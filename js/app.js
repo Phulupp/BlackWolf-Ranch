@@ -177,9 +177,14 @@
     modalBestellungTitel: document.getElementById("modal-bestellung-titel"),
     bestellungEditingId: document.getElementById("bestellung-editing-id"),
     bestellungUnternehmenInput: document.getElementById("bestellung-unternehmen-input"),
-    bestellungProduktInput: document.getElementById("bestellung-produkt-input"),
-    bestellungMengeInput: document.getElementById("bestellung-menge-input"),
-    bestellungDeadlineInput: document.getElementById("bestellung-deadline-input"),
+    bestellungPositionProdukt: document.getElementById("bestellung-position-produkt"),
+    bestellungPositionMenge: document.getElementById("bestellung-position-menge"),
+    btnBestellungPositionHinzufuegen: document.getElementById("btn-bestellung-position-hinzufuegen"),
+    bestellungPositionenListe: document.getElementById("bestellung-positionen-liste"),
+    bestellungPositionenLeer: document.getElementById("bestellung-positionen-leer"),
+    bestellungZusammenfassung: document.getElementById("bestellung-zusammenfassung"),
+    bestellungZusammenfassungAnzahl: document.getElementById("bestellung-zusammenfassung-anzahl"),
+    bestellungZusammenfassungMenge: document.getElementById("bestellung-zusammenfassung-menge"),
     bestellungStatusInput: document.getElementById("bestellung-status-input"),
     bestellungNotizInput: document.getElementById("bestellung-notiz-input"),
     bestellungError: document.getElementById("bestellung-error"),
@@ -626,7 +631,7 @@
 
   function befuelleProduktSelects() {
     const optionsHtml = produkte.map((p) => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}</option>`).join("");
-    [el.rechnerProdukt, el.bestellungProduktInput, el.verkaufProduktInput].forEach((select) => {
+    [el.rechnerProdukt, el.bestellungPositionProdukt, el.verkaufProduktInput].forEach((select) => {
       if (!select) return;
       const vorher = select.value;
       select.innerHTML = optionsHtml || '<option value="">Keine Waren vorhanden</option>';
@@ -745,6 +750,13 @@
   /* ------------------------------------------------------------------------
      10. Bestellungen
      ------------------------------------------------------------------------ */
+  // Eine Bestellung enthält jetzt beliebig viele Produkte:
+  //   { unternehmen, produkte: [{ produktId, produktName, menge }, ...],
+  //     status, notiz, erstelltAm, erstelltVon }
+  // "bestellungEntwurfPositionen" ist die Arbeitskopie der Produktliste,
+  // während das Bestellungs-Modal offen ist (siehe oeffneBestellungModal).
+  let bestellungEntwurfPositionen = [];
+
   function starteBestellungenListener() {
     if (!db) return;
     if (unsubBestellungen) unsubBestellungen();
@@ -754,7 +766,7 @@
       .onSnapshot(
         (snap) => {
           bestellungen = [];
-          snap.forEach((docSnap) => bestellungen.push({ id: docSnap.id, ...docSnap.data() }));
+          snap.forEach((docSnap) => bestellungen.push({ id: docSnap.id, produkte: [], ...docSnap.data() }));
           renderBestellungen();
           renderUebersicht();
           renderStatistiken();
@@ -764,13 +776,30 @@
       );
   }
 
+  // Kleine Zusammenfassung einer Produktliste, z. B. "Zucker, Mehl, Eier +1
+  // weitere" bzw. "4 Produkte · 890 Stück gesamt".
+  function bestellungProdukteZeilen(produkteListe) {
+    return (produkteListe || []).reduce((sum, p) => sum + (Number(p.menge) || 0), 0);
+  }
+
+  function bestellungProdukteText(produkteListe) {
+    const liste = produkteListe || [];
+    if (liste.length === 0) return "—";
+    const namen = liste.map((p) => `${p.produktName} ×${p.menge}`);
+    const sichtbar = namen.slice(0, 3).join(", ");
+    const rest = namen.length > 3 ? ` +${namen.length - 3} weitere` : "";
+    return `${sichtbar}${rest}`;
+  }
+
   function gefilterteBestellungen() {
     let liste = bestellungen;
     if (bestellungenStatusFilter !== "alle") liste = liste.filter((b) => b.status === bestellungenStatusFilter);
     const begriff = bestellungenSuche.trim().toLowerCase();
     if (begriff) {
       liste = liste.filter(
-        (b) => (b.unternehmen || "").toLowerCase().includes(begriff) || (b.produktName || "").toLowerCase().includes(begriff)
+        (b) =>
+          (b.unternehmen || "").toLowerCase().includes(begriff) ||
+          (b.produkte || []).some((p) => (p.produktName || "").toLowerCase().includes(begriff))
       );
     }
     return liste;
@@ -785,17 +814,20 @@
     el.bestellungenTableBody.innerHTML = liste
       .map((b) => {
         const statusOptions = BESTELLUNG_STATUS.map((s) => `<option value="${s}" ${s === b.status ? "selected" : ""}>${s}</option>`).join("");
+        const anzahl = (b.produkte || []).length;
+        const gesamtmenge = bestellungProdukteZeilen(b.produkte);
         return `<div class="reg-row reg-row--body bestellungen-row">
             <span class="reg-name">${escapeHtml(b.unternehmen || "—")}</span>
-            <span>${escapeHtml(b.produktName || "—")}</span>
-            <span>${b.menge != null ? b.menge : "—"} Stück</span>
+            <span class="bestellung-produkte-summary">
+              <span class="bestellung-produkte-summary__liste">${escapeHtml(bestellungProdukteText(b.produkte))}</span>
+              <span class="bestellung-produkte-summary__zaehler">${anzahl} Produkt${anzahl === 1 ? "" : "e"} · ${gesamtmenge} Stück gesamt</span>
+            </span>
             <span>${formatDatum(b.erstelltAm)}</span>
-            <span>${b.deadline ? formatDatum(new Date(b.deadline)) : "—"}</span>
             <span><select class="field-input" style="padding:5px 8px;font-size:11.5px;" data-bestellung-status="${b.id}">${statusOptions}</select></span>
             <span class="notiz-text">${b.notiz ? escapeHtml(b.notiz) : "—"}</span>
             <span class="reg-row__actions-col">
               <div class="row-actions">
-                <button class="icon-btn" data-bestellung-edit="${b.id}" title="Bearbeiten">✎</button>
+                <button class="icon-btn" data-bestellung-edit="${b.id}" title="Öffnen / Bearbeiten">✎</button>
                 <button class="icon-btn icon-btn--delete" data-bestellung-delete="${b.id}" title="Löschen">🗑</button>
               </div>
             </span>
@@ -811,16 +843,77 @@
     });
   }
 
+  // Rendert die Produktliste + Zusammenfassung INNERHALB des offenen
+  // Bestellungs-Modals, auf Basis von bestellungEntwurfPositionen.
+  function renderBestellungPositionen() {
+    if (!el.bestellungPositionenListe) return;
+    const positionen = bestellungEntwurfPositionen;
+
+    el.bestellungPositionenLeer.hidden = positionen.length !== 0;
+    el.bestellungPositionenListe.innerHTML = positionen
+      .map(
+        (p, index) => `<div class="bestellung-positionen-zeile">
+          <span class="bestellung-positionen-zeile__name">${escapeHtml(p.produktName)}</span>
+          <input type="number" class="field-input" min="1" step="1" value="${p.menge}" data-position-menge="${index}" />
+          <button type="button" class="icon-btn icon-btn--delete" data-position-entfernen="${index}" title="Entfernen">✕</button>
+        </div>`
+      )
+      .join("");
+
+    const gesamtmenge = bestellungProdukteZeilen(positionen);
+    el.bestellungZusammenfassung.hidden = positionen.length === 0;
+    el.bestellungZusammenfassungAnzahl.textContent = String(positionen.length);
+    el.bestellungZusammenfassungMenge.textContent = String(gesamtmenge);
+  }
+
+  if (el.btnBestellungPositionHinzufuegen) {
+    el.btnBestellungPositionHinzufuegen.addEventListener("click", () => {
+      versteckeFeldFehler(el.bestellungError);
+      const produkt = produkte.find((p) => p.id === el.bestellungPositionProdukt.value);
+      const menge = parseInt(el.bestellungPositionMenge.value, 10);
+
+      if (!produkt) return zeigeFeldFehler(el.bestellungError, "Bitte wähle ein Produkt aus.");
+      if (!isFinite(menge) || menge < 1) return zeigeFeldFehler(el.bestellungError, "Bitte gib eine gültige Menge ein.");
+
+      const vorhanden = bestellungEntwurfPositionen.find((p) => p.produktId === produkt.id);
+      if (vorhanden) {
+        vorhanden.menge += menge;
+      } else {
+        bestellungEntwurfPositionen.push({ produktId: produkt.id, produktName: produkt.name, menge });
+      }
+      renderBestellungPositionen();
+      el.bestellungPositionMenge.value = 1;
+    });
+  }
+
+  if (el.bestellungPositionenListe) {
+    el.bestellungPositionenListe.addEventListener("click", (event) => {
+      const entfernenBtn = event.target.closest("[data-position-entfernen]");
+      if (!entfernenBtn) return;
+      const index = parseInt(entfernenBtn.getAttribute("data-position-entfernen"), 10);
+      bestellungEntwurfPositionen.splice(index, 1);
+      renderBestellungPositionen();
+    });
+    el.bestellungPositionenListe.addEventListener("change", (event) => {
+      const mengeInput = event.target.closest("[data-position-menge]");
+      if (!mengeInput) return;
+      const index = parseInt(mengeInput.getAttribute("data-position-menge"), 10);
+      const menge = Math.max(1, parseInt(mengeInput.value, 10) || 1);
+      bestellungEntwurfPositionen[index].menge = menge;
+      renderBestellungPositionen();
+    });
+  }
+
   function oeffneBestellungModal(bestellung) {
     versteckeFeldFehler(el.bestellungError);
     el.modalBestellungTitel.textContent = bestellung ? "Bestellung bearbeiten" : "Neue Bestellung";
     el.bestellungEditingId.value = bestellung ? bestellung.id : "";
     el.bestellungUnternehmenInput.value = bestellung ? bestellung.unternehmen || "" : "";
-    el.bestellungProduktInput.value = bestellung ? bestellung.produktId || "" : el.bestellungProduktInput.value;
-    el.bestellungMengeInput.value = bestellung ? bestellung.menge : 1;
-    el.bestellungDeadlineInput.value = bestellung && bestellung.deadline ? bestellung.deadline : "";
     el.bestellungStatusInput.value = bestellung ? bestellung.status : "Offen";
     el.bestellungNotizInput.value = bestellung ? bestellung.notiz || "" : "";
+    bestellungEntwurfPositionen = bestellung ? (bestellung.produkte || []).map((p) => ({ ...p })) : [];
+    el.bestellungPositionMenge.value = 1;
+    renderBestellungPositionen();
     oeffneModal("modal-bestellung");
   }
 
@@ -859,20 +952,14 @@
     el.btnConfirmBestellung.addEventListener("click", async () => {
       versteckeFeldFehler(el.bestellungError);
       const unternehmen = el.bestellungUnternehmenInput.value.trim();
-      const produktId = el.bestellungProduktInput.value;
-      const produkt = produkte.find((p) => p.id === produktId);
-      const menge = parseInt(el.bestellungMengeInput.value, 10);
 
       if (!unternehmen) return zeigeFeldFehler(el.bestellungError, "Bitte gib ein Unternehmen ein.");
-      if (!produkt) return zeigeFeldFehler(el.bestellungError, "Bitte wähle ein Produkt aus.");
-      if (!isFinite(menge) || menge < 1) return zeigeFeldFehler(el.bestellungError, "Bitte gib eine gültige Menge ein.");
+      if (bestellungEntwurfPositionen.length === 0)
+        return zeigeFeldFehler(el.bestellungError, "Bitte füge mindestens ein Produkt zur Bestellung hinzu.");
 
       const daten = {
         unternehmen,
-        produktId,
-        produktName: produkt.name,
-        menge,
-        deadline: el.bestellungDeadlineInput.value || null,
+        produkte: bestellungEntwurfPositionen.map((p) => ({ produktId: p.produktId, produktName: p.produktName, menge: p.menge })),
         status: el.bestellungStatusInput.value,
         notiz: el.bestellungNotizInput.value.trim(),
       };
@@ -1038,10 +1125,7 @@
 
         await db.collection(BESTELLUNGEN_COLLECTION).add({
           unternehmen,
-          produktId: ergebnis.produkt.id,
-          produktName: ergebnis.produkt.name,
-          menge: ergebnis.menge,
-          deadline: null,
+          produkte: [{ produktId: ergebnis.produkt.id, produktName: ergebnis.produkt.name, menge: ergebnis.menge }],
           status: "Offen",
           notiz: `Aus Handelsrechner übernommen (${formatProzent(ergebnis.rabattProzent, 0)} Rabatt).`,
           erstelltAm: firebase.firestore.FieldValue.serverTimestamp(),
@@ -1565,7 +1649,7 @@
       .map(
         (b) => `<div class="dash-mini-row">
           <div class="dash-mini-row__top"><span>${escapeHtml(b.unternehmen)}</span><span class="status-pill ${statusPillKlasse(b.status)}">${escapeHtml(b.status)}</span></div>
-          <div class="dash-mini-row__bottom"><span>${escapeHtml(b.produktName)} · ${b.menge} Stück</span><span>${b.deadline ? formatDatum(new Date(b.deadline)) : ""}</span></div>
+          <div class="dash-mini-row__bottom"><span>${escapeHtml(bestellungProdukteText(b.produkte))}</span><span>${(b.produkte || []).length} Produkt${(b.produkte || []).length === 1 ? "" : "e"}</span></div>
         </div>`
       )
       .join("");
