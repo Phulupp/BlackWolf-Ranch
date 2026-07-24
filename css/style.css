@@ -1,10 +1,10 @@
 /* ==========================================================================
    HORNHAUSEN-HOF — Hofverwaltung (1899)
    ---------------------------------------------------------------------------
-   Western/Red-Dead-Redemption-Anmutung: dunkles Holz, Pergament, alte
-   Dokumente, rustikale Rahmen, warme Braun-/Beigetöne, elegante Verzierungen,
-   Windräder/Scheunen/Felder als Liniengrafik. Keine modernen Karten, keine
-   modernen Icons, keine modernen Dashboard-Elemente.
+   Moderne, ruhige Hofverwaltung im Stil von Red Dead Redemption 2: dunkles
+   Leder und Holz mit Messing-/Gold-Akzenten als Rahmen und Highlights. Kein
+   Pergament/Papier mehr als Hintergrund für Karten, Formulare oder Tabellen
+   irgendwo in der Anwendung — der Fokus liegt auf Lesbarkeit und Funktion.
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -23,18 +23,12 @@
   --wood-grain: rgba(0, 0, 0, 0.32);
   --wood-grain-light: rgba(255, 208, 140, 0.06);
 
-  /* Pergament — jetzt nur noch für echte Dokumente reserviert (Hofbuch,
-     Datenschutz/Informationen), NICHT mehr für die eigentliche Anwendung. */
-  --parch-100: #dcc48e;
+  /* Warmer Akzentton (nur noch als Textfarbe, z. B. auf dem Übersicht-Hero) */
   --parch-200: #cdb277;
-  --parch-300: #ba9c60;
-  --parch-400: #a8874f;
-  --parch-edge: #7c5c2c;
-  --parch-shadow: rgba(50, 32, 10, 0.4);
 
-  /* Leder-Oberflächen: die eigentliche Anwendung (Karten, Tabellen, Modals,
-     Login) nutzt jetzt dunkles Leder statt Pergament — ruhiger, moderner,
-     mit Messing-Akzenten statt Verzierung. */
+  /* Leder-Panels: die gesamte Anwendung (Karten, Tabellen, Modals, Login,
+     Hofbuch) nutzt dunkles, halbtransparent wirkendes Leder mit feiner
+     Messing-Kante statt Pergament oder Papier. */
   --leather-900: #19110b;
   --leather-800: #241a11;
   --leather-700: #332417;
@@ -42,14 +36,7 @@
   --leather-edge: rgba(189, 145, 67, 0.28);
   --leather-edge-soft: rgba(189, 145, 67, 0.16);
 
-  /* Tinte / Text auf Pergament — etwas dunkler/kräftiger für mehr Kontrast */
-  --ink-900: #221607;
-  --ink-800: #33220f;
-  --ink-700: #46311a;
-  --ink-soft: #5f4728;
-  --ink-faint: #7c6440;
-
-  /* Text auf dunklem Holz */
+  /* Text auf dunklem Holz/Leder */
   --wood-text: #e7d5a8;
   --wood-text-muted: #b9976a;
   --wood-text-soft: #8a6b47;
@@ -199,23 +186,6 @@ p {
   background-color: transparent;
 }
 
-/* Feine, körnige "altes Papier"-Struktur — als einzelner, fixer Overlay über
-   der kompletten Seite (Holz UND Pergament gleichermaßen), statt pro
-   Komponente, damit keine Stacking-Context-Probleme mit einzelnen Karten/
-   Modals entstehen. Nutzt jetzt die echte Papier-Textur aus dem Asset-Pack
-   statt eines per SVG erzeugten Rauschens. */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 5000;
-  pointer-events: none;
-  opacity: 0.06;
-  mix-blend-mode: multiply;
-  background-image: url("../assets/textures/paper-texture.webp.png");
-  background-size: 420px auto;
-  background-repeat: repeat;
-}
 
 /* --------------------------------------------------------------------------
    4. Hintergrund der gesamten App (echtes Hof-Foto hinter Sidebar + Inhalt)
@@ -1147,12 +1117,6 @@ body::before {
   font-style: italic;
 }
 
-/* Ausnahme: Leerzustand innerhalb des Hofbuchs sitzt auf hellem Pergament
-   und braucht daher dunkle Tinte statt heller Schrift. */
-.hofbuch-card .empty-state {
-  color: var(--ink-faint);
-}
-
 /* --------------------------------------------------------------------------
    11. Übersicht (Dashboard)
    -------------------------------------------------------------------------- */
@@ -1878,9 +1842,8 @@ body::before {
 }
 
 /* --------------------------------------------------------------------------
-   17. Modals: dunkles Leder für Funktions-Dialoge. Die Ausnahme ist
-   .modal--document (Datenschutz/Informationen) — echte Dokumente, die
-   bewusst die Pergament-Optik behalten.
+   17. Modals: einheitlich dunkles Leder mit Messing-Kante für alle Dialoge,
+   inklusive Datenschutz/Informationen — keine Pergament-Optik mehr.
    -------------------------------------------------------------------------- */
 .modal-overlay {
   position: fixed;
@@ -1911,41 +1874,6 @@ body::before {
   transition: transform 0.18s ease;
 }
 
-/* "Dokument"-Variante: Pergament-Optik bleibt hier bewusst erhalten, da es
-   sich um echten Fließtext handelt (Datenschutz, Informationen), nicht um
-   einen Funktions-Dialog. */
-.modal--document {
-  background-color: var(--parch-100);
-  background-image: url("../assets/textures/paper-texture.webp.png");
-  background-size: 420px auto;
-  background-blend-mode: multiply;
-  border-color: rgba(124, 92, 44, 0.3);
-  color: var(--ink-800);
-}
-
-.modal--document h3 {
-  color: var(--ink-900);
-}
-
-.modal--document .modal__hint,
-.modal--document .modal__close {
-  color: var(--ink-soft);
-}
-
-.modal--document .modal__close:hover {
-  background: rgba(124, 92, 44, 0.12);
-}
-
-.modal--document .btn--ghost {
-  color: var(--ink-soft);
-  border-color: var(--parch-edge);
-}
-
-.modal--document .btn--ghost:hover {
-  color: var(--ink-900);
-  background: rgba(124, 92, 44, 0.12);
-  border-color: var(--brass);
-}
 
 .modal-overlay--visible .modal {
   transform: translateY(0) scale(1);
@@ -2217,18 +2145,16 @@ body::before {
 }
 
 /* --------------------------------------------------------------------------
-   22. Hofbuch (schlichte Papierkarte statt Buch-Foto)
+   22. Hofbuch (dunkles Leder-Panel wie der Rest der Anwendung, kein Pergament)
    -------------------------------------------------------------------------- */
 .hofbuch-card {
-  background-color: var(--parch-100);
-  background-image: url("../assets/textures/paper-texture.webp.png");
-  background-size: 420px auto;
-  background-blend-mode: multiply;
-  border: 1px solid rgba(124, 92, 44, 0.25);
+  background: var(--leather-800);
+  border: 1px solid var(--leather-edge);
+  border-top: 2px solid var(--brass);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
-  padding: 40px 48px 44px;
-  min-height: 420px;
+  padding: 32px 36px;
+  min-height: 380px;
 }
 
 .hofbuch-card__form-wrap h3 {
@@ -2236,7 +2162,7 @@ body::before {
   font-size: 20px;
   text-align: center;
   margin-bottom: 14px;
-  color: var(--ink-900);
+  color: var(--wood-text);
 }
 
 .hofbuch-form {
@@ -2248,25 +2174,13 @@ body::before {
   margin: 0 auto;
 }
 
-.hofbuch-form .field-input,
-.hofbuch-form .field-textarea {
-  background: rgba(255, 250, 235, 0.4);
-  color: var(--ink-900);
-}
-
-.hofbuch-form .field-input::placeholder,
-.hofbuch-form .field-textarea::placeholder {
-  color: var(--ink-faint);
-}
-
 .hofbuch-rope-divider {
   display: block;
   width: 100%;
   max-width: 420px;
   height: 1px;
   margin: 22px auto;
-  background: var(--parch-edge);
-  opacity: 0.6;
+  background: var(--leather-edge);
 }
 
 #hofbuch-eintraege {
@@ -2298,18 +2212,18 @@ body::before {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 15.5px;
-  color: var(--ink-900);
+  color: var(--wood-text);
 }
 
 .hofbuch-eintrag__meta {
   font-size: 10.5px;
-  color: var(--ink-faint);
+  color: var(--wood-text-soft);
   white-space: nowrap;
 }
 
 .hofbuch-eintrag__text {
   font-size: 13px;
-  color: var(--ink-800);
+  color: var(--wood-text-muted);
   line-height: 1.65;
   white-space: pre-wrap;
 }
