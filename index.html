@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hornhausen-Hof — Hofverwaltung</title>
-  <link rel="icon" type="image/png" href="img/favicon.png" />
+  <link rel="icon" type="image/png" href="assets/logo/hornhausen-sign-small.png.png" />
 
   <!-- Google Fonts: Rye (Farmschild/Wordmark), Playfair Display (Überschriften), Vollkorn (Fließtext/Pergament) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -26,16 +26,9 @@
   <!-- ZUGANGSSPERRE: Login-/Benutzersystem (js/auth.js) -->
   <!-- ============================ -->
   <div class="auth-screen" id="auth-screen">
-    <!-- Wiederverwendbare Formen (Rahmen-Ecke, Icons) - unsichtbar, nur als Vorlage für <use> -->
+    <!-- Wiederverwendbare Formen (Icons) - unsichtbar, nur als Vorlage für <use> -->
     <svg width="0" height="0" style="position: absolute;" aria-hidden="true">
       <defs>
-        <symbol id="auth-frame-corner" viewBox="0 0 120 120">
-          <path d="M4 96 V4 H96" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" />
-          <path d="M4 68 Q4 46 26 46 Q46 46 46 26 Q46 8 64 4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity="0.85" />
-          <circle cx="26" cy="46" r="4.5" fill="currentColor" />
-          <circle cx="4" cy="96" r="4.5" fill="currentColor" />
-          <circle cx="96" cy="4" r="3" fill="currentColor" opacity="0.7" />
-        </symbol>
         <symbol id="auth-icon-person" viewBox="0 0 24 24">
           <circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.8" />
           <path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
@@ -53,23 +46,16 @@
 
     <div class="auth-screen__vignette"></div>
 
-    <div class="auth-screen__frame" aria-hidden="true">
-      <svg class="auth-screen__frame-corner auth-screen__frame-corner--tl" viewBox="0 0 120 120"><use href="#auth-frame-corner"></use></svg>
-      <svg class="auth-screen__frame-corner auth-screen__frame-corner--tr" viewBox="0 0 120 120"><use href="#auth-frame-corner"></use></svg>
-      <svg class="auth-screen__frame-corner auth-screen__frame-corner--bl" viewBox="0 0 120 120"><use href="#auth-frame-corner"></use></svg>
-      <svg class="auth-screen__frame-corner auth-screen__frame-corner--br" viewBox="0 0 120 120"><use href="#auth-frame-corner"></use></svg>
-    </div>
-
     <div class="auth-gate">
       <div class="auth-gate__sign-wrap">
-        <img class="auth-gate__sign-img" src="img/auth-sign.png" alt="Hornhausen-Hof – Est. 1899" />
+        <img class="auth-gate__sign-img" src="assets/logo/hornhausen-sign.png.png" alt="Hornhausen-Hof – Est. 1899" />
       </div>
 
       <div class="auth-card">
         <div class="auth-card__brand">
           <span class="auth-card__eyebrow">Willkommen zurück</span>
           <span class="auth-card__heading">Anmelden</span>
-          <div class="ornament-divider"><span class="ornament-divider__diamond"></span></div>
+          <img class="ornament-divider" src="assets/decorations/divider-western.png.png" alt="" aria-hidden="true" />
         </div>
 
         <!-- Login mit Benutzername (E-Mail) & Passwort oder Google -->
@@ -194,7 +180,7 @@
   <!-- APP (erst sichtbar nach Login) -->
   <!-- ============================ -->
   <div class="update-banner" id="update-banner" hidden>
-    <img class="update-banner__logo" src="img/logo-badge.png" alt="" aria-hidden="true" />
+    <img class="update-banner__logo" src="assets/logo/hornhausen-sign-small.png.png" alt="" aria-hidden="true" />
     <span>Eine neue Version ist verfügbar. Danach ist eine erneute Anmeldung nötig.</span>
     <button type="button" class="btn btn--primary" id="update-banner-btn">Jetzt aktualisieren</button>
   </div>
@@ -205,7 +191,7 @@
     <!-- ============================ -->
     <aside class="sidebar tex-wood">
       <div class="sidebar__brand">
-        <img class="sidebar__brand-icon" src="img/logo-badge.png" alt="Hornhausen-Hof Wappen" />
+        <img class="sidebar__brand-icon" src="assets/logo/hornhausen-sign-small.png.png" alt="Hornhausen-Hof Wappen" />
         <span class="sidebar__brand-title">Hornhausen-Hof</span>
         <span class="sidebar__brand-subtitle">Est. 1899</span>
       </div>
@@ -238,6 +224,10 @@
         <button class="sidebar__item" data-view="verkaeufe">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M9.7 14.6c.3.9 1.2 1.5 2.3 1.5 1.4 0 2.4-.8 2.4-1.9 0-1.2-1-1.6-2.4-2-1.4-.4-2.4-.9-2.4-2 0-1.1 1-1.9 2.4-1.9 1.1 0 2 .6 2.3 1.5"/><line x1="12" y1="6.7" x2="12" y2="17.3"/></svg>
           <span>Verkäufe</span>
+        </button>
+        <button class="sidebar__item" data-view="hofbuch">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5.5C10 4 6.5 3.6 4 4.3v14.3c2.5-.7 6-.3 8 1.2"/><path d="M12 5.5c2-1.5 5.5-1.9 8-1.2v14.3c-2.5-.7-6-.3-8 1.2Z"/><line x1="12" y1="5.5" x2="12" y2="19.8"/></svg>
+          <span>Hofbuch</span>
         </button>
         <button class="sidebar__item" data-view="statistiken">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="20" x2="19" y2="20"/><rect x="6" y="12" width="3.4" height="8"/><rect x="10.3" y="7" width="3.4" height="13"/><rect x="14.6" y="10" width="3.4" height="10"/></svg>
@@ -293,19 +283,7 @@
             <h1 id="view-title">Übersicht</h1>
             <p id="view-subtitle">Hier behältst du alles im Blick.</p>
           </div>
-          <svg class="page-header__art" viewBox="0 0 320 140" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <line x1="0" y1="122" x2="320" y2="122"/>
-            <path d="M50 122V95l58-30 58 30v27"/>
-            <line x1="65" y1="122" x2="65" y2="98"/>
-            <line x1="151" y1="122" x2="151" y2="98"/>
-            <rect x="90" y="100" width="36" height="22"/>
-            <line x1="250" y1="122" x2="250" y2="34"/>
-            <circle cx="250" cy="30" r="5"/>
-            <line x1="250" y1="30" x2="277" y2="48"/>
-            <line x1="250" y1="30" x2="266" y2="60"/>
-            <line x1="250" y1="30" x2="234" y2="60"/>
-            <line x1="250" y1="30" x2="223" y2="48"/>
-          </svg>
+          <img class="page-header__art" src="assets/decorations/farm-outline.png.png" alt="" aria-hidden="true" />
         </div>
 
         <div class="main">
@@ -313,7 +291,7 @@
           <!-- VIEW: ÜBERSICHT               -->
           <!-- ============================ -->
           <section class="view view--active" id="view-uebersicht">
-            <div class="dash-hero">
+            <div class="dash-hero framed">
               <div class="dash-hero__greeting">
                 <p class="dash-hero__eyebrow" id="dashboard-greeting">Willkommen zurück,</p>
                 <h1 class="dash-hero__name" id="dashboard-name">—</h1>
@@ -555,7 +533,7 @@
               </div>
 
               <div>
-                <div class="parch-card rechner-preview">
+                <div class="parch-card rechner-preview framed">
                   <p class="rechner-section-title">Angebotsvorschau</p>
                   <div class="rechner-preview__row"><span class="rechner-preview__label">Unternehmen</span><span class="rechner-preview__value" id="vorschau-unternehmen">—</span></div>
                   <div class="rechner-preview__row"><span class="rechner-preview__label">Produkt</span><span class="rechner-preview__value" id="vorschau-produkt">—</span></div>
@@ -637,7 +615,7 @@
               <p class="empty-state" id="kontakte-empty" hidden>Noch keine Kontakte eingetragen.</p>
             </div>
             <p class="empty-state" id="kontakte-no-results" hidden>Keine Kontakte gefunden, die zu deiner Suche passen.</p>
-            <p class="parch-card__hint" style="padding: 0 6px;">Alle Telegrammnummern beginnen mit „BW-“.</p>
+            <p class="parch-card__hint" style="padding: 0 6px;">Alle Telegrammnummern beginnen mit „BW-".</p>
           </section>
 
           <!-- ============================ -->
@@ -706,6 +684,27 @@
           </section>
 
           <!-- ============================ -->
+          <!-- VIEW: HOFBUCH                 -->
+          <!-- ============================ -->
+          <section class="view" id="view-hofbuch">
+            <div class="hofbuch-card">
+              <div class="hofbuch-card__form-wrap">
+                <h3>Neuen Eintrag ins Hofbuch schreiben</h3>
+                <form class="hofbuch-form" id="form-hofbuch">
+                  <input type="text" id="hofbuch-titel-input" class="field-input" placeholder="Überschrift, z. B. Ernte eingebracht" required style="flex: 1 1 240px;" />
+                  <button type="submit" class="btn btn--primary">Eintragen</button>
+                  <textarea id="hofbuch-text-input" class="field-input field-textarea" placeholder="Was ist geschehen?" style="flex: 1 1 100%;" rows="3" required></textarea>
+                </form>
+              </div>
+
+              <img class="hofbuch-rope-divider" src="assets/decorations/rope-divider.png.png" alt="" aria-hidden="true" />
+
+              <div id="hofbuch-eintraege"></div>
+              <p class="empty-state" id="hofbuch-empty" hidden>Das Hofbuch ist noch leer — trage den ersten Eintrag ein.</p>
+            </div>
+          </section>
+
+          <!-- ============================ -->
           <!-- VIEW: STATISTIKEN             -->
           <!-- ============================ -->
           <section class="view" id="view-statistiken">
@@ -757,6 +756,7 @@
                 <option value="kontakte">Kontakte</option>
                 <option value="lager">Lager</option>
                 <option value="verkaeufe">Verkäufe</option>
+                <option value="hofbuch">Hofbuch</option>
                 <option value="statistiken">Statistiken</option>
               </select>
             </div>
@@ -771,7 +771,7 @@
               <button class="tabs__tab" data-admin-subview="admin-log">Aktivitäts-Log</button>
             </div>
 
-            <div class="parch-card">
+            <div class="parch-card parch-card--sealed">
               <h3>Benutzerverwaltung</h3>
               <p class="parch-card__hint">Hier verwaltest du alle Accounts: Registrierungsanfragen freigeben oder ablehnen, Rang und Verwalterrechte vergeben, Benutzer sperren/entsperren/löschen/umbenennen und interne Notizen hinterlegen. <strong>Verwalterrechte</strong> sind unabhängig vom Rang und werden separat je Benutzer vergeben.</p>
 
