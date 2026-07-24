@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hornhausen-Hof — Hofverwaltung</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='10' fill='%23241708'/%3E%3Cpath d='M50 20v55M30 45l20-10 20 10M50 30l14 8M50 30l-14 8' stroke='%23c9a34e' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <link rel="icon" type="image/png" href="img/favicon.png" />
 
   <!-- Google Fonts: Rye (Farmschild/Wordmark), Playfair Display (Überschriften), Vollkorn (Fließtext/Pergament) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -14,7 +14,7 @@
     rel="stylesheet"
   />
 
-  <link rel="stylesheet" href="css/style.css?v=1" />
+  <link rel="stylesheet" href="css/style.css?v=2" />
 
   <!-- Firebase SDK (Authentifizierung + Datenbank) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -26,90 +26,85 @@
   <!-- ZUGANGSSPERRE: Login-/Benutzersystem (js/auth.js) -->
   <!-- ============================ -->
   <div class="auth-screen" id="auth-screen">
-    <div class="auth-screen__sky"></div>
-    <svg class="auth-screen__scene" viewBox="0 0 1600 420" preserveAspectRatio="xMidYMax slice" fill="currentColor" aria-hidden="true">
-      <!-- Boden/Horizont -->
-      <rect x="0" y="392" width="1600" height="28" />
-      <!-- Zaun links -->
-      <g>
-        <rect x="0" y="360" width="480" height="6" />
-        <rect x="0" y="340" width="480" height="5" />
-        <rect x="10" y="330" width="8" height="65" />
-        <rect x="60" y="330" width="8" height="65" />
-        <rect x="110" y="330" width="8" height="65" />
-        <rect x="160" y="330" width="8" height="65" />
-        <rect x="210" y="330" width="8" height="65" />
-        <rect x="260" y="330" width="8" height="65" />
-        <rect x="310" y="330" width="8" height="65" />
-        <rect x="360" y="330" width="8" height="65" />
-        <rect x="410" y="330" width="8" height="65" />
-        <rect x="460" y="330" width="8" height="65" />
-      </g>
-      <!-- Scheune -->
-      <g>
-        <path d="M620 395 V300 L740 240 L860 300 V395 Z" />
-        <rect x="620" y="290" width="240" height="8" fill="#100a06" opacity="0.001" />
-        <path d="M690 395 V330 H790 V395 Z" fill="#3a2410" opacity="0" />
-        <rect x="695" y="335" width="90" height="60" fill="#f4e8c8" opacity="0.12" />
-        <line x1="740" y1="335" x2="740" y2="395" stroke="#f4e8c8" stroke-width="3" opacity="0.15" />
-        <line x1="695" y1="365" x2="785" y2="365" stroke="#f4e8c8" stroke-width="3" opacity="0.15" />
-      </g>
-      <!-- Windrad -->
-      <g>
-        <rect x="1145" y="200" width="10" height="195" />
-        <circle cx="1150" cy="195" r="10" />
-        <g stroke="currentColor" stroke-width="10" stroke-linecap="round">
-          <line x1="1150" y1="195" x2="1150" y2="120" />
-          <line x1="1150" y1="195" x2="1214" y2="234" />
-          <line x1="1150" y1="195" x2="1195" y2="266" />
-          <line x1="1150" y1="195" x2="1086" y2="234" />
-          <line x1="1150" y1="195" x2="1105" y2="266" />
-        </g>
-      </g>
-      <!-- Bäume rechts -->
-      <g>
-        <ellipse cx="1340" cy="330" rx="46" ry="52" />
-        <rect x="1332" y="378" width="16" height="20" />
-        <ellipse cx="1440" cy="350" rx="36" ry="42" />
-        <rect x="1434" y="388" width="12" height="14" />
-        <ellipse cx="1520" cy="335" rx="42" ry="48" />
-        <rect x="1512" y="380" width="16" height="18" />
-      </g>
+    <!-- Wiederverwendbare Formen (Rahmen-Ecke, Icons) - unsichtbar, nur als Vorlage für <use> -->
+    <svg width="0" height="0" style="position: absolute;" aria-hidden="true">
+      <defs>
+        <symbol id="auth-frame-corner" viewBox="0 0 120 120">
+          <path d="M4 96 V4 H96" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" />
+          <path d="M4 68 Q4 46 26 46 Q46 46 46 26 Q46 8 64 4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity="0.85" />
+          <circle cx="26" cy="46" r="4.5" fill="currentColor" />
+          <circle cx="4" cy="96" r="4.5" fill="currentColor" />
+          <circle cx="96" cy="4" r="3" fill="currentColor" opacity="0.7" />
+        </symbol>
+        <symbol id="auth-icon-person" viewBox="0 0 24 24">
+          <circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.8" />
+          <path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+        </symbol>
+        <symbol id="auth-icon-lock" viewBox="0 0 24 24">
+          <rect x="5" y="11" width="14" height="10" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8" />
+          <path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          <circle cx="12" cy="16" r="1.6" fill="currentColor" />
+        </symbol>
+      </defs>
     </svg>
+
+    <!-- Foto-Hintergrund: Hof bei Sonnenuntergang (echtes Bild statt Vektor-Illustration) -->
+    <div class="auth-screen__bg"></div>
+
     <div class="auth-screen__vignette"></div>
+
+    <div class="auth-screen__frame" aria-hidden="true">
+      <svg class="auth-screen__frame-corner auth-screen__frame-corner--tl" viewBox="0 0 120 120"><use href="#auth-frame-corner"></use></svg>
+      <svg class="auth-screen__frame-corner auth-screen__frame-corner--tr" viewBox="0 0 120 120"><use href="#auth-frame-corner"></use></svg>
+      <svg class="auth-screen__frame-corner auth-screen__frame-corner--bl" viewBox="0 0 120 120"><use href="#auth-frame-corner"></use></svg>
+      <svg class="auth-screen__frame-corner auth-screen__frame-corner--br" viewBox="0 0 120 120"><use href="#auth-frame-corner"></use></svg>
+    </div>
 
     <div class="auth-gate">
       <div class="auth-gate__sign-wrap">
-        <div class="auth-gate__chains">
-          <div class="auth-gate__chain"></div>
-          <div class="auth-gate__chain"></div>
-        </div>
-        <div class="auth-gate__sign">
-          <span class="auth-gate__title">Hornhausen-Hof</span>
-          <span class="auth-gate__subtitle">Est. 1899</span>
-        </div>
+        <img class="auth-gate__sign-img" src="img/auth-sign.png" alt="Hornhausen-Hof – Est. 1899" />
       </div>
 
       <div class="auth-card">
         <div class="auth-card__brand">
-          <span class="brand-text__title">Anmelden</span>
-          <span class="brand-text__subtitle">Willkommen zurück</span>
+          <span class="auth-card__eyebrow">Willkommen zurück</span>
+          <span class="auth-card__heading">Anmelden</span>
+          <div class="ornament-divider"><span class="ornament-divider__diamond"></span></div>
         </div>
 
         <!-- Login mit Benutzername (E-Mail) & Passwort oder Google -->
         <form class="auth-form auth-form--active" id="form-login">
           <label class="field-label" for="login-email">Benutzername (E-Mail)</label>
-          <input type="email" id="login-email" class="field-input" placeholder="Benutzername eingeben" autocomplete="username" required />
+          <div class="field-icon-wrap">
+            <svg class="field-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#auth-icon-person"></use></svg>
+            <input type="email" id="login-email" class="field-input field-input--icon" placeholder="Benutzername eingeben" autocomplete="username" required />
+          </div>
 
           <label class="field-label" for="login-password">Passwort</label>
-          <input type="password" id="login-password" class="field-input" placeholder="Passwort eingeben..." autocomplete="current-password" required />
+          <div class="field-icon-wrap">
+            <svg class="field-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#auth-icon-lock"></use></svg>
+            <input type="password" id="login-password" class="field-input field-input--icon" placeholder="Passwort eingeben..." autocomplete="current-password" required />
+          </div>
+
+          <label class="field-checkbox-row" for="login-remember">
+            <input type="checkbox" id="login-remember" />
+            <span>Angemeldet bleiben</span>
+          </label>
 
           <p class="field-error" id="login-error" hidden></p>
 
-          <button type="submit" class="btn btn--primary auth-submit">Anmelden</button>
+          <button type="submit" class="btn btn--wood-plank auth-submit">Anmelden</button>
 
           <div class="auth-divider">Oder</div>
-          <button type="button" class="btn btn--ghost auth-submit" id="btn-google-login">Mit Google anmelden</button>
+          <button type="button" class="btn btn--google-rustic auth-submit" id="btn-google-login">
+            <svg class="btn__google-icon" viewBox="0 0 48 48" aria-hidden="true">
+              <path fill="#4285F4" d="M45.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h11.9c-.5 2.8-2.1 5.1-4.4 6.7v5.5h7.1c4.2-3.9 6.5-9.6 6.5-16.7z" />
+              <path fill="#34A853" d="M24 46c6 0 11-2 14.6-5.3l-7.1-5.5c-2 1.3-4.5 2.1-7.5 2.1-5.8 0-10.7-3.9-12.4-9.1H4.3v5.7C7.9 41 15.3 46 24 46z" />
+              <path fill="#FBBC05" d="M11.6 28.2c-.4-1.3-.7-2.7-.7-4.2s.3-2.9.7-4.2v-5.7H4.3C2.8 17 2 20.4 2 24s.8 7 2.3 9.9l7.3-5.7z" />
+              <path fill="#EA4335" d="M24 10.7c3.3 0 6.2 1.1 8.5 3.3l6.3-6.3C35 4.1 30 2 24 2 15.3 2 7.9 7 4.3 14.1l7.3 5.7C13.3 14.6 18.2 10.7 24 10.7z" />
+            </svg>
+            <span>Mit Google anmelden</span>
+          </button>
 
           <div class="auth-links">
             <button type="button" class="auth-link" id="link-forgot-password">Passwort vergessen?</button>
@@ -120,20 +115,29 @@
         <!-- Registrierung -->
         <form class="auth-form" id="form-register">
           <label class="field-label" for="register-username">Benutzername (RP-/Ingame-Name)</label>
-          <input type="text" id="register-username" class="field-input" placeholder="z. B. Grete Hornhausen" autocomplete="off" required />
+          <div class="field-icon-wrap">
+            <svg class="field-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#auth-icon-person"></use></svg>
+            <input type="text" id="register-username" class="field-input field-input--icon" placeholder="z. B. Grete Hornhausen" autocomplete="off" required />
+          </div>
 
           <label class="field-label" for="register-email">E-Mail-Adresse</label>
           <input type="email" id="register-email" class="field-input" placeholder="deine@email.de" autocomplete="email" required />
 
           <label class="field-label" for="register-password">Passwort</label>
-          <input type="password" id="register-password" class="field-input" placeholder="Mind. 6 Zeichen" autocomplete="new-password" required minlength="6" />
+          <div class="field-icon-wrap">
+            <svg class="field-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#auth-icon-lock"></use></svg>
+            <input type="password" id="register-password" class="field-input field-input--icon" placeholder="Mind. 6 Zeichen" autocomplete="new-password" required minlength="6" />
+          </div>
 
           <label class="field-label" for="register-password2">Passwort wiederholen</label>
-          <input type="password" id="register-password2" class="field-input" placeholder="Passwort wiederholen" autocomplete="new-password" required minlength="6" />
+          <div class="field-icon-wrap">
+            <svg class="field-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#auth-icon-lock"></use></svg>
+            <input type="password" id="register-password2" class="field-input field-input--icon" placeholder="Passwort wiederholen" autocomplete="new-password" required minlength="6" />
+          </div>
 
           <p class="field-error" id="register-error" hidden></p>
 
-          <button type="submit" class="btn btn--primary auth-submit">Account erstellen</button>
+          <button type="submit" class="btn btn--wood-plank auth-submit">Account erstellen</button>
 
           <div class="auth-links">
             <button type="button" class="auth-link" id="link-show-login">Schon einen Account? Anmelden</button>
@@ -143,11 +147,14 @@
         <!-- Nur beim allerersten Google-Login: Benutzernamen wählen -->
         <form class="auth-form" id="form-google-username">
           <label class="field-label" for="google-username-input">Wähle deinen Benutzernamen (RP-/Ingame-Name)</label>
-          <input type="text" id="google-username-input" class="field-input" placeholder="z. B. Grete Hornhausen" autocomplete="off" required />
+          <div class="field-icon-wrap">
+            <svg class="field-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#auth-icon-person"></use></svg>
+            <input type="text" id="google-username-input" class="field-input field-input--icon" placeholder="z. B. Grete Hornhausen" autocomplete="off" required />
+          </div>
 
           <p class="field-error" id="google-username-error" hidden></p>
 
-          <button type="submit" class="btn btn--primary auth-submit">Weiter</button>
+          <button type="submit" class="btn btn--wood-plank auth-submit">Weiter</button>
         </form>
 
         <!-- Status: Account wartet auf Freigabe -->
@@ -187,6 +194,7 @@
   <!-- APP (erst sichtbar nach Login) -->
   <!-- ============================ -->
   <div class="update-banner" id="update-banner" hidden>
+    <img class="update-banner__logo" src="img/logo-badge.png" alt="" aria-hidden="true" />
     <span>Eine neue Version ist verfügbar. Danach ist eine erneute Anmeldung nötig.</span>
     <button type="button" class="btn btn--primary" id="update-banner-btn">Jetzt aktualisieren</button>
   </div>
@@ -197,16 +205,7 @@
     <!-- ============================ -->
     <aside class="sidebar tex-wood">
       <div class="sidebar__brand">
-        <svg class="sidebar__brand-icon" width="34" height="34" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M50 18v62" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
-          <circle cx="50" cy="18" r="6" fill="currentColor"/>
-          <g stroke="currentColor" stroke-width="5" stroke-linecap="round">
-            <line x1="50" y1="18" x2="74" y2="34"/>
-            <line x1="50" y1="18" x2="64" y2="46"/>
-            <line x1="50" y1="18" x2="36" y2="46"/>
-            <line x1="50" y1="18" x2="26" y2="34"/>
-          </g>
-        </svg>
+        <img class="sidebar__brand-icon" src="img/logo-badge.png" alt="Hornhausen-Hof Wappen" />
         <span class="sidebar__brand-title">Hornhausen-Hof</span>
         <span class="sidebar__brand-subtitle">Est. 1899</span>
       </div>
@@ -320,18 +319,6 @@
                 <h1 class="dash-hero__name" id="dashboard-name">—</h1>
                 <p class="dash-hero__sub">Hier behältst du alles im Blick.</p>
               </div>
-              <svg class="dash-hero__art" viewBox="0 0 300 130" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <line x1="0" y1="112" x2="300" y2="112"/>
-                <path d="M40 112V88l50-26 50 26v24"/>
-                <rect x="72" y="92" width="36" height="20"/>
-                <line x1="230" y1="112" x2="230" y2="24"/>
-                <circle cx="230" cy="20" r="5"/>
-                <line x1="230" y1="20" x2="256" y2="37"/>
-                <line x1="230" y1="20" x2="246" y2="66"/>
-                <line x1="230" y1="20" x2="214" y2="66"/>
-                <line x1="230" y1="20" x2="204" y2="37"/>
-                <ellipse cx="265" cy="100" rx="20" ry="22"/>
-              </svg>
             </div>
 
             <div class="dash-stats">
@@ -438,10 +425,8 @@
               <div class="reg-table">
                 <div class="reg-row reg-row--head bestellungen-row">
                   <span>Unternehmen</span>
-                  <span>Produkt</span>
-                  <span>Menge</span>
+                  <span>Produkte</span>
                   <span>Bestellt am</span>
-                  <span>Deadline</span>
                   <span>Status</span>
                   <span>Notiz</span>
                   <span class="reg-row__actions-col">Aktionen</span>
@@ -845,7 +830,7 @@
   <!-- MODAL: Bestellung hinzufügen/bearbeiten -->
   <!-- ============================ -->
   <div class="modal-overlay" id="modal-bestellung">
-    <div class="modal">
+    <div class="modal modal--large">
       <div class="modal__header">
         <h3 id="modal-bestellung-titel">Neue Bestellung</h3>
         <button class="modal__close" data-close-modal="modal-bestellung">✕</button>
@@ -855,14 +840,20 @@
         <label class="field-label" for="bestellung-unternehmen-input">Unternehmen</label>
         <input type="text" id="bestellung-unternehmen-input" class="field-input" list="unternehmen-liste" placeholder="z. B. Blackwater Saloon" />
 
-        <label class="field-label" for="bestellung-produkt-input">Produkt</label>
-        <select id="bestellung-produkt-input" class="field-input"></select>
+        <p class="field-label" style="margin-top:18px;">Produkte</p>
+        <div class="bestellung-position-form">
+          <select id="bestellung-position-produkt" class="field-input" style="flex: 2 1 auto;"></select>
+          <input type="number" id="bestellung-position-menge" class="field-input" min="1" step="1" value="1" style="flex: 0 0 90px;" placeholder="Menge" />
+          <button type="button" class="btn btn--ghost btn--sm" id="btn-bestellung-position-hinzufuegen" style="flex: 0 0 auto;">＋ Hinzufügen</button>
+        </div>
 
-        <label class="field-label" for="bestellung-menge-input">Menge</label>
-        <input type="number" id="bestellung-menge-input" class="field-input" min="1" step="1" value="1" />
+        <div class="bestellung-positionen-liste" id="bestellung-positionen-liste"></div>
+        <p class="empty-state" id="bestellung-positionen-leer" style="padding:16px 0;">Noch keine Produkte hinzugefügt.</p>
 
-        <label class="field-label" for="bestellung-deadline-input">Deadline (optional)</label>
-        <input type="date" id="bestellung-deadline-input" class="field-input" />
+        <div class="bestellung-zusammenfassung" id="bestellung-zusammenfassung" hidden>
+          <span><strong id="bestellung-zusammenfassung-anzahl">0</strong> Produkte</span>
+          <span><strong id="bestellung-zusammenfassung-menge">0</strong> Stück gesamt</span>
+        </div>
 
         <label class="field-label" for="bestellung-status-input">Status</label>
         <select id="bestellung-status-input" class="field-input">
