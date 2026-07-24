@@ -162,99 +162,62 @@ p {
   margin: 0;
 }
 
-/* Dekorative Verzierung: kleine Rauten-Trenner, wie auf altem Briefpapier */
+/* Dekorative Verzierung: echte Bild-Ranke (assets/decorations/divider-western)
+   statt der früheren CSS-gezeichneten Raute + Linien. */
 .ornament-divider {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  color: var(--brass);
-  opacity: 0.75;
-  margin: 10px 0;
-}
-
-.ornament-divider::before,
-.ornament-divider::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--brass), transparent);
-}
-
-.ornament-divider__diamond {
-  width: 7px;
-  height: 7px;
-  background: var(--brass);
-  transform: rotate(45deg);
-  flex-shrink: 0;
+  display: block;
+  width: 100%;
+  max-width: 210px;
+  height: auto;
+  margin: 10px auto;
+  opacity: 0.92;
 }
 
 /* --------------------------------------------------------------------------
-   3. Holz-Textur & Pergament-Textur (per CSS erzeugt, keine Bild-Assets)
+   3. Holz-Textur & Pergament-Textur (echte Foto-Assets statt CSS-Verläufen)
    -------------------------------------------------------------------------- */
 .tex-wood {
   background-color: var(--wood-800);
-  background-image:
-    repeating-linear-gradient(
-      90deg,
-      var(--wood-grain-light) 0px,
-      transparent 2px,
-      transparent 6px,
-      var(--wood-grain) 7px,
-      transparent 8px,
-      transparent 24px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      rgba(0, 0, 0, 0.16) 0px,
-      transparent 1px,
-      transparent 45px,
-      rgba(0, 0, 0, 0.16) 46px,
-      transparent 47px,
-      transparent 130px
-    ),
-    radial-gradient(ellipse 500px 900px at 10% 20%, rgba(0, 0, 0, 0.25), transparent 60%),
-    linear-gradient(180deg, var(--wood-700) 0%, var(--wood-800) 38%, var(--wood-900) 100%);
+  background-image: url("../assets/textures/wood-panel.webp.png");
+  background-size: 340px auto;
+  background-repeat: repeat;
 }
 
 .tex-parchment {
-  background-color: var(--parch-200);
-  background-image:
-    radial-gradient(ellipse 620px 340px at 8% 0%, rgba(230, 205, 150, 0.4), transparent 62%),
-    radial-gradient(ellipse 560px 420px at 97% 8%, rgba(60, 40, 15, 0.22), transparent 58%),
-    radial-gradient(ellipse 700px 460px at 18% 100%, rgba(60, 40, 15, 0.2), transparent 58%),
-    radial-gradient(ellipse 480px 340px at 82% 92%, rgba(40, 26, 8, 0.22), transparent 62%),
-    radial-gradient(ellipse 900px 500px at 50% 45%, transparent 55%, rgba(35, 22, 8, 0.16) 100%);
+  background-color: transparent;
 }
 
 /* Feine, körnige "altes Papier"-Struktur — als einzelner, fixer Overlay über
    der kompletten Seite (Holz UND Pergament gleichermaßen), statt pro
    Komponente, damit keine Stacking-Context-Probleme mit einzelnen Karten/
-   Modals entstehen. Rein per CSS/SVG erzeugt, kein Bild-Asset nötig. */
+   Modals entstehen. Nutzt jetzt die echte Papier-Textur aus dem Asset-Pack
+   statt eines per SVG erzeugten Rauschens. */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: 5000;
   pointer-events: none;
-  opacity: 0.5;
+  opacity: 0.16;
   mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch' result='t'/%3E%3CfeColorMatrix in='t' type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 160px 160px;
+  background-image: url("../assets/textures/paper-texture.webp.png");
+  background-size: 420px auto;
+  background-repeat: repeat;
 }
 
 /* --------------------------------------------------------------------------
-   4. Farm-Illustration (wiederverwendbares Liniengrafik-SVG: Windrad + Scheune)
+   4. Hintergrund der gesamten App (echtes Hof-Foto hinter Sidebar + Inhalt)
    -------------------------------------------------------------------------- */
-.farm-scene {
-  color: var(--ink-700);
-  opacity: 0.55;
-  pointer-events: none;
+.app {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(10, 6, 3, 0.55) 0%, rgba(10, 6, 3, 0.3) 40%, rgba(10, 6, 3, 0.62) 100%),
+    url("../assets/background/dashboard-background.webp.png") center 38% / cover fixed no-repeat;
 }
 
+.farm-scene,
 .farm-scene--dark {
-  color: var(--wood-text-muted);
-  opacity: 0.5;
+  display: none;
 }
 
 /* --------------------------------------------------------------------------
@@ -272,21 +235,19 @@ body::before {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background:
-    radial-gradient(ellipse 1000px 700px at 50% -8%, #5a3f24 0%, transparent 62%),
-    linear-gradient(180deg, #2c2013 0%, #1c130b 55%, #100a06 100%);
+  background: #100a06;
 }
 
-/* Foto-Hintergrund: echtes Bild des Hofes bei Sonnenuntergang (statt der
-   früheren Vektor-Illustration) - liegt als eigene Ebene hinter der Vignette
-   und dem Bilderrahmen, damit diese weiterhin für Tiefe/Kontrast sorgen. */
+/* Foto-Hintergrund: echtes Bild des Hofes bei Sonnenuntergang aus dem neuen
+   Asset-Pack (assets/background/login-background.webp) - liegt als eigene
+   Ebene hinter der Vignette, die weiterhin für Tiefe/Kontrast sorgt. */
 .auth-screen__bg {
   position: absolute;
   inset: 0;
   z-index: 0;
   background:
     linear-gradient(180deg, rgba(10, 6, 3, 0.12) 0%, rgba(10, 6, 3, 0.02) 26%, rgba(10, 6, 3, 0.1) 68%, rgba(10, 6, 3, 0.4) 100%),
-    url("../img/auth-background.jpg") center 42% / cover no-repeat;
+    url("../assets/background/login-background.webp.png") center 42% / cover no-repeat;
 }
 
 .auth-screen__vignette {
@@ -298,32 +259,6 @@ body::before {
     linear-gradient(180deg, rgba(8, 5, 2, 0.28) 0%, transparent 12%, transparent 82%, rgba(6, 3, 1, 0.4) 100%);
   pointer-events: none;
 }
-
-/* Rustikaler Bilderrahmen um den gesamten Bildschirm, nur hier verwendet */
-.auth-screen__frame {
-  position: absolute;
-  inset: 14px;
-  z-index: 4;
-  pointer-events: none;
-  border: 2px solid rgba(189, 145, 67, 0.4);
-  box-shadow:
-    inset 0 0 0 7px rgba(9, 5, 2, 0.55),
-    inset 0 0 0 9px rgba(189, 145, 67, 0.22);
-}
-
-.auth-screen__frame-corner {
-  position: absolute;
-  width: 58px;
-  height: 58px;
-  color: var(--brass-bright);
-  opacity: 0.8;
-  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.6));
-}
-
-.auth-screen__frame-corner--tl { top: -14px; left: -14px; }
-.auth-screen__frame-corner--tr { top: -14px; right: -14px; transform: scaleX(-1); }
-.auth-screen__frame-corner--bl { bottom: -14px; left: -14px; transform: scaleY(-1); }
-.auth-screen__frame-corner--br { bottom: -14px; right: -14px; transform: scale(-1, -1); }
 
 .auth-gate {
   position: relative;
@@ -341,32 +276,26 @@ body::before {
   align-items: center;
 }
 
-/* Echtes Foto des Hängeschilds (Holzbrett, Ketten, Gravur und Schriftzug
-   sind bereits Teil des Bildes) statt der früheren CSS-/SVG-Nachbildung. */
+/* Echtes Hänge-Schild-Foto aus dem Asset-Pack (assets/logo/hornhausen-sign),
+   das große Logo der Login-Seite. */
 .auth-gate__sign-img {
   display: block;
-  width: 440px;
-  max-width: 78vw;
+  width: 380px;
+  max-width: 72vw;
   height: auto;
   filter: drop-shadow(0 18px 26px rgba(6, 3, 1, 0.55));
 }
 
-/* Echtes Anmelde-Pergament (Foto mit ausgefranstem Rand + eigenem Schlagschatten)
-   statt der früheren CSS-Verläufe + clip-path-Nachbildung. */
+/* Echtes Anmelde-Pergament aus dem Asset-Pack (assets/parchment/parchment-
+   login) - bringt Rahmen, Aufhänge-Schildchen und ausgefransten Papierrand
+   bereits selbst mit, daher genügend Innenabstand oben, damit unser
+   eigentlicher Anmelde-Text darunter Platz hat. */
 .auth-card {
-  width: 388px;
-  background: url("../img/auth-card-parchment.png") center center / cover no-repeat;
-  padding: 40px 36px 34px;
+  width: 420px;
+  background: url("../assets/parchment/parchment-login.png.png") center center / cover no-repeat;
+  padding: 168px 40px 40px;
   position: relative;
   animation: auth-fade-in 0.75s ease 0.05s both;
-}
-
-.auth-card::before {
-  content: "";
-  position: absolute;
-  inset: 22px;
-  border: 1px solid rgba(124, 92, 44, 0.35);
-  pointer-events: none;
 }
 
 .auth-card__brand {
@@ -391,11 +320,6 @@ body::before {
   font-size: 30px;
   letter-spacing: 0.03em;
   color: var(--ink-900);
-}
-
-.auth-card__brand .ornament-divider {
-  margin: 10px auto 0;
-  max-width: 160px;
 }
 
 .auth-form {
@@ -540,11 +464,11 @@ body::before {
   }
 
   .auth-gate__sign-img {
-    width: 340px;
+    width: 300px;
   }
 
   .auth-card {
-    padding: 24px 30px 20px;
+    padding: 130px 32px 28px;
   }
 
   .auth-card__brand {
@@ -554,7 +478,11 @@ body::before {
 
 @media (max-height: 700px) {
   .auth-gate__sign-img {
-    width: 260px;
+    width: 230px;
+  }
+
+  .auth-card {
+    padding: 105px 28px 22px;
   }
 
   .auth-card__brand {
@@ -651,15 +579,18 @@ body::before {
   font-family: var(--font-body);
 }
 
+/* Standardbutton: echtes Holzbrett-Foto aus dem Asset-Pack statt CSS-
+   Verlauf. Wechselt beim Hover auf die zweite, hellere Holzbrett-Variante. */
 .btn--primary {
-  background: linear-gradient(180deg, var(--wood-700), var(--wood-850));
+  background: url("../assets/buttons/button-dark.png.png") center center / 100% 100% no-repeat;
   color: var(--brass-bright);
-  border: 1px solid var(--wood-line);
+  border: none;
   box-shadow: var(--shadow-card);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
 
 .btn--primary:hover {
-  filter: brightness(1.18);
+  background-image: url("../assets/buttons/button-hover.png.png");
 }
 
 .btn--primary:active {
@@ -698,31 +629,29 @@ body::before {
   filter: brightness(1.15);
 }
 
-/* Holzbrett-Knopf (nur Login-/Registrierungs-Formulare): dunkles Holz mit
-   feiner Maserung und goldener Serifenschrift, wie ein eingebranntes Schild. */
+/* Holzbrett-Knopf (Login-/Registrierungs-Formulare): dasselbe Holzbrett-Foto
+   wie .btn--primary, wie ein eingebranntes Schild vor der Anmeldung. */
 .btn--wood-plank {
   position: relative;
-  background:
-    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.14) 0 2px, transparent 2px 18px),
-    linear-gradient(180deg, var(--wood-600) 0%, var(--wood-800) 55%, var(--wood-900) 100%);
+  background: url("../assets/buttons/button-dark.png.png") center center / 100% 100% no-repeat;
   color: var(--brass-bright);
   font-family: var(--font-brand);
   font-size: 15px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  border: 1px solid var(--wood-line);
-  box-shadow: var(--shadow-card), inset 0 0 0 1px rgba(189, 145, 67, 0.18);
-  padding: 12px 22px;
+  border: none;
+  box-shadow: var(--shadow-card);
+  padding: 14px 22px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
 
 .btn--wood-plank:hover {
-  filter: brightness(1.16);
+  background-image: url("../assets/buttons/button-hover.png.png");
   transform: translateY(-1px);
 }
 
 .btn--wood-plank:active {
   transform: translateY(1px);
-  filter: brightness(1.02);
 }
 
 /* Rustikal gestalteter Google-Login-Knopf statt des modernen weißen
@@ -811,6 +740,10 @@ body::before {
   border-right: 3px solid var(--wood-line);
   box-shadow: 6px 0 18px rgba(0, 0, 0, 0.35);
   z-index: 20;
+  background-image: url("../assets/textures/sidebar-background.webp.png");
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
 }
 
 .sidebar__brand {
@@ -821,7 +754,7 @@ body::before {
 
 .sidebar__brand-icon {
   display: block;
-  width: 46px;
+  width: 52px;
   height: auto;
   margin: 0 auto 8px;
   filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5));
@@ -1138,10 +1071,10 @@ body::before {
 
 .page-header__art {
   flex-shrink: 0;
-  width: 260px;
-  height: 90px;
-  color: var(--ink-700);
-  opacity: 0.5;
+  width: 190px;
+  height: auto;
+  opacity: 0.92;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 .view {
@@ -1182,14 +1115,14 @@ body::before {
 }
 
 /* --------------------------------------------------------------------------
-   10. Parchment-Karten
+   10. Parchment-Karten (echtes Pergament-Foto statt Flächenfarbe)
    -------------------------------------------------------------------------- */
 .parch-card {
-  background: var(--parch-100);
-  border: 1.5px solid var(--parch-edge);
+  background: var(--parch-100) url("../assets/parchment/parchment-page.png.png") center center / cover no-repeat;
+  border: none;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
-  padding: 26px 28px;
+  padding: 30px 32px;
   margin-bottom: 24px;
   position: relative;
 }
@@ -1206,6 +1139,24 @@ body::before {
   line-height: 1.6;
 }
 
+/* Dekorativer Siegel-Akzent (assets/decorations/wax-seal) für besonders
+   wichtige Bereiche, z. B. die Benutzerverwaltung. */
+.parch-card--sealed {
+  padding-top: 34px;
+}
+
+.parch-card--sealed::after {
+  content: "";
+  position: absolute;
+  top: -22px;
+  right: 26px;
+  width: 64px;
+  height: 64px;
+  background: url("../assets/decorations/wax-seal.png.png") center / contain no-repeat;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.35));
+  pointer-events: none;
+}
+
 .empty-state {
   text-align: center;
   padding: 36px 20px;
@@ -1217,14 +1168,14 @@ body::before {
 /* --------------------------------------------------------------------------
    11. Übersicht (Dashboard)
    -------------------------------------------------------------------------- */
-/* Kopfbereich der Übersicht: echtes Hof-Foto (Scheune, Windrad, Laterne bei
-   Sonnenuntergang) statt der früheren Liniengrafik, mit dunklem Verlauf
-   links, damit die Begrüßung weiterhin gut lesbar bleibt. */
+/* Kopfbereich der Übersicht: echtes Hof-Foto aus dem Asset-Pack, mit
+   dunklem Verlauf links, damit die Begrüßung weiterhin gut lesbar bleibt,
+   umrahmt vom dekorativen Holzrahmen-Asset für "besondere Inhalte". */
 .dash-hero {
   background:
     linear-gradient(100deg, rgba(18, 11, 5, 0.9) 0%, rgba(18, 11, 5, 0.68) 38%, rgba(18, 11, 5, 0.28) 68%, rgba(18, 11, 5, 0.05) 100%),
-    url("../img/dashboard-banner.jpg") center 40% / cover no-repeat;
-  border: 1.5px solid var(--parch-edge);
+    url("../assets/background/dashboard-background.webp.png") center 40% / cover no-repeat;
+  border: none;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
   padding: 34px 36px;
@@ -1235,6 +1186,18 @@ body::before {
   margin-bottom: 26px;
   position: relative;
   overflow: hidden;
+}
+
+.framed {
+  position: relative;
+}
+
+.framed::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("../assets/decorations/wood-frame.png.png") center / 100% 100% no-repeat;
+  pointer-events: none;
 }
 
 .dash-hero__greeting {
@@ -1270,8 +1233,8 @@ body::before {
 }
 
 .dash-stat {
-  background: var(--parch-100);
-  border: 1.5px solid var(--parch-edge);
+  background: var(--parch-100) url("../assets/parchment/parchment-page.png.png") center center / cover no-repeat;
+  border: none;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
   padding: 20px 22px;
@@ -1309,8 +1272,8 @@ body::before {
 }
 
 .dash-panel {
-  background: var(--parch-100);
-  border: 1.5px solid var(--parch-edge);
+  background: var(--parch-100) url("../assets/parchment/parchment-page.png.png") center center / cover no-repeat;
+  border: none;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
   overflow: hidden;
@@ -1397,15 +1360,15 @@ body::before {
 .dash-quicklink {
   text-align: left;
   padding: 20px 18px;
-  border: 1.5px solid var(--parch-edge);
+  border: none;
   border-radius: var(--radius-md);
-  background: var(--parch-100);
+  background: var(--parch-100) url("../assets/parchment/parchment-page.png.png") center center / cover no-repeat;
   box-shadow: var(--shadow-card);
-  transition: transform 0.15s ease, border-color 0.15s ease;
+  transition: transform 0.15s ease, filter 0.15s ease;
 }
 
 .dash-quicklink:hover {
-  border-color: var(--brass);
+  filter: brightness(1.04);
   transform: translateY(-2px);
 }
 
@@ -1522,8 +1485,8 @@ body::before {
 }
 
 .table-card {
-  background: var(--parch-100);
-  border: 1.5px solid var(--parch-edge);
+  background: var(--parch-100) url("../assets/parchment/parchment-page.png.png") center center / cover no-repeat;
+  border: none;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
   padding: 4px;
@@ -1875,6 +1838,7 @@ body::before {
 .rechner-preview {
   position: sticky;
   top: 20px;
+  margin: 16px 6px 24px;
 }
 
 .rechner-preview__row {
@@ -1939,7 +1903,7 @@ body::before {
 }
 
 /* --------------------------------------------------------------------------
-   17. Modals
+   17. Modals (echtes Pergament-Foto mit Messing-Nieten aus dem Asset-Pack)
    -------------------------------------------------------------------------- */
 .modal-overlay {
   position: fixed;
@@ -1961,11 +1925,11 @@ body::before {
 
 .modal {
   width: 420px;
-  background: var(--parch-100);
-  border: 1.5px solid var(--parch-edge);
+  background: var(--parch-100) url("../assets/parchment/parchment-modal.png.png") center center / cover no-repeat;
+  border: none;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-modal);
-  padding: 26px;
+  padding: 30px;
   transform: translateY(8px) scale(0.98);
   transition: transform 0.18s ease;
 }
@@ -2074,9 +2038,21 @@ body::before {
   font-size: 10.5px;
   color: var(--brass-deep);
   background: var(--brass-soft);
-  padding: 3px 8px;
+  padding: 3px 8px 3px 20px;
   border-radius: 999px;
   margin-left: 8px;
+  position: relative;
+}
+
+.settings-list__protected::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 13px;
+  height: 13px;
+  background: url("../assets/decorations/wax-seal.png.png") center / contain no-repeat;
 }
 
 .settings-list__wartet {
@@ -2225,7 +2201,94 @@ body::before {
 }
 
 /* --------------------------------------------------------------------------
-   22. Responsive Grundschutz (reine Desktop-Optik, minimaler Umbruch)
+   22. Hofbuch (offenes Buch-Asset: assets/parchment/parchment-book)
+   -------------------------------------------------------------------------- */
+.hofbuch-card {
+  background: url("../assets/parchment/parchment-book.png.png") center center / cover no-repeat;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-raised);
+  padding: 60px 70px 50px;
+  min-height: 560px;
+}
+
+.hofbuch-card__form-wrap h3 {
+  font-family: var(--font-brand);
+  font-size: 20px;
+  text-align: center;
+  margin-bottom: 14px;
+  color: var(--ink-900);
+}
+
+.hofbuch-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: flex-start;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.hofbuch-form .field-input,
+.hofbuch-form .field-textarea {
+  background: rgba(255, 250, 235, 0.4);
+}
+
+.hofbuch-rope-divider {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  margin: 22px auto;
+  opacity: 0.85;
+}
+
+#hofbuch-eintraege {
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.hofbuch-eintrag {
+  padding-bottom: 14px;
+  border-bottom: 1px dashed rgba(90, 62, 27, 0.4);
+}
+
+.hofbuch-eintrag:last-child {
+  border-bottom: none;
+}
+
+.hofbuch-eintrag__kopf {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.hofbuch-eintrag__titel {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15.5px;
+  color: var(--ink-900);
+}
+
+.hofbuch-eintrag__meta {
+  font-size: 10.5px;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+
+.hofbuch-eintrag__text {
+  font-size: 13px;
+  color: var(--ink-800);
+  line-height: 1.65;
+  white-space: pre-wrap;
+}
+
+/* --------------------------------------------------------------------------
+   23. Responsive Grundschutz (reine Desktop-Optik, minimaler Umbruch)
    -------------------------------------------------------------------------- */
 @media (max-width: 1180px) {
   .dash-columns {
@@ -2239,5 +2302,8 @@ body::before {
   }
   .rechner-layout {
     grid-template-columns: 1fr;
+  }
+  .hofbuch-card {
+    padding: 46px 30px 40px;
   }
 }
