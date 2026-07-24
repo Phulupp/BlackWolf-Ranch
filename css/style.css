@@ -162,15 +162,16 @@ p {
   margin: 0;
 }
 
-/* Dekorative Verzierung: echte Bild-Ranke (assets/decorations/divider-western)
-   statt der früheren CSS-gezeichneten Raute + Linien. */
+/* Schlichter Trenner: dünne Linie statt Bild-Ranke, für ein ruhigeres,
+   weniger dekoratives Erscheinungsbild. */
 .ornament-divider {
   display: block;
-  width: 100%;
-  max-width: 210px;
-  height: auto;
-  margin: 10px auto;
-  opacity: 0.92;
+  width: 56px;
+  height: 2px;
+  margin: 14px auto;
+  background: var(--brass);
+  opacity: 0.55;
+  border-radius: 999px;
 }
 
 /* --------------------------------------------------------------------------
@@ -198,7 +199,7 @@ body::before {
   inset: 0;
   z-index: 5000;
   pointer-events: none;
-  opacity: 0.16;
+  opacity: 0.06;
   mix-blend-mode: multiply;
   background-image: url("../assets/textures/paper-texture.webp.png");
   background-size: 420px auto;
@@ -211,7 +212,7 @@ body::before {
 .app {
   position: relative;
   background:
-    linear-gradient(180deg, rgba(10, 6, 3, 0.55) 0%, rgba(10, 6, 3, 0.3) 40%, rgba(10, 6, 3, 0.62) 100%),
+    linear-gradient(180deg, rgba(8, 5, 2, 0.84) 0%, rgba(8, 5, 2, 0.74) 45%, rgba(8, 5, 2, 0.88) 100%),
     url("../assets/background/dashboard-background.webp.png") center 38% / cover fixed no-repeat;
 }
 
@@ -246,7 +247,7 @@ body::before {
   inset: 0;
   z-index: 0;
   background:
-    linear-gradient(180deg, rgba(10, 6, 3, 0.12) 0%, rgba(10, 6, 3, 0.02) 26%, rgba(10, 6, 3, 0.1) 68%, rgba(10, 6, 3, 0.4) 100%),
+    linear-gradient(180deg, rgba(8, 5, 2, 0.58) 0%, rgba(8, 5, 2, 0.36) 30%, rgba(8, 5, 2, 0.52) 70%, rgba(8, 5, 2, 0.78) 100%),
     url("../assets/background/login-background.webp.png") center 42% / cover no-repeat;
 }
 
@@ -280,20 +281,23 @@ body::before {
    das große Logo der Login-Seite. */
 .auth-gate__sign-img {
   display: block;
-  width: 380px;
-  max-width: 72vw;
+  width: 290px;
+  max-width: 60vw;
   height: auto;
-  filter: drop-shadow(0 18px 26px rgba(6, 3, 1, 0.55));
+  filter: drop-shadow(0 14px 22px rgba(6, 3, 1, 0.5));
 }
 
-/* Echtes Anmelde-Pergament aus dem Asset-Pack (assets/parchment/parchment-
-   login) - bringt Rahmen, Aufhänge-Schildchen und ausgefransten Papierrand
-   bereits selbst mit, daher genügend Innenabstand oben, damit unser
-   eigentlicher Anmelde-Text darunter Platz hat. */
+/* Schlichte, hochwertige Anmelde-Karte: dezente Papierstruktur statt
+   ausgefranstem Pergament-Foto, damit der Fokus auf Lesbarkeit liegt. */
 .auth-card {
   width: 420px;
-  background: url("../assets/parchment/parchment-login.png.png") center center / cover no-repeat;
-  padding: 168px 40px 40px;
+  background-color: var(--parch-100);
+  background-image: url("../assets/textures/paper-texture.webp.png");
+  background-size: 420px auto;
+  background-blend-mode: multiply;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-modal);
+  padding: 40px 40px 36px;
   position: relative;
   animation: auth-fade-in 0.75s ease 0.05s both;
 }
@@ -464,11 +468,11 @@ body::before {
   }
 
   .auth-gate__sign-img {
-    width: 300px;
+    width: 240px;
   }
 
   .auth-card {
-    padding: 130px 32px 28px;
+    padding: 32px 32px 26px;
   }
 
   .auth-card__brand {
@@ -478,11 +482,11 @@ body::before {
 
 @media (max-height: 700px) {
   .auth-gate__sign-img {
-    width: 230px;
+    width: 190px;
   }
 
   .auth-card {
-    padding: 105px 28px 22px;
+    padding: 24px 28px 20px;
   }
 
   .auth-card__brand {
@@ -579,18 +583,17 @@ body::before {
   font-family: var(--font-body);
 }
 
-/* Standardbutton: echtes Holzbrett-Foto aus dem Asset-Pack statt CSS-
-   Verlauf. Wechselt beim Hover auf die zweite, hellere Holzbrett-Variante. */
+/* Standardbutton: schlichter, flacher Holz-Verlauf statt Foto-Textur. */
 .btn--primary {
-  background: url("../assets/buttons/button-dark.png.png") center center / 100% 100% no-repeat;
+  background: linear-gradient(180deg, var(--wood-700), var(--wood-850));
   color: var(--brass-bright);
-  border: none;
+  border: 1px solid var(--wood-line);
   box-shadow: var(--shadow-card);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
 
 .btn--primary:hover {
-  background-image: url("../assets/buttons/button-hover.png.png");
+  background: linear-gradient(180deg, var(--wood-600), var(--wood-800));
 }
 
 .btn--primary:active {
@@ -629,24 +632,24 @@ body::before {
   filter: brightness(1.15);
 }
 
-/* Holzbrett-Knopf (Login-/Registrierungs-Formulare): dasselbe Holzbrett-Foto
-   wie .btn--primary, wie ein eingebranntes Schild vor der Anmeldung. */
+/* Holzbrett-Knopf (Login-/Registrierungs-Formulare): derselbe schlichte
+   Holz-Verlauf wie .btn--primary. */
 .btn--wood-plank {
   position: relative;
-  background: url("../assets/buttons/button-dark.png.png") center center / 100% 100% no-repeat;
+  background: linear-gradient(180deg, var(--wood-700), var(--wood-850));
   color: var(--brass-bright);
   font-family: var(--font-brand);
   font-size: 15px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  border: none;
+  border: 1px solid var(--wood-line);
   box-shadow: var(--shadow-card);
   padding: 14px 22px;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
 
 .btn--wood-plank:hover {
-  background-image: url("../assets/buttons/button-hover.png.png");
+  background: linear-gradient(180deg, var(--wood-600), var(--wood-800));
   transform: translateY(-1px);
 }
 
@@ -737,13 +740,10 @@ body::before {
   align-self: flex-start;
   display: flex;
   flex-direction: column;
-  border-right: 3px solid var(--wood-line);
-  box-shadow: 6px 0 18px rgba(0, 0, 0, 0.35);
+  border-right: 1px solid rgba(0, 0, 0, 0.4);
+  box-shadow: 6px 0 18px rgba(0, 0, 0, 0.3);
   z-index: 20;
-  background-image: url("../assets/textures/sidebar-background.webp.png");
-  background-size: cover;
-  background-position: center top;
-  background-repeat: no-repeat;
+  background: linear-gradient(180deg, var(--wood-900) 0%, var(--wood-950) 100%);
 }
 
 .sidebar__brand {
@@ -1069,14 +1069,6 @@ body::before {
   line-height: 1.6;
 }
 
-.page-header__art {
-  flex-shrink: 0;
-  width: 190px;
-  height: auto;
-  opacity: 0.92;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-}
-
 .view {
   display: none;
 }
@@ -1118,12 +1110,15 @@ body::before {
    10. Parchment-Karten (echtes Pergament-Foto statt Flächenfarbe)
    -------------------------------------------------------------------------- */
 .parch-card {
-  background: var(--parch-100) url("../assets/parchment/parchment-page.png.png") center center / cover no-repeat;
-  border: none;
+  background-color: var(--parch-100);
+  background-image: url("../assets/textures/paper-texture.webp.png");
+  background-size: 420px auto;
+  background-blend-mode: multiply;
+  border: 1px solid rgba(124, 92, 44, 0.25);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
-  padding: 30px 32px;
-  margin-bottom: 24px;
+  padding: 26px 28px;
+  margin-bottom: 20px;
   position: relative;
 }
 
@@ -1137,24 +1132,6 @@ body::before {
   color: var(--ink-soft);
   margin-bottom: 18px;
   line-height: 1.6;
-}
-
-/* Dekorativer Siegel-Akzent (assets/decorations/wax-seal) für besonders
-   wichtige Bereiche, z. B. die Benutzerverwaltung. */
-.parch-card--sealed {
-  padding-top: 34px;
-}
-
-.parch-card--sealed::after {
-  content: "";
-  position: absolute;
-  top: -22px;
-  right: 26px;
-  width: 64px;
-  height: 64px;
-  background: url("../assets/decorations/wax-seal.png.png") center / contain no-repeat;
-  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.35));
-  pointer-events: none;
 }
 
 .empty-state {
@@ -1172,32 +1149,18 @@ body::before {
    dunklem Verlauf links, damit die Begrüßung weiterhin gut lesbar bleibt,
    umrahmt vom dekorativen Holzrahmen-Asset für "besondere Inhalte". */
 .dash-hero {
-  background:
-    linear-gradient(100deg, rgba(18, 11, 5, 0.9) 0%, rgba(18, 11, 5, 0.68) 38%, rgba(18, 11, 5, 0.28) 68%, rgba(18, 11, 5, 0.05) 100%),
-    url("../assets/background/dashboard-background.webp.png") center 40% / cover no-repeat;
-  border: none;
+  background: linear-gradient(135deg, var(--wood-800) 0%, var(--wood-900) 100%);
+  border: 1px solid var(--wood-line);
+  border-left: 3px solid var(--brass);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
-  padding: 34px 36px;
+  padding: 28px 36px;
   display: flex;
   align-items: center;
-  min-height: 158px;
+  min-height: 122px;
   gap: 24px;
-  margin-bottom: 26px;
+  margin-bottom: 22px;
   position: relative;
-  overflow: hidden;
-}
-
-.framed {
-  position: relative;
-}
-
-.framed::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: url("../assets/decorations/wood-frame.png.png") center / 100% 100% no-repeat;
-  pointer-events: none;
 }
 
 .dash-hero__greeting {
@@ -1233,8 +1196,11 @@ body::before {
 }
 
 .dash-stat {
-  background: var(--parch-100) url("../assets/parchment/parchment-page.png.png") center center / cover no-repeat;
-  border: none;
+  background-color: var(--parch-100);
+  background-image: url("../assets/textures/paper-texture.webp.png");
+  background-size: 420px auto;
+  background-blend-mode: multiply;
+  border: 1px solid rgba(124, 92, 44, 0.22);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
   padding: 20px 22px;
@@ -1272,8 +1238,11 @@ body::before {
 }
 
 .dash-panel {
-  background: var(--parch-100) url("../assets/parchment/parchment-page.png.png") center center / cover no-repeat;
-  border: none;
+  background-color: var(--parch-100);
+  background-image: url("../assets/textures/paper-texture.webp.png");
+  background-size: 420px auto;
+  background-blend-mode: multiply;
+  border: 1px solid rgba(124, 92, 44, 0.22);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
   overflow: hidden;
@@ -1360,9 +1329,12 @@ body::before {
 .dash-quicklink {
   text-align: left;
   padding: 20px 18px;
-  border: none;
+  border: 1px solid rgba(124, 92, 44, 0.22);
   border-radius: var(--radius-md);
-  background: var(--parch-100) url("../assets/parchment/parchment-page.png.png") center center / cover no-repeat;
+  background-color: var(--parch-100);
+  background-image: url("../assets/textures/paper-texture.webp.png");
+  background-size: 420px auto;
+  background-blend-mode: multiply;
   box-shadow: var(--shadow-card);
   transition: transform 0.15s ease, filter 0.15s ease;
 }
@@ -1485,12 +1457,15 @@ body::before {
 }
 
 .table-card {
-  background: var(--parch-100) url("../assets/parchment/parchment-page.png.png") center center / cover no-repeat;
-  border: none;
+  background-color: var(--parch-100);
+  background-image: url("../assets/textures/paper-texture.webp.png");
+  background-size: 420px auto;
+  background-blend-mode: multiply;
+  border: 1px solid rgba(124, 92, 44, 0.22);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
   padding: 4px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 /* Toolbar oberhalb von Tabellen */
@@ -1925,8 +1900,11 @@ body::before {
 
 .modal {
   width: 420px;
-  background: var(--parch-100) url("../assets/parchment/parchment-modal.png.png") center center / cover no-repeat;
-  border: none;
+  background-color: var(--parch-100);
+  background-image: url("../assets/textures/paper-texture.webp.png");
+  background-size: 420px auto;
+  background-blend-mode: multiply;
+  border: 1px solid rgba(124, 92, 44, 0.25);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-modal);
   padding: 30px;
@@ -2047,12 +2025,13 @@ body::before {
 .settings-list__protected::before {
   content: "";
   position: absolute;
-  left: 3px;
+  left: 8px;
   top: 50%;
   transform: translateY(-50%);
-  width: 13px;
-  height: 13px;
-  background: url("../assets/decorations/wax-seal.png.png") center / contain no-repeat;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brass-deep);
 }
 
 .settings-list__wartet {
@@ -2201,14 +2180,18 @@ body::before {
 }
 
 /* --------------------------------------------------------------------------
-   22. Hofbuch (offenes Buch-Asset: assets/parchment/parchment-book)
+   22. Hofbuch (schlichte Papierkarte statt Buch-Foto)
    -------------------------------------------------------------------------- */
 .hofbuch-card {
-  background: url("../assets/parchment/parchment-book.png.png") center center / cover no-repeat;
+  background-color: var(--parch-100);
+  background-image: url("../assets/textures/paper-texture.webp.png");
+  background-size: 420px auto;
+  background-blend-mode: multiply;
+  border: 1px solid rgba(124, 92, 44, 0.25);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-raised);
-  padding: 60px 70px 50px;
-  min-height: 560px;
+  box-shadow: var(--shadow-card);
+  padding: 40px 48px 44px;
+  min-height: 420px;
 }
 
 .hofbuch-card__form-wrap h3 {
@@ -2237,9 +2220,10 @@ body::before {
   display: block;
   width: 100%;
   max-width: 420px;
-  height: auto;
+  height: 1px;
   margin: 22px auto;
-  opacity: 0.85;
+  background: var(--parch-edge);
+  opacity: 0.6;
 }
 
 #hofbuch-eintraege {
@@ -2304,6 +2288,6 @@ body::before {
     grid-template-columns: 1fr;
   }
   .hofbuch-card {
-    padding: 46px 30px 40px;
+    padding: 28px 24px 30px;
   }
 }
