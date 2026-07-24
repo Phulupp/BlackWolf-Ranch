@@ -23,14 +23,24 @@
   --wood-grain: rgba(0, 0, 0, 0.32);
   --wood-grain-light: rgba(255, 208, 140, 0.06);
 
-  /* Pergament (Hauptfläche, Karten) — dunkler, spürbar vergilbt, weniger
-     "sauberes" Beige, damit es wie altes, gelagertes Papier wirkt. */
+  /* Pergament — jetzt nur noch für echte Dokumente reserviert (Hofbuch,
+     Datenschutz/Informationen), NICHT mehr für die eigentliche Anwendung. */
   --parch-100: #dcc48e;
   --parch-200: #cdb277;
   --parch-300: #ba9c60;
   --parch-400: #a8874f;
   --parch-edge: #7c5c2c;
   --parch-shadow: rgba(50, 32, 10, 0.4);
+
+  /* Leder-Oberflächen: die eigentliche Anwendung (Karten, Tabellen, Modals,
+     Login) nutzt jetzt dunkles Leder statt Pergament — ruhiger, moderner,
+     mit Messing-Akzenten statt Verzierung. */
+  --leather-900: #19110b;
+  --leather-800: #241a11;
+  --leather-700: #332417;
+  --leather-600: #46331f;
+  --leather-edge: rgba(189, 145, 67, 0.28);
+  --leather-edge-soft: rgba(189, 145, 67, 0.16);
 
   /* Tinte / Text auf Pergament — etwas dunkler/kräftiger für mehr Kontrast */
   --ink-900: #221607;
@@ -59,6 +69,7 @@
   --status-done-soft: rgba(67, 89, 58, 0.2);
   --status-danger: #6e2317;
   --status-danger-soft: rgba(110, 35, 23, 0.18);
+  --status-danger-bright: #e2836b; /* Rot-Text auf dunklen Leder-Flächen */
 
   --radius-sm: 3px;
   --radius-md: 6px;
@@ -93,7 +104,7 @@ body {
 
 body {
   background: var(--wood-900);
-  color: var(--ink-900);
+  color: var(--wood-text-muted);
   font-family: var(--font-body);
   font-size: 14px;
   line-height: 1.55;
@@ -139,9 +150,9 @@ a {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--parch-edge);
+  background: var(--leather-600);
   border-radius: 999px;
-  border: 3px solid var(--parch-100);
+  border: 3px solid var(--wood-900);
 }
 
 :focus-visible {
@@ -154,7 +165,7 @@ h2,
 h3 {
   font-family: var(--font-display);
   font-weight: 700;
-  color: var(--ink-900);
+  color: var(--wood-text);
   margin: 0;
 }
 
@@ -287,14 +298,12 @@ body::before {
   filter: drop-shadow(0 14px 22px rgba(6, 3, 1, 0.5));
 }
 
-/* Schlichte, hochwertige Anmelde-Karte: dezente Papierstruktur statt
-   ausgefranstem Pergament-Foto, damit der Fokus auf Lesbarkeit liegt. */
+/* Schlichte, hochwertige Anmelde-Karte: dunkles Leder mit Messing-Kante,
+   damit Login und Anwendung optisch aus einem Guss wirken. */
 .auth-card {
   width: 420px;
-  background-color: var(--parch-100);
-  background-image: url("../assets/textures/paper-texture.webp.png");
-  background-size: 420px auto;
-  background-blend-mode: multiply;
+  background: var(--leather-800);
+  border: 1px solid var(--leather-edge);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-modal);
   padding: 40px 40px 36px;
@@ -314,7 +323,7 @@ body::before {
   font-size: 11px;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: var(--brass-deep);
+  color: var(--brass-bright);
 }
 
 .auth-card__heading {
@@ -323,7 +332,7 @@ body::before {
   font-family: var(--font-brand);
   font-size: 30px;
   letter-spacing: 0.03em;
-  color: var(--ink-900);
+  color: var(--wood-text);
 }
 
 .auth-form {
@@ -344,7 +353,7 @@ body::before {
 .auth-hint {
   margin-top: 18px;
   font-size: 12px;
-  color: var(--status-danger);
+  color: var(--status-danger-bright);
   background: var(--status-danger-soft);
   padding: 12px 14px;
   border-radius: var(--radius-sm);
@@ -369,7 +378,7 @@ body::before {
   border: none;
   padding: 0;
   font-size: 12px;
-  color: var(--ink-soft);
+  color: var(--wood-text-muted);
   cursor: pointer;
   text-decoration: underline;
   text-underline-offset: 2px;
@@ -378,7 +387,7 @@ body::before {
 }
 
 .auth-link:hover {
-  color: var(--brass-deep);
+  color: var(--brass-bright);
 }
 
 .auth-status {
@@ -394,7 +403,7 @@ body::before {
 
 .auth-status__text {
   font-size: 13.5px;
-  color: var(--ink-700);
+  color: var(--wood-text-muted);
   line-height: 1.65;
 }
 
@@ -403,7 +412,7 @@ body::before {
   align-items: center;
   gap: 12px;
   margin: 10px 0;
-  color: var(--ink-faint);
+  color: var(--wood-text-soft);
   font-size: 10.5px;
   font-weight: 700;
   letter-spacing: 0.2em;
@@ -415,7 +424,7 @@ body::before {
   content: "";
   flex: 1;
   height: 1px;
-  background: var(--parch-edge);
+  background: var(--leather-edge);
 }
 
 /* Eingabefelder mit Icon (nur im Login-Bereich, keine Änderung an den
@@ -432,7 +441,7 @@ body::before {
   left: 12px;
   width: 15px;
   height: 15px;
-  color: var(--ink-faint);
+  color: var(--wood-text-soft);
   pointer-events: none;
   transition: color 0.15s ease;
 }
@@ -442,11 +451,7 @@ body::before {
 }
 
 #auth-screen .field-icon-wrap:focus-within .field-icon {
-  color: var(--brass-deep);
-}
-
-#auth-screen .field-input {
-  background: rgba(245, 232, 198, 0.55);
+  color: var(--brass-bright);
 }
 
 #auth-screen .field-checkbox-row {
@@ -506,7 +511,7 @@ body::before {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--ink-soft);
+  color: var(--wood-text-muted);
   margin: 12px 0 6px;
   display: block;
 }
@@ -517,18 +522,18 @@ body::before {
 
 .field-input {
   width: 100%;
-  border: 1.5px solid var(--parch-edge);
-  background: var(--parch-100);
+  border: 1.5px solid var(--leather-edge);
+  background: rgba(0, 0, 0, 0.25);
   border-radius: var(--radius-sm);
   padding: 10px 13px;
   font-size: 13.5px;
   font-family: var(--font-body);
-  color: var(--ink-900);
+  color: var(--wood-text);
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .field-input::placeholder {
-  color: var(--ink-faint);
+  color: var(--wood-text-soft);
   font-style: italic;
 }
 
@@ -545,7 +550,7 @@ body::before {
 }
 
 .field-error {
-  color: var(--status-danger);
+  color: var(--status-danger-bright);
   font-size: 12px;
   margin-top: 8px;
 }
@@ -555,7 +560,7 @@ body::before {
   align-items: center;
   gap: 7px;
   font-size: 12.5px;
-  color: var(--ink-soft);
+  color: var(--wood-text-muted);
   margin-top: 12px;
 }
 
@@ -613,13 +618,13 @@ body::before {
 
 .btn--ghost {
   background: transparent;
-  color: var(--ink-soft);
-  border: 1.5px solid var(--parch-edge);
+  color: var(--wood-text-muted);
+  border: 1.5px solid var(--leather-edge);
 }
 
 .btn--ghost:hover {
-  background: rgba(155, 122, 52, 0.12);
-  color: var(--ink-900);
+  background: rgba(189, 145, 67, 0.1);
+  color: var(--wood-text);
   border-color: var(--brass);
 }
 
@@ -660,14 +665,14 @@ body::before {
 /* Rustikal gestalteter Google-Login-Knopf statt des modernen weißen
    Google-Buttons - nur innerhalb des Login-Bereichs verwendet. */
 .btn--google-rustic {
-  background: var(--parch-100);
-  color: var(--ink-800);
-  border: 1.5px solid var(--parch-edge);
+  background: var(--leather-700);
+  color: var(--wood-text);
+  border: 1.5px solid var(--leather-edge);
   box-shadow: var(--shadow-card);
 }
 
 .btn--google-rustic:hover {
-  background: rgba(155, 122, 52, 0.14);
+  background: var(--leather-600);
   border-color: var(--brass);
 }
 
@@ -694,20 +699,20 @@ body::before {
   align-items: center;
   justify-content: center;
   font-size: 12px;
-  background: rgba(155, 122, 52, 0.1);
-  color: var(--ink-soft);
+  background: rgba(189, 145, 67, 0.08);
+  color: var(--wood-text-muted);
   border: 1px solid transparent;
   transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
 .icon-btn:hover {
   border-color: var(--brass);
-  color: var(--brass-deep);
+  color: var(--brass-bright);
 }
 
 .icon-btn--delete:hover {
-  border-color: var(--status-danger);
-  color: var(--status-danger);
+  border-color: var(--status-danger-bright);
+  color: var(--status-danger-bright);
   background: var(--status-danger-soft);
 }
 
@@ -920,8 +925,8 @@ body::before {
   bottom: calc(100% + 6px);
   left: 14px;
   right: 14px;
-  background: var(--parch-100);
-  border: 1.5px solid var(--parch-edge);
+  background: var(--leather-800);
+  border: 1.5px solid var(--leather-edge);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-raised);
   padding: 6px;
@@ -940,7 +945,7 @@ body::before {
   border-radius: var(--radius-sm);
   font-size: 12.5px;
   font-weight: 600;
-  color: var(--ink-900);
+  color: var(--wood-text);
 }
 
 .sidebar__user-menu-item:hover {
@@ -976,11 +981,11 @@ body::before {
   gap: 8px;
   font-size: 12px;
   font-weight: 600;
-  color: var(--ink-soft);
+  color: var(--wood-text-muted);
   padding: 8px 14px;
   border-radius: 999px;
-  background: var(--parch-100);
-  border: 1.5px solid var(--parch-edge);
+  background: var(--leather-800);
+  border: 1.5px solid var(--leather-edge);
   transition: border-color 0.15s ease;
 }
 
@@ -1002,8 +1007,8 @@ body::before {
   top: calc(100% + 8px);
   right: 0;
   width: 210px;
-  background: var(--parch-100);
-  border: 1.5px solid var(--parch-edge);
+  background: var(--leather-800);
+  border: 1.5px solid var(--leather-edge);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-raised);
   padding: 12px;
@@ -1019,7 +1024,7 @@ body::before {
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--ink-faint);
+  color: var(--wood-text-soft);
   margin-bottom: 8px;
 }
 
@@ -1028,13 +1033,13 @@ body::before {
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  color: var(--ink-900);
+  color: var(--wood-text);
   padding: 4px 0;
 }
 
 .online-panel__empty {
   font-size: 12px;
-  color: var(--ink-faint);
+  color: var(--wood-text-soft);
   font-style: italic;
 }
 
@@ -1064,7 +1069,7 @@ body::before {
 .page-header__text p {
   margin-top: 8px;
   font-size: 13.5px;
-  color: var(--ink-soft);
+  color: var(--wood-text-muted);
   max-width: 560px;
   line-height: 1.6;
 }
@@ -1090,14 +1095,14 @@ body::before {
   border-radius: 999px;
   font-size: 12.5px;
   font-weight: 700;
-  color: var(--ink-soft);
-  background: rgba(155, 122, 52, 0.08);
+  color: var(--wood-text-muted);
+  background: rgba(189, 145, 67, 0.08);
   border: 1px solid transparent;
   transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
 .tabs__tab:hover {
-  border-color: var(--parch-edge);
+  border-color: var(--leather-edge);
 }
 
 .tabs__tab--active {
@@ -1107,14 +1112,14 @@ body::before {
 }
 
 /* --------------------------------------------------------------------------
-   10. Parchment-Karten (echtes Pergament-Foto statt Flächenfarbe)
+   10. Karten: dunkles Leder mit feiner Messing-Kante statt Pergament —
+   die eigentliche Anwendung ist jetzt ein modernes, ruhiges Verwaltungs-
+   system; Pergament bleibt Dokumenten (Hofbuch, Datenschutz/Informationen)
+   vorbehalten.
    -------------------------------------------------------------------------- */
 .parch-card {
-  background-color: var(--parch-100);
-  background-image: url("../assets/textures/paper-texture.webp.png");
-  background-size: 420px auto;
-  background-blend-mode: multiply;
-  border: 1px solid rgba(124, 92, 44, 0.25);
+  background: var(--leather-800);
+  border: 1px solid var(--leather-edge);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
   padding: 26px 28px;
@@ -1129,7 +1134,7 @@ body::before {
 
 .parch-card__hint {
   font-size: 12.5px;
-  color: var(--ink-soft);
+  color: var(--wood-text-muted);
   margin-bottom: 18px;
   line-height: 1.6;
 }
@@ -1137,9 +1142,15 @@ body::before {
 .empty-state {
   text-align: center;
   padding: 36px 20px;
-  color: var(--ink-faint);
+  color: var(--wood-text-soft);
   font-size: 13px;
   font-style: italic;
+}
+
+/* Ausnahme: Leerzustand innerhalb des Hofbuchs sitzt auf hellem Pergament
+   und braucht daher dunkle Tinte statt heller Schrift. */
+.hofbuch-card .empty-state {
+  color: var(--ink-faint);
 }
 
 /* --------------------------------------------------------------------------
@@ -1196,11 +1207,8 @@ body::before {
 }
 
 .dash-stat {
-  background-color: var(--parch-100);
-  background-image: url("../assets/textures/paper-texture.webp.png");
-  background-size: 420px auto;
-  background-blend-mode: multiply;
-  border: 1px solid rgba(124, 92, 44, 0.22);
+  background: var(--leather-800);
+  border: 1px solid var(--leather-edge);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
   padding: 20px 22px;
@@ -1214,19 +1222,19 @@ body::before {
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: var(--ink-soft);
+  color: var(--wood-text-muted);
 }
 
 .dash-stat__value {
   font-family: var(--font-display);
   font-size: 26px;
   font-weight: 700;
-  color: var(--ink-900);
+  color: var(--wood-text);
 }
 
 .dash-stat__sub {
   font-size: 11px;
-  color: var(--ink-faint);
+  color: var(--wood-text-soft);
 }
 
 .dash-columns {
@@ -1238,11 +1246,8 @@ body::before {
 }
 
 .dash-panel {
-  background-color: var(--parch-100);
-  background-image: url("../assets/textures/paper-texture.webp.png");
-  background-size: 420px auto;
-  background-blend-mode: multiply;
-  border: 1px solid rgba(124, 92, 44, 0.22);
+  background: var(--leather-800);
+  border: 1px solid var(--leather-edge);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
   overflow: hidden;
@@ -1253,20 +1258,21 @@ body::before {
   align-items: center;
   justify-content: space-between;
   padding: 14px 18px;
-  border-bottom: 1px solid var(--parch-edge);
-  background: rgba(155, 122, 52, 0.06);
+  border-bottom: 1px solid var(--leather-edge);
+  background: rgba(0, 0, 0, 0.18);
 }
 
 .dash-panel__title {
   font-family: var(--font-display);
   font-size: 14.5px;
   font-weight: 700;
+  color: var(--wood-text);
 }
 
 .dash-panel__more {
   font-size: 11px;
   font-weight: 700;
-  color: var(--brass-deep);
+  color: var(--brass-bright);
 }
 
 .dash-panel__more:hover {
@@ -1284,7 +1290,7 @@ body::before {
   flex-direction: column;
   gap: 2px;
   padding: 10px 18px;
-  border-bottom: 1px solid rgba(185, 154, 94, 0.35);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   font-size: 12.5px;
 }
 
@@ -1298,7 +1304,7 @@ body::before {
   justify-content: space-between;
   gap: 8px;
   font-weight: 700;
-  color: var(--ink-900);
+  color: var(--wood-text);
 }
 
 .dash-mini-row__bottom {
@@ -1307,7 +1313,7 @@ body::before {
   justify-content: space-between;
   gap: 8px;
   font-size: 11px;
-  color: var(--ink-soft);
+  color: var(--wood-text-muted);
 }
 
 .dash-section-title {
@@ -1329,18 +1335,15 @@ body::before {
 .dash-quicklink {
   text-align: left;
   padding: 20px 18px;
-  border: 1px solid rgba(124, 92, 44, 0.22);
+  border: 1px solid var(--leather-edge);
   border-radius: var(--radius-md);
-  background-color: var(--parch-100);
-  background-image: url("../assets/textures/paper-texture.webp.png");
-  background-size: 420px auto;
-  background-blend-mode: multiply;
+  background: var(--leather-800);
   box-shadow: var(--shadow-card);
-  transition: transform 0.15s ease, filter 0.15s ease;
+  transition: transform 0.15s ease, filter 0.15s ease, border-color 0.15s ease;
 }
 
 .dash-quicklink:hover {
-  filter: brightness(1.04);
+  border-color: var(--brass);
   transform: translateY(-2px);
 }
 
@@ -1348,7 +1351,7 @@ body::before {
   display: block;
   width: 22px;
   height: 22px;
-  color: var(--brass-deep);
+  color: var(--brass-bright);
   margin-bottom: 12px;
 }
 
@@ -1357,14 +1360,14 @@ body::before {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 14.5px;
-  color: var(--ink-900);
+  color: var(--wood-text);
   margin-bottom: 4px;
 }
 
 .dash-quicklink__text {
   display: block;
   font-size: 11.5px;
-  color: var(--ink-soft);
+  color: var(--wood-text-muted);
 }
 
 .status-pill {
@@ -1396,8 +1399,8 @@ body::before {
 }
 
 .status-pill--entwurf {
-  background: rgba(120, 100, 60, 0.14);
-  color: var(--ink-soft);
+  background: rgba(189, 145, 67, 0.14);
+  color: var(--wood-text-muted);
 }
 
 /* --------------------------------------------------------------------------
@@ -1421,14 +1424,14 @@ body::before {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--ink-soft);
-  border-bottom: 2px solid var(--parch-edge);
+  color: var(--wood-text-muted);
+  border-bottom: 2px solid var(--leather-edge);
 }
 
 .reg-row--body {
   padding: 13px 22px;
   font-size: 13px;
-  border-bottom: 1px solid rgba(185, 154, 94, 0.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   transition: background 0.15s ease;
 }
 
@@ -1437,7 +1440,7 @@ body::before {
 }
 
 .reg-row--body:hover {
-  background: rgba(155, 122, 52, 0.07);
+  background: rgba(189, 145, 67, 0.06);
 }
 
 .reg-row__actions-col {
@@ -1448,20 +1451,17 @@ body::before {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 14px;
-  color: var(--ink-900);
+  color: var(--wood-text);
 }
 
 .reg-num {
   font-weight: 700;
-  color: var(--ink-800);
+  color: var(--wood-text);
 }
 
 .table-card {
-  background-color: var(--parch-100);
-  background-image: url("../assets/textures/paper-texture.webp.png");
-  background-size: 420px auto;
-  background-blend-mode: multiply;
-  border: 1px solid rgba(124, 92, 44, 0.22);
+  background: var(--leather-800);
+  border: 1px solid var(--leather-edge);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
   padding: 4px;
@@ -1488,8 +1488,8 @@ body::before {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: var(--parch-100);
-  border: 1.5px solid var(--parch-edge);
+  background: var(--leather-800);
+  border: 1.5px solid var(--leather-edge);
   border-radius: var(--radius-md);
   padding: 11px 16px;
   box-shadow: var(--shadow-card);
@@ -1503,12 +1503,12 @@ body::before {
   background: transparent;
   font-size: 13px;
   width: 100%;
-  color: var(--ink-900);
+  color: var(--wood-text);
   font-family: var(--font-body);
 }
 
 .search-field input::placeholder {
-  color: var(--ink-faint);
+  color: var(--wood-text-soft);
   font-style: italic;
 }
 
@@ -1527,7 +1527,7 @@ body::before {
 }
 
 .notiz-text {
-  color: var(--ink-soft);
+  color: var(--wood-text-muted);
   font-style: italic;
   font-size: 12px;
 }
@@ -1539,12 +1539,12 @@ body::before {
 }
 
 .bestellung-produkte-summary__liste {
-  color: var(--ink-900);
+  color: var(--wood-text);
 }
 
 .bestellung-produkte-summary__zaehler {
   font-size: 11px;
-  color: var(--ink-faint);
+  color: var(--wood-text-soft);
 }
 
 /* Zeilen-Erfassung im Bestellungs-Modal (Produkt + Menge + Hinzufügen) */
@@ -1568,8 +1568,8 @@ body::before {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: var(--parch-200);
-  border: 1px solid var(--parch-edge);
+  background: var(--leather-700);
+  border: 1px solid var(--leather-edge);
   border-radius: var(--radius-sm);
   padding: 8px 10px;
 }
@@ -1578,7 +1578,7 @@ body::before {
   flex: 1;
   font-weight: 700;
   font-size: 13px;
-  color: var(--ink-900);
+  color: var(--wood-text);
 }
 
 .bestellung-positionen-zeile input[type="number"] {
@@ -1592,15 +1592,15 @@ body::before {
   display: flex;
   gap: 22px;
   padding: 10px 14px;
-  background: rgba(145, 109, 44, 0.12);
+  background: rgba(189, 145, 67, 0.1);
   border-radius: var(--radius-sm);
   font-size: 12.5px;
-  color: var(--ink-soft);
+  color: var(--wood-text-muted);
   margin-bottom: 6px;
 }
 
 .bestellung-zusammenfassung strong {
-  color: var(--ink-900);
+  color: var(--wood-text);
   font-family: var(--font-display);
 }
 
@@ -1617,8 +1617,8 @@ body::before {
 .kontakt-nummer-field {
   display: flex;
   align-items: center;
-  border: 1.5px solid var(--parch-edge);
-  background: var(--parch-100);
+  border: 1.5px solid var(--leather-edge);
+  background: rgba(0, 0, 0, 0.25);
   border-radius: var(--radius-sm);
   overflow: hidden;
   flex: 0 0 120px;
@@ -1632,7 +1632,7 @@ body::before {
 .kontakt-nummer-field__prefix {
   padding: 10px 0 10px 12px;
   font-weight: 700;
-  color: var(--ink-soft);
+  color: var(--wood-text-muted);
   font-size: 13.5px;
 }
 
@@ -1642,7 +1642,7 @@ body::before {
   padding: 10px 12px 10px 2px;
   font-weight: 700;
   font-size: 13.5px;
-  color: var(--ink-900);
+  color: var(--wood-text);
   width: 100%;
   min-width: 0;
 }
@@ -1664,12 +1664,12 @@ body::before {
   font-weight: 700;
   white-space: nowrap;
   background: var(--brass-soft);
-  color: var(--brass-deep);
+  color: var(--brass-bright);
 }
 
 .kontakt-tel {
   font-weight: 700;
-  color: var(--brass-deep);
+  color: var(--brass-bright);
   background: var(--brass-soft);
   padding: 4px 10px;
   border-radius: var(--radius-sm);
@@ -1691,7 +1691,7 @@ body::before {
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--brass-deep);
+  color: var(--brass-bright);
   margin-bottom: 14px;
 }
 
@@ -1719,7 +1719,7 @@ body::before {
   gap: 7px;
   font-size: 13px;
   font-weight: 600;
-  color: var(--ink-800);
+  color: var(--wood-text);
   cursor: pointer;
 }
 
@@ -1744,32 +1744,32 @@ body::before {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  border: 1.5px solid var(--parch-edge);
+  border: 1.5px solid var(--leather-edge);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
   font-size: 15px;
-  color: var(--ink-soft);
+  color: var(--wood-text-muted);
   flex-shrink: 0;
 }
 
 .rechner-slider-btn:hover {
   border-color: var(--brass);
-  color: var(--brass-deep);
+  color: var(--brass-bright);
 }
 
 .rechner-slider-scale {
   display: flex;
   justify-content: space-between;
   font-size: 10.5px;
-  color: var(--ink-faint);
+  color: var(--wood-text-soft);
   margin-top: 2px;
 }
 
 .rechner-field-box {
-  background: var(--parch-200);
-  border: 1.5px solid var(--parch-edge);
+  background: var(--leather-700);
+  border: 1.5px solid var(--leather-edge);
   border-radius: var(--radius-sm);
   padding: 12px 14px;
 }
@@ -1779,7 +1779,7 @@ body::before {
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--ink-soft);
+  color: var(--wood-text-muted);
   margin-bottom: 6px;
 }
 
@@ -1787,13 +1787,13 @@ body::before {
   font-family: var(--font-display);
   font-size: 18px;
   font-weight: 700;
-  color: var(--ink-900);
+  color: var(--wood-text);
 }
 
 .rechner-field-box__unit {
   font-size: 10.5px;
   font-weight: 500;
-  color: var(--ink-faint);
+  color: var(--wood-text-soft);
   margin-left: 4px;
 }
 
@@ -1802,8 +1802,8 @@ body::before {
   gap: 10px;
   align-items: flex-start;
   font-size: 12px;
-  color: var(--ink-soft);
-  background: rgba(155, 122, 52, 0.08);
+  color: var(--wood-text-muted);
+  background: rgba(189, 145, 67, 0.08);
   border-radius: var(--radius-sm);
   padding: 12px 14px;
   margin-top: 6px;
@@ -1821,7 +1821,7 @@ body::before {
   align-items: baseline;
   justify-content: space-between;
   padding: 9px 0;
-  border-bottom: 1px dashed var(--parch-edge);
+  border-bottom: 1px dashed var(--leather-edge);
   font-size: 12.5px;
 }
 
@@ -1830,12 +1830,12 @@ body::before {
 }
 
 .rechner-preview__label {
-  color: var(--ink-soft);
+  color: var(--wood-text-muted);
 }
 
 .rechner-preview__value {
   font-weight: 700;
-  color: var(--ink-900);
+  color: var(--wood-text);
 }
 
 .rechner-preview__total {
@@ -1844,20 +1844,20 @@ body::before {
   justify-content: space-between;
   margin-top: 12px;
   padding-top: 14px;
-  border-top: 2px solid var(--parch-edge);
+  border-top: 2px solid var(--leather-edge);
 }
 
 .rechner-preview__total-label {
   font-size: 13px;
   font-weight: 700;
-  color: var(--ink-soft);
+  color: var(--wood-text-muted);
 }
 
 .rechner-preview__total-value {
   font-family: var(--font-display);
   font-size: 26px;
   font-weight: 700;
-  color: var(--brass-deep);
+  color: var(--brass-bright);
 }
 
 .rechner-preview__notice {
@@ -1866,8 +1866,8 @@ body::before {
   align-items: flex-start;
   font-size: 11.5px;
   line-height: 1.55;
-  color: var(--ink-soft);
-  background: rgba(155, 122, 52, 0.08);
+  color: var(--wood-text-muted);
+  background: rgba(189, 145, 67, 0.08);
   border-radius: var(--radius-sm);
   padding: 12px 14px;
   margin: 16px 0;
@@ -1878,7 +1878,9 @@ body::before {
 }
 
 /* --------------------------------------------------------------------------
-   17. Modals (echtes Pergament-Foto mit Messing-Nieten aus dem Asset-Pack)
+   17. Modals: dunkles Leder für Funktions-Dialoge. Die Ausnahme ist
+   .modal--document (Datenschutz/Informationen) — echte Dokumente, die
+   bewusst die Pergament-Optik behalten.
    -------------------------------------------------------------------------- */
 .modal-overlay {
   position: fixed;
@@ -1900,16 +1902,49 @@ body::before {
 
 .modal {
   width: 420px;
-  background-color: var(--parch-100);
-  background-image: url("../assets/textures/paper-texture.webp.png");
-  background-size: 420px auto;
-  background-blend-mode: multiply;
-  border: 1px solid rgba(124, 92, 44, 0.25);
+  background: var(--leather-800);
+  border: 1px solid var(--leather-edge);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-modal);
   padding: 30px;
   transform: translateY(8px) scale(0.98);
   transition: transform 0.18s ease;
+}
+
+/* "Dokument"-Variante: Pergament-Optik bleibt hier bewusst erhalten, da es
+   sich um echten Fließtext handelt (Datenschutz, Informationen), nicht um
+   einen Funktions-Dialog. */
+.modal--document {
+  background-color: var(--parch-100);
+  background-image: url("../assets/textures/paper-texture.webp.png");
+  background-size: 420px auto;
+  background-blend-mode: multiply;
+  border-color: rgba(124, 92, 44, 0.3);
+  color: var(--ink-800);
+}
+
+.modal--document h3 {
+  color: var(--ink-900);
+}
+
+.modal--document .modal__hint,
+.modal--document .modal__close {
+  color: var(--ink-soft);
+}
+
+.modal--document .modal__close:hover {
+  background: rgba(124, 92, 44, 0.12);
+}
+
+.modal--document .btn--ghost {
+  color: var(--ink-soft);
+  border-color: var(--parch-edge);
+}
+
+.modal--document .btn--ghost:hover {
+  color: var(--ink-900);
+  background: rgba(124, 92, 44, 0.12);
+  border-color: var(--brass);
 }
 
 .modal-overlay--visible .modal {
@@ -1942,11 +1977,11 @@ body::before {
   height: 28px;
   border-radius: var(--radius-sm);
   font-size: 13px;
-  color: var(--ink-soft);
+  color: var(--wood-text-muted);
 }
 
 .modal__close:hover {
-  background: rgba(155, 122, 52, 0.12);
+  background: rgba(189, 145, 67, 0.1);
 }
 
 .modal__body {
@@ -1956,7 +1991,7 @@ body::before {
 
 .modal__hint {
   font-size: 12.5px;
-  color: var(--ink-soft);
+  color: var(--wood-text-muted);
   margin-bottom: 4px;
 }
 
@@ -1989,7 +2024,7 @@ body::before {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  background: var(--parch-200);
+  background: var(--leather-700);
   border-radius: var(--radius-sm);
   padding: 11px 14px;
   cursor: pointer;
@@ -2004,17 +2039,18 @@ body::before {
   font-weight: 700;
   font-size: 13px;
   margin-right: 8px;
+  color: var(--wood-text);
 }
 
 .settings-list__role {
   font-size: 11.5px;
-  color: var(--ink-soft);
+  color: var(--wood-text-muted);
   margin-left: 8px;
 }
 
 .settings-list__protected {
   font-size: 10.5px;
-  color: var(--brass-deep);
+  color: var(--brass-bright);
   background: var(--brass-soft);
   padding: 3px 8px 3px 20px;
   border-radius: 999px;
@@ -2036,7 +2072,7 @@ body::before {
 
 .settings-list__wartet {
   font-size: 10.5px;
-  color: var(--status-danger);
+  color: var(--status-danger-bright);
   background: var(--status-danger-soft);
   padding: 3px 8px;
   border-radius: 999px;
@@ -2046,18 +2082,19 @@ body::before {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  background: var(--parch-200);
+  background: var(--leather-700);
   border-radius: var(--radius-sm);
   padding: 9px 14px;
 }
 
 .admin-log__item-text {
   font-size: 12.5px;
+  color: var(--wood-text);
 }
 
 .admin-log__item-zeit {
   font-size: 10.5px;
-  color: var(--ink-faint);
+  color: var(--wood-text-soft);
 }
 
 .detail-grid {
@@ -2078,7 +2115,7 @@ body::before {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--ink-soft);
+  color: var(--wood-text-muted);
   flex: 0 0 130px;
 }
 
@@ -2140,9 +2177,9 @@ body::before {
    -------------------------------------------------------------------------- */
 .page-footer {
   padding: 22px 0 10px;
-  border-top: 1px solid var(--parch-edge);
+  border-top: 1px solid var(--leather-edge);
   margin-top: 10px;
-  color: var(--ink-faint);
+  color: var(--wood-text-soft);
   font-size: 11px;
   line-height: 1.7;
 }
@@ -2157,8 +2194,8 @@ body::before {
    21. Rollen-/Produkt-Verwaltung (Kataloge)
    -------------------------------------------------------------------------- */
 .katalog-box {
-  background: var(--parch-200);
-  border: 1.5px solid var(--parch-edge);
+  background: var(--leather-700);
+  border: 1.5px solid var(--leather-edge);
   border-radius: var(--radius-md);
   padding: 14px;
   margin-bottom: 8px;
@@ -2170,7 +2207,7 @@ body::before {
   gap: 8px;
   padding-bottom: 10px;
   margin-bottom: 10px;
-  border-bottom: 1px solid var(--parch-edge);
+  border-bottom: 1px solid var(--leather-edge);
 }
 
 .katalog-zeile:last-child {
@@ -2214,6 +2251,12 @@ body::before {
 .hofbuch-form .field-input,
 .hofbuch-form .field-textarea {
   background: rgba(255, 250, 235, 0.4);
+  color: var(--ink-900);
+}
+
+.hofbuch-form .field-input::placeholder,
+.hofbuch-form .field-textarea::placeholder {
+  color: var(--ink-faint);
 }
 
 .hofbuch-rope-divider {
