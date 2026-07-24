@@ -1,12 +1,13 @@
 # Hornhausen-Hof
 
 Internes Verwaltungsprogramm für den privaten **Hornhausen-Hof** (RedM Roleplay, Jahr 1899).
-Waren, Preise, Bestellungen, ein Handelsrechner, das Telegramm-Verzeichnis, Lager, Verkäufe und
-die Benutzerverwaltung des Hofes laufen alle in Echtzeit über **Firebase** (Authentication +
-Firestore) – Änderungen sind sofort bei allen angemeldeten Mitarbeitern sichtbar.
+Waren, Preise, Bestellungen, ein Handelsrechner, das Telegramm-Verzeichnis, Lager, Verkäufe, das
+Hofbuch und die Benutzerverwaltung des Hofes laufen alle in Echtzeit über **Firebase**
+(Authentication + Firestore) – Änderungen sind sofort bei allen angemeldeten Mitarbeitern sichtbar.
 
 Das gesamte Design ist bewusst rustikal gehalten: dunkles Holz, altes Pergament, Western-Typografie
-und echte Hof-Fotografien (Hängeschild, Sonnenuntergangs-Kulisse) statt moderner Dashboard-Optik.
+und ein durchgängiges Grafik-Set (Hintergründe, Pergament-Texturen, Zierrahmen, Trenner, Siegel)
+statt moderner Dashboard-Optik – im Stil einer hochwertigen internen Hofverwaltung von 1899.
 
 ## ✨ Funktionen
 
@@ -32,6 +33,8 @@ und echte Hof-Fotografien (Hängeschild, Sonnenuntergangs-Kulisse) statt moderne
   Rancher, Schmied, Händler, …), verwaltbare Rollenliste.
 - **Lager** – Bestandsführung je Ware, inkl. Warenwert für die Übersicht.
 - **Verkäufe** – Verkaufslog mit automatischer Tagesstatistik.
+- **Hofbuch** – die Chronik des Hofes: jeder freigegebene Mitarbeiter kann Einträge (Überschrift +
+  Text) verfassen, die chronologisch in einem aufgeschlagenen Buch dargestellt werden.
 - **Statistiken** – Auswertungen zu Top-Waren, Top-Kunden und Gesamtgewinn.
 - **Verwaltung (Admin)** – Benutzerliste freigeben/ablehnen/sperren/entsperren, Rang & Verwalter-
   rechte setzen, Notizen, Umbenennen, Passwort-Reset auslösen, Accounts direkt anlegen, sowie ein
@@ -41,11 +44,18 @@ und echte Hof-Fotografien (Hängeschild, Sonnenuntergangs-Kulisse) statt moderne
 
 ## 🖥️ Design
 
-- Dunkles Holz, gealbtes Pergament, warme Brauntöne und Goldakzente statt modernem UI.
-- Der Login-/Registrierungsbildschirm nutzt echte Fotografien: ein Hof-Sonnenuntergangs-
-  Hintergrund, ein hängendes Holzschild mit Gravur und ein echtes Pergament-Foto als Anmelde-Karte.
-- Dasselbe Schild-Logo taucht auch im Sidebar-Kopf, als Browser-Tab-Icon (Favicon) und in der
-  Update-Benachrichtigung auf; der Übersicht-Kopfbereich zeigt das Hof-Foto als Banner.
+- Dunkles Holz, gealtertes Pergament, warme Brauntöne und Goldakzente statt modernem UI –
+  konsequent auf jeder einzelnen Seite der Anwendung, nicht nur auf dem Login-Bildschirm.
+- Der Login-/Registrierungsbildschirm nutzt einen Hof-Hintergrund, ein hängendes Holzschild-Logo
+  und ein Pergament-Foto als Anmelde-Karte; dieselbe Hintergrund-Textur zieht sich als
+  Dashboard-Hintergrund durch die gesamte App.
+- Dasselbe Schild-Logo (in klein) taucht auch im Sidebar-Kopf, als Browser-Tab-Icon (Favicon) und
+  in der Update-Benachrichtigung auf; der Übersicht-Kopfbereich zeigt das große Hof-Foto als
+  Banner mit Zierrahmen.
+- Alle Karten, Panels und Dialoge nutzen dieselbe Pergament-Textur (jeweils eine eigene Variante
+  für Standardseiten, Dialoge und das Hofbuch); Buttons, Trennlinien, Wachssiegel und Zierrahmen
+  stammen ebenfalls aus demselben Grafik-Set, damit die Designsprache auf allen Seiten identisch
+  bleibt.
 - Schriften: „Rye" (Wortmarke/Schild), „Playfair Display" (Überschriften), „Vollkorn" (Fließtext).
 
 ## 📁 Projektstruktur
@@ -60,8 +70,15 @@ Hornhausen-Hof/
 │   ├── firebase-config.js  # Firebase-Projektdaten (Compat-SDK)
 │   ├── auth.js              # Login/Registrierung/Benutzerverwaltung (Firebase Modular-SDK)
 │   └── app.js                # Restliche App-Logik: Firestore-Sync, Rendering, Modale
-├── img/                     # Echte Fotos: Hängeschild, Hof-Hintergrund, Pergament, Logo-Badge,
-│                             # Favicon, Dashboard-Banner
+├── assets/                  # Grafik-Set: Hintergründe, Logo, Pergament-Texturen, Holz- und
+│                             # Papier-Texturen, Buttons, Zierelemente (Rahmen, Trenner, Siegel,
+│                             # Hof-Illustration)
+│   ├── background/          # login-background, dashboard-background
+│   ├── logo/                # hornhausen-sign (groß), hornhausen-sign-small (Sidebar/Favicon)
+│   ├── parchment/            # parchment-login, parchment-page, parchment-modal, parchment-book
+│   ├── textures/             # sidebar-background, wood-panel, paper-texture
+│   ├── buttons/               # button-dark, button-hover
+│   └── decorations/            # farm-outline, divider-western, rope-divider, wax-seal, wood-frame
 ├── firestore.rules          # Sicherheitsregeln (Firestore) – Archivkopie, siehe unten
 └── version.json             # Versionsnummer für das automatische Update-Banner
 ```
@@ -80,6 +97,7 @@ Hornhausen-Hof/
 | `angebote`    | Historie der Handelsrechner-Angebote                             |
 | `verkaeufe`   | Verkaufslog                                                       |
 | `kataloge`    | Verwaltete Listen (z. B. Rollen der Kontakte-Seite)              |
+| `hofbuch`     | Chronik-Einträge des Hofbuchs (Titel, Text, Autor, Zeitpunkt)    |
 
 Die aktuellen, gültigen Regeln werden ausschließlich über die Firebase-Konsole
 (Firestore Database → Regeln) gepflegt – `firestore.rules` in diesem Repo ist nur eine

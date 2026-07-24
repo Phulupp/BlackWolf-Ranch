@@ -14,7 +14,7 @@
   /* ------------------------------------------------------------------------
      1. Konstanten
      ------------------------------------------------------------------------ */
-  const VERSION_AKTUELL = 1;
+  const VERSION_AKTUELL = 2;
 
   // Ränge des Hofes (rein organisatorisch — Verwalterrechte sind unabhängig
   // davon und werden separat je Benutzer vergeben, siehe isAdmin).
@@ -26,6 +26,7 @@
   const ANGEBOTE_COLLECTION = "angebote";
   const KONTAKTE_COLLECTION = "kontakte";
   const VERKAEUFE_COLLECTION = "verkaeufe";
+  const HOFBUCH_COLLECTION = "hofbuch";
   const PRESENCE_COLLECTION = "presence";
   const KONTAKTE_ROLLEN_DOC = "kataloge/kontakte-rollen";
   const KONTAKTE_ROLLEN_FALLBACK = "Sonstiges";
@@ -73,6 +74,7 @@
     kontakte: { title: "Kontakte", subtitle: "Verwalte deine Kontakte und Telegrammnummern." },
     lager: { title: "Lager", subtitle: "Aktueller Warenbestand und Lagerwert." },
     verkaeufe: { title: "Verkäufe", subtitle: "Trage Verkäufe ein und behalte die Historie im Blick." },
+    hofbuch: { title: "Hofbuch", subtitle: "Die Chronik des Hofes — wichtige Ereignisse und Notizen." },
     statistiken: { title: "Statistiken", subtitle: "Auswertung von Verkäufen und Bestellungen." },
     einstellungen: { title: "Einstellungen", subtitle: "Konfiguration der Hofverwaltung." },
     admin: { title: "Verwaltung", subtitle: "Benutzerverwaltung — nur für Verwalter sichtbar." },
@@ -95,6 +97,8 @@
   let unsubKontakte = null;
   let verkaeufe = [];
   let unsubVerkaeufe = null;
+  let hofbuchEintraege = [];
+  let unsubHofbuch = null;
   let unsubPresence = null;
   let unsubKontakteRollen = null;
   let kontakteRollenKatalog = [];
@@ -275,6 +279,13 @@
     verkaeufeSearch: document.getElementById("verkaeufe-search"),
     verkaeufeTableBody: document.getElementById("verkaeufe-table-body"),
     verkaeufeEmpty: document.getElementById("verkaeufe-empty"),
+
+    // Hofbuch
+    formHofbuch: document.getElementById("form-hofbuch"),
+    hofbuchTitelInput: document.getElementById("hofbuch-titel-input"),
+    hofbuchTextInput: document.getElementById("hofbuch-text-input"),
+    hofbuchEintraegeEl: document.getElementById("hofbuch-eintraege"),
+    hofbuchEmpty: document.getElementById("hofbuch-empty"),
 
     // Statistiken
     statVerkaeufeAnzahl: document.getElementById("stat-verkaeufe-anzahl"),
@@ -1574,7 +1585,68 @@
   }
 
   /* ------------------------------------------------------------------------
-     15. Statistiken
+     15. Hofbuch
+     ------------------------------------------------------------------------ */
+  // Chronik des Hofes: freie Textnotizen mit Überschrift, für alle
+  // freigegebenen Nutzer lesbar/schreibbar (analog zu Kontakte/Bestellungen).
+  function starteHofbuchListener() {
+    if (!db) return;
+    if (unsubHofbuch) unsubHofbuch();
+    unsubHofbuch = db
+      .collection(HOFBUCH_COLLECTION)
+      .orderBy("erstelltAm", "desc")
+      .limit(200)
+      .onSnapshot(
+        (snap) => {
+          hofbuchEintraege = [];
+          snap.forEach((docSnap) => hofbuchEintraege.push({ id: docSnap.id, ...docSnap.data() }));
+          renderHofbuch();
+        },
+        (fehler) => console.error("Hofbuch konnte nicht geladen werden:", fehler)
+      );
+  }
+
+  function renderHofbuch() {
+    if (!el.hofbuchEintraegeEl) return;
+    el.hofbuchEmpty.hidden = hofbuchEintraege.length !== 0;
+    el.hofbuchEintraegeEl.innerHTML = hofbuchEintraege
+      .map(
+        (e) => `<div class="hofbuch-eintrag">
+          <div class="hofbuch-eintrag__kopf">
+            <span class="hofbuch-eintrag__titel">${escapeHtml(e.titel)}</span>
+            <span class="hofbuch-eintrag__meta">${escapeHtml(e.autor || "Unbekannt")} · ${formatDatum(e.erstelltAm)}</span>
+          </div>
+          <p class="hofbuch-eintrag__text">${escapeHtml(e.text)}</p>
+        </div>`
+      )
+      .join("");
+  }
+
+  if (el.formHofbuch) {
+    el.formHofbuch.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const titel = el.hofbuchTitelInput.value.trim();
+      const text = el.hofbuchTextInput.value.trim();
+      if (!titel || !text) return zeigeToast("Bitte Überschrift und Text eintragen.");
+
+      try {
+        await db.collection(HOFBUCH_COLLECTION).add({
+          titel,
+          text,
+          autor: aktuellerNutzer ? aktuellerNutzer.name : null,
+          erstelltAm: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        el.formHofbuch.reset();
+        zeigeToast("Eintrag ins Hofbuch geschrieben.");
+      } catch (fehler) {
+        console.error(fehler);
+        zeigeToast("Eintrag konnte nicht gespeichert werden.");
+      }
+    });
+  }
+
+  /* ------------------------------------------------------------------------
+     16. Statistiken
      ------------------------------------------------------------------------ */
   function renderStatistiken() {
     if (!el.statVerkaeufeAnzahl) return;
@@ -1615,7 +1687,7 @@
   }
 
   /* ------------------------------------------------------------------------
-     16. Übersicht (Dashboard)
+     17. Übersicht (Dashboard)
      ------------------------------------------------------------------------ */
   function renderUebersicht() {
     if (!el.dashOffeneBestellungen) return;
@@ -1678,7 +1750,7 @@
   }
 
   /* ------------------------------------------------------------------------
-     17. Einstellungen (Standard-Startseite)
+     18. Einstellungen (Standard-Startseite)
      ------------------------------------------------------------------------ */
   const STARTSEITE_KEY = "hornhausenHof.startseite";
 
@@ -1696,7 +1768,7 @@
   }
 
   /* ------------------------------------------------------------------------
-     18. Verwaltung (Benutzerverwaltung + Aktivitäts-Log)
+     19. Verwaltung (Benutzerverwaltung + Aktivitäts-Log)
      ------------------------------------------------------------------------ */
   function starteBenutzerverwaltung() {
     if (!window.BenutzerVerwaltung || !istAdmin()) return;
@@ -1904,7 +1976,7 @@
   }
 
   /* ------------------------------------------------------------------------
-     19. Versions-Check (Update-Banner)
+     20. Versions-Check (Update-Banner)
      ------------------------------------------------------------------------ */
   async function pruefeVersion() {
     try {
@@ -1920,7 +1992,7 @@
   if (el.updateBannerBtn) el.updateBannerBtn.addEventListener("click", () => window.location.reload());
 
   /* ------------------------------------------------------------------------
-     20. Start / Stop der App (reagiert auf js/auth.js-Events)
+     21. Start / Stop der App (reagiert auf js/auth.js-Events)
      ------------------------------------------------------------------------ */
   function starteApp(detail) {
     aktuellerNutzer = { uid: detail.uid, name: detail.username, rolle: detail.rolle, admin: !!detail.isAdmin };
@@ -1941,6 +2013,7 @@
     starteKontakteRollenListener();
     starteKontakteListener();
     starteVerkaeufeListener();
+    starteHofbuchListener();
     if (istAdmin()) starteBenutzerverwaltung();
 
     zeigeAnsicht(ladeStartseite());
@@ -1968,8 +2041,8 @@
 
   function stoppeApp() {
     aktuellerNutzer = null;
-    [unsubProdukte, unsubBestellungen, unsubAngebote, unsubKontakte, unsubVerkaeufe, unsubKontakteRollen].forEach((unsub) => unsub && unsub());
-    unsubProdukte = unsubBestellungen = unsubAngebote = unsubKontakte = unsubVerkaeufe = unsubKontakteRollen = null;
+    [unsubProdukte, unsubBestellungen, unsubAngebote, unsubKontakte, unsubVerkaeufe, unsubHofbuch, unsubKontakteRollen].forEach((unsub) => unsub && unsub());
+    unsubProdukte = unsubBestellungen = unsubAngebote = unsubKontakte = unsubVerkaeufe = unsubHofbuch = unsubKontakteRollen = null;
     stoppeBenutzerverwaltung();
     stoppeHeartbeat();
     clearInterval(versionCheckTimer);
@@ -1978,6 +2051,7 @@
     angebote = [];
     kontakte = [];
     verkaeufe = [];
+    hofbuchEintraege = [];
   }
 
   window.addEventListener("hof:auth-approved", (event) => starteApp(event.detail));
