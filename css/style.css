@@ -11,60 +11,62 @@
    1. Design-Tokens
    -------------------------------------------------------------------------- */
 :root {
-  /* Dunkles Holz (Sidebar, Kopfleisten, Footer) */
-  --wood-950: #150d08;
-  --wood-900: #1d130c;
-  --wood-850: #241708;
-  --wood-800: #2b1c10;
-  --wood-700: #3a2615;
-  --wood-600: #4a3018;
-  --wood-line: #0e0906;
-  --wood-grain: rgba(0, 0, 0, 0.22);
-  --wood-grain-light: rgba(255, 220, 160, 0.05);
+  /* Dunkles Holz (Sidebar, Kopfleisten, Footer) — kräftiger, sattes Rotbraun
+     statt eines flachen Graubraun, damit es natürlicher/wärmer wirkt. */
+  --wood-950: #0d0704;
+  --wood-900: #170e07;
+  --wood-850: #1e1208;
+  --wood-800: #33200f;
+  --wood-700: #4f3016;
+  --wood-600: #714623;
+  --wood-line: #090402;
+  --wood-grain: rgba(0, 0, 0, 0.32);
+  --wood-grain-light: rgba(255, 208, 140, 0.06);
 
-  /* Pergament (Hauptfläche, Karten) */
-  --parch-100: #f4e8c8;
-  --parch-200: #ecdcb2;
-  --parch-300: #e2cd98;
-  --parch-400: #d6bc80;
-  --parch-edge: #b99a5e;
-  --parch-shadow: rgba(90, 62, 24, 0.28);
+  /* Pergament (Hauptfläche, Karten) — dunkler, spürbar vergilbt, weniger
+     "sauberes" Beige, damit es wie altes, gelagertes Papier wirkt. */
+  --parch-100: #dcc48e;
+  --parch-200: #cdb277;
+  --parch-300: #ba9c60;
+  --parch-400: #a8874f;
+  --parch-edge: #7c5c2c;
+  --parch-shadow: rgba(50, 32, 10, 0.4);
 
-  /* Tinte / Text auf Pergament */
-  --ink-900: #2c1d10;
-  --ink-800: #3a2818;
-  --ink-700: #4d3a24;
-  --ink-soft: #6e5738;
-  --ink-faint: #8a744f;
+  /* Tinte / Text auf Pergament — etwas dunkler/kräftiger für mehr Kontrast */
+  --ink-900: #221607;
+  --ink-800: #33220f;
+  --ink-700: #46311a;
+  --ink-soft: #5f4728;
+  --ink-faint: #7c6440;
 
   /* Text auf dunklem Holz */
-  --wood-text: #e9d9b3;
-  --wood-text-muted: #b89f77;
-  --wood-text-soft: #8d7554;
+  --wood-text: #e7d5a8;
+  --wood-text-muted: #b9976a;
+  --wood-text-soft: #8a6b47;
 
-  /* Messing/Gold-Akzent */
-  --brass: #9c7a34;
-  --brass-bright: #c9a34e;
-  --brass-deep: #7a5c22;
-  --brass-soft: rgba(201, 163, 78, 0.16);
+  /* Messing/Gold-Akzent — etwas gedämpfter, antiker statt hell-golden */
+  --brass: #916d2c;
+  --brass-bright: #bd9143;
+  --brass-deep: #6b4c1a;
+  --brass-soft: rgba(189, 145, 67, 0.18);
 
   /* Status-Akzente (gedämpft, erdig) */
-  --status-open: #a85c3f;      /* Offen / warm ochre-red */
-  --status-open-soft: rgba(168, 92, 63, 0.15);
-  --status-progress: #7d6a2e;
-  --status-progress-soft: rgba(125, 106, 46, 0.16);
-  --status-done: #4d6b3f;      /* übernommen/geschlossen, gedämpftes Grün */
-  --status-done-soft: rgba(77, 107, 63, 0.16);
-  --status-danger: #7a2e21;
-  --status-danger-soft: rgba(122, 46, 33, 0.15);
+  --status-open: #9c4e33;      /* Offen / warm ochre-red */
+  --status-open-soft: rgba(156, 78, 51, 0.18);
+  --status-progress: #71601f;
+  --status-progress-soft: rgba(113, 96, 31, 0.2);
+  --status-done: #43593a;      /* übernommen/geschlossen, gedämpftes Grün */
+  --status-done-soft: rgba(67, 89, 58, 0.2);
+  --status-danger: #6e2317;
+  --status-danger-soft: rgba(110, 35, 23, 0.18);
 
   --radius-sm: 3px;
   --radius-md: 6px;
   --radius-lg: 10px;
 
-  --shadow-card: 0 3px 10px rgba(40, 25, 10, 0.22), 0 1px 0 rgba(255, 255, 255, 0.35) inset;
-  --shadow-raised: 0 14px 34px rgba(20, 12, 5, 0.4);
-  --shadow-modal: 0 30px 70px rgba(10, 6, 3, 0.6);
+  --shadow-card: 0 4px 13px rgba(25, 14, 5, 0.34), 0 1px 0 rgba(255, 240, 200, 0.18) inset;
+  --shadow-raised: 0 16px 38px rgba(10, 5, 2, 0.5);
+  --shadow-modal: 0 32px 76px rgba(6, 3, 1, 0.68);
 
   --sidebar-width: 232px;
   --content-width: 1360px;
@@ -197,21 +199,48 @@ p {
       90deg,
       var(--wood-grain-light) 0px,
       transparent 2px,
-      transparent 7px,
-      var(--wood-grain) 8px,
-      transparent 9px,
-      transparent 26px
+      transparent 6px,
+      var(--wood-grain) 7px,
+      transparent 8px,
+      transparent 24px
     ),
-    linear-gradient(180deg, var(--wood-700) 0%, var(--wood-800) 40%, var(--wood-900) 100%);
+    repeating-linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.16) 0px,
+      transparent 1px,
+      transparent 45px,
+      rgba(0, 0, 0, 0.16) 46px,
+      transparent 47px,
+      transparent 130px
+    ),
+    radial-gradient(ellipse 500px 900px at 10% 20%, rgba(0, 0, 0, 0.25), transparent 60%),
+    linear-gradient(180deg, var(--wood-700) 0%, var(--wood-800) 38%, var(--wood-900) 100%);
 }
 
 .tex-parchment {
   background-color: var(--parch-200);
   background-image:
-    radial-gradient(ellipse 620px 340px at 8% 0%, rgba(255, 250, 230, 0.55), transparent 60%),
-    radial-gradient(ellipse 500px 380px at 96% 12%, var(--parch-300) 0%, transparent 55%),
-    radial-gradient(ellipse 700px 420px at 20% 100%, var(--parch-300) 0%, transparent 55%),
-    radial-gradient(ellipse 420px 300px at 80% 90%, rgba(140, 100, 40, 0.12), transparent 60%);
+    radial-gradient(ellipse 620px 340px at 8% 0%, rgba(230, 205, 150, 0.4), transparent 62%),
+    radial-gradient(ellipse 560px 420px at 97% 8%, rgba(60, 40, 15, 0.22), transparent 58%),
+    radial-gradient(ellipse 700px 460px at 18% 100%, rgba(60, 40, 15, 0.2), transparent 58%),
+    radial-gradient(ellipse 480px 340px at 82% 92%, rgba(40, 26, 8, 0.22), transparent 62%),
+    radial-gradient(ellipse 900px 500px at 50% 45%, transparent 55%, rgba(35, 22, 8, 0.16) 100%);
+}
+
+/* Feine, körnige "altes Papier"-Struktur — als einzelner, fixer Overlay über
+   der kompletten Seite (Holz UND Pergament gleichermaßen), statt pro
+   Komponente, damit keine Stacking-Context-Probleme mit einzelnen Karten/
+   Modals entstehen. Rein per CSS/SVG erzeugt, kein Bild-Asset nötig. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  pointer-events: none;
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch' result='t'/%3E%3CfeColorMatrix in='t' type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
 }
 
 /* --------------------------------------------------------------------------
@@ -231,6 +260,11 @@ p {
 /* --------------------------------------------------------------------------
    5. Login-Bildschirm (Farmtor mit Holzschild)
    -------------------------------------------------------------------------- */
+@keyframes auth-fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 .auth-screen {
   position: fixed;
   inset: 0;
@@ -239,37 +273,57 @@ p {
   justify-content: center;
   overflow: hidden;
   background:
-    radial-gradient(ellipse 900px 620px at 50% -10%, #4a3420 0%, transparent 60%),
+    radial-gradient(ellipse 1000px 700px at 50% -8%, #5a3f24 0%, transparent 62%),
     linear-gradient(180deg, #2c2013 0%, #1c130b 55%, #100a06 100%);
 }
 
-.auth-screen__sky {
+/* Foto-Hintergrund: echtes Bild des Hofes bei Sonnenuntergang (statt der
+   früheren Vektor-Illustration) - liegt als eigene Ebene hinter der Vignette
+   und dem Bilderrahmen, damit diese weiterhin für Tiefe/Kontrast sorgen. */
+.auth-screen__bg {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(ellipse 700px 500px at 78% 8%, rgba(216, 158, 90, 0.35), transparent 65%),
-    linear-gradient(180deg, #5c3d22 0%, #38270f 45%, #1a1108 100%);
   z-index: 0;
-}
-
-.auth-screen__scene {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 46%;
-  z-index: 1;
-  color: #2f1f10;
-  opacity: 0.95;
+  background:
+    linear-gradient(180deg, rgba(10, 6, 3, 0.12) 0%, rgba(10, 6, 3, 0.02) 26%, rgba(10, 6, 3, 0.1) 68%, rgba(10, 6, 3, 0.4) 100%),
+    url("../img/auth-background.jpg") center 42% / cover no-repeat;
 }
 
 .auth-screen__vignette {
   position: absolute;
   inset: 0;
   z-index: 2;
-  background: radial-gradient(ellipse 1300px 950px at 50% 32%, transparent 50%, rgba(8, 5, 2, 0.42) 100%);
+  background:
+    radial-gradient(ellipse 1300px 950px at 50% 32%, transparent 45%, rgba(8, 5, 2, 0.5) 100%),
+    linear-gradient(180deg, rgba(8, 5, 2, 0.28) 0%, transparent 12%, transparent 82%, rgba(6, 3, 1, 0.4) 100%);
   pointer-events: none;
 }
+
+/* Rustikaler Bilderrahmen um den gesamten Bildschirm, nur hier verwendet */
+.auth-screen__frame {
+  position: absolute;
+  inset: 14px;
+  z-index: 4;
+  pointer-events: none;
+  border: 2px solid rgba(189, 145, 67, 0.4);
+  box-shadow:
+    inset 0 0 0 7px rgba(9, 5, 2, 0.55),
+    inset 0 0 0 9px rgba(189, 145, 67, 0.22);
+}
+
+.auth-screen__frame-corner {
+  position: absolute;
+  width: 58px;
+  height: 58px;
+  color: var(--brass-bright);
+  opacity: 0.8;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.6));
+}
+
+.auth-screen__frame-corner--tl { top: -14px; left: -14px; }
+.auth-screen__frame-corner--tr { top: -14px; right: -14px; transform: scaleX(-1); }
+.auth-screen__frame-corner--bl { bottom: -14px; left: -14px; transform: scaleY(-1); }
+.auth-screen__frame-corner--br { bottom: -14px; right: -14px; transform: scale(-1, -1); }
 
 .auth-gate {
   position: relative;
@@ -277,7 +331,8 @@ p {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 26px;
+  gap: 22px;
+  animation: auth-fade-in 0.7s ease both;
 }
 
 .auth-gate__sign-wrap {
@@ -286,115 +341,61 @@ p {
   align-items: center;
 }
 
-.auth-gate__chains {
-  display: flex;
-  gap: 130px;
-  margin-bottom: -6px;
-}
-
-.auth-gate__chain {
-  width: 2px;
-  height: 34px;
-  background: repeating-linear-gradient(180deg, #6b5a3c 0 4px, #251a0d 4px 8px);
-  border-radius: 2px;
-}
-
-.auth-gate__sign {
-  position: relative;
-  padding: 20px 42px;
-  background: linear-gradient(180deg, #6b4726 0%, #4a2f18 100%);
-  border: 3px solid #2a1a0c;
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-raised), 0 0 0 1px rgba(201, 163, 78, 0.15) inset;
-  text-align: center;
-}
-
-.auth-gate__sign::before {
-  content: "";
-  position: absolute;
-  inset: 5px;
-  border: 1px solid rgba(201, 163, 78, 0.3);
-  border-radius: 2px;
-  pointer-events: none;
-}
-
-.auth-gate__title {
+/* Echtes Foto des Hängeschilds (Holzbrett, Ketten, Gravur und Schriftzug
+   sind bereits Teil des Bildes) statt der früheren CSS-/SVG-Nachbildung. */
+.auth-gate__sign-img {
   display: block;
-  font-family: var(--font-brand);
-  font-size: 34px;
-  letter-spacing: 0.04em;
-  color: var(--brass-bright);
-  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.5);
-  line-height: 1.1;
+  width: 440px;
+  max-width: 78vw;
+  height: auto;
+  filter: drop-shadow(0 18px 26px rgba(6, 3, 1, 0.55));
 }
 
-.auth-gate__subtitle {
-  display: block;
-  margin-top: 6px;
-  font-family: var(--font-body);
-  font-weight: 700;
-  font-size: 11px;
-  letter-spacing: 0.32em;
-  color: var(--wood-text-muted);
-  text-transform: uppercase;
-}
-
+/* Echtes Anmelde-Pergament (Foto mit ausgefranstem Rand + eigenem Schlagschatten)
+   statt der früheren CSS-Verläufe + clip-path-Nachbildung. */
 .auth-card {
-  width: 380px;
-  background: var(--parch-100);
-  border: 1px solid var(--parch-edge);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-modal);
-  padding: 34px 32px 28px;
+  width: 388px;
+  background: url("../img/auth-card-parchment.png") center center / cover no-repeat;
+  padding: 40px 36px 34px;
   position: relative;
-}
-
-.auth-card::before,
-.auth-card::after,
-.auth-card__corner-tl,
-.auth-card__corner-br {
-  content: "";
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  border: 2px solid var(--brass);
-  opacity: 0.55;
+  animation: auth-fade-in 0.75s ease 0.05s both;
 }
 
 .auth-card::before {
-  top: 8px;
-  left: 8px;
-  border-right: none;
-  border-bottom: none;
-}
-
-.auth-card::after {
-  bottom: 8px;
-  right: 8px;
-  border-left: none;
-  border-top: none;
+  content: "";
+  position: absolute;
+  inset: 22px;
+  border: 1px solid rgba(124, 92, 44, 0.35);
+  pointer-events: none;
 }
 
 .auth-card__brand {
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
-.auth-card__brand .brand-text__title {
-  font-family: var(--font-brand);
-  font-size: 24px;
-  color: var(--ink-900);
-  letter-spacing: 0.02em;
-}
-
-.auth-card__brand .brand-text__subtitle {
+.auth-card__eyebrow {
   display: block;
-  margin-top: 3px;
-  font-size: 10.5px;
+  font-family: var(--font-body);
   font-weight: 700;
-  letter-spacing: 0.26em;
+  font-size: 11px;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--brass-deep);
+}
+
+.auth-card__heading {
+  display: block;
+  margin-top: 5px;
+  font-family: var(--font-brand);
+  font-size: 30px;
+  letter-spacing: 0.03em;
+  color: var(--ink-900);
+}
+
+.auth-card__brand .ornament-divider {
+  margin: 10px auto 0;
+  max-width: 160px;
 }
 
 .auth-form {
@@ -408,7 +409,7 @@ p {
 }
 
 .auth-submit {
-  margin-top: 14px;
+  margin-top: 16px;
   width: 100%;
 }
 
@@ -445,6 +446,7 @@ p {
   text-decoration: underline;
   text-underline-offset: 2px;
   font-style: italic;
+  transition: color 0.15s ease;
 }
 
 .auth-link:hover {
@@ -486,6 +488,82 @@ p {
   flex: 1;
   height: 1px;
   background: var(--parch-edge);
+}
+
+/* Eingabefelder mit Icon (nur im Login-Bereich, keine Änderung an den
+   geteilten Basis-Klassen .field-label/.field-input, die auch anderswo
+   in der App verwendet werden) */
+#auth-screen .field-icon-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+#auth-screen .field-icon {
+  position: absolute;
+  left: 12px;
+  width: 15px;
+  height: 15px;
+  color: var(--ink-faint);
+  pointer-events: none;
+  transition: color 0.15s ease;
+}
+
+#auth-screen .field-input--icon {
+  padding-left: 36px;
+}
+
+#auth-screen .field-icon-wrap:focus-within .field-icon {
+  color: var(--brass-deep);
+}
+
+#auth-screen .field-input {
+  background: rgba(245, 232, 198, 0.55);
+}
+
+#auth-screen .field-checkbox-row {
+  margin-top: 14px;
+  cursor: pointer;
+  user-select: none;
+}
+
+#auth-screen .field-checkbox-row span {
+  font-style: italic;
+}
+
+/* Auf niedrigeren Bildschirmen (kleine Laptop-Fenster) etwas kompakter, damit
+   Schild + Pergament-Karte + Footer nicht durch die feste Bildschirmhöhe
+   abgeschnitten werden. */
+@media (max-height: 800px) {
+  .auth-gate {
+    gap: 14px;
+  }
+
+  .auth-gate__sign-img {
+    width: 340px;
+  }
+
+  .auth-card {
+    padding: 24px 30px 20px;
+  }
+
+  .auth-card__brand {
+    margin-bottom: 12px;
+  }
+}
+
+@media (max-height: 700px) {
+  .auth-gate__sign-img {
+    width: 260px;
+  }
+
+  .auth-card__brand {
+    margin-bottom: 6px;
+  }
+
+  #auth-screen .field-label {
+    margin: 8px 0 4px;
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -620,6 +698,53 @@ p {
   filter: brightness(1.15);
 }
 
+/* Holzbrett-Knopf (nur Login-/Registrierungs-Formulare): dunkles Holz mit
+   feiner Maserung und goldener Serifenschrift, wie ein eingebranntes Schild. */
+.btn--wood-plank {
+  position: relative;
+  background:
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.14) 0 2px, transparent 2px 18px),
+    linear-gradient(180deg, var(--wood-600) 0%, var(--wood-800) 55%, var(--wood-900) 100%);
+  color: var(--brass-bright);
+  font-family: var(--font-brand);
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid var(--wood-line);
+  box-shadow: var(--shadow-card), inset 0 0 0 1px rgba(189, 145, 67, 0.18);
+  padding: 12px 22px;
+}
+
+.btn--wood-plank:hover {
+  filter: brightness(1.16);
+  transform: translateY(-1px);
+}
+
+.btn--wood-plank:active {
+  transform: translateY(1px);
+  filter: brightness(1.02);
+}
+
+/* Rustikal gestalteter Google-Login-Knopf statt des modernen weißen
+   Google-Buttons - nur innerhalb des Login-Bereichs verwendet. */
+.btn--google-rustic {
+  background: var(--parch-100);
+  color: var(--ink-800);
+  border: 1.5px solid var(--parch-edge);
+  box-shadow: var(--shadow-card);
+}
+
+.btn--google-rustic:hover {
+  background: rgba(155, 122, 52, 0.14);
+  border-color: var(--brass);
+}
+
+.btn__google-icon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
 .btn--sm {
   padding: 7px 14px;
   font-size: 11.5px;
@@ -695,8 +820,11 @@ p {
 }
 
 .sidebar__brand-icon {
-  color: var(--brass-bright);
-  margin-bottom: 8px;
+  display: block;
+  width: 46px;
+  height: auto;
+  margin: 0 auto 8px;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5));
 }
 
 .sidebar__brand-title {
@@ -860,7 +988,7 @@ p {
   left: 14px;
   right: 14px;
   background: var(--parch-100);
-  border: 1px solid var(--parch-edge);
+  border: 1.5px solid var(--parch-edge);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-raised);
   padding: 6px;
@@ -919,7 +1047,7 @@ p {
   padding: 8px 14px;
   border-radius: 999px;
   background: var(--parch-100);
-  border: 1px solid var(--parch-edge);
+  border: 1.5px solid var(--parch-edge);
   transition: border-color 0.15s ease;
 }
 
@@ -942,7 +1070,7 @@ p {
   right: 0;
   width: 210px;
   background: var(--parch-100);
-  border: 1px solid var(--parch-edge);
+  border: 1.5px solid var(--parch-edge);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-raised);
   padding: 12px;
@@ -1058,7 +1186,7 @@ p {
    -------------------------------------------------------------------------- */
 .parch-card {
   background: var(--parch-100);
-  border: 1px solid var(--parch-edge);
+  border: 1.5px solid var(--parch-edge);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
   padding: 26px 28px;
@@ -1089,15 +1217,20 @@ p {
 /* --------------------------------------------------------------------------
    11. Übersicht (Dashboard)
    -------------------------------------------------------------------------- */
+/* Kopfbereich der Übersicht: echtes Hof-Foto (Scheune, Windrad, Laterne bei
+   Sonnenuntergang) statt der früheren Liniengrafik, mit dunklem Verlauf
+   links, damit die Begrüßung weiterhin gut lesbar bleibt. */
 .dash-hero {
-  background: var(--parch-100);
-  border: 1px solid var(--parch-edge);
+  background:
+    linear-gradient(100deg, rgba(18, 11, 5, 0.9) 0%, rgba(18, 11, 5, 0.68) 38%, rgba(18, 11, 5, 0.28) 68%, rgba(18, 11, 5, 0.05) 100%),
+    url("../img/dashboard-banner.jpg") center 40% / cover no-repeat;
+  border: 1.5px solid var(--parch-edge);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
   padding: 34px 36px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  min-height: 158px;
   gap: 24px;
   margin-bottom: 26px;
   position: relative;
@@ -1111,28 +1244,22 @@ p {
 
 .dash-hero__eyebrow {
   font-size: 12.5px;
-  color: var(--ink-soft);
+  color: var(--parch-200);
   margin-bottom: 4px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.65);
 }
 
 .dash-hero__name {
   font-size: 32px;
+  color: var(--brass-bright);
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.65);
 }
 
 .dash-hero__sub {
   margin-top: 8px;
   font-size: 13px;
-  color: var(--ink-soft);
-}
-
-.dash-hero__art {
-  width: 300px;
-  height: 130px;
-  color: var(--ink-700);
-  opacity: 0.45;
-  flex-shrink: 0;
-  position: relative;
-  z-index: 1;
+  color: var(--parch-200);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.65);
 }
 
 .dash-stats {
@@ -1144,7 +1271,7 @@ p {
 
 .dash-stat {
   background: var(--parch-100);
-  border: 1px solid var(--parch-edge);
+  border: 1.5px solid var(--parch-edge);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
   padding: 20px 22px;
@@ -1183,7 +1310,7 @@ p {
 
 .dash-panel {
   background: var(--parch-100);
-  border: 1px solid var(--parch-edge);
+  border: 1.5px solid var(--parch-edge);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
   overflow: hidden;
@@ -1270,7 +1397,7 @@ p {
 .dash-quicklink {
   text-align: left;
   padding: 20px 18px;
-  border: 1px solid var(--parch-edge);
+  border: 1.5px solid var(--parch-edge);
   border-radius: var(--radius-md);
   background: var(--parch-100);
   box-shadow: var(--shadow-card);
@@ -1396,7 +1523,7 @@ p {
 
 .table-card {
   background: var(--parch-100);
-  border: 1px solid var(--parch-edge);
+  border: 1.5px solid var(--parch-edge);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
   padding: 4px;
@@ -1424,7 +1551,7 @@ p {
   align-items: center;
   gap: 10px;
   background: var(--parch-100);
-  border: 1px solid var(--parch-edge);
+  border: 1.5px solid var(--parch-edge);
   border-radius: var(--radius-md);
   padding: 11px 16px;
   box-shadow: var(--shadow-card);
@@ -1458,13 +1585,85 @@ p {
    14. Bestellungen
    -------------------------------------------------------------------------- */
 .bestellungen-row {
-  grid-template-columns: 16fr 14fr 10fr 14fr 12fr 12fr 16fr 10fr;
+  grid-template-columns: 18fr 32fr 14fr 16fr 20fr 12fr;
 }
 
 .notiz-text {
   color: var(--ink-soft);
   font-style: italic;
   font-size: 12px;
+}
+
+.bestellung-produkte-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bestellung-produkte-summary__liste {
+  color: var(--ink-900);
+}
+
+.bestellung-produkte-summary__zaehler {
+  font-size: 11px;
+  color: var(--ink-faint);
+}
+
+/* Zeilen-Erfassung im Bestellungs-Modal (Produkt + Menge + Hinzufügen) */
+.bestellung-position-form {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.bestellung-positionen-liste {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 10px 0;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.bestellung-positionen-zeile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--parch-200);
+  border: 1px solid var(--parch-edge);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+}
+
+.bestellung-positionen-zeile__name {
+  flex: 1;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--ink-900);
+}
+
+.bestellung-positionen-zeile input[type="number"] {
+  width: 80px;
+  flex: 0 0 auto;
+  padding: 6px 8px;
+  text-align: right;
+}
+
+.bestellung-zusammenfassung {
+  display: flex;
+  gap: 22px;
+  padding: 10px 14px;
+  background: rgba(145, 109, 44, 0.12);
+  border-radius: var(--radius-sm);
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+}
+
+.bestellung-zusammenfassung strong {
+  color: var(--ink-900);
+  font-family: var(--font-display);
 }
 
 /* --------------------------------------------------------------------------
@@ -1632,7 +1831,7 @@ p {
 
 .rechner-field-box {
   background: var(--parch-200);
-  border: 1px solid var(--parch-edge);
+  border: 1.5px solid var(--parch-edge);
   border-radius: var(--radius-sm);
   padding: 12px 14px;
 }
@@ -1763,7 +1962,7 @@ p {
 .modal {
   width: 420px;
   background: var(--parch-100);
-  border: 1px solid var(--parch-edge);
+  border: 1.5px solid var(--parch-edge);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-modal);
   padding: 26px;
@@ -1970,6 +2169,12 @@ p {
   font-weight: 700;
 }
 
+.update-banner__logo {
+  width: 26px;
+  height: auto;
+  flex-shrink: 0;
+}
+
 .update-banner .btn {
   background: var(--wood-900);
   color: var(--brass-bright);
@@ -1998,7 +2203,7 @@ p {
    -------------------------------------------------------------------------- */
 .katalog-box {
   background: var(--parch-200);
-  border: 1px solid var(--parch-edge);
+  border: 1.5px solid var(--parch-edge);
   border-radius: var(--radius-md);
   padding: 14px;
   margin-bottom: 8px;
