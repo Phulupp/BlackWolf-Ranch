@@ -14,7 +14,7 @@
   /* ------------------------------------------------------------------------
      1. Konstanten
      ------------------------------------------------------------------------ */
-  const VERSION_AKTUELL = 2;
+  const VERSION_AKTUELL = 5;
 
   // Ränge des Hofes (rein organisatorisch — Verwalterrechte sind unabhängig
   // davon und werden separat je Benutzer vergeben, siehe isAdmin).
@@ -108,7 +108,7 @@
   let unsubAdminLog = null;
   let adminLogEintraege = [];
 
-  let bestellungenStatusFilter = "alle";
+  let bestellungenStatusFilter = "Offen";
   let bestellungenSuche = "";
   let warenSuche = "";
   let kontakteSuche = "";
@@ -179,19 +179,34 @@
     btnAddBestellung: document.getElementById("btn-add-bestellung"),
     modalBestellung: document.getElementById("modal-bestellung"),
     modalBestellungTitel: document.getElementById("modal-bestellung-titel"),
+    bestellungArchivHinweis: document.getElementById("bestellung-archiv-hinweis"),
     bestellungEditingId: document.getElementById("bestellung-editing-id"),
     bestellungUnternehmenInput: document.getElementById("bestellung-unternehmen-input"),
+    bestellungAnsprechpartnerInput: document.getElementById("bestellung-ansprechpartner-input"),
+    bestellungBestelldatumAnzeige: document.getElementById("bestellung-bestelldatum-anzeige"),
+    bestellungBearbeiterAnzeige: document.getElementById("bestellung-bearbeiter-anzeige"),
+    bestellungPositionForm: document.getElementById("bestellung-position-form"),
     bestellungPositionProdukt: document.getElementById("bestellung-position-produkt"),
     bestellungPositionMenge: document.getElementById("bestellung-position-menge"),
+    bestellungPositionRabatt: document.getElementById("bestellung-position-rabatt"),
+    bestellungPositionVorschau: document.getElementById("bestellung-position-vorschau"),
+    bestellungPositionVorschauStandard: document.getElementById("bestellung-position-vorschau-standard"),
+    bestellungPositionVorschauEndpreis: document.getElementById("bestellung-position-vorschau-endpreis"),
+    bestellungPositionVorschauGesamt: document.getElementById("bestellung-position-vorschau-gesamt"),
+    bestellungPositionVorschauHinweis: document.getElementById("bestellung-position-vorschau-hinweis"),
     btnBestellungPositionHinzufuegen: document.getElementById("btn-bestellung-position-hinzufuegen"),
     bestellungPositionenListe: document.getElementById("bestellung-positionen-liste"),
     bestellungPositionenLeer: document.getElementById("bestellung-positionen-leer"),
     bestellungZusammenfassung: document.getElementById("bestellung-zusammenfassung"),
     bestellungZusammenfassungAnzahl: document.getElementById("bestellung-zusammenfassung-anzahl"),
     bestellungZusammenfassungMenge: document.getElementById("bestellung-zusammenfassung-menge"),
+    bestellungZusammenfassungRabatt: document.getElementById("bestellung-zusammenfassung-rabatt"),
+    bestellungZusammenfassungSumme: document.getElementById("bestellung-zusammenfassung-summe"),
     bestellungStatusInput: document.getElementById("bestellung-status-input"),
     bestellungNotizInput: document.getElementById("bestellung-notiz-input"),
     bestellungError: document.getElementById("bestellung-error"),
+    btnBestellungLoeschen: document.getElementById("btn-bestellung-loeschen"),
+    btnBestellungArchivieren: document.getElementById("btn-bestellung-archivieren"),
     btnConfirmBestellung: document.getElementById("btn-confirm-bestellung"),
 
     // Waren & Preise
@@ -761,12 +776,25 @@
   /* ------------------------------------------------------------------------
      10. Bestellungen
      ------------------------------------------------------------------------ */
-  // Eine Bestellung enthält jetzt beliebig viele Produkte:
-  //   { unternehmen, produkte: [{ produktId, produktName, menge }, ...],
-  //     status, notiz, erstelltAm, erstelltVon }
+  // Eine Bestellung enthält beliebig viele Produkte, jede Produktzeile ist
+  // ein vollständiger PREIS-SCHNAPPSCHUSS zum Zeitpunkt des Hinzufügens -
+  // spätere Änderungen am Produkt-Standardpreis wirken sich NICHT auf schon
+  // bestehende Bestellungen aus, damit die Historie nachvollziehbar bleibt:
+  //   {
+  //     unternehmen, ansprechpartner,
+  //     produkte: [{ produktId, produktName, menge, standardpreis,
+  //                  rabattProzent, endpreis, gesamtpreis }, ...],
+  //     status, notiz, archiviert,
+  //     erstelltAm, erstelltVon, bearbeiter
+  //   }
+  // "Archiv" ist bewusst KEIN vierter Status, sondern ein eigenes Flag
+  // ("archiviert"), das nur bei Status "Abgeschlossen" gesetzt werden kann -
+  // archivierte Bestellungen dürfen laut Firestore-Regel nie gelöscht
+  // werden und bleiben so dauerhaft als Beleg einsehbar.
   // "bestellungEntwurfPositionen" ist die Arbeitskopie der Produktliste,
   // während das Bestellungs-Modal offen ist (siehe oeffneBestellungModal).
   let bestellungEntwurfPositionen = [];
+  let bestellungModalArchiviert = false;
 
   function starteBestellungenListener() {
     if (!db) return;
@@ -777,7 +805,7 @@
       .onSnapshot(
         (snap) => {
           bestellungen = [];
-          snap.forEach((docSnap) => bestellungen.push({ id: docSnap.id, produkte: [], ...docSnap.data() }));
+          snap.forEach((docSnap) => bestellungen.push({ id: docSnap.id, produkte: [], archiviert: false, ...docSnap.data() }));
           renderBestellungen();
           renderUebersicht();
           renderStatistiken();
@@ -787,12 +815,12 @@
       );
   }
 
-  // Kleine Zusammenfassung einer Produktliste, z. B. "Zucker, Mehl, Eier +1
-  // weitere" bzw. "4 Produkte · 890 Stück gesamt".
   function bestellungProdukteZeilen(produkteListe) {
     return (produkteListe || []).reduce((sum, p) => sum + (Number(p.menge) || 0), 0);
   }
 
+  // Kleine Zusammenfassung einer Produktliste, z. B. "Zucker, Mehl, Eier +1
+  // weitere" - wird u. a. im Übersicht-Dashboard (dash-mini-row) verwendet.
   function bestellungProdukteText(produkteListe) {
     const liste = produkteListe || [];
     if (liste.length === 0) return "—";
@@ -802,9 +830,46 @@
     return `${sichtbar}${rest}`;
   }
 
+  // Berechnet aus dem gespeicherten Standardpreis + Rabatt den Endpreis
+  // (Stückpreis nach Rabatt) sowie den Gesamtpreis der Zeile (Endpreis × Menge).
+  function berechneBestellungPositionPreise(standardpreis, rabattProzent, menge) {
+    const sp = Number(standardpreis) || 0;
+    const rp = Math.max(0, Math.min(100, Number(rabattProzent) || 0));
+    const mg = Number(menge) || 0;
+    const endpreis = sp * (1 - rp / 100);
+    return { endpreis, gesamtpreis: endpreis * mg };
+  }
+
+  // Fasst eine Produktliste zu den vier Kennzahlen der Zusammenfassung
+  // zusammen: Anzahl Produkte, Gesamtmenge, Gesamtrabatt (in $ gespart) und
+  // Gesamtsumme.
+  function bestellungZusammenfassungWerte(produkteListe) {
+    const liste = produkteListe || [];
+    let gesamtmenge = 0;
+    let gesamtrabatt = 0;
+    let gesamtsumme = 0;
+    liste.forEach((p) => {
+      const { endpreis, gesamtpreis } = berechneBestellungPositionPreise(p.standardpreis, p.rabattProzent, p.menge);
+      const menge = Number(p.menge) || 0;
+      gesamtmenge += menge;
+      gesamtrabatt += ((Number(p.standardpreis) || 0) - endpreis) * menge;
+      gesamtsumme += gesamtpreis;
+    });
+    return { anzahl: liste.length, gesamtmenge, gesamtrabatt, gesamtsumme };
+  }
+
+  // Filter-Logik für die 4 Reiter Offen/In Bearbeitung/Abgeschlossen/Archiv:
+  // "Archiv" zeigt alle archivierten Bestellungen (unabhängig vom Status),
+  // die drei normalen Reiter zeigen nur NICHT archivierte Bestellungen mit
+  // passendem Status - so verschwinden abgeschlossene, archivierte
+  // Bestellungen aus der normalen Ansicht und liegen nur noch im Archiv.
   function gefilterteBestellungen() {
     let liste = bestellungen;
-    if (bestellungenStatusFilter !== "alle") liste = liste.filter((b) => b.status === bestellungenStatusFilter);
+    if (bestellungenStatusFilter === "Archiv") {
+      liste = liste.filter((b) => b.archiviert === true);
+    } else {
+      liste = liste.filter((b) => b.status === bestellungenStatusFilter && b.archiviert !== true);
+    }
     const begriff = bestellungenSuche.trim().toLowerCase();
     if (begriff) {
       liste = liste.filter(
@@ -816,6 +881,10 @@
     return liste;
   }
 
+  // Kompakte Übersichtstabelle: nur Unternehmen, Anzahl der Produkte,
+  // Gesamtmenge, Bestelldatum und Status - alles Weitere (Ansprechpartner,
+  // Notiz, Preise, Rabatte, Bearbeiter) ist erst nach dem Anklicken im
+  // Detail-Modal sichtbar.
   function renderBestellungen() {
     if (!el.bestellungenTableBody) return;
     const liste = gefilterteBestellungen();
@@ -824,24 +893,14 @@
 
     el.bestellungenTableBody.innerHTML = liste
       .map((b) => {
-        const statusOptions = BESTELLUNG_STATUS.map((s) => `<option value="${s}" ${s === b.status ? "selected" : ""}>${s}</option>`).join("");
         const anzahl = (b.produkte || []).length;
         const gesamtmenge = bestellungProdukteZeilen(b.produkte);
-        return `<div class="reg-row reg-row--body bestellungen-row">
+        return `<div class="reg-row reg-row--body bestellungen-row" data-bestellung-oeffnen="${b.id}">
             <span class="reg-name">${escapeHtml(b.unternehmen || "—")}</span>
-            <span class="bestellung-produkte-summary">
-              <span class="bestellung-produkte-summary__liste">${escapeHtml(bestellungProdukteText(b.produkte))}</span>
-              <span class="bestellung-produkte-summary__zaehler">${anzahl} Produkt${anzahl === 1 ? "" : "e"} · ${gesamtmenge} Stück gesamt</span>
-            </span>
+            <span>${anzahl} Produkt${anzahl === 1 ? "" : "e"}</span>
+            <span>${gesamtmenge} Stück</span>
             <span>${formatDatum(b.erstelltAm)}</span>
-            <span><select class="field-input" style="padding:5px 8px;font-size:11.5px;" data-bestellung-status="${b.id}">${statusOptions}</select></span>
-            <span class="notiz-text">${b.notiz ? escapeHtml(b.notiz) : "—"}</span>
-            <span class="reg-row__actions-col">
-              <div class="row-actions">
-                <button class="icon-btn" data-bestellung-edit="${b.id}" title="Öffnen / Bearbeiten">✎</button>
-                <button class="icon-btn icon-btn--delete" data-bestellung-delete="${b.id}" title="Löschen">🗑</button>
-              </div>
-            </span>
+            <span><span class="status-pill ${statusPillKlasse(b.status)}">${escapeHtml(b.status || "—")}</span></span>
           </div>`;
       })
       .join("");
@@ -854,46 +913,148 @@
     });
   }
 
-  // Rendert die Produktliste + Zusammenfassung INNERHALB des offenen
-  // Bestellungs-Modals, auf Basis von bestellungEntwurfPositionen.
+  // Aktualisiert NUR die vier Zahlen unter der Produkt-Tabelle (Anzahl,
+  // Gesamtmenge, Gesamtrabatt, Gesamtsumme), ohne die Tabelle selbst neu
+  // aufzubauen - wird sowohl vom vollständigen Render als auch von der
+  // Live-Neuberechnung bei jeder Tastatureingabe aufgerufen.
+  function aktualisiereBestellungZusammenfassung() {
+    const werte = bestellungZusammenfassungWerte(bestellungEntwurfPositionen);
+    el.bestellungZusammenfassung.hidden = bestellungEntwurfPositionen.length === 0;
+    el.bestellungZusammenfassungAnzahl.textContent = String(werte.anzahl);
+    el.bestellungZusammenfassungMenge.textContent = String(werte.gesamtmenge);
+    el.bestellungZusammenfassungRabatt.textContent = formatGeld(werte.gesamtrabatt);
+    el.bestellungZusammenfassungSumme.textContent = formatGeld(werte.gesamtsumme);
+  }
+
+  // Rendert die komplette Produkt-Tabelle INNERHALB des offenen Bestellungs-
+  // Modals, auf Basis von bestellungEntwurfPositionen. Wird beim Öffnen des
+  // Modals sowie beim Hinzufügen/Entfernen einer Position aufgerufen (dort
+  // ändert sich die Anzahl der Zeilen, ein kompletter Neuaufbau ist nötig).
+  // Ist die Bestellung archiviert, wird nur noch reine Text-Ansicht ohne
+  // Eingabefelder/Entfernen-Buttons gezeigt (Archiv = unveränderliches
+  // Beleg-Dokument).
   function renderBestellungPositionen() {
     if (!el.bestellungPositionenListe) return;
     const positionen = bestellungEntwurfPositionen;
+    const admin = istAdmin();
 
     el.bestellungPositionenLeer.hidden = positionen.length !== 0;
     el.bestellungPositionenListe.innerHTML = positionen
-      .map(
-        (p, index) => `<div class="bestellung-positionen-zeile">
+      .map((p, index) => {
+        const { endpreis, gesamtpreis } = berechneBestellungPositionPreise(p.standardpreis, p.rabattProzent, p.menge);
+        const mengeFeld = bestellungModalArchiviert
+          ? `<span>${escapeHtml(p.menge)}</span>`
+          : `<input type="number" class="field-input" min="1" step="1" value="${p.menge}" data-position-menge="${index}" />`;
+        const rabattFeld =
+          !bestellungModalArchiviert && admin
+            ? `<input type="number" class="field-input" min="0" max="100" step="0.1" value="${p.rabattProzent || 0}" data-position-rabatt="${index}" />`
+            : `<span>${formatProzent(p.rabattProzent || 0, 1)}</span>`;
+        const entfernenBtn = bestellungModalArchiviert
+          ? ""
+          : `<button type="button" class="icon-btn icon-btn--delete" data-position-entfernen="${index}" title="Entfernen">✕</button>`;
+        const standardpreisHinweis =
+          !p.standardpreis || Number(p.standardpreis) === 0
+            ? ` <span class="bestellung-positionen-zeile__kein-preis" title="Für dieses Produkt ist kein Standardpreis hinterlegt.">⚠</span>`
+            : "";
+        return `<div class="bestellung-positionen-zeile">
           <span class="bestellung-positionen-zeile__name">${escapeHtml(p.produktName)}</span>
-          <input type="number" class="field-input" min="1" step="1" value="${p.menge}" data-position-menge="${index}" />
-          <button type="button" class="icon-btn icon-btn--delete" data-position-entfernen="${index}" title="Entfernen">✕</button>
-        </div>`
-      )
+          ${mengeFeld}
+          <span>${formatGeld(p.standardpreis)}${standardpreisHinweis}</span>
+          ${rabattFeld}
+          <span class="bestellung-positionen-zeile__endpreis" data-endpreis-anzeige="${index}">${formatGeld(endpreis)}</span>
+          <span class="bestellung-positionen-zeile__gesamt" data-gesamt-anzeige="${index}">${formatGeld(gesamtpreis)}</span>
+          <span>${entfernenBtn}</span>
+        </div>`;
+      })
       .join("");
 
-    const gesamtmenge = bestellungProdukteZeilen(positionen);
-    el.bestellungZusammenfassung.hidden = positionen.length === 0;
-    el.bestellungZusammenfassungAnzahl.textContent = String(positionen.length);
-    el.bestellungZusammenfassungMenge.textContent = String(gesamtmenge);
+    aktualisiereBestellungZusammenfassung();
   }
+
+  // Leichtgewichtige Neuberechnung für eine EINZELNE Zeile: wird bei jeder
+  // Tastatureingabe in Menge/Rabatt aufgerufen. Baut die Tabelle bewusst
+  // NICHT komplett neu auf (das würde die gerade fokussierten Eingabefelder
+  // zerstören und den Cursor/Fokus verlieren - genau das war die Ursache
+  // dafür, dass sich Endpreis/Gesamtpreis vorher erst nach einem Klick
+  // woanders hin aktualisiert haben). Stattdessen werden nur die Endpreis-/
+  // Gesamtpreis-Textinhalte dieser einen Zeile sowie die Zusammenfassung
+  // gezielt aktualisiert.
+  function aktualisierePositionsBerechnung(index) {
+    const p = bestellungEntwurfPositionen[index];
+    if (!p) return;
+    const { endpreis, gesamtpreis } = berechneBestellungPositionPreise(p.standardpreis, p.rabattProzent, p.menge);
+    const endpreisEl = el.bestellungPositionenListe.querySelector(`[data-endpreis-anzeige="${index}"]`);
+    const gesamtEl = el.bestellungPositionenListe.querySelector(`[data-gesamt-anzeige="${index}"]`);
+    if (endpreisEl) endpreisEl.textContent = formatGeld(endpreis);
+    if (gesamtEl) gesamtEl.textContent = formatGeld(gesamtpreis);
+    aktualisiereBestellungZusammenfassung();
+  }
+
+  // Live-Vorschau im "Produkt hinzufügen"-Formular: sobald ein Produkt
+  // gewählt oder Menge/Rabatt geändert werden, wird sofort (ohne Klick auf
+  // "Hinzufügen") angezeigt, welcher Standardpreis für dieses Produkt aus
+  // der Datenbank geladen wurde und welcher Endpreis/Gesamtpreis sich daraus
+  // ergibt. Zeigt außerdem einen klaren Hinweis, falls für das gewählte
+  // Produkt gar kein Standardpreis in "Waren & Preise" hinterlegt ist -
+  // damit sofort ersichtlich ist, ob 0,00 $ an fehlenden Katalogdaten liegt.
+  function aktualisierePositionVorschau() {
+    if (!el.bestellungPositionVorschau || !el.bestellungPositionProdukt) return;
+    const produkt = produkte.find((p) => p.id === el.bestellungPositionProdukt.value);
+    const menge = Math.max(0, parseInt(el.bestellungPositionMenge.value, 10) || 0);
+    const rabattProzent = istAdmin() ? Math.max(0, Math.min(100, parseFloat(el.bestellungPositionRabatt.value) || 0)) : 0;
+    const standardpreis = produkt ? Number(produkt.verkaufspreis) || 0 : 0;
+    const { endpreis, gesamtpreis } = berechneBestellungPositionPreise(standardpreis, rabattProzent, menge);
+
+    el.bestellungPositionVorschauStandard.textContent = formatGeld(standardpreis);
+    el.bestellungPositionVorschauEndpreis.textContent = formatGeld(endpreis);
+    el.bestellungPositionVorschauGesamt.textContent = formatGeld(gesamtpreis);
+    el.bestellungPositionVorschauHinweis.hidden = !(produkt && standardpreis === 0);
+  }
+
+  // Live-Vorschau im Hinzufügen-Formular: sofort bei Produktwahl (Standard-
+  // preis wird direkt beim Auswählen aus der Datenbank übernommen) und bei
+  // jeder Tastatureingabe in Menge/Rabatt neu berechnen - kein zusätzlicher
+  // Klick nötig.
+  if (el.bestellungPositionProdukt) el.bestellungPositionProdukt.addEventListener("change", aktualisierePositionVorschau);
+  if (el.bestellungPositionMenge) el.bestellungPositionMenge.addEventListener("input", aktualisierePositionVorschau);
+  if (el.bestellungPositionRabatt) el.bestellungPositionRabatt.addEventListener("input", aktualisierePositionVorschau);
 
   if (el.btnBestellungPositionHinzufuegen) {
     el.btnBestellungPositionHinzufuegen.addEventListener("click", () => {
       versteckeFeldFehler(el.bestellungError);
       const produkt = produkte.find((p) => p.id === el.bestellungPositionProdukt.value);
       const menge = parseInt(el.bestellungPositionMenge.value, 10);
+      const rabattProzent = istAdmin() ? Math.max(0, Math.min(100, parseFloat(el.bestellungPositionRabatt.value) || 0)) : 0;
 
       if (!produkt) return zeigeFeldFehler(el.bestellungError, "Bitte wähle ein Produkt aus.");
       if (!isFinite(menge) || menge < 1) return zeigeFeldFehler(el.bestellungError, "Bitte gib eine gültige Menge ein.");
 
-      const vorhanden = bestellungEntwurfPositionen.find((p) => p.produktId === produkt.id);
+      const standardpreis = Number(produkt.verkaufspreis) || 0;
+
+      // Zeilen werden nur zusammengeführt, wenn Produkt UND Rabatt
+      // übereinstimmen - unterschiedliche Rabatte auf dasselbe Produkt
+      // bleiben als eigene, nachvollziehbare Zeilen bestehen.
+      const vorhanden = bestellungEntwurfPositionen.find((p) => p.produktId === produkt.id && (p.rabattProzent || 0) === rabattProzent);
       if (vorhanden) {
         vorhanden.menge += menge;
+        // Standardpreis der bestehenden Zeile wird beim Zusammenführen mit
+        // dem aktuell im Katalog hinterlegten Preis synchron gehalten, damit
+        // eine zusammengeführte Zeile nicht an einem veralteten Preis von
+        // vorher hängen bleibt.
+        vorhanden.standardpreis = standardpreis;
       } else {
-        bestellungEntwurfPositionen.push({ produktId: produkt.id, produktName: produkt.name, menge });
+        bestellungEntwurfPositionen.push({
+          produktId: produkt.id,
+          produktName: produkt.name,
+          menge,
+          standardpreis,
+          rabattProzent,
+        });
       }
       renderBestellungPositionen();
       el.bestellungPositionMenge.value = 1;
+      el.bestellungPositionRabatt.value = 0;
+      aktualisierePositionVorschau();
     });
   }
 
@@ -905,26 +1066,70 @@
       bestellungEntwurfPositionen.splice(index, 1);
       renderBestellungPositionen();
     });
-    el.bestellungPositionenListe.addEventListener("change", (event) => {
+    // "input" statt "change": die Berechnung muss bei JEDEM Tastenanschlag
+    // sofort erfolgen, nicht erst wenn das Feld den Fokus verliert. Es wird
+    // bewusst NICHT die ganze Tabelle neu aufgebaut (siehe
+    // aktualisierePositionsBerechnung) - sonst würde das gerade fokussierte
+    // Eingabefeld bei jedem Tastenanschlag neu erzeugt und der Cursor bzw.
+    // der Fokus ginge verloren, was sich wie "die Berechnung reagiert nicht"
+    // angefühlt hat.
+    el.bestellungPositionenListe.addEventListener("input", (event) => {
       const mengeInput = event.target.closest("[data-position-menge]");
-      if (!mengeInput) return;
-      const index = parseInt(mengeInput.getAttribute("data-position-menge"), 10);
-      const menge = Math.max(1, parseInt(mengeInput.value, 10) || 1);
-      bestellungEntwurfPositionen[index].menge = menge;
-      renderBestellungPositionen();
+      const rabattInput = event.target.closest("[data-position-rabatt]");
+      if (mengeInput) {
+        const index = parseInt(mengeInput.getAttribute("data-position-menge"), 10);
+        const menge = Math.max(1, parseInt(mengeInput.value, 10) || 1);
+        bestellungEntwurfPositionen[index].menge = menge;
+        aktualisierePositionsBerechnung(index);
+      } else if (rabattInput) {
+        const index = parseInt(rabattInput.getAttribute("data-position-rabatt"), 10);
+        const rabatt = Math.max(0, Math.min(100, parseFloat(rabattInput.value) || 0));
+        bestellungEntwurfPositionen[index].rabattProzent = rabatt;
+        aktualisierePositionsBerechnung(index);
+      }
     });
   }
 
+  // Öffnet das Detail-/Bearbeiten-Modal. Ist die Bestellung bereits
+  // archiviert, wird das gesamte Modal auf reine Ansicht umgeschaltet:
+  // alle Felder gesperrt, Hinzufügen/Entfernen ausgeblendet, Speichern/
+  // Archivieren/Löschen ausgeblendet - so bleibt sie als Beleg vollständig
+  // einsehbar, aber unveränderlich.
   function oeffneBestellungModal(bestellung) {
     versteckeFeldFehler(el.bestellungError);
-    el.modalBestellungTitel.textContent = bestellung ? "Bestellung bearbeiten" : "Neue Bestellung";
+    bestellungModalArchiviert = !!(bestellung && bestellung.archiviert);
+
+    el.modalBestellungTitel.textContent = bestellung ? "Bestellung" : "Neue Bestellung";
     el.bestellungEditingId.value = bestellung ? bestellung.id : "";
     el.bestellungUnternehmenInput.value = bestellung ? bestellung.unternehmen || "" : "";
+    el.bestellungAnsprechpartnerInput.value = bestellung ? bestellung.ansprechpartner || "" : "";
+    el.bestellungBestelldatumAnzeige.textContent = bestellung ? formatDatumUhrzeit(bestellung.erstelltAm) : "Wird beim Speichern gesetzt";
+    el.bestellungBearbeiterAnzeige.textContent = bestellung ? bestellung.bearbeiter || bestellung.erstelltVon || "—" : "—";
     el.bestellungStatusInput.value = bestellung ? bestellung.status : "Offen";
     el.bestellungNotizInput.value = bestellung ? bestellung.notiz || "" : "";
     bestellungEntwurfPositionen = bestellung ? (bestellung.produkte || []).map((p) => ({ ...p })) : [];
     el.bestellungPositionMenge.value = 1;
+    el.bestellungPositionRabatt.value = 0;
+    el.bestellungPositionRabatt.disabled = !istAdmin();
     renderBestellungPositionen();
+
+    [el.bestellungUnternehmenInput, el.bestellungAnsprechpartnerInput, el.bestellungStatusInput, el.bestellungNotizInput].forEach(
+      (feld) => {
+        if (feld) feld.disabled = bestellungModalArchiviert;
+      }
+    );
+    el.bestellungPositionForm.hidden = bestellungModalArchiviert;
+    el.bestellungPositionVorschau.hidden = bestellungModalArchiviert;
+    // Zeigt sofort den Standardpreis des aktuell (ggf. automatisch als
+    // erste Option) ausgewählten Produkts an - ohne dass extra etwas
+    // angeklickt werden muss.
+    aktualisierePositionVorschau();
+
+    el.bestellungArchivHinweis.hidden = !bestellungModalArchiviert;
+    el.btnConfirmBestellung.hidden = bestellungModalArchiviert;
+    el.btnBestellungLoeschen.hidden = bestellungModalArchiviert;
+    el.btnBestellungArchivieren.hidden = !(bestellung && !bestellungModalArchiviert && bestellung.status === "Abgeschlossen");
+
     oeffneModal("modal-bestellung");
   }
 
@@ -935,27 +1140,41 @@
 
   if (el.bestellungenTableBody) {
     el.bestellungenTableBody.addEventListener("click", (event) => {
-      const editBtn = event.target.closest("[data-bestellung-edit]");
-      const delBtn = event.target.closest("[data-bestellung-delete]");
-      if (editBtn) {
-        const b = bestellungen.find((x) => x.id === editBtn.getAttribute("data-bestellung-edit"));
-        if (b) oeffneBestellungModal(b);
-      } else if (delBtn) {
-        const id = delBtn.getAttribute("data-bestellung-delete");
-        fordereLoeschungAn("Bestellung löschen", "Möchtest du diese Bestellung wirklich löschen?", async () => {
-          await db.collection(BESTELLUNGEN_COLLECTION).doc(id).delete();
-          zeigeToast("Bestellung gelöscht.");
-        });
-      }
+      const zeile = event.target.closest("[data-bestellung-oeffnen]");
+      if (!zeile) return;
+      const b = bestellungen.find((x) => x.id === zeile.getAttribute("data-bestellung-oeffnen"));
+      if (b) oeffneBestellungModal(b);
     });
-    el.bestellungenTableBody.addEventListener("change", (event) => {
-      const select = event.target.closest("[data-bestellung-status]");
-      if (!select) return;
-      db.collection(BESTELLUNGEN_COLLECTION)
-        .doc(select.getAttribute("data-bestellung-status"))
-        .update({ status: select.value })
-        .then(() => zeigeToast("Status aktualisiert."))
-        .catch(() => zeigeToast("Status konnte nicht aktualisiert werden."));
+  }
+
+  if (el.btnBestellungLoeschen) {
+    el.btnBestellungLoeschen.addEventListener("click", () => {
+      const id = el.bestellungEditingId.value;
+      if (!id) return;
+      fordereLoeschungAn("Bestellung löschen", "Möchtest du diese Bestellung wirklich löschen?", async () => {
+        await db.collection(BESTELLUNGEN_COLLECTION).doc(id).delete();
+        schliesseModal("modal-bestellung");
+        zeigeToast("Bestellung gelöscht.");
+      });
+    });
+  }
+
+  if (el.btnBestellungArchivieren) {
+    el.btnBestellungArchivieren.addEventListener("click", () => {
+      const id = el.bestellungEditingId.value;
+      if (!id) return;
+      fordereLoeschungAn(
+        "Bestellung archivieren",
+        "Möchtest du diese Bestellung wirklich archivieren? Sie bleibt danach dauerhaft im Archiv einsehbar, kann aber nicht mehr bearbeitet oder gelöscht werden.",
+        async () => {
+          await db
+            .collection(BESTELLUNGEN_COLLECTION)
+            .doc(id)
+            .update({ archiviert: true, bearbeiter: aktuellerNutzer ? aktuellerNutzer.name : null });
+          schliesseModal("modal-bestellung");
+          zeigeToast("Bestellung archiviert.");
+        }
+      );
     });
   }
 
@@ -970,9 +1189,22 @@
 
       const daten = {
         unternehmen,
-        produkte: bestellungEntwurfPositionen.map((p) => ({ produktId: p.produktId, produktName: p.produktName, menge: p.menge })),
+        ansprechpartner: el.bestellungAnsprechpartnerInput.value.trim(),
+        produkte: bestellungEntwurfPositionen.map((p) => {
+          const { endpreis, gesamtpreis } = berechneBestellungPositionPreise(p.standardpreis, p.rabattProzent, p.menge);
+          return {
+            produktId: p.produktId,
+            produktName: p.produktName,
+            menge: p.menge,
+            standardpreis: Number(p.standardpreis) || 0,
+            rabattProzent: Number(p.rabattProzent) || 0,
+            endpreis,
+            gesamtpreis,
+          };
+        }),
         status: el.bestellungStatusInput.value,
         notiz: el.bestellungNotizInput.value.trim(),
+        bearbeiter: aktuellerNutzer ? aktuellerNutzer.name : null,
       };
 
       try {
@@ -980,6 +1212,7 @@
         if (id) {
           await db.collection(BESTELLUNGEN_COLLECTION).doc(id).update(daten);
         } else {
+          daten.archiviert = false;
           daten.erstelltAm = firebase.firestore.FieldValue.serverTimestamp();
           daten.erstelltVon = aktuellerNutzer ? aktuellerNutzer.name : null;
           await db.collection(BESTELLUNGEN_COLLECTION).add(daten);
@@ -1134,13 +1367,33 @@
           erstelltVon: aktuellerNutzer ? aktuellerNutzer.name : null,
         });
 
+        // Der komplette, im Handelsrechner verhandelte Preis-Schnappschuss
+        // (Standardpreis, Rabatt, Endpreis, Gesamtpreis) wird 1:1 auf die
+        // Produktzeile der Bestellung übernommen - so bleibt für jede aus
+        // dem Handelsrechner übernommene Bestellung nachvollziehbar, welcher
+        // Rabatt vereinbart wurde, welcher Standardpreis galt, welcher
+        // Endpreis berechnet wurde und welche Gesamtsumme daraus resultierte.
+        // Diese Daten gehen NICHT mehr nur in einem Freitext-Hinweis verloren.
         await db.collection(BESTELLUNGEN_COLLECTION).add({
           unternehmen,
-          produkte: [{ produktId: ergebnis.produkt.id, produktName: ergebnis.produkt.name, menge: ergebnis.menge }],
+          ansprechpartner: "",
+          produkte: [
+            {
+              produktId: ergebnis.produkt.id,
+              produktName: ergebnis.produkt.name,
+              menge: ergebnis.menge,
+              standardpreis: ergebnis.standardpreis || 0,
+              rabattProzent: Math.round(ergebnis.rabattProzent * 10) / 10,
+              endpreis: ergebnis.neuerStueckpreis,
+              gesamtpreis: ergebnis.gesamtpreis,
+            },
+          ],
           status: "Offen",
-          notiz: `Aus Handelsrechner übernommen (${formatProzent(ergebnis.rabattProzent, 0)} Rabatt).`,
+          notiz: "Aus Handelsrechner übernommen.",
+          archiviert: false,
           erstelltAm: firebase.firestore.FieldValue.serverTimestamp(),
           erstelltVon: aktuellerNutzer ? aktuellerNutzer.name : null,
+          bearbeiter: aktuellerNutzer ? aktuellerNutzer.name : null,
         });
 
         zeigeToast("Angebot als Bestellung übernommen.");
@@ -1606,19 +1859,37 @@
       );
   }
 
+  // Darf der aktuelle Nutzer diesen Hofbuch-Eintrag löschen? Verwalter dürfen
+  // immer, der Verfasser darf seinen eigenen Eintrag löschen (siehe
+  // firestore.rules: gleiche Bedingung serverseitig geprüft).
+  function darfHofbuchEintragLoeschen(eintrag) {
+    if (istAdmin()) return true;
+    return !!(aktuellerNutzer && eintrag.autorUid && eintrag.autorUid === aktuellerNutzer.uid);
+  }
+
   function renderHofbuch() {
     if (!el.hofbuchEintraegeEl) return;
     el.hofbuchEmpty.hidden = hofbuchEintraege.length !== 0;
     el.hofbuchEintraegeEl.innerHTML = hofbuchEintraege
-      .map(
-        (e) => `<div class="hofbuch-eintrag">
+      .map((e) => {
+        const darfLoeschen = darfHofbuchEintragLoeschen(e);
+        return `<article class="hofbuch-eintrag">
           <div class="hofbuch-eintrag__kopf">
-            <span class="hofbuch-eintrag__titel">${escapeHtml(e.titel)}</span>
-            <span class="hofbuch-eintrag__meta">${escapeHtml(e.autor || "Unbekannt")} · ${formatDatum(e.erstelltAm)}</span>
+            <div class="hofbuch-eintrag__kopf-text">
+              <span class="hofbuch-eintrag__titel">${escapeHtml(e.titel)}</span>
+              <span class="hofbuch-eintrag__meta">${escapeHtml(e.autor || "Unbekannt")} · ${formatDatum(e.erstelltAm)}</span>
+            </div>
+            ${
+              darfLoeschen
+                ? `<button type="button" class="icon-btn icon-btn--delete hofbuch-eintrag__delete" data-hofbuch-delete="${e.id}" title="Eintrag löschen" aria-label="Eintrag löschen">
+                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M9 7V4.8c0-.4.4-.8.9-.8h4.2c.5 0 .9.4.9.8V7"/><path d="M6.5 7 7.3 19.2c0 .5.5.8 1 .8h7.4c.5 0 .9-.3 1-.8L17.5 7"/><line x1="10" y1="11" x2="10" y2="16"/><line x1="14" y1="11" x2="14" y2="16"/></svg>
+                   </button>`
+                : ""
+            }
           </div>
           <p class="hofbuch-eintrag__text">${escapeHtml(e.text)}</p>
-        </div>`
-      )
+        </article>`;
+      })
       .join("");
   }
 
@@ -1634,6 +1905,7 @@
           titel,
           text,
           autor: aktuellerNutzer ? aktuellerNutzer.name : null,
+          autorUid: aktuellerNutzer ? aktuellerNutzer.uid : null,
           erstelltAm: firebase.firestore.FieldValue.serverTimestamp(),
         });
         el.formHofbuch.reset();
@@ -1642,6 +1914,21 @@
         console.error(fehler);
         zeigeToast("Eintrag konnte nicht gespeichert werden.");
       }
+    });
+  }
+
+  // Löschen (mit Bestätigung über das geteilte Löschen-Modal, siehe
+  // fordereLoeschungAn) - per Klick-Delegation, da die Einträge dynamisch
+  // neu gerendert werden.
+  if (el.hofbuchEintraegeEl) {
+    el.hofbuchEintraegeEl.addEventListener("click", (event) => {
+      const btn = event.target.closest("[data-hofbuch-delete]");
+      if (!btn) return;
+      const id = btn.getAttribute("data-hofbuch-delete");
+      fordereLoeschungAn("Eintrag löschen", "Möchtest du diesen Eintrag wirklich löschen?", async () => {
+        await db.collection(HOFBUCH_COLLECTION).doc(id).delete();
+        zeigeToast("Eintrag gelöscht.");
+      });
     });
   }
 
@@ -1897,7 +2184,7 @@
         }
         <div class="detail-row"><span class="detail-row__label">Registriert</span><span>${formatDatumUhrzeit(b.createdAt)}</span></div>
         <div class="detail-row"><span class="detail-row__label">Letzter Login</span><span>${formatDatumUhrzeit(b.lastLogin)}</span></div>
-        <div class="detail-row" style="justify-content:flex-end; border-top:1px solid var(--parch-edge); padding-top:14px;">
+        <div class="detail-row" style="justify-content:flex-end; border-top:1px solid var(--leather-edge); padding-top:14px;">
           <button class="btn btn--danger btn--sm" data-benutzer-aktion="loeschen">Benutzer löschen</button>
         </div>
       </div>`;
