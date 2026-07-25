@@ -201,6 +201,10 @@
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1V10"/><path d="M9.5 20.5v-6h5v6"/></svg>
           <span>Übersicht</span>
         </button>
+        <button class="sidebar__item" data-view="hofbuch">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5.5C10 4 6.5 3.6 4 4.3v14.3c2.5-.7 6-.3 8 1.2"/><path d="M12 5.5c2-1.5 5.5-1.9 8-1.2v14.3c-2.5-.7-6-.3-8 1.2Z"/><line x1="12" y1="5.5" x2="12" y2="19.8"/></svg>
+          <span>Hofbuch</span>
+        </button>
         <button class="sidebar__item" data-view="bestellungen">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="12" height="17" rx="1.5"/><path d="M9 4V3.3A1.3 1.3 0 0 1 10.3 2h3.4A1.3 1.3 0 0 1 15 3.3V4"/><line x1="9" y1="10.5" x2="15" y2="10.5"/><line x1="9" y1="14" x2="15" y2="14"/><line x1="9" y1="17.5" x2="13" y2="17.5"/></svg>
           <span>Bestellungen</span>
@@ -224,10 +228,6 @@
         <button class="sidebar__item" data-view="verkaeufe">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M9.7 14.6c.3.9 1.2 1.5 2.3 1.5 1.4 0 2.4-.8 2.4-1.9 0-1.2-1-1.6-2.4-2-1.4-.4-2.4-.9-2.4-2 0-1.1 1-1.9 2.4-1.9 1.1 0 2 .6 2.3 1.5"/><line x1="12" y1="6.7" x2="12" y2="17.3"/></svg>
           <span>Verkäufe</span>
-        </button>
-        <button class="sidebar__item" data-view="hofbuch">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5.5C10 4 6.5 3.6 4 4.3v14.3c2.5-.7 6-.3 8 1.2"/><path d="M12 5.5c2-1.5 5.5-1.9 8-1.2v14.3c-2.5-.7-6-.3-8 1.2Z"/><line x1="12" y1="5.5" x2="12" y2="19.8"/></svg>
-          <span>Hofbuch</span>
         </button>
         <button class="sidebar__item" data-view="statistiken">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="20" x2="19" y2="20"/><rect x="6" y="12" width="3.4" height="8"/><rect x="10.3" y="7" width="3.4" height="13"/><rect x="14.6" y="10" width="3.4" height="10"/></svg>
@@ -621,6 +621,10 @@
           <!-- VIEW: LAGER                   -->
           <!-- ============================ -->
           <section class="view" id="view-lager">
+            <div class="parch-card lager-summary">
+              <span class="dash-stat__label">Gesamter Lagerwert</span>
+              <p class="dash-stat__value" id="lager-gesamtwert" style="font-size: 30px; margin-top: 6px;">0,00 $</p>
+            </div>
             <div class="toolbar">
               <div class="search-field">
                 <input type="text" id="lager-search" placeholder="Ware suchen..." autocomplete="off" />
@@ -637,10 +641,6 @@
                 <div id="lager-table-body"></div>
               </div>
               <p class="empty-state" id="lager-empty" hidden>Noch keine Waren im Lager erfasst.</p>
-            </div>
-            <div class="parch-card">
-              <h3>Gesamter Lagerwert</h3>
-              <p class="dash-stat__value" id="lager-gesamtwert" style="font-size: 28px;">0,00 $</p>
             </div>
           </section>
 
@@ -749,13 +749,13 @@
               <p class="parch-card__hint">Diese Seite öffnet sich automatisch, sobald du dich anmeldest — nur in deinem eigenen Browser gespeichert.</p>
               <select id="startseite-select" class="field-input" style="max-width: 320px;">
                 <option value="uebersicht">Übersicht</option>
+                <option value="hofbuch">Hofbuch</option>
                 <option value="bestellungen">Bestellungen</option>
                 <option value="waren">Waren &amp; Preise</option>
                 <option value="handelsrechner">Handelsrechner</option>
                 <option value="kontakte">Kontakte</option>
                 <option value="lager">Lager</option>
                 <option value="verkaeufe">Verkäufe</option>
-                <option value="hofbuch">Hofbuch</option>
                 <option value="statistiken">Statistiken</option>
               </select>
             </div>

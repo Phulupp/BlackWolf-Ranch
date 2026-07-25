@@ -232,11 +232,15 @@ service cloud.firestore {
     }
 
     // Hofbuch: die Chronik des Hofes. Jeder freigegebene Nutzer darf Einträge
-    // schreiben und lesen; gelöscht werden darf nur von Verwaltern (analog
-    // zum Verkaufslog), damit die Chronik nicht versehentlich verfälscht wird.
+    // schreiben und lesen. Löschen dürfen Verwalter (jeden Eintrag) sowie der
+    // Verfasser selbst (nur den eigenen Eintrag, anhand der beim Anlegen
+    // gespeicherten autorUid) - Bearbeiten bleibt Verwaltern vorbehalten,
+    // damit die Chronik nicht nachträglich verfälscht werden kann.
     match /hofbuch/{dokument} {
       allow read, create: if istFreigegeben();
-      allow update, delete: if istAdmin();
+      allow update: if istAdmin();
+      allow delete: if istAdmin()
+                    || (istFreigegeben() && resource.data.get('autorUid', null) == request.auth.uid);
     }
   }
 }
