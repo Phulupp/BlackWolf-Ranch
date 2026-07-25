@@ -877,10 +877,25 @@
 
         <p class="field-label" style="margin-bottom:8px;">Produkte</p>
         <div class="bestellung-position-form" id="bestellung-position-form">
-          <select id="bestellung-position-produkt" class="field-input"></select>
-          <input type="number" id="bestellung-position-menge" class="field-input" min="1" step="1" value="1" placeholder="Menge" />
-          <input type="number" id="bestellung-position-rabatt" class="field-input" min="0" max="100" step="0.1" value="0" placeholder="Rabatt %" title="Rabatt anpassen (falls berechtigt)" />
+          <div class="field-group">
+            <span class="field-label field-label--klein">Produkt</span>
+            <select id="bestellung-position-produkt" class="field-input"></select>
+          </div>
+          <div class="field-group">
+            <span class="field-label field-label--klein">Menge</span>
+            <input type="number" id="bestellung-position-menge" class="field-input" min="1" step="1" value="1" placeholder="Menge" />
+          </div>
+          <div class="field-group">
+            <span class="field-label field-label--klein">Rabatt %</span>
+            <input type="number" id="bestellung-position-rabatt" class="field-input" min="0" max="100" step="0.1" value="0" placeholder="Rabatt %" title="Rabatt anpassen (falls berechtigt)" />
+          </div>
           <button type="button" class="btn btn--ghost btn--sm" id="btn-bestellung-position-hinzufuegen">＋ Hinzufügen</button>
+        </div>
+        <div class="bestellung-position-vorschau" id="bestellung-position-vorschau">
+          <span>Standardpreis <strong id="bestellung-position-vorschau-standard">–</strong></span>
+          <span>Endpreis <strong id="bestellung-position-vorschau-endpreis">–</strong></span>
+          <span>Gesamtpreis <strong id="bestellung-position-vorschau-gesamt">–</strong></span>
+          <span class="bestellung-position-vorschau__hinweis" id="bestellung-position-vorschau-hinweis" hidden>Kein Standardpreis hinterlegt – bitte in „Waren &amp; Preise" prüfen.</span>
         </div>
 
         <div class="bestellung-positionen-tabelle" id="bestellung-positionen-wrap">
