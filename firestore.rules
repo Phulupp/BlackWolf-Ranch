@@ -206,10 +206,16 @@ service cloud.firestore {
       allow write: if istAdmin();
     }
 
-    // Bestellungen: jeder freigegebene Nutzer darf Bestellungen anlegen,
-    // bearbeiten (z. B. Status ändern) und löschen.
+    // Bestellungen: jeder freigegebene Nutzer darf Bestellungen anlegen und
+    // bearbeiten (z. B. Status ändern, Produkte/Preise/Rabatte anpassen).
+    // Löschen ist NUR erlaubt, solange die Bestellung noch nicht archiviert
+    // ist ("archiviert" != true) - archivierte Bestellungen dienen als
+    // dauerhafter Beleg abgeschlossener Geschäfte und dürfen niemals
+    // gelöscht werden, auch nicht von Verwaltern.
     match /bestellungen/{dokument} {
-      allow read, write: if istFreigegeben();
+      allow read: if istFreigegeben();
+      allow create, update: if istFreigegeben();
+      allow delete: if istFreigegeben() && resource.data.get('archiviert', false) != true;
     }
 
     // Handelsrechner-Angebote (Ledger "Letzte Angebote").
