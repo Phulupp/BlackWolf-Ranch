@@ -55,7 +55,7 @@
         <div class="auth-card__brand">
           <span class="auth-card__eyebrow">Willkommen zurück</span>
           <span class="auth-card__heading">Anmelden</span>
-          <img class="ornament-divider" src="assets/decorations/divider-western.png.png" alt="" aria-hidden="true" />
+          <span class="ornament-divider" aria-hidden="true"></span>
         </div>
 
         <!-- Login mit Benutzername (E-Mail) & Passwort oder Google -->
@@ -189,7 +189,7 @@
     <!-- ============================ -->
     <!-- SIDEBAR (dunkles Holz)        -->
     <!-- ============================ -->
-    <aside class="sidebar tex-wood">
+    <aside class="sidebar">
       <div class="sidebar__brand">
         <img class="sidebar__brand-icon" src="assets/logo/hornhausen-sign-small.png.png" alt="Hornhausen-Hof Wappen" />
         <span class="sidebar__brand-title">Hornhausen-Hof</span>
@@ -200,6 +200,10 @@
         <button class="sidebar__item sidebar__item--active" data-view="uebersicht">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1V10"/><path d="M9.5 20.5v-6h5v6"/></svg>
           <span>Übersicht</span>
+        </button>
+        <button class="sidebar__item" data-view="hofbuch">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5.5C10 4 6.5 3.6 4 4.3v14.3c2.5-.7 6-.3 8 1.2"/><path d="M12 5.5c2-1.5 5.5-1.9 8-1.2v14.3c-2.5-.7-6-.3-8 1.2Z"/><line x1="12" y1="5.5" x2="12" y2="19.8"/></svg>
+          <span>Hofbuch</span>
         </button>
         <button class="sidebar__item" data-view="bestellungen">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="12" height="17" rx="1.5"/><path d="M9 4V3.3A1.3 1.3 0 0 1 10.3 2h3.4A1.3 1.3 0 0 1 15 3.3V4"/><line x1="9" y1="10.5" x2="15" y2="10.5"/><line x1="9" y1="14" x2="15" y2="14"/><line x1="9" y1="17.5" x2="13" y2="17.5"/></svg>
@@ -224,10 +228,6 @@
         <button class="sidebar__item" data-view="verkaeufe">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M9.7 14.6c.3.9 1.2 1.5 2.3 1.5 1.4 0 2.4-.8 2.4-1.9 0-1.2-1-1.6-2.4-2-1.4-.4-2.4-.9-2.4-2 0-1.1 1-1.9 2.4-1.9 1.1 0 2 .6 2.3 1.5"/><line x1="12" y1="6.7" x2="12" y2="17.3"/></svg>
           <span>Verkäufe</span>
-        </button>
-        <button class="sidebar__item" data-view="hofbuch">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5.5C10 4 6.5 3.6 4 4.3v14.3c2.5-.7 6-.3 8 1.2"/><path d="M12 5.5c2-1.5 5.5-1.9 8-1.2v14.3c-2.5-.7-6-.3-8 1.2Z"/><line x1="12" y1="5.5" x2="12" y2="19.8"/></svg>
-          <span>Hofbuch</span>
         </button>
         <button class="sidebar__item" data-view="statistiken">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="20" x2="19" y2="20"/><rect x="6" y="12" width="3.4" height="8"/><rect x="10.3" y="7" width="3.4" height="13"/><rect x="14.6" y="10" width="3.4" height="10"/></svg>
@@ -283,7 +283,6 @@
             <h1 id="view-title">Übersicht</h1>
             <p id="view-subtitle">Hier behältst du alles im Blick.</p>
           </div>
-          <img class="page-header__art" src="assets/decorations/farm-outline.png.png" alt="" aria-hidden="true" />
         </div>
 
         <div class="main">
@@ -291,7 +290,7 @@
           <!-- VIEW: ÜBERSICHT               -->
           <!-- ============================ -->
           <section class="view view--active" id="view-uebersicht">
-            <div class="dash-hero framed">
+            <div class="dash-hero">
               <div class="dash-hero__greeting">
                 <p class="dash-hero__eyebrow" id="dashboard-greeting">Willkommen zurück,</p>
                 <h1 class="dash-hero__name" id="dashboard-name">—</h1>
@@ -384,10 +383,10 @@
           <!-- ============================ -->
           <section class="view" id="view-bestellungen">
             <div class="tabs" id="bestellungen-tabs">
-              <button class="tabs__tab tabs__tab--active" data-status-filter="alle">Alle</button>
-              <button class="tabs__tab" data-status-filter="Offen">Offen</button>
+              <button class="tabs__tab tabs__tab--active" data-status-filter="Offen">Offen</button>
               <button class="tabs__tab" data-status-filter="In Bearbeitung">In Bearbeitung</button>
               <button class="tabs__tab" data-status-filter="Abgeschlossen">Abgeschlossen</button>
+              <button class="tabs__tab" data-status-filter="Archiv">Archiv</button>
             </div>
 
             <div class="toolbar">
@@ -403,11 +402,10 @@
               <div class="reg-table">
                 <div class="reg-row reg-row--head bestellungen-row">
                   <span>Unternehmen</span>
-                  <span>Produkte</span>
+                  <span>Anzahl Produkte</span>
+                  <span>Gesamtmenge</span>
                   <span>Bestellt am</span>
                   <span>Status</span>
-                  <span>Notiz</span>
-                  <span class="reg-row__actions-col">Aktionen</span>
                 </div>
                 <div id="bestellungen-table-body"></div>
               </div>
@@ -533,7 +531,7 @@
               </div>
 
               <div>
-                <div class="parch-card rechner-preview framed">
+                <div class="parch-card rechner-preview">
                   <p class="rechner-section-title">Angebotsvorschau</p>
                   <div class="rechner-preview__row"><span class="rechner-preview__label">Unternehmen</span><span class="rechner-preview__value" id="vorschau-unternehmen">—</span></div>
                   <div class="rechner-preview__row"><span class="rechner-preview__label">Produkt</span><span class="rechner-preview__value" id="vorschau-produkt">—</span></div>
@@ -622,6 +620,10 @@
           <!-- VIEW: LAGER                   -->
           <!-- ============================ -->
           <section class="view" id="view-lager">
+            <div class="parch-card lager-summary">
+              <span class="dash-stat__label">Gesamter Lagerwert</span>
+              <p class="dash-stat__value" id="lager-gesamtwert" style="font-size: 30px; margin-top: 6px;">0,00 $</p>
+            </div>
             <div class="toolbar">
               <div class="search-field">
                 <input type="text" id="lager-search" placeholder="Ware suchen..." autocomplete="off" />
@@ -638,10 +640,6 @@
                 <div id="lager-table-body"></div>
               </div>
               <p class="empty-state" id="lager-empty" hidden>Noch keine Waren im Lager erfasst.</p>
-            </div>
-            <div class="parch-card">
-              <h3>Gesamter Lagerwert</h3>
-              <p class="dash-stat__value" id="lager-gesamtwert" style="font-size: 28px;">0,00 $</p>
             </div>
           </section>
 
@@ -697,7 +695,7 @@
                 </form>
               </div>
 
-              <img class="hofbuch-rope-divider" src="assets/decorations/rope-divider.png.png" alt="" aria-hidden="true" />
+              <div class="hofbuch-rope-divider" aria-hidden="true"></div>
 
               <div id="hofbuch-eintraege"></div>
               <p class="empty-state" id="hofbuch-empty" hidden>Das Hofbuch ist noch leer — trage den ersten Eintrag ein.</p>
@@ -750,13 +748,13 @@
               <p class="parch-card__hint">Diese Seite öffnet sich automatisch, sobald du dich anmeldest — nur in deinem eigenen Browser gespeichert.</p>
               <select id="startseite-select" class="field-input" style="max-width: 320px;">
                 <option value="uebersicht">Übersicht</option>
+                <option value="hofbuch">Hofbuch</option>
                 <option value="bestellungen">Bestellungen</option>
                 <option value="waren">Waren &amp; Preise</option>
                 <option value="handelsrechner">Handelsrechner</option>
                 <option value="kontakte">Kontakte</option>
                 <option value="lager">Lager</option>
                 <option value="verkaeufe">Verkäufe</option>
-                <option value="hofbuch">Hofbuch</option>
                 <option value="statistiken">Statistiken</option>
               </select>
             </div>
@@ -771,7 +769,7 @@
               <button class="tabs__tab" data-admin-subview="admin-log">Aktivitäts-Log</button>
             </div>
 
-            <div class="parch-card parch-card--sealed">
+            <div class="parch-card">
               <h3>Benutzerverwaltung</h3>
               <p class="parch-card__hint">Hier verwaltest du alle Accounts: Registrierungsanfragen freigeben oder ablehnen, Rang und Verwalterrechte vergeben, Benutzer sperren/entsperren/löschen/umbenennen und interne Notizen hinterlegen. <strong>Verwalterrechte</strong> sind unabhängig vom Rang und werden separat je Benutzer vergeben.</p>
 
@@ -830,44 +828,102 @@
   <!-- MODAL: Bestellung hinzufügen/bearbeiten -->
   <!-- ============================ -->
   <div class="modal-overlay" id="modal-bestellung">
-    <div class="modal modal--large">
+    <div class="modal modal--xlarge">
       <div class="modal__header">
         <h3 id="modal-bestellung-titel">Neue Bestellung</h3>
         <button class="modal__close" data-close-modal="modal-bestellung">✕</button>
       </div>
       <div class="modal__body">
         <input type="hidden" id="bestellung-editing-id" value="" />
-        <label class="field-label" for="bestellung-unternehmen-input">Unternehmen</label>
-        <input type="text" id="bestellung-unternehmen-input" class="field-input" list="unternehmen-liste" placeholder="z. B. Blackwater Saloon" />
 
-        <p class="field-label" style="margin-top:18px;">Produkte</p>
-        <div class="bestellung-position-form">
-          <select id="bestellung-position-produkt" class="field-input" style="flex: 2 1 auto;"></select>
-          <input type="number" id="bestellung-position-menge" class="field-input" min="1" step="1" value="1" style="flex: 0 0 90px;" placeholder="Menge" />
-          <button type="button" class="btn btn--ghost btn--sm" id="btn-bestellung-position-hinzufuegen" style="flex: 0 0 auto;">＋ Hinzufügen</button>
+        <span class="status-pill" id="bestellung-archiv-hinweis" hidden style="margin-bottom:14px;">Im Archiv – nur ansehen</span>
+
+        <div class="detail-grid" style="margin-bottom:22px;">
+          <div class="bestellung-form-zeile">
+            <div class="field-group">
+              <label class="field-label" for="bestellung-unternehmen-input">Unternehmen</label>
+              <input type="text" id="bestellung-unternehmen-input" class="field-input" list="unternehmen-liste" placeholder="z. B. Blackwater Saloon" />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="bestellung-ansprechpartner-input">Ansprechpartner</label>
+              <input type="text" id="bestellung-ansprechpartner-input" class="field-input" placeholder="z. B. Marlene Cross" />
+            </div>
+          </div>
+          <div class="bestellung-form-zeile">
+            <div class="field-group">
+              <span class="field-label">Bestelldatum</span>
+              <p class="field-static" id="bestellung-bestelldatum-anzeige">Wird beim Speichern gesetzt</p>
+            </div>
+            <div class="field-group">
+              <span class="field-label">Bearbeiter</span>
+              <p class="field-static" id="bestellung-bearbeiter-anzeige">—</p>
+            </div>
+          </div>
+          <div class="bestellung-form-zeile">
+            <div class="field-group">
+              <label class="field-label" for="bestellung-status-input">Status</label>
+              <select id="bestellung-status-input" class="field-input">
+                <option value="Offen">Offen</option>
+                <option value="In Bearbeitung">In Bearbeitung</option>
+                <option value="Abgeschlossen">Abgeschlossen</option>
+              </select>
+            </div>
+            <div class="field-group" style="flex: 2 1 260px;">
+              <label class="field-label" for="bestellung-notiz-input">Notiz (optional)</label>
+              <input type="text" id="bestellung-notiz-input" class="field-input" placeholder="z. B. Dringend" />
+            </div>
+          </div>
         </div>
 
-        <div class="bestellung-positionen-liste" id="bestellung-positionen-liste"></div>
+        <p class="field-label" style="margin-bottom:8px;">Produkte</p>
+        <div class="bestellung-position-form" id="bestellung-position-form">
+          <div class="field-group">
+            <span class="field-label field-label--klein">Produkt</span>
+            <select id="bestellung-position-produkt" class="field-input"></select>
+          </div>
+          <div class="field-group">
+            <span class="field-label field-label--klein">Menge</span>
+            <input type="number" id="bestellung-position-menge" class="field-input" min="1" step="1" value="1" placeholder="Menge" />
+          </div>
+          <div class="field-group">
+            <span class="field-label field-label--klein">Rabatt %</span>
+            <input type="number" id="bestellung-position-rabatt" class="field-input" min="0" max="100" step="0.1" value="0" placeholder="Rabatt %" title="Rabatt anpassen (falls berechtigt)" />
+          </div>
+          <button type="button" class="btn btn--ghost btn--sm" id="btn-bestellung-position-hinzufuegen">＋ Hinzufügen</button>
+        </div>
+        <div class="bestellung-position-vorschau" id="bestellung-position-vorschau">
+          <span>Standardpreis <strong id="bestellung-position-vorschau-standard">–</strong></span>
+          <span>Endpreis <strong id="bestellung-position-vorschau-endpreis">–</strong></span>
+          <span>Gesamtpreis <strong id="bestellung-position-vorschau-gesamt">–</strong></span>
+          <span class="bestellung-position-vorschau__hinweis" id="bestellung-position-vorschau-hinweis" hidden>Kein Standardpreis hinterlegt – bitte in „Waren &amp; Preise" prüfen.</span>
+        </div>
+
+        <div class="bestellung-positionen-tabelle" id="bestellung-positionen-wrap">
+          <div class="bestellung-positionen-zeile bestellung-positionen-zeile--kopf">
+            <span>Produkt</span>
+            <span>Menge</span>
+            <span>Standardpreis</span>
+            <span>Rabatt</span>
+            <span>Endpreis</span>
+            <span>Gesamtpreis</span>
+            <span></span>
+          </div>
+          <div id="bestellung-positionen-liste"></div>
+        </div>
         <p class="empty-state" id="bestellung-positionen-leer" style="padding:16px 0;">Noch keine Produkte hinzugefügt.</p>
 
         <div class="bestellung-zusammenfassung" id="bestellung-zusammenfassung" hidden>
           <span><strong id="bestellung-zusammenfassung-anzahl">0</strong> Produkte</span>
           <span><strong id="bestellung-zusammenfassung-menge">0</strong> Stück gesamt</span>
+          <span><strong id="bestellung-zusammenfassung-rabatt">0,00 $</strong> Rabatt gesamt</span>
+          <span><strong id="bestellung-zusammenfassung-summe">0,00 $</strong> Gesamtsumme</span>
         </div>
-
-        <label class="field-label" for="bestellung-status-input">Status</label>
-        <select id="bestellung-status-input" class="field-input">
-          <option value="Offen">Offen</option>
-          <option value="In Bearbeitung">In Bearbeitung</option>
-          <option value="Abgeschlossen">Abgeschlossen</option>
-        </select>
-
-        <label class="field-label" for="bestellung-notiz-input">Notiz (optional)</label>
-        <input type="text" id="bestellung-notiz-input" class="field-input" placeholder="z. B. Dringend" />
 
         <p class="field-error" id="bestellung-error" hidden></p>
       </div>
       <div class="modal__footer">
+        <button class="btn btn--danger" id="btn-bestellung-loeschen" style="margin-right:auto;">Löschen</button>
+        <button class="btn btn--ghost" id="btn-bestellung-archivieren" hidden>Archivieren</button>
         <button class="btn btn--ghost" data-close-modal="modal-bestellung">Abbrechen</button>
         <button class="btn btn--primary" id="btn-confirm-bestellung">Speichern</button>
       </div>
