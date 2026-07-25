@@ -14,7 +14,7 @@
   /* ------------------------------------------------------------------------
      1. Konstanten
      ------------------------------------------------------------------------ */
-  const VERSION_AKTUELL = 4;
+  const VERSION_AKTUELL = 5;
 
   // Ränge des Hofes (rein organisatorisch — Verwalterrechte sind unabhängig
   // davon und werden separat je Benutzer vergeben, siehe isAdmin).
@@ -189,6 +189,11 @@
     bestellungPositionProdukt: document.getElementById("bestellung-position-produkt"),
     bestellungPositionMenge: document.getElementById("bestellung-position-menge"),
     bestellungPositionRabatt: document.getElementById("bestellung-position-rabatt"),
+    bestellungPositionVorschau: document.getElementById("bestellung-position-vorschau"),
+    bestellungPositionVorschauStandard: document.getElementById("bestellung-position-vorschau-standard"),
+    bestellungPositionVorschauEndpreis: document.getElementById("bestellung-position-vorschau-endpreis"),
+    bestellungPositionVorschauGesamt: document.getElementById("bestellung-position-vorschau-gesamt"),
+    bestellungPositionVorschauHinweis: document.getElementById("bestellung-position-vorschau-hinweis"),
     btnBestellungPositionHinzufuegen: document.getElementById("btn-bestellung-position-hinzufuegen"),
     bestellungPositionenListe: document.getElementById("bestellung-positionen-liste"),
     bestellungPositionenLeer: document.getElementById("bestellung-positionen-leer"),
@@ -908,9 +913,24 @@
     });
   }
 
-  // Rendert die Produkt-Tabelle + Zusammenfassung INNERHALB des offenen
-  // Bestellungs-Modals, auf Basis von bestellungEntwurfPositionen. Ist die
-  // Bestellung archiviert, wird nur noch reine Text-Ansicht ohne
+  // Aktualisiert NUR die vier Zahlen unter der Produkt-Tabelle (Anzahl,
+  // Gesamtmenge, Gesamtrabatt, Gesamtsumme), ohne die Tabelle selbst neu
+  // aufzubauen - wird sowohl vom vollständigen Render als auch von der
+  // Live-Neuberechnung bei jeder Tastatureingabe aufgerufen.
+  function aktualisiereBestellungZusammenfassung() {
+    const werte = bestellungZusammenfassungWerte(bestellungEntwurfPositionen);
+    el.bestellungZusammenfassung.hidden = bestellungEntwurfPositionen.length === 0;
+    el.bestellungZusammenfassungAnzahl.textContent = String(werte.anzahl);
+    el.bestellungZusammenfassungMenge.textContent = String(werte.gesamtmenge);
+    el.bestellungZusammenfassungRabatt.textContent = formatGeld(werte.gesamtrabatt);
+    el.bestellungZusammenfassungSumme.textContent = formatGeld(werte.gesamtsumme);
+  }
+
+  // Rendert die komplette Produkt-Tabelle INNERHALB des offenen Bestellungs-
+  // Modals, auf Basis von bestellungEntwurfPositionen. Wird beim Öffnen des
+  // Modals sowie beim Hinzufügen/Entfernen einer Position aufgerufen (dort
+  // ändert sich die Anzahl der Zeilen, ein kompletter Neuaufbau ist nötig).
+  // Ist die Bestellung archiviert, wird nur noch reine Text-Ansicht ohne
   // Eingabefelder/Entfernen-Buttons gezeigt (Archiv = unveränderliches
   // Beleg-Dokument).
   function renderBestellungPositionen() {
@@ -932,25 +952,72 @@
         const entfernenBtn = bestellungModalArchiviert
           ? ""
           : `<button type="button" class="icon-btn icon-btn--delete" data-position-entfernen="${index}" title="Entfernen">✕</button>`;
+        const standardpreisHinweis =
+          !p.standardpreis || Number(p.standardpreis) === 0
+            ? ` <span class="bestellung-positionen-zeile__kein-preis" title="Für dieses Produkt ist kein Standardpreis hinterlegt.">⚠</span>`
+            : "";
         return `<div class="bestellung-positionen-zeile">
           <span class="bestellung-positionen-zeile__name">${escapeHtml(p.produktName)}</span>
           ${mengeFeld}
-          <span>${formatGeld(p.standardpreis)}</span>
+          <span>${formatGeld(p.standardpreis)}${standardpreisHinweis}</span>
           ${rabattFeld}
-          <span class="bestellung-positionen-zeile__endpreis">${formatGeld(endpreis)}</span>
-          <span class="bestellung-positionen-zeile__gesamt">${formatGeld(gesamtpreis)}</span>
+          <span class="bestellung-positionen-zeile__endpreis" data-endpreis-anzeige="${index}">${formatGeld(endpreis)}</span>
+          <span class="bestellung-positionen-zeile__gesamt" data-gesamt-anzeige="${index}">${formatGeld(gesamtpreis)}</span>
           <span>${entfernenBtn}</span>
         </div>`;
       })
       .join("");
 
-    const werte = bestellungZusammenfassungWerte(positionen);
-    el.bestellungZusammenfassung.hidden = positionen.length === 0;
-    el.bestellungZusammenfassungAnzahl.textContent = String(werte.anzahl);
-    el.bestellungZusammenfassungMenge.textContent = String(werte.gesamtmenge);
-    el.bestellungZusammenfassungRabatt.textContent = formatGeld(werte.gesamtrabatt);
-    el.bestellungZusammenfassungSumme.textContent = formatGeld(werte.gesamtsumme);
+    aktualisiereBestellungZusammenfassung();
   }
+
+  // Leichtgewichtige Neuberechnung für eine EINZELNE Zeile: wird bei jeder
+  // Tastatureingabe in Menge/Rabatt aufgerufen. Baut die Tabelle bewusst
+  // NICHT komplett neu auf (das würde die gerade fokussierten Eingabefelder
+  // zerstören und den Cursor/Fokus verlieren - genau das war die Ursache
+  // dafür, dass sich Endpreis/Gesamtpreis vorher erst nach einem Klick
+  // woanders hin aktualisiert haben). Stattdessen werden nur die Endpreis-/
+  // Gesamtpreis-Textinhalte dieser einen Zeile sowie die Zusammenfassung
+  // gezielt aktualisiert.
+  function aktualisierePositionsBerechnung(index) {
+    const p = bestellungEntwurfPositionen[index];
+    if (!p) return;
+    const { endpreis, gesamtpreis } = berechneBestellungPositionPreise(p.standardpreis, p.rabattProzent, p.menge);
+    const endpreisEl = el.bestellungPositionenListe.querySelector(`[data-endpreis-anzeige="${index}"]`);
+    const gesamtEl = el.bestellungPositionenListe.querySelector(`[data-gesamt-anzeige="${index}"]`);
+    if (endpreisEl) endpreisEl.textContent = formatGeld(endpreis);
+    if (gesamtEl) gesamtEl.textContent = formatGeld(gesamtpreis);
+    aktualisiereBestellungZusammenfassung();
+  }
+
+  // Live-Vorschau im "Produkt hinzufügen"-Formular: sobald ein Produkt
+  // gewählt oder Menge/Rabatt geändert werden, wird sofort (ohne Klick auf
+  // "Hinzufügen") angezeigt, welcher Standardpreis für dieses Produkt aus
+  // der Datenbank geladen wurde und welcher Endpreis/Gesamtpreis sich daraus
+  // ergibt. Zeigt außerdem einen klaren Hinweis, falls für das gewählte
+  // Produkt gar kein Standardpreis in "Waren & Preise" hinterlegt ist -
+  // damit sofort ersichtlich ist, ob 0,00 $ an fehlenden Katalogdaten liegt.
+  function aktualisierePositionVorschau() {
+    if (!el.bestellungPositionVorschau || !el.bestellungPositionProdukt) return;
+    const produkt = produkte.find((p) => p.id === el.bestellungPositionProdukt.value);
+    const menge = Math.max(0, parseInt(el.bestellungPositionMenge.value, 10) || 0);
+    const rabattProzent = istAdmin() ? Math.max(0, Math.min(100, parseFloat(el.bestellungPositionRabatt.value) || 0)) : 0;
+    const standardpreis = produkt ? Number(produkt.verkaufspreis) || 0 : 0;
+    const { endpreis, gesamtpreis } = berechneBestellungPositionPreise(standardpreis, rabattProzent, menge);
+
+    el.bestellungPositionVorschauStandard.textContent = formatGeld(standardpreis);
+    el.bestellungPositionVorschauEndpreis.textContent = formatGeld(endpreis);
+    el.bestellungPositionVorschauGesamt.textContent = formatGeld(gesamtpreis);
+    el.bestellungPositionVorschauHinweis.hidden = !(produkt && standardpreis === 0);
+  }
+
+  // Live-Vorschau im Hinzufügen-Formular: sofort bei Produktwahl (Standard-
+  // preis wird direkt beim Auswählen aus der Datenbank übernommen) und bei
+  // jeder Tastatureingabe in Menge/Rabatt neu berechnen - kein zusätzlicher
+  // Klick nötig.
+  if (el.bestellungPositionProdukt) el.bestellungPositionProdukt.addEventListener("change", aktualisierePositionVorschau);
+  if (el.bestellungPositionMenge) el.bestellungPositionMenge.addEventListener("input", aktualisierePositionVorschau);
+  if (el.bestellungPositionRabatt) el.bestellungPositionRabatt.addEventListener("input", aktualisierePositionVorschau);
 
   if (el.btnBestellungPositionHinzufuegen) {
     el.btnBestellungPositionHinzufuegen.addEventListener("click", () => {
@@ -962,24 +1029,32 @@
       if (!produkt) return zeigeFeldFehler(el.bestellungError, "Bitte wähle ein Produkt aus.");
       if (!isFinite(menge) || menge < 1) return zeigeFeldFehler(el.bestellungError, "Bitte gib eine gültige Menge ein.");
 
+      const standardpreis = Number(produkt.verkaufspreis) || 0;
+
       // Zeilen werden nur zusammengeführt, wenn Produkt UND Rabatt
       // übereinstimmen - unterschiedliche Rabatte auf dasselbe Produkt
       // bleiben als eigene, nachvollziehbare Zeilen bestehen.
       const vorhanden = bestellungEntwurfPositionen.find((p) => p.produktId === produkt.id && (p.rabattProzent || 0) === rabattProzent);
       if (vorhanden) {
         vorhanden.menge += menge;
+        // Standardpreis der bestehenden Zeile wird beim Zusammenführen mit
+        // dem aktuell im Katalog hinterlegten Preis synchron gehalten, damit
+        // eine zusammengeführte Zeile nicht an einem veralteten Preis von
+        // vorher hängen bleibt.
+        vorhanden.standardpreis = standardpreis;
       } else {
         bestellungEntwurfPositionen.push({
           produktId: produkt.id,
           produktName: produkt.name,
           menge,
-          standardpreis: Number(produkt.verkaufspreis) || 0,
+          standardpreis,
           rabattProzent,
         });
       }
       renderBestellungPositionen();
       el.bestellungPositionMenge.value = 1;
       el.bestellungPositionRabatt.value = 0;
+      aktualisierePositionVorschau();
     });
   }
 
@@ -991,19 +1066,26 @@
       bestellungEntwurfPositionen.splice(index, 1);
       renderBestellungPositionen();
     });
-    el.bestellungPositionenListe.addEventListener("change", (event) => {
+    // "input" statt "change": die Berechnung muss bei JEDEM Tastenanschlag
+    // sofort erfolgen, nicht erst wenn das Feld den Fokus verliert. Es wird
+    // bewusst NICHT die ganze Tabelle neu aufgebaut (siehe
+    // aktualisierePositionsBerechnung) - sonst würde das gerade fokussierte
+    // Eingabefeld bei jedem Tastenanschlag neu erzeugt und der Cursor bzw.
+    // der Fokus ginge verloren, was sich wie "die Berechnung reagiert nicht"
+    // angefühlt hat.
+    el.bestellungPositionenListe.addEventListener("input", (event) => {
       const mengeInput = event.target.closest("[data-position-menge]");
       const rabattInput = event.target.closest("[data-position-rabatt]");
       if (mengeInput) {
         const index = parseInt(mengeInput.getAttribute("data-position-menge"), 10);
         const menge = Math.max(1, parseInt(mengeInput.value, 10) || 1);
         bestellungEntwurfPositionen[index].menge = menge;
-        renderBestellungPositionen();
+        aktualisierePositionsBerechnung(index);
       } else if (rabattInput) {
         const index = parseInt(rabattInput.getAttribute("data-position-rabatt"), 10);
         const rabatt = Math.max(0, Math.min(100, parseFloat(rabattInput.value) || 0));
         bestellungEntwurfPositionen[index].rabattProzent = rabatt;
-        renderBestellungPositionen();
+        aktualisierePositionsBerechnung(index);
       }
     });
   }
@@ -1028,6 +1110,7 @@
     bestellungEntwurfPositionen = bestellung ? (bestellung.produkte || []).map((p) => ({ ...p })) : [];
     el.bestellungPositionMenge.value = 1;
     el.bestellungPositionRabatt.value = 0;
+    el.bestellungPositionRabatt.disabled = !istAdmin();
     renderBestellungPositionen();
 
     [el.bestellungUnternehmenInput, el.bestellungAnsprechpartnerInput, el.bestellungStatusInput, el.bestellungNotizInput].forEach(
@@ -1036,6 +1119,11 @@
       }
     );
     el.bestellungPositionForm.hidden = bestellungModalArchiviert;
+    el.bestellungPositionVorschau.hidden = bestellungModalArchiviert;
+    // Zeigt sofort den Standardpreis des aktuell (ggf. automatisch als
+    // erste Option) ausgewählten Produkts an - ohne dass extra etwas
+    // angeklickt werden muss.
+    aktualisierePositionVorschau();
 
     el.bestellungArchivHinweis.hidden = !bestellungModalArchiviert;
     el.btnConfirmBestellung.hidden = bestellungModalArchiviert;
