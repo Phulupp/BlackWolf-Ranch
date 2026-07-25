@@ -1476,6 +1476,12 @@ p {
   font-style: italic;
 }
 
+/* Lager: Gesamtwert-Zusammenfassung direkt unter der Seitenüberschrift, mit
+   Messing-Akzent oben, damit sie sofort ins Auge fällt. */
+.lager-summary {
+  border-top: 2px solid var(--brass);
+}
+
 /* --------------------------------------------------------------------------
    13. Waren & Preise
    -------------------------------------------------------------------------- */
@@ -1487,7 +1493,11 @@ p {
    14. Bestellungen
    -------------------------------------------------------------------------- */
 .bestellungen-row {
-  grid-template-columns: 18fr 32fr 14fr 16fr 20fr 12fr;
+  grid-template-columns: 28fr 20fr 18fr 18fr 16fr;
+}
+
+.reg-row--body.bestellungen-row {
+  cursor: pointer;
 }
 
 .notiz-text {
@@ -1511,61 +1521,208 @@ p {
   color: var(--wood-text-soft);
 }
 
-/* Zeilen-Erfassung im Bestellungs-Modal (Produkt + Menge + Hinzufügen) */
-.bestellung-position-form {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  margin-bottom: 4px;
-}
-
-.bestellung-positionen-liste {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin: 10px 0;
-  max-height: 220px;
+.modal--xlarge {
+  width: 860px;
+  max-width: 94vw;
+  max-height: 90vh;
   overflow-y: auto;
 }
 
-.bestellung-positionen-zeile {
+/* Allgemeine Infos im Bestellungs-Modal: Unternehmen/Ansprechpartner/
+   Bestelldatum/Bearbeiter/Status/Notiz, paarweise nebeneinander. */
+.bestellung-form-zeile {
   display: flex;
+  gap: 16px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.field-group {
+  flex: 1 1 0;
+  min-width: 160px;
+  display: flex;
+  flex-direction: column;
+}
+
+.field-label--klein {
+  margin-bottom: 6px;
+}
+
+.field-static {
+  margin: 0;
+  padding: 10px 13px;
+  font-size: 13.5px;
+  color: var(--wood-text-muted);
+  background: rgba(0, 0, 0, 0.16);
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-sm);
+}
+
+/* Zeilen-Erfassung im Bestellungs-Modal (Produkt + Menge + Rabatt + Hinzufügen).
+   Eigene, großzügig bemessene Felder statt der knappen .field-input-Defaults,
+   damit Zahlen bequem eingegeben werden können. */
+.bestellung-position-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: flex-end;
+  margin-bottom: 8px;
+}
+
+.bestellung-position-form .field-group:first-child {
+  flex: 2 1 220px;
+}
+
+.bestellung-position-form .field-group {
+  flex: 1 1 130px;
+}
+
+.bestellung-position-form select,
+.bestellung-position-form input[type="number"] {
+  min-height: 42px;
+  padding: 10px 14px;
+  font-size: 14px;
+}
+
+.bestellung-position-form input[type="number"] {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.bestellung-position-form .btn {
+  min-height: 42px;
+}
+
+/* Live-Vorschau im Hinzufügen-Formular: zeigt sofort bei Produktwahl bzw.
+   Änderung von Menge/Rabatt den geladenen Standardpreis sowie den daraus
+   berechneten Endpreis/Gesamtpreis - noch bevor die Zeile hinzugefügt wird. */
+.bestellung-position-vorschau {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
   align-items: center;
-  gap: 10px;
-  background: var(--leather-700);
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  background: rgba(0, 0, 0, 0.16);
   border: 1px solid var(--leather-edge);
   border-radius: var(--radius-sm);
-  padding: 8px 10px;
+  font-size: 12.5px;
+  color: var(--wood-text-muted);
+}
+
+.bestellung-position-vorschau strong {
+  color: var(--brass-bright);
+  font-family: var(--font-display);
+  margin-left: 4px;
+}
+
+.bestellung-position-vorschau__hinweis {
+  color: var(--status-danger-bright);
+  font-style: italic;
+  flex: 1 1 220px;
+}
+
+/* Horizontal scrollbar statt Zusammenquetschen, falls der Platz für alle
+   Spalten (Produkt/Menge/Standardpreis/Rabatt/Endpreis/Gesamtpreis/Entfernen)
+   nicht ausreicht. */
+.bestellung-positionen-tabelle {
+  display: flex;
+  flex-direction: column;
+  max-height: 320px;
+  overflow: auto;
+  border: 1px solid var(--leather-edge);
+  border-radius: var(--radius-sm);
+}
+
+.bestellung-positionen-zeile {
+  display: grid;
+  grid-template-columns: 2fr 0.9fr 1.15fr 1fr 1.15fr 1.2fr 40px;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: var(--wood-text);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  min-width: 780px;
+}
+
+.bestellung-positionen-zeile:last-child {
+  border-bottom: none;
+}
+
+.bestellung-positionen-zeile--kopf {
+  position: sticky;
+  top: 0;
+  background: var(--leather-800);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--wood-text-muted);
+  border-bottom: 2px solid var(--leather-edge);
+  white-space: nowrap;
+  z-index: 1;
 }
 
 .bestellung-positionen-zeile__name {
-  flex: 1;
   font-weight: 700;
-  font-size: 13px;
+  font-size: 13.5px;
   color: var(--wood-text);
 }
 
-.bestellung-positionen-zeile input[type="number"] {
-  width: 80px;
-  flex: 0 0 auto;
-  padding: 6px 8px;
+.bestellung-positionen-zeile > span:nth-child(2),
+.bestellung-positionen-zeile > span:nth-child(3),
+.bestellung-positionen-zeile > span:nth-child(4),
+.bestellung-positionen-zeile > span:nth-child(5),
+.bestellung-positionen-zeile > span:nth-child(6) {
   text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.bestellung-positionen-zeile input[type="number"] {
+  width: 100%;
+  min-height: 38px;
+  padding: 7px 10px;
+  text-align: right;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.bestellung-positionen-zeile__endpreis,
+.bestellung-positionen-zeile__gesamt {
+  font-weight: 700;
+  color: var(--brass-bright);
+}
+
+.bestellung-positionen-zeile__kein-preis {
+  color: var(--status-danger-bright);
+  cursor: help;
+  font-weight: 700;
 }
 
 .bestellung-zusammenfassung {
   display: flex;
+  flex-wrap: wrap;
   gap: 22px;
-  padding: 10px 14px;
+  padding: 12px 16px;
   background: rgba(189, 145, 67, 0.1);
   border-radius: var(--radius-sm);
-  font-size: 12.5px;
+  font-size: 13px;
   color: var(--wood-text-muted);
-  margin-bottom: 6px;
+  margin: 10px 0 6px;
 }
 
 .bestellung-zusammenfassung strong {
   color: var(--wood-text);
   font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+
+.field-input:disabled,
+.field-input[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: rgba(0, 0, 0, 0.1);
 }
 
 /* --------------------------------------------------------------------------
@@ -2188,24 +2345,31 @@ p {
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 }
 
+/* Jeder Eintrag ist eine eigene, klar abgegrenzte Karte — konsistent mit den
+   übrigen Leder-Panels der Anwendung, statt nur einer Trennlinie. */
 .hofbuch-eintrag {
-  padding-bottom: 14px;
-  border-bottom: 1px dashed rgba(90, 62, 27, 0.4);
-}
-
-.hofbuch-eintrag:last-child {
-  border-bottom: none;
+  background: var(--leather-700);
+  border: 1px solid var(--leather-edge);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
 }
 
 .hofbuch-eintrag__kopf {
   display: flex;
-  align-items: baseline;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 10px;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
+}
+
+.hofbuch-eintrag__kopf-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
 }
 
 .hofbuch-eintrag__titel {
@@ -2219,6 +2383,10 @@ p {
   font-size: 10.5px;
   color: var(--wood-text-soft);
   white-space: nowrap;
+}
+
+.hofbuch-eintrag__delete {
+  flex-shrink: 0;
 }
 
 .hofbuch-eintrag__text {
