@@ -31,6 +31,8 @@
   let kontakteSuche = "";
   let lagerSuche = "";
   let verkaeufeSuche = "";
+  let hofbuchSuche = "";
+  let hofbuchAeltesteZuerst = false;
   let benutzerSuche = "";
   let aktiverDetailUid = null;
   let kontakteRollenVerwaltungOffen = false;

@@ -179,6 +179,14 @@
     hofbuchTextInput: document.getElementById("hofbuch-text-input"),
     hofbuchEintraegeEl: document.getElementById("hofbuch-eintraege"),
     hofbuchEmpty: document.getElementById("hofbuch-empty"),
+    hofbuchNoResults: document.getElementById("hofbuch-no-results"),
+    hofbuchSearch: document.getElementById("hofbuch-search"),
+    btnHofbuchSortToggle: document.getElementById("btn-hofbuch-sort-toggle"),
+    hofbuchEditId: document.getElementById("hofbuch-edit-id"),
+    hofbuchEditTitel: document.getElementById("hofbuch-edit-titel"),
+    hofbuchEditText: document.getElementById("hofbuch-edit-text"),
+    hofbuchEditError: document.getElementById("hofbuch-edit-error"),
+    btnConfirmHofbuchEdit: document.getElementById("btn-confirm-hofbuch-edit"),
 
     // Statistiken
     statVerkaeufeAnzahl: document.getElementById("stat-verkaeufe-anzahl"),

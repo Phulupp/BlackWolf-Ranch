@@ -16,8 +16,8 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>Hornhausen-Hof — Hofverwaltung</title>
-  <link rel="icon" type="image/png" href="assets/logo/favicon-mais.png?v=13" />
-  <link rel="apple-touch-icon" href="assets/logo/favicon-mais.png?v=13" />
+  <link rel="icon" type="image/png" href="assets/logo/favicon-mais.png?v=14" />
+  <link rel="apple-touch-icon" href="assets/logo/favicon-mais.png?v=14" />
 
   <!-- Google Fonts: Rye (Farmschild/Wordmark), Playfair Display (Überschriften), Vollkorn (Fließtext/Pergament) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -31,27 +31,27 @@
        style.css - nur jetzt nach Zweck aufgeteilt (base > layout >
        components > views), damit man den passenden Abschnitt schneller
        findet. Reihenfolge ist wichtig und darf nicht vertauscht werden. -->
-  <link rel="stylesheet" href="css/base/tokens.css?v=13" />
-  <link rel="stylesheet" href="css/base/reset.css?v=13" />
-  <link rel="stylesheet" href="css/base/textures.css?v=13" />
-  <link rel="stylesheet" href="css/views/auth.css?v=13" />
-  <link rel="stylesheet" href="css/components/forms.css?v=13" />
-  <link rel="stylesheet" href="css/components/buttons.css?v=13" />
-  <link rel="stylesheet" href="css/layout/shell.css?v=13" />
-  <link rel="stylesheet" href="css/components/cards.css?v=13" />
-  <link rel="stylesheet" href="css/views/dashboard.css?v=13" />
-  <link rel="stylesheet" href="css/components/tables.css?v=13" />
-  <link rel="stylesheet" href="css/views/waren.css?v=13" />
-  <link rel="stylesheet" href="css/views/bestellungen.css?v=13" />
-  <link rel="stylesheet" href="css/views/kontakte.css?v=13" />
-  <link rel="stylesheet" href="css/views/handelsrechner.css?v=13" />
-  <link rel="stylesheet" href="css/components/modals.css?v=13" />
-  <link rel="stylesheet" href="css/views/admin.css?v=13" />
-  <link rel="stylesheet" href="css/components/toast.css?v=13" />
-  <link rel="stylesheet" href="css/layout/footer.css?v=13" />
-  <link rel="stylesheet" href="css/components/kataloge.css?v=13" />
-  <link rel="stylesheet" href="css/views/hofbuch.css?v=13" />
-  <link rel="stylesheet" href="css/base/responsive.css?v=13" />
+  <link rel="stylesheet" href="css/base/tokens.css?v=14" />
+  <link rel="stylesheet" href="css/base/reset.css?v=14" />
+  <link rel="stylesheet" href="css/base/textures.css?v=14" />
+  <link rel="stylesheet" href="css/views/auth.css?v=14" />
+  <link rel="stylesheet" href="css/components/forms.css?v=14" />
+  <link rel="stylesheet" href="css/components/buttons.css?v=14" />
+  <link rel="stylesheet" href="css/layout/shell.css?v=14" />
+  <link rel="stylesheet" href="css/components/cards.css?v=14" />
+  <link rel="stylesheet" href="css/views/dashboard.css?v=14" />
+  <link rel="stylesheet" href="css/components/tables.css?v=14" />
+  <link rel="stylesheet" href="css/views/waren.css?v=14" />
+  <link rel="stylesheet" href="css/views/bestellungen.css?v=14" />
+  <link rel="stylesheet" href="css/views/kontakte.css?v=14" />
+  <link rel="stylesheet" href="css/views/handelsrechner.css?v=14" />
+  <link rel="stylesheet" href="css/components/modals.css?v=14" />
+  <link rel="stylesheet" href="css/views/admin.css?v=14" />
+  <link rel="stylesheet" href="css/components/toast.css?v=14" />
+  <link rel="stylesheet" href="css/layout/footer.css?v=14" />
+  <link rel="stylesheet" href="css/components/kataloge.css?v=14" />
+  <link rel="stylesheet" href="css/views/hofbuch.css?v=14" />
+  <link rel="stylesheet" href="css/base/responsive.css?v=14" />
 
   <!-- Firebase SDK (Authentifizierung + Datenbank). "defer" statt normaler
        blockierender <script>-Tags: der Browser kann so den Rest der Seite
@@ -737,8 +737,18 @@
 
               <div class="hofbuch-rope-divider" aria-hidden="true"></div>
 
+              <div class="toolbar" style="max-width: 640px; margin: 0 auto 16px;">
+                <div class="search-field">
+                  <input type="text" id="hofbuch-search" placeholder="Nach Titel, Inhalt oder Autor suchen..." autocomplete="off" />
+                </div>
+                <div class="toolbar__buttons">
+                  <button type="button" class="btn btn--ghost" id="btn-hofbuch-sort-toggle">Älteste zuerst</button>
+                </div>
+              </div>
+
               <div id="hofbuch-eintraege"></div>
               <p class="empty-state" id="hofbuch-empty" hidden>Das Hofbuch ist noch leer — trage den ersten Eintrag ein.</p>
+              <p class="empty-state" id="hofbuch-no-results" hidden>Keine Einträge gefunden, die zu deiner Suche passen.</p>
             </div>
           </section>
 
@@ -1066,6 +1076,27 @@
     </div>
   </div>
 
+  <div class="modal-overlay" id="modal-hofbuch-edit">
+    <div class="modal">
+      <div class="modal__header">
+        <h3>Hofbucheintrag bearbeiten</h3>
+        <button class="modal__close" data-close-modal="modal-hofbuch-edit">✕</button>
+      </div>
+      <div class="modal__body">
+        <input type="hidden" id="hofbuch-edit-id" value="" />
+        <label class="field-label" for="hofbuch-edit-titel">Überschrift</label>
+        <input type="text" id="hofbuch-edit-titel" class="field-input" />
+        <label class="field-label" for="hofbuch-edit-text">Text</label>
+        <textarea id="hofbuch-edit-text" class="field-input field-textarea" rows="5"></textarea>
+        <p class="field-error" id="hofbuch-edit-error" hidden></p>
+      </div>
+      <div class="modal__footer">
+        <button class="btn btn--ghost" data-close-modal="modal-hofbuch-edit">Abbrechen</button>
+        <button class="btn btn--primary" id="btn-confirm-hofbuch-edit">Speichern</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ============================ -->
   <!-- MODAL: Löschen bestätigen (universell) -->
   <!-- ============================ -->
@@ -1165,28 +1196,28 @@
        teilen können. Die Reihenfolge entspricht exakt den frueheren
        nummerierten Abschnitten in app.js und darf nicht vertauscht werden:
        js/main.js muss immer zuletzt kommen, da es die App erst startet. -->
-  <script defer src="js/firebase-config.js?v=13"></script>
-  <script defer src="js/core/config.js?v=13"></script>
-  <script defer src="js/core/state.js?v=13"></script>
-  <script defer src="js/core/dom.js?v=13"></script>
-  <script defer src="js/core/firebase-init.js?v=13"></script>
-  <script defer src="js/core/utils.js?v=13"></script>
-  <script defer src="js/ui/modals.js?v=13"></script>
-  <script defer src="js/ui/nav.js?v=13"></script>
-  <script defer src="js/ui/presence.js?v=13"></script>
-  <script defer src="js/views/waren.js?v=13"></script>
-  <script defer src="js/views/bestellungen.js?v=13"></script>
-  <script defer src="js/views/handelsrechner.js?v=13"></script>
-  <script defer src="js/views/kontakte.js?v=13"></script>
-  <script defer src="js/views/lager.js?v=13"></script>
-  <script defer src="js/views/verkaeufe.js?v=13"></script>
-  <script defer src="js/views/hofbuch.js?v=13"></script>
-  <script defer src="js/views/statistiken.js?v=13"></script>
-  <script defer src="js/views/dashboard.js?v=13"></script>
-  <script defer src="js/views/einstellungen.js?v=13"></script>
-  <script defer src="js/views/admin.js?v=13"></script>
-  <script defer src="js/ui/version-check.js?v=13"></script>
-  <script defer src="js/main.js?v=13"></script>
-  <script type="module" src="js/auth.js?v=13"></script>
+  <script defer src="js/firebase-config.js?v=14"></script>
+  <script defer src="js/core/config.js?v=14"></script>
+  <script defer src="js/core/state.js?v=14"></script>
+  <script defer src="js/core/dom.js?v=14"></script>
+  <script defer src="js/core/firebase-init.js?v=14"></script>
+  <script defer src="js/core/utils.js?v=14"></script>
+  <script defer src="js/ui/modals.js?v=14"></script>
+  <script defer src="js/ui/nav.js?v=14"></script>
+  <script defer src="js/ui/presence.js?v=14"></script>
+  <script defer src="js/views/waren.js?v=14"></script>
+  <script defer src="js/views/bestellungen.js?v=14"></script>
+  <script defer src="js/views/handelsrechner.js?v=14"></script>
+  <script defer src="js/views/kontakte.js?v=14"></script>
+  <script defer src="js/views/lager.js?v=14"></script>
+  <script defer src="js/views/verkaeufe.js?v=14"></script>
+  <script defer src="js/views/hofbuch.js?v=14"></script>
+  <script defer src="js/views/statistiken.js?v=14"></script>
+  <script defer src="js/views/dashboard.js?v=14"></script>
+  <script defer src="js/views/einstellungen.js?v=14"></script>
+  <script defer src="js/views/admin.js?v=14"></script>
+  <script defer src="js/ui/version-check.js?v=14"></script>
+  <script defer src="js/main.js?v=14"></script>
+  <script type="module" src="js/auth.js?v=14"></script>
 </body>
 </html>

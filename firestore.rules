@@ -254,8 +254,7 @@ service cloud.firestore {
     // damit die Chronik nicht nachträglich verfälscht werden kann.
     match /hofbuch/{dokument} {
       allow read, create: if istFreigegeben();
-      allow update: if istAdmin();
-      allow delete: if istAdmin()
+      allow update, delete: if istAdmin()
                     || (istFreigegeben() && resource.data.get('autorUid', null) == request.auth.uid);
     }
   }

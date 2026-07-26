@@ -82,8 +82,37 @@
   white-space: nowrap;
 }
 
+.hofbuch-eintrag__meta--bearbeitet {
+  font-style: italic;
+}
+
 .hofbuch-eintrag__delete {
   flex-shrink: 0;
+}
+
+/* Angeheftete Einträge: dezenter Messing-Akzent links, damit sie in der
+   Liste auffallen, ohne das übrige Kartendesign zu verändern. */
+.hofbuch-eintrag--angeheftet {
+  border-left: 3px solid var(--brass);
+}
+
+.hofbuch-pin-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  align-self: flex-start;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  background: var(--brass-soft);
+  color: var(--brass-bright);
+}
+
+.icon-btn--active {
+  border-color: var(--brass);
+  color: var(--brass-bright);
+  background: var(--brass-soft);
 }
 
 .hofbuch-eintrag__text {
