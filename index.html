@@ -14,12 +14,18 @@
     rel="stylesheet"
   />
 
-  <link rel="stylesheet" href="css/style.css?v=2" />
+  <link rel="stylesheet" href="css/style.css?v=7" />
 
-  <!-- Firebase SDK (Authentifizierung + Datenbank) -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <!-- Firebase SDK (Authentifizierung + Datenbank). "defer" statt normaler
+       blockierender <script>-Tags: der Browser kann so den Rest der Seite
+       parallel zum Herunterladen dieser (recht großen) SDK-Dateien weiter
+       aufbauen, statt das Rendern komplett zu pausieren. Ausführung erfolgt
+       trotzdem garantiert in Dokumentreihenfolge, direkt bevor js/firebase-
+       config.js und js/app.js (ebenfalls "defer", siehe Ende von <body>)
+       laufen - die Reihenfolge/Funktionsweise bleibt also unverändert. -->
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 </head>
 <body>
   <!-- ============================ -->
@@ -227,7 +233,7 @@
         </button>
         <button class="sidebar__item" data-view="verkaeufe">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M9.7 14.6c.3.9 1.2 1.5 2.3 1.5 1.4 0 2.4-.8 2.4-1.9 0-1.2-1-1.6-2.4-2-1.4-.4-2.4-.9-2.4-2 0-1.1 1-1.9 2.4-1.9 1.1 0 2 .6 2.3 1.5"/><line x1="12" y1="6.7" x2="12" y2="17.3"/></svg>
-          <span>Verkäufe</span>
+          <span>Verkaufshistorie</span>
         </button>
         <button class="sidebar__item" data-view="statistiken">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="20" x2="19" y2="20"/><rect x="6" y="12" width="3.4" height="8"/><rect x="10.3" y="7" width="3.4" height="13"/><rect x="14.6" y="10" width="3.4" height="10"/></svg>
@@ -307,7 +313,7 @@
               <div class="dash-stat">
                 <span class="dash-stat__label">Heute verkauft</span>
                 <span class="dash-stat__value" id="stat-heute-verkauft">0,00 $</span>
-                <span class="dash-stat__sub" id="stat-heute-verkauft-sub">Aus 0 Verkäufen</span>
+                <span class="dash-stat__sub" id="stat-heute-verkauft-sub">Aus 0 abgeschlossenen Bestellungen</span>
               </div>
               <div class="dash-stat">
                 <span class="dash-stat__label">Lagerwert</span>
@@ -361,11 +367,11 @@
               </div>
               <div class="dash-panel">
                 <div class="dash-panel__header">
-                  <span class="dash-panel__title">Kürzliche Verkäufe</span>
+                  <span class="dash-panel__title">Kürzlich abgeschlossen</span>
                   <button type="button" class="dash-panel__more" data-quicklink="verkaeufe">Alle ansehen ›</button>
                 </div>
                 <div class="dash-panel__body" id="dash-kuerzliche-verkaeufe"></div>
-                <p class="empty-state" id="dash-kuerzliche-verkaeufe-empty" hidden>Noch keine Verkäufe erfasst.</p>
+                <p class="empty-state" id="dash-kuerzliche-verkaeufe-empty" hidden>Noch keine abgeschlossenen Bestellungen.</p>
               </div>
               <div class="dash-panel">
                 <div class="dash-panel__header">
@@ -644,41 +650,36 @@
           </section>
 
           <!-- ============================ -->
-          <!-- VIEW: VERKÄUFE                -->
+          <!-- VIEW: VERKAUFSHISTORIE        -->
           <!-- ============================ -->
+          <!-- Rein automatisch aus abgeschlossenen Bestellungen erzeugt - keine
+               manuelle Erfassung mehr. Eine abgeschlossene Bestellung IST der
+               Verkauf; ein Klick auf eine Zeile öffnet die vollständigen
+               Details der zugrunde liegenden Bestellung (dasselbe Modal wie
+               auf der Bestellungen-Seite). -->
           <section class="view" id="view-verkaeufe">
-            <div class="parch-card">
-              <h3>Neuen Verkauf eintragen</h3>
-              <form class="kontakt-form" id="form-verkauf">
-                <input type="text" id="verkauf-unternehmen-input" class="field-input" list="unternehmen-liste" placeholder="Unternehmen / Kunde" required style="flex: 1 1 200px;" />
-                <select id="verkauf-produkt-input" class="field-input" style="flex: 1 1 170px;"></select>
-                <input type="number" id="verkauf-menge-input" class="field-input" placeholder="Menge" min="1" step="1" value="1" style="flex: 0 0 100px;" />
-                <input type="number" id="verkauf-preis-input" class="field-input" placeholder="Preis/Stück" min="0" step="0.01" style="flex: 0 0 130px;" />
-                <button type="submit" class="btn btn--primary">Eintragen</button>
-              </form>
-            </div>
-
             <div class="toolbar">
               <div class="search-field">
-                <input type="text" id="verkaeufe-search" placeholder="Nach Unternehmen oder Produkt suchen..." autocomplete="off" />
+                <input type="text" id="verkaeufe-search" placeholder="Nach Unternehmen suchen..." autocomplete="off" />
               </div>
             </div>
 
             <div class="table-card">
               <div class="reg-table">
-                <div class="reg-row reg-row--head" style="grid-template-columns: 16fr 18fr 20fr 12fr 14fr 14fr 10fr;">
+                <div class="reg-row reg-row--head" style="grid-template-columns: 16fr 22fr 16fr 14fr 14fr 14fr 14fr;">
                   <span>Datum</span>
                   <span>Unternehmen</span>
-                  <span>Produkt</span>
-                  <span>Menge</span>
-                  <span>Preis/Stück</span>
-                  <span>Summe</span>
-                  <span class="reg-row__actions-col">Aktion</span>
+                  <span>Anzahl Produkte</span>
+                  <span>Gesamtmenge</span>
+                  <span>Umsatz</span>
+                  <span>Gewinn</span>
+                  <span>Bearbeiter</span>
                 </div>
                 <div id="verkaeufe-table-body"></div>
               </div>
-              <p class="empty-state" id="verkaeufe-empty" hidden>Noch keine Verkäufe eingetragen.</p>
+              <p class="empty-state" id="verkaeufe-empty" hidden>Noch keine abgeschlossenen Bestellungen.</p>
             </div>
+            <p class="empty-state" id="verkaeufe-no-results" hidden>Keine Einträge gefunden, die zu deiner Suche passen.</p>
           </section>
 
           <!-- ============================ -->
@@ -729,12 +730,12 @@
               <div class="dash-panel">
                 <div class="dash-panel__header"><span class="dash-panel__title">Meistverkaufte Waren</span></div>
                 <div class="dash-panel__body" id="statistik-top-waren"></div>
-                <p class="empty-state" id="statistik-top-waren-empty" hidden>Noch keine Verkäufe erfasst.</p>
+                <p class="empty-state" id="statistik-top-waren-empty" hidden>Noch keine abgeschlossenen Bestellungen.</p>
               </div>
               <div class="dash-panel">
                 <div class="dash-panel__header"><span class="dash-panel__title">Beste Kunden nach Umsatz</span></div>
                 <div class="dash-panel__body" id="statistik-top-kunden"></div>
-                <p class="empty-state" id="statistik-top-kunden-empty" hidden>Noch keine Verkäufe erfasst.</p>
+                <p class="empty-state" id="statistik-top-kunden-empty" hidden>Noch keine abgeschlossenen Bestellungen.</p>
               </div>
             </div>
           </section>
@@ -754,7 +755,7 @@
                 <option value="handelsrechner">Handelsrechner</option>
                 <option value="kontakte">Kontakte</option>
                 <option value="lager">Lager</option>
-                <option value="verkaeufe">Verkäufe</option>
+                <option value="verkaeufe">Verkaufshistorie</option>
                 <option value="statistiken">Statistiken</option>
               </select>
             </div>
@@ -836,90 +837,108 @@
       <div class="modal__body">
         <input type="hidden" id="bestellung-editing-id" value="" />
 
-        <span class="status-pill" id="bestellung-archiv-hinweis" hidden style="margin-bottom:14px;">Im Archiv – nur ansehen</span>
+        <!-- LINKE SPALTE: Allgemeine Infos + Produkt hinzufügen -->
+        <div class="bestellung-spalte bestellung-spalte--links">
+          <span class="status-pill" id="bestellung-archiv-hinweis" hidden style="margin-bottom:14px;">Im Archiv – nur ansehen</span>
 
-        <div class="detail-grid" style="margin-bottom:22px;">
-          <div class="bestellung-form-zeile">
-            <div class="field-group">
-              <label class="field-label" for="bestellung-unternehmen-input">Unternehmen</label>
-              <input type="text" id="bestellung-unternehmen-input" class="field-input" list="unternehmen-liste" placeholder="z. B. Blackwater Saloon" />
+          <div class="detail-grid" style="margin-bottom:22px;">
+            <div class="bestellung-form-zeile">
+              <div class="field-group">
+                <label class="field-label" for="bestellung-unternehmen-input">Unternehmen</label>
+                <input type="text" id="bestellung-unternehmen-input" class="field-input" list="unternehmen-liste" placeholder="z. B. Blackwater Saloon" />
+              </div>
             </div>
-            <div class="field-group">
-              <label class="field-label" for="bestellung-ansprechpartner-input">Ansprechpartner</label>
-              <input type="text" id="bestellung-ansprechpartner-input" class="field-input" placeholder="z. B. Marlene Cross" />
+            <div class="bestellung-form-zeile">
+              <div class="field-group">
+                <label class="field-label" for="bestellung-ansprechpartner-input">Ansprechpartner</label>
+                <input type="text" id="bestellung-ansprechpartner-input" class="field-input" placeholder="z. B. Marlene Cross" />
+              </div>
+            </div>
+            <div class="bestellung-form-zeile bestellung-form-zeile--klein">
+              <div class="field-group">
+                <span class="field-label">Bestelldatum</span>
+                <p class="field-static" id="bestellung-bestelldatum-anzeige">Wird beim Speichern gesetzt</p>
+              </div>
+              <div class="field-group">
+                <span class="field-label">Bearbeiter</span>
+                <p class="field-static" id="bestellung-bearbeiter-anzeige">—</p>
+              </div>
+            </div>
+            <div class="bestellung-form-zeile">
+              <div class="field-group">
+                <label class="field-label" for="bestellung-status-input">Status</label>
+                <select id="bestellung-status-input" class="field-input">
+                  <option value="Offen">Offen</option>
+                  <option value="In Bearbeitung">In Bearbeitung</option>
+                  <option value="Abgeschlossen">Abgeschlossen</option>
+                </select>
+              </div>
+            </div>
+            <div class="bestellung-form-zeile">
+              <div class="field-group">
+                <label class="field-label" for="bestellung-notiz-input">Notiz (optional)</label>
+                <input type="text" id="bestellung-notiz-input" class="field-input" placeholder="z. B. Dringend" />
+              </div>
             </div>
           </div>
-          <div class="bestellung-form-zeile">
+
+          <p class="field-label" style="margin-bottom:8px;">Produkt hinzufügen</p>
+          <div class="bestellung-position-form bestellung-position-form--vertikal" id="bestellung-position-form">
             <div class="field-group">
-              <span class="field-label">Bestelldatum</span>
-              <p class="field-static" id="bestellung-bestelldatum-anzeige">Wird beim Speichern gesetzt</p>
+              <span class="field-label field-label--klein">Produkt</span>
+              <div class="custom-select" id="bestellung-position-produkt-dropdown">
+                <button type="button" class="custom-select__trigger" id="bestellung-position-produkt-trigger">
+                  <span id="bestellung-position-produkt-label">Kein Produkt vorhanden</span>
+                  <span class="custom-select__chevron">⌄</span>
+                </button>
+                <div class="custom-select__panel" id="bestellung-position-produkt-panel" hidden></div>
+                <select id="bestellung-position-produkt" class="visually-hidden" tabindex="-1" aria-hidden="true"></select>
+              </div>
             </div>
             <div class="field-group">
-              <span class="field-label">Bearbeiter</span>
-              <p class="field-static" id="bestellung-bearbeiter-anzeige">—</p>
+              <span class="field-label field-label--klein">Menge</span>
+              <input type="number" id="bestellung-position-menge" class="field-input" min="1" step="1" value="1" placeholder="Menge" />
             </div>
+            <div class="field-group">
+              <span class="field-label field-label--klein">Rabatt %</span>
+              <input type="number" id="bestellung-position-rabatt" class="field-input" min="0" max="100" step="0.1" value="0" placeholder="Rabatt %" title="Rabatt anpassen (falls berechtigt)" />
+            </div>
+            <button type="button" class="btn btn--primary btn--sm" id="btn-bestellung-position-hinzufuegen">＋ Produkt hinzufügen</button>
           </div>
-          <div class="bestellung-form-zeile">
-            <div class="field-group">
-              <label class="field-label" for="bestellung-status-input">Status</label>
-              <select id="bestellung-status-input" class="field-input">
-                <option value="Offen">Offen</option>
-                <option value="In Bearbeitung">In Bearbeitung</option>
-                <option value="Abgeschlossen">Abgeschlossen</option>
-              </select>
-            </div>
-            <div class="field-group" style="flex: 2 1 260px;">
-              <label class="field-label" for="bestellung-notiz-input">Notiz (optional)</label>
-              <input type="text" id="bestellung-notiz-input" class="field-input" placeholder="z. B. Dringend" />
-            </div>
+          <div class="bestellung-position-vorschau" id="bestellung-position-vorschau">
+            <span>Standardpreis <strong id="bestellung-position-vorschau-standard">–</strong></span>
+            <span>Endpreis <strong id="bestellung-position-vorschau-endpreis">–</strong></span>
+            <span>Gesamtpreis <strong id="bestellung-position-vorschau-gesamt">–</strong></span>
+            <span class="bestellung-position-vorschau__hinweis" id="bestellung-position-vorschau-hinweis" hidden>Kein Standardpreis hinterlegt – bitte in „Waren &amp; Preise" prüfen.</span>
           </div>
+
+          <p class="field-error" id="bestellung-error" hidden></p>
         </div>
 
-        <p class="field-label" style="margin-bottom:8px;">Produkte</p>
-        <div class="bestellung-position-form" id="bestellung-position-form">
-          <div class="field-group">
-            <span class="field-label field-label--klein">Produkt</span>
-            <select id="bestellung-position-produkt" class="field-input"></select>
+        <!-- RECHTE SPALTE: Live-Zusammenfassung -->
+        <div class="bestellung-spalte bestellung-spalte--rechts">
+          <p class="field-label" style="margin-bottom:8px;">Produkte in dieser Bestellung</p>
+          <div class="bestellung-positionen-tabelle" id="bestellung-positionen-wrap">
+            <div class="bestellung-positionen-zeile bestellung-positionen-zeile--kopf">
+              <span>Produkt</span>
+              <span>Menge</span>
+              <span>Standardpreis</span>
+              <span>Rabatt</span>
+              <span>Endpreis</span>
+              <span>Gesamtpreis</span>
+              <span></span>
+            </div>
+            <div id="bestellung-positionen-liste"></div>
           </div>
-          <div class="field-group">
-            <span class="field-label field-label--klein">Menge</span>
-            <input type="number" id="bestellung-position-menge" class="field-input" min="1" step="1" value="1" placeholder="Menge" />
-          </div>
-          <div class="field-group">
-            <span class="field-label field-label--klein">Rabatt %</span>
-            <input type="number" id="bestellung-position-rabatt" class="field-input" min="0" max="100" step="0.1" value="0" placeholder="Rabatt %" title="Rabatt anpassen (falls berechtigt)" />
-          </div>
-          <button type="button" class="btn btn--ghost btn--sm" id="btn-bestellung-position-hinzufuegen">＋ Hinzufügen</button>
-        </div>
-        <div class="bestellung-position-vorschau" id="bestellung-position-vorschau">
-          <span>Standardpreis <strong id="bestellung-position-vorschau-standard">–</strong></span>
-          <span>Endpreis <strong id="bestellung-position-vorschau-endpreis">–</strong></span>
-          <span>Gesamtpreis <strong id="bestellung-position-vorschau-gesamt">–</strong></span>
-          <span class="bestellung-position-vorschau__hinweis" id="bestellung-position-vorschau-hinweis" hidden>Kein Standardpreis hinterlegt – bitte in „Waren &amp; Preise" prüfen.</span>
-        </div>
+          <p class="empty-state" id="bestellung-positionen-leer" style="padding:16px 0;">Noch keine Produkte hinzugefügt.</p>
 
-        <div class="bestellung-positionen-tabelle" id="bestellung-positionen-wrap">
-          <div class="bestellung-positionen-zeile bestellung-positionen-zeile--kopf">
-            <span>Produkt</span>
-            <span>Menge</span>
-            <span>Standardpreis</span>
-            <span>Rabatt</span>
-            <span>Endpreis</span>
-            <span>Gesamtpreis</span>
-            <span></span>
+          <div class="bestellung-zusammenfassung" id="bestellung-zusammenfassung" hidden>
+            <span><strong id="bestellung-zusammenfassung-anzahl">0</strong> Produkte</span>
+            <span><strong id="bestellung-zusammenfassung-menge">0</strong> Stück gesamt</span>
+            <span><strong id="bestellung-zusammenfassung-rabatt">0,00 $</strong> Rabatt gesamt</span>
+            <span><strong id="bestellung-zusammenfassung-summe">0,00 $</strong> Gesamtsumme</span>
           </div>
-          <div id="bestellung-positionen-liste"></div>
         </div>
-        <p class="empty-state" id="bestellung-positionen-leer" style="padding:16px 0;">Noch keine Produkte hinzugefügt.</p>
-
-        <div class="bestellung-zusammenfassung" id="bestellung-zusammenfassung" hidden>
-          <span><strong id="bestellung-zusammenfassung-anzahl">0</strong> Produkte</span>
-          <span><strong id="bestellung-zusammenfassung-menge">0</strong> Stück gesamt</span>
-          <span><strong id="bestellung-zusammenfassung-rabatt">0,00 $</strong> Rabatt gesamt</span>
-          <span><strong id="bestellung-zusammenfassung-summe">0,00 $</strong> Gesamtsumme</span>
-        </div>
-
-        <p class="field-error" id="bestellung-error" hidden></p>
       </div>
       <div class="modal__footer">
         <button class="btn btn--danger" id="btn-bestellung-loeschen" style="margin-right:auto;">Löschen</button>
@@ -1076,8 +1095,14 @@
   <!-- Toast-Benachrichtigung -->
   <div class="toast" id="toast"></div>
 
-  <script src="js/firebase-config.js?v=1"></script>
-  <script src="js/app.js?v=1"></script>
-  <script type="module" src="js/auth.js?v=1"></script>
+  <!-- Ebenfalls "defer": muss zwingend NACH den drei Firebase-SDK-Skripten
+       oben ausgeführt werden (nutzt das globale "firebase"-Objekt). "defer"-
+       Skripte laufen garantiert in exakter Dokumentreihenfolge, daher bleibt
+       diese Reihenfolge korrekt erhalten, obwohl die SDK-Skripte jetzt im
+       <head> stehen. js/auth.js ist als type="module" ohnehin automatisch
+       "deferred" und reiht sich an derselben Stelle ein. -->
+  <script defer src="js/firebase-config.js?v=7"></script>
+  <script defer src="js/app.js?v=7"></script>
+  <script type="module" src="js/auth.js?v=7"></script>
 </body>
 </html>

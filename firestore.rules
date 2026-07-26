@@ -13,12 +13,19 @@
    adminLog/presence/kontakte bleiben unverändert, inkl. "unantastbar"-
    Schutz, Selbstheilungs-Mechanismus für befristete Sperren, ...) - ergänzt
    um die neuen Collections der Hofverwaltung (produkte, bestellungen,
-   angebote, verkaeufe, kataloge) und bereinigt um die medizinspezifischen
-   Collections, die es in der neuen App nicht mehr gibt (department,
-   notizen, verkaufslog, ankuendigungen, handbuch + darfHandbuchSehen()).
+   angebote, kataloge) und bereinigt um die medizinspezifischen Collections,
+   die es in der neuen App nicht mehr gibt (department, notizen, verkaufslog,
+   ankuendigungen, handbuch + darfHandbuchSehen()).
    Falls dort noch alte Daten liegen, bleiben sie einfach ungenutzt in der
    Datenbank liegen - das schadet nichts, sie sind über die neue Seite nur
    nicht mehr erreichbar.
+
+   Die frühere Collection "verkaeufe" gibt es nicht mehr: Eine abgeschlossene
+   Bestellung IST der Verkauf (siehe "Verkaufshistorie" in js/app.js), eine
+   separate Verkaufserfassung entfällt. Alte "verkaeufe"-Dokumente bleiben
+   ungenutzt in der Datenbank liegen, falls vorhanden - ohne eigene Regel
+   dafür sind sie über die Firestore-Regeln standardmäßig für niemanden mehr
+   erreichbar (schadet nichts).
    ============================================================================ */
 
 rules_version = '2';
@@ -200,10 +207,20 @@ service cloud.firestore {
 
     // Waren & Preise: alle freigegebenen Nutzer dürfen die Preisliste
     // sehen (auch für den Handelsrechner nötig), aber nur Verwalter dürfen
-    // Produkte anlegen/bearbeiten/löschen oder den Lagerbestand ändern.
+    // Produkte anlegen/löschen oder vollständig bearbeiten (Name/Preise).
+    // AUSNAHME: das Feld "lagerMenge" dürfen auch nicht-Verwalter ändern -
+    // das ist nötig, damit (a) die automatische Lagerverarbeitung beim
+    // Abschließen einer Bestellung (siehe berechneLagerDeltas in js/app.js)
+    // für jeden freigegebenen Nutzer funktioniert, nicht nur für Verwalter,
+    // und (b) die manuelle Bestandskorrektur auf der Lager-Seite für alle
+    // freigegebenen Nutzer nutzbar bleibt. request.resource.data.diff(...)
+    // stellt sicher, dass dabei wirklich NUR "lagerMenge" geändert wird -
+    // alle anderen Felder bleiben weiterhin Verwaltern vorbehalten.
     match /produkte/{dokument} {
       allow read: if istFreigegeben();
-      allow write: if istAdmin();
+      allow create, delete: if istAdmin();
+      allow update: if istAdmin()
+                    || (istFreigegeben() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['lagerMenge']));
     }
 
     // Bestellungen: jeder freigegebene Nutzer darf Bestellungen anlegen und
@@ -221,13 +238,6 @@ service cloud.firestore {
     // Handelsrechner-Angebote (Ledger "Letzte Angebote").
     match /angebote/{dokument} {
       allow read, write: if istFreigegeben();
-    }
-
-    // Verkaufslog: Eintragen/Ändern für alle freigegebenen Nutzer, Löschen
-    // (inkl. Rückbuchung ins Lager) nur für Verwalter.
-    match /verkaeufe/{dokument} {
-      allow read, create, update: if istFreigegeben();
-      allow delete: if istAdmin();
     }
 
     // Verwaltete Kataloge (z. B. die Rollen-Liste der Kontakte-Seite):
