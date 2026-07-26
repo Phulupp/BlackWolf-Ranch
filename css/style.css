@@ -1654,6 +1654,45 @@ p {
   color: var(--brass);
 }
 
+.custom-select__trigger--disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.custom-select__trigger--disabled:hover {
+  border-color: var(--leather-edge);
+}
+
+/* Dunkler Scrollbalken innerhalb der aufgeklappten Dropdown-Liste (statt des
+   hellen Standard-Scrollbalkens des Browsers). */
+.custom-select__panel {
+  scrollbar-color: var(--brass) rgba(0, 0, 0, 0.25);
+  scrollbar-width: thin;
+}
+
+.custom-select__panel::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.custom-select__panel::-webkit-scrollbar-thumb {
+  background: var(--brass);
+  border-radius: var(--radius-sm);
+}
+
+/* Sicherheitsnetz: Sollte irgendwo (noch) ein natives <select> sichtbar
+   bleiben, bevor/falls es per JS in ein Custom-Dropdown umgewandelt wird,
+   soll wenigstens die aufgeklappte native Liste selbst schon dunkel/golden
+   statt hell erscheinen (in unterstützten Browsern). Kein Ersatz für die
+   Custom-Dropdowns, nur ein Fallback. */
+select.field-input {
+  color-scheme: dark;
+}
+
+select.field-input option {
+  background: var(--leather-900);
+  color: var(--wood-text);
+}
+
 /* position: fixed statt absolute, mit Position/Breite per JS (siehe
    positioniereBestellungProduktPanel in app.js) - so kann die aufgeklappte
    Liste nicht von der scrollbaren linken Spalte des Bestellungs-Modals
@@ -1701,47 +1740,37 @@ p {
 }
 
 /* Zeilen-Erfassung im Bestellungs-Modal (Produkt + Menge + Rabatt + Hinzufügen).
-   Eigene, großzügig bemessene Felder statt der knappen .field-input-Defaults,
-   damit Zahlen bequem eingegeben werden können. In der schmaleren linken
-   Spalte werden die Felder untereinander statt nebeneinander angeordnet. */
+   Kompakt in EINER Zeile nebeneinander (Produkt wächst, Menge/Rabatt haben
+   eine feste, normale Breite, Button richtet sich nach seinem Text) - so
+   bleibt möglichst viel Platz für die Produkttabelle darunter. Auf schmalen
+   Bildschirmen bricht die Zeile dank flex-wrap einfach um. */
 .bestellung-position-form {
   display: flex;
   flex-wrap: wrap;
-  gap: 14px;
+  gap: 12px;
   align-items: flex-end;
   margin-bottom: 8px;
 }
 
-.bestellung-position-form--vertikal {
-  flex-direction: column;
-  align-items: stretch;
+.bestellung-position-form--kompakt .field-group--produkt {
+  flex: 1 1 220px;
+  min-width: 180px;
 }
 
-.bestellung-position-form--vertikal .field-group {
-  width: 100%;
+.bestellung-position-form--kompakt .field-group--menge {
+  flex: 0 0 140px;
+  width: 140px;
 }
 
-.bestellung-position-form--vertikal .btn {
-  width: 100%;
+.bestellung-position-form--kompakt .field-group--rabatt {
+  flex: 0 0 120px;
+  width: 120px;
 }
 
-.bestellung-position-form .field-group:first-child {
-  flex: 2 1 220px;
-}
-
-.bestellung-position-form .field-group {
-  flex: 1 1 130px;
-}
-
-/* In der schmalen linken Spalte (--vertikal) dürfen sich die Felder NICHT
-   zusätzlich in die Höhe strecken - sonst reißt flex-grow (von der breiten
-   Nebeneinander-Ansicht geerbt) große, leere Lücken zwischen Produkt/Menge/
-   Rabatt/Button auf. Muss nach den beiden Regeln oben stehen, damit sie
-   hier wirklich greift. */
-.bestellung-position-form--vertikal .field-group,
-.bestellung-position-form--vertikal .field-group:first-child {
+.bestellung-position-form--kompakt .btn {
   flex: 0 0 auto;
-  width: 100%;
+  width: auto;
+  white-space: nowrap;
 }
 
 .bestellung-position-form select,
@@ -1752,7 +1781,7 @@ p {
 }
 
 .bestellung-position-form input[type="number"] {
-  text-align: right;
+  text-align: left;
   font-variant-numeric: tabular-nums;
 }
 
@@ -2241,6 +2270,7 @@ p {
 .modal--xlarge .modal__body {
   flex: 1 1 auto;
   display: flex;
+  flex-direction: row;
   overflow: hidden;
   padding: 0;
 }
