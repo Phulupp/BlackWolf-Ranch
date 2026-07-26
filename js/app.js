@@ -19,7 +19,7 @@
   /* ------------------------------------------------------------------------
      1. Konstanten
      ------------------------------------------------------------------------ */
-  const VERSION_AKTUELL = 12;
+  const VERSION_AKTUELL = 13;
 
   // Ränge des Hofes (rein organisatorisch — Verwalterrechte sind unabhängig
   // davon und werden separat je Benutzer vergeben, siehe isAdmin).
@@ -208,6 +208,9 @@
     bestellungZusammenfassungMenge: document.getElementById("bestellung-zusammenfassung-menge"),
     bestellungZusammenfassungRabatt: document.getElementById("bestellung-zusammenfassung-rabatt"),
     bestellungZusammenfassungSumme: document.getElementById("bestellung-zusammenfassung-summe"),
+    bestellungZahlung: document.getElementById("bestellung-zahlung"),
+    bestellungZahlungBerechnet: document.getElementById("bestellung-zahlung-berechnet"),
+    bestellungErhaltenInput: document.getElementById("bestellung-erhalten-input"),
     bestellungStatusInput: document.getElementById("bestellung-status-input"),
     bestellungNotizInput: document.getElementById("bestellung-notiz-input"),
     bestellungError: document.getElementById("bestellung-error"),
@@ -1223,6 +1226,23 @@
     el.bestellungZusammenfassungMenge.textContent = String(werte.gesamtmenge);
     el.bestellungZusammenfassungRabatt.textContent = formatGeld(werte.gesamtrabatt);
     el.bestellungZusammenfassungSumme.textContent = formatGeld(werte.gesamtsumme);
+    // Die berechnete Gesamtsumme im "Zahlung"-Bereich (siehe
+    // aktualisiereZahlungBereich) muss bei jeder Produktänderung mit
+    // aktuell bleiben, auch wenn die Bestellung schon abgeschlossen ist und
+    // z. B. nachträglich noch eine Menge korrigiert wird.
+    if (el.bestellungZahlungBerechnet) el.bestellungZahlungBerechnet.textContent = formatGeld(werte.gesamtsumme);
+  }
+
+  // Zeigt den "Zahlung"-Bereich (berechnete Gesamtsumme + tatsächlich
+  // erhaltener Betrag) nur, wenn die Bestellung den Status "Abgeschlossen"
+  // hat bzw. gerade darauf gesetzt wird - vorher (Offen/In Bearbeitung)
+  // ergibt "tatsächlich erhalten" noch keinen Sinn, weil ja noch gar nicht
+  // bezahlt wurde.
+  function aktualisiereZahlungBereich() {
+    if (!el.bestellungZahlung) return;
+    const istAbgeschlossen = el.bestellungStatusInput.value === "Abgeschlossen";
+    el.bestellungZahlung.hidden = !istAbgeschlossen;
+    if (el.bestellungErhaltenInput) el.bestellungErhaltenInput.disabled = bestellungModalArchiviert;
   }
 
   // Rendert die komplette Produkt-Tabelle INNERHALB des offenen Bestellungs-
@@ -1545,6 +1565,10 @@
     el.bestellungBearbeiterAnzeige.textContent = bestellung ? bestellung.bearbeiter || bestellung.erstelltVon || "—" : "—";
     el.bestellungStatusInput.value = bestellung ? bestellung.status : "Offen";
     aktualisiereCustomSelect(el.bestellungStatusInput);
+    if (el.bestellungErhaltenInput) {
+      el.bestellungErhaltenInput.value = bestellung && bestellung.erhaltenerBetrag != null ? bestellung.erhaltenerBetrag : "";
+    }
+    aktualisiereZahlungBereich();
     el.bestellungNotizInput.value = bestellung ? bestellung.notiz || "" : "";
     bestellungEntwurfPositionen = bestellung ? (bestellung.produkte || []).map((p) => ({ ...p })) : [];
     el.bestellungPositionMenge.value = 1;
@@ -1573,6 +1597,12 @@
 
     oeffneModal("modal-bestellung");
   }
+
+  // Wird der Status direkt im offenen Fenster auf "Abgeschlossen" gesetzt
+  // (oder wieder davon weg geändert), soll der "Zahlung"-Bereich sofort
+  // erscheinen bzw. verschwinden, ohne dass das Fenster neu geöffnet werden
+  // muss.
+  if (el.bestellungStatusInput) el.bestellungStatusInput.addEventListener("change", aktualisiereZahlungBereich);
 
   if (el.btnAddBestellung) el.btnAddBestellung.addEventListener("click", () => oeffneBestellungModal(null));
   document.querySelectorAll('[data-action="neue-bestellung"]').forEach((btn) =>
@@ -1663,6 +1693,20 @@
         };
       });
 
+      // "Tatsächlich erhalten" ist bewusst getrennt vom berechneten
+      // Gesamtpreis (siehe "produkte"/gesamtpreis oben, bleibt als Beleg des
+      // vereinbarten Verkaufspreises unverändert erhalten). Nur bei Status
+      // "Abgeschlossen" ergibt ein tatsächlicher Zahlungseingang Sinn - wird
+      // der Status wieder davon weg geändert, wird der Betrag mit
+      // zurückgesetzt. Bleibt das Feld leer, wird kein eigener Betrag
+      // gespeichert - Dashboard/Statistiken greifen dann automatisch auf
+      // die berechnete Gesamtsumme zurück (siehe berechneBestellungKennzahlen).
+      let erhaltenerBetrag = null;
+      if (neuerStatus === "Abgeschlossen" && el.bestellungErhaltenInput && el.bestellungErhaltenInput.value.trim() !== "") {
+        const eingabe = parseFloat(el.bestellungErhaltenInput.value);
+        if (isFinite(eingabe) && eingabe >= 0) erhaltenerBetrag = eingabe;
+      }
+
       const daten = {
         unternehmen,
         ansprechpartner: el.bestellungAnsprechpartnerInput.value.trim(),
@@ -1670,6 +1714,7 @@
         status: neuerStatus,
         notiz: el.bestellungNotizInput.value.trim(),
         bearbeiter: aktuellerNutzer ? aktuellerNutzer.name : null,
+        erhaltenerBetrag,
       };
 
       const id = el.bestellungEditingId.value;
@@ -2259,21 +2304,39 @@
   // (Endpreis - Einkaufspreis) × Menge je Zeile. Beide Werte nutzen die
   // Preis-Schnappschüsse der Bestellung, nicht die aktuellen Katalogpreise -
   // damit bleibt die Historie auch nach späteren Preisänderungen korrekt.
+  // Zentrale Stelle für Umsatz/Gewinn EINER Bestellung - wird von
+  // Verkaufshistorie, Statistiken und Übersicht/Dashboard gleichermaßen
+  // genutzt, damit "tatsächlich erhaltener Betrag" (siehe Zahlung-Bereich im
+  // Bestellungs-Fenster) überall automatisch statt des rein rechnerischen
+  // Werts einfließt, ohne dass jede Stelle einzeln angepasst werden muss.
+  //   - berechneterUmsatz: Summe aus Menge × Endpreis je Position - der
+  //     rechnerisch/vertraglich vereinbarte Verkaufspreis, bleibt immer als
+  //     Beleg erhalten (siehe "produkte" auf der Bestellung).
+  //   - umsatz: der tatsächliche Zahlungseingang - entspricht dem manuell
+  //     eingetragenen "erhaltenerBetrag", falls vorhanden (z. B. aufgerundet,
+  //     Trinkgeld, vor Ort nachverhandelt), sonst fällt er automatisch auf
+  //     den berechneten Umsatz zurück (ältere Bestellungen ohne dieses Feld,
+  //     oder falls einfach nichts eingetragen wurde).
+  //   - gewinn: tatsächlicher Umsatz minus Einkaufskosten - spiegelt damit
+  //     ebenfalls den echten Zahlungseingang wider, nicht nur den Plan-Wert.
   function berechneBestellungKennzahlen(b) {
     const produkteListe = b.produkte || [];
     const anzahlProdukte = produkteListe.length;
     let gesamtmenge = 0;
-    let umsatz = 0;
-    let gewinn = 0;
+    let berechneterUmsatz = 0;
+    let kosten = 0;
     produkteListe.forEach((p) => {
       const menge = Number(p.menge) || 0;
       const endpreis = Number(p.endpreis) || 0;
       const ek = Number(p.einkaufspreis) || 0;
       gesamtmenge += menge;
-      umsatz += Number(p.gesamtpreis) || 0;
-      gewinn += (endpreis - ek) * menge;
+      berechneterUmsatz += Number(p.gesamtpreis) || 0;
+      kosten += ek * menge;
     });
-    return { anzahlProdukte, gesamtmenge, umsatz, gewinn };
+    const hatErhaltenenBetrag = b.erhaltenerBetrag !== null && b.erhaltenerBetrag !== undefined && b.erhaltenerBetrag !== "";
+    const umsatz = hatErhaltenenBetrag ? Number(b.erhaltenerBetrag) || 0 : berechneterUmsatz;
+    const gewinn = umsatz - kosten;
+    return { anzahlProdukte, gesamtmenge, berechneterUmsatz, umsatz, gewinn };
   }
 
   function gefiltertVerkaufshistorie() {
