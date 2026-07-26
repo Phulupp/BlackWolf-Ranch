@@ -1733,6 +1733,17 @@ p {
   flex: 1 1 130px;
 }
 
+/* In der schmalen linken Spalte (--vertikal) dürfen sich die Felder NICHT
+   zusätzlich in die Höhe strecken - sonst reißt flex-grow (von der breiten
+   Nebeneinander-Ansicht geerbt) große, leere Lücken zwischen Produkt/Menge/
+   Rabatt/Button auf. Muss nach den beiden Regeln oben stehen, damit sie
+   hier wirklich greift. */
+.bestellung-position-form--vertikal .field-group,
+.bestellung-position-form--vertikal .field-group:first-child {
+  flex: 0 0 auto;
+  width: 100%;
+}
+
 .bestellung-position-form select,
 .bestellung-position-form input[type="number"] {
   min-height: 42px;
