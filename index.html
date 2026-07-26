@@ -26,7 +26,7 @@
     rel="stylesheet"
   />
 
-  <link rel="stylesheet" href="css/style.css?v=12" />
+  <link rel="stylesheet" href="css/style.css?v=13" />
 
   <!-- Firebase SDK (Authentifizierung + Datenbank). "defer" statt normaler
        blockierender <script>-Tags: der Browser kann so den Rest der Seite
@@ -949,6 +949,25 @@
             <span><strong id="bestellung-zusammenfassung-rabatt">0,00 $</strong> Rabatt gesamt</span>
             <span><strong id="bestellung-zusammenfassung-summe">0,00 $</strong> Gesamtsumme</span>
           </div>
+
+          <!-- Erscheint nur bei Status "Abgeschlossen": trennt den
+               berechneten (vereinbarten) Verkaufspreis vom tatsächlich
+               erhaltenen Betrag (Aufrunden, Trinkgeld, Nachverhandeln im RP).
+               Für Dashboard/Statistiken/Verkaufshistorie zählt ab jetzt der
+               tatsächlich erhaltene Betrag, falls eingetragen. -->
+          <div class="bestellung-zahlung" id="bestellung-zahlung" hidden>
+            <p class="field-label" style="margin: 14px 0 8px;">Zahlung</p>
+            <div class="bestellung-form-zeile bestellung-form-zeile--klein">
+              <div class="field-group">
+                <span class="field-label">Berechnete Gesamtsumme</span>
+                <p class="field-static" id="bestellung-zahlung-berechnet">0,00 $</p>
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="bestellung-erhalten-input">Tatsächlich erhalten</label>
+                <input type="number" id="bestellung-erhalten-input" class="field-input" min="0" step="0.01" placeholder="z. B. 60,00" />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="modal__footer">
@@ -1112,8 +1131,8 @@
        diese Reihenfolge korrekt erhalten, obwohl die SDK-Skripte jetzt im
        <head> stehen. js/auth.js ist als type="module" ohnehin automatisch
        "deferred" und reiht sich an derselben Stelle ein. -->
-  <script defer src="js/firebase-config.js?v=12"></script>
-  <script defer src="js/app.js?v=12"></script>
-  <script type="module" src="js/auth.js?v=12"></script>
+  <script defer src="js/firebase-config.js?v=13"></script>
+  <script defer src="js/app.js?v=13"></script>
+  <script type="module" src="js/auth.js?v=13"></script>
 </body>
 </html>
