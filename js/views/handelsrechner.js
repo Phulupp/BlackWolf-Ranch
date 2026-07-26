@@ -218,8 +218,25 @@
           <span>${formatGeld(a.stueckpreis)}</span>
           <span>${formatGeld(a.gesamtpreis)}</span>
           <span><span class="status-pill ${statusPillKlasse(a.status)}">${escapeHtml(a.status)}</span></span>
+          <span class="reg-row__actions-col">
+            <div class="row-actions">
+              <button class="icon-btn icon-btn--delete" data-angebot-delete="${a.id}" title="Löschen">🗑</button>
+            </div>
+          </span>
         </div>`
       )
       .join("");
+  }
+
+  if (el.angeboteTableBody) {
+    el.angeboteTableBody.addEventListener("click", (event) => {
+      const delBtn = event.target.closest("[data-angebot-delete]");
+      if (!delBtn) return;
+      const id = delBtn.getAttribute("data-angebot-delete");
+      fordereLoeschungAn("Angebot löschen", "Möchtest du dieses Angebot wirklich löschen?", async () => {
+        await db.collection(ANGEBOTE_COLLECTION).doc(id).delete();
+        zeigeToast("Angebot gelöscht.");
+      });
+    });
   }
 

@@ -317,6 +317,10 @@
       trigger.classList.add("custom-select__trigger--offen");
     }
 
+
+
+    
+
     function schliessen() {
       panel.hidden = true;
       trigger.classList.remove("custom-select__trigger--offen");
