@@ -1521,20 +1521,58 @@ p {
   color: var(--wood-text-soft);
 }
 
-.modal--xlarge {
-  width: 860px;
-  max-width: 94vw;
-  max-height: 90vh;
+/* Layout-Hilfsklassen für die beiden Spalten des Bestellungs-Modals -
+   die eigentliche Größen-Definition von .modal--xlarge liegt bewusst bei
+   den anderen Modal-Größen (.modal--small/--large) im Abschnitt "17.
+   Modals" weiter unten, NICHT hier: zwei Klassen mit gleicher Spezifität
+   (.modal / .modal--xlarge) werden von der CSS-Kaskade nach Quellreihen-
+   folge aufgelöst, und .modal--xlarge muss deshalb NACH der Basisklasse
+   .modal stehen, sonst gewinnt z. B. deren width:420px. */
+.bestellung-spalte {
   overflow-y: auto;
+  padding: 22px 30px;
+}
+
+.bestellung-spalte--links {
+  flex: 0 0 400px;
+  border-right: 1px solid var(--leather-edge);
+}
+
+.bestellung-spalte--rechts {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.bestellung-spalte--rechts .bestellung-positionen-tabelle {
+  flex: 1 1 auto;
+  max-height: none;
+}
+
+@media (max-width: 900px) {
+  .bestellung-spalte--links {
+    flex: 0 0 auto;
+    border-right: none;
+    border-bottom: 1px solid var(--leather-edge);
+  }
+  .bestellung-spalte--rechts .bestellung-positionen-tabelle {
+    max-height: 320px;
+  }
 }
 
 /* Allgemeine Infos im Bestellungs-Modal: Unternehmen/Ansprechpartner/
-   Bestelldatum/Bearbeiter/Status/Notiz, paarweise nebeneinander. */
+   Bestelldatum/Bearbeiter/Status/Notiz. */
 .bestellung-form-zeile {
   display: flex;
   gap: 16px;
   align-items: flex-end;
   flex-wrap: wrap;
+}
+
+.bestellung-form-zeile--klein .field-static {
+  font-size: 12.5px;
+  padding: 8px 12px;
 }
 
 .field-group {
@@ -1558,15 +1596,133 @@ p {
   border-radius: var(--radius-sm);
 }
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Eigene dunkle Dropdown-Komponente für die Produktauswahl - ersetzt das
+   native (helle) Browser-<select>, damit auch die aufgeklappte Liste im
+   Hofverwaltungs-Stil (dunkler Hintergrund, goldene Schrift) erscheint statt
+   im hellen Browser-Standarddesign. */
+.custom-select {
+  position: relative;
+}
+
+.custom-select__trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 42px;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--wood-text);
+  background: rgba(0, 0, 0, 0.25);
+  border: 1.5px solid var(--leather-edge);
+  border-radius: var(--radius-sm);
+  text-align: left;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.custom-select__trigger:hover {
+  border-color: var(--brass);
+}
+
+.custom-select__trigger--offen {
+  border-color: var(--brass);
+  box-shadow: 0 0 0 3px var(--brass-soft);
+}
+
+.custom-select__chevron {
+  color: var(--wood-text-muted);
+  font-size: 12px;
+  transition: transform 0.15s ease;
+}
+
+.custom-select__trigger--offen .custom-select__chevron {
+  transform: rotate(180deg);
+  color: var(--brass);
+}
+
+/* position: fixed statt absolute, mit Position/Breite per JS (siehe
+   positioniereBestellungProduktPanel in app.js) - so kann die aufgeklappte
+   Liste nicht von der scrollbaren linken Spalte des Bestellungs-Modals
+   abgeschnitten werden, egal wie weit unten die Produktauswahl im Formular
+   steht. Das Panel wird dafür beim Öffnen einmalig an <body> gehängt. */
+.custom-select__panel {
+  position: fixed;
+  z-index: 500;
+  max-height: 280px;
+  overflow-y: auto;
+  background: var(--leather-900);
+  border: 1.5px solid var(--brass);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-modal);
+  padding: 6px;
+}
+
+.custom-select__option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 9px 12px;
+  font-size: 13.5px;
+  color: var(--wood-text);
+  border-radius: var(--radius-sm);
+  background: transparent;
+}
+
+.custom-select__option:hover,
+.custom-select__option--hervorgehoben {
+  background: rgba(189, 145, 67, 0.16);
+  color: var(--brass-bright);
+}
+
+.custom-select__option--aktiv {
+  color: var(--brass-bright);
+  font-weight: 700;
+}
+
+.custom-select__leer {
+  padding: 9px 12px;
+  font-size: 13px;
+  color: var(--wood-text-soft);
+  font-style: italic;
+}
+
 /* Zeilen-Erfassung im Bestellungs-Modal (Produkt + Menge + Rabatt + Hinzufügen).
    Eigene, großzügig bemessene Felder statt der knappen .field-input-Defaults,
-   damit Zahlen bequem eingegeben werden können. */
+   damit Zahlen bequem eingegeben werden können. In der schmaleren linken
+   Spalte werden die Felder untereinander statt nebeneinander angeordnet. */
 .bestellung-position-form {
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
   align-items: flex-end;
   margin-bottom: 8px;
+}
+
+.bestellung-position-form--vertikal {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.bestellung-position-form--vertikal .field-group {
+  width: 100%;
+}
+
+.bestellung-position-form--vertikal .btn {
+  width: 100%;
 }
 
 .bestellung-position-form .field-group:first-child {
@@ -1624,7 +1780,9 @@ p {
 
 /* Horizontal scrollbar statt Zusammenquetschen, falls der Platz für alle
    Spalten (Produkt/Menge/Standardpreis/Rabatt/Endpreis/Gesamtpreis/Entfernen)
-   nicht ausreicht. */
+   nicht ausreicht. In der rechten Spalte wächst die Tabelle über
+   .bestellung-spalte--rechts .bestellung-positionen-tabelle (oben) auf die
+   volle verfügbare Höhe. */
 .bestellung-positionen-tabelle {
   display: flex;
   flex-direction: column;
@@ -2044,6 +2202,54 @@ p {
   width: 580px;
   max-height: 85vh;
   overflow-y: auto;
+}
+
+/* Großes, zweispaltiges Bestellungs-Fenster: breites Verwaltungsfenster
+   statt schmalem, langem Formular - links Allgemeine Infos + Produkt
+   hinzufügen, rechts die Live-Zusammenfassung mit der Produkttabelle. Header/
+   Footer bleiben fix, nur die beiden Spalten (.bestellung-spalte--links/
+   --rechts, siehe Abschnitt 14) scrollen bei Bedarf für sich. */
+.modal--xlarge {
+  width: 88vw;
+  max-width: 1360px;
+  height: 88vh;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+}
+
+.modal--xlarge .modal__header {
+  flex: 0 0 auto;
+  padding: 26px 34px 18px;
+  margin-bottom: 0;
+  border-bottom: 1px solid var(--leather-edge);
+}
+
+.modal--xlarge .modal__body {
+  flex: 1 1 auto;
+  display: flex;
+  overflow: hidden;
+  padding: 0;
+}
+
+.modal--xlarge .modal__footer {
+  flex: 0 0 auto;
+  margin-top: 0;
+  padding: 16px 34px 22px;
+  border-top: 1px solid var(--leather-edge);
+}
+
+@media (max-width: 900px) {
+  .modal--xlarge {
+    width: 96vw;
+    max-width: 96vw;
+  }
+  .modal--xlarge .modal__body {
+    flex-direction: column;
+    overflow-y: auto;
+  }
 }
 
 .modal__header {
