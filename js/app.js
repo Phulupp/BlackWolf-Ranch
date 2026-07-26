@@ -19,7 +19,7 @@
   /* ------------------------------------------------------------------------
      1. Konstanten
      ------------------------------------------------------------------------ */
-  const VERSION_AKTUELL = 7;
+  const VERSION_AKTUELL = 8;
 
   // Ränge des Hofes (rein organisatorisch — Verwalterrechte sind unabhängig
   // davon und werden separat je Benutzer vergeben, siehe isAdmin).
@@ -659,14 +659,25 @@
           await seedeStandardprodukte();
           return;
         }
-        produkte = [];
-        snap.forEach((docSnap) => produkte.push({ id: docSnap.id, ...docSnap.data() }));
-        produkte.sort((a, b) => (a.reihenfolge || 0) - (b.reihenfolge || 0) || a.name.localeCompare(b.name, "de"));
-        befuelleProduktSelects();
-        renderWaren();
-        renderLager();
-        renderHandelsrechner();
-        renderUebersicht();
+        try {
+          // In ein try/catch gefasst: ein einzelnes fehlerhaftes Produkt-
+          // Dokument (z. B. ohne "name", etwa durch eine manuelle Änderung
+          // direkt in der Firebase-Konsole) darf nicht die komplette
+          // Aktualisierung von Waren & Preise, Lager, Handelsrechner,
+          // Bestellungs-Produktauswahl und Dashboard verhindern - sonst
+          // bliebe z. B. die Produktauswahl im Bestellfenster dauerhaft
+          // leer/veraltet, obwohl auf "Waren & Preise" Produkte existieren.
+          produkte = [];
+          snap.forEach((docSnap) => produkte.push({ id: docSnap.id, ...docSnap.data() }));
+          produkte.sort((a, b) => (a.reihenfolge || 0) - (b.reihenfolge || 0) || (a.name || "").localeCompare(b.name || "", "de"));
+          befuelleProduktSelects();
+          renderWaren();
+          renderLager();
+          renderHandelsrechner();
+          renderUebersicht();
+        } catch (fehler) {
+          console.error("Waren konnten nicht verarbeitet werden (fehlerhaftes Produkt-Dokument?):", fehler);
+        }
       },
       (fehler) => console.error("Waren konnten nicht geladen werden:", fehler)
     );
@@ -709,7 +720,7 @@
   function gefiltertProdukte() {
     const begriff = warenSuche.trim().toLowerCase();
     if (!begriff) return produkte;
-    return produkte.filter((p) => p.name.toLowerCase().includes(begriff));
+    return produkte.filter((p) => (p.name || "").toLowerCase().includes(begriff));
   }
 
   function renderWaren() {
@@ -1962,7 +1973,7 @@
   function gefiltertLager() {
     const begriff = lagerSuche.trim().toLowerCase();
     if (!begriff) return produkte;
-    return produkte.filter((p) => p.name.toLowerCase().includes(begriff));
+    return produkte.filter((p) => (p.name || "").toLowerCase().includes(begriff));
   }
 
   function renderLager() {
