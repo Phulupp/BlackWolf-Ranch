@@ -4,8 +4,13 @@
    Zugang: echtes Login-/Benutzersystem (siehe js/auth.js). Diese Datei
    (js/app.js) nutzt weiterhin das "Compat"-SDK (firebase.firestore()) für
    alle fachlichen Daten (Waren, Bestellungen, Handelsrechner, Kontakte,
-   Lager, Verkäufe, Statistiken) und reagiert nur auf die Events, die
-   js/auth.js verschickt, sobald jemand eingeloggt UND freigegeben ist.
+   Lager, Verkaufshistorie, Statistiken) und reagiert nur auf die Events,
+   die js/auth.js verschickt, sobald jemand eingeloggt UND freigegeben ist.
+   Die Bestellung ist die zentrale Datenbasis: Sobald eine Bestellung den
+   Status "Abgeschlossen" erhält, gilt sie als Verkauf. Lagerbestand,
+   Lagerwert, Umsatz, Gewinn, Statistiken und Dashboard werden ausschließlich
+   aus abgeschlossenen Bestellungen abgeleitet - es gibt keine separate
+   Verkaufs-Collection mehr (siehe Abschnitt "14. Verkaufshistorie").
    ========================================================================== */
 
 (function () {
@@ -14,7 +19,7 @@
   /* ------------------------------------------------------------------------
      1. Konstanten
      ------------------------------------------------------------------------ */
-  const VERSION_AKTUELL = 5;
+  const VERSION_AKTUELL = 7;
 
   // Ränge des Hofes (rein organisatorisch — Verwalterrechte sind unabhängig
   // davon und werden separat je Benutzer vergeben, siehe isAdmin).
@@ -25,7 +30,6 @@
   const BESTELLUNGEN_COLLECTION = "bestellungen";
   const ANGEBOTE_COLLECTION = "angebote";
   const KONTAKTE_COLLECTION = "kontakte";
-  const VERKAEUFE_COLLECTION = "verkaeufe";
   const HOFBUCH_COLLECTION = "hofbuch";
   const PRESENCE_COLLECTION = "presence";
   const KONTAKTE_ROLLEN_DOC = "kataloge/kontakte-rollen";
@@ -73,9 +77,9 @@
     handelsrechner: { title: "Handelsrechner", subtitle: "Berechne Angebote und Handelskonditionen für Unternehmen." },
     kontakte: { title: "Kontakte", subtitle: "Verwalte deine Kontakte und Telegrammnummern." },
     lager: { title: "Lager", subtitle: "Aktueller Warenbestand und Lagerwert." },
-    verkaeufe: { title: "Verkäufe", subtitle: "Trage Verkäufe ein und behalte die Historie im Blick." },
+    verkaeufe: { title: "Verkaufshistorie", subtitle: "Automatisch aus abgeschlossenen Bestellungen — keine manuelle Erfassung." },
     hofbuch: { title: "Hofbuch", subtitle: "Die Chronik des Hofes — wichtige Ereignisse und Notizen." },
-    statistiken: { title: "Statistiken", subtitle: "Auswertung von Verkäufen und Bestellungen." },
+    statistiken: { title: "Statistiken", subtitle: "Auswertung abgeschlossener Bestellungen." },
     einstellungen: { title: "Einstellungen", subtitle: "Konfiguration der Hofverwaltung." },
     admin: { title: "Verwaltung", subtitle: "Benutzerverwaltung — nur für Verwalter sichtbar." },
     "admin-log": { title: "Aktivitäts-Log", subtitle: "Wer hat wann was geändert — nur für Verwalter sichtbar." },
@@ -95,8 +99,6 @@
   let unsubAngebote = null;
   let kontakte = [];
   let unsubKontakte = null;
-  let verkaeufe = [];
-  let unsubVerkaeufe = null;
   let hofbuchEintraege = [];
   let unsubHofbuch = null;
   let unsubPresence = null;
@@ -187,6 +189,10 @@
     bestellungBearbeiterAnzeige: document.getElementById("bestellung-bearbeiter-anzeige"),
     bestellungPositionForm: document.getElementById("bestellung-position-form"),
     bestellungPositionProdukt: document.getElementById("bestellung-position-produkt"),
+    bestellungPositionProduktDropdown: document.getElementById("bestellung-position-produkt-dropdown"),
+    bestellungPositionProduktTrigger: document.getElementById("bestellung-position-produkt-trigger"),
+    bestellungPositionProduktLabel: document.getElementById("bestellung-position-produkt-label"),
+    bestellungPositionProduktPanel: document.getElementById("bestellung-position-produkt-panel"),
     bestellungPositionMenge: document.getElementById("bestellung-position-menge"),
     bestellungPositionRabatt: document.getElementById("bestellung-position-rabatt"),
     bestellungPositionVorschau: document.getElementById("bestellung-position-vorschau"),
@@ -285,15 +291,11 @@
     lagerEmpty: document.getElementById("lager-empty"),
     lagerGesamtwert: document.getElementById("lager-gesamtwert"),
 
-    // Verkäufe
-    formVerkauf: document.getElementById("form-verkauf"),
-    verkaufUnternehmenInput: document.getElementById("verkauf-unternehmen-input"),
-    verkaufProduktInput: document.getElementById("verkauf-produkt-input"),
-    verkaufMengeInput: document.getElementById("verkauf-menge-input"),
-    verkaufPreisInput: document.getElementById("verkauf-preis-input"),
+    // Verkaufshistorie (automatisch aus abgeschlossenen Bestellungen)
     verkaeufeSearch: document.getElementById("verkaeufe-search"),
     verkaeufeTableBody: document.getElementById("verkaeufe-table-body"),
     verkaeufeEmpty: document.getElementById("verkaeufe-empty"),
+    verkaeufeNoResults: document.getElementById("verkaeufe-no-results"),
 
     // Hofbuch
     formHofbuch: document.getElementById("form-hofbuch"),
@@ -397,6 +399,16 @@
     return d.getFullYear() === heute.getFullYear() && d.getMonth() === heute.getMonth();
   }
 
+  // Wandelt einen Firestore-Timestamp (oder null, z. B. während ein
+  // serverTimestamp() noch aussteht) in eine vergleichbare Zahl um - für
+  // die Sortierung "kürzlich abgeschlossen" nach Abschlussdatum.
+  function zeitstempelWert(ts) {
+    if (!ts) return 0;
+    if (typeof ts.toMillis === "function") return ts.toMillis();
+    const d = typeof ts.toDate === "function" ? ts.toDate() : new Date(ts);
+    return d.getTime();
+  }
+
   function zeigeToast(text) {
     el.toast.textContent = text;
     el.toast.classList.add("toast--visible");
@@ -451,14 +463,24 @@
   /* ------------------------------------------------------------------------
      6. Modals (allgemein, funktionieren auch vor dem Login)
      ------------------------------------------------------------------------ */
+  // Merkt sich die Reihenfolge, in der Dialoge geöffnet wurden, damit die
+  // ESC-Taste gezielt den ZULETZT geöffneten (obersten) Dialog schließt -
+  // wichtig, wenn z. B. der Löschen/Archivieren-Bestätigungsdialog über
+  // einem bereits offenen Bestellungs-Modal liegt.
+  let offeneModalStapel = [];
+
   function oeffneModal(id) {
     const overlay = document.getElementById(id);
-    if (overlay) overlay.classList.add("modal-overlay--visible");
+    if (!overlay) return;
+    overlay.classList.add("modal-overlay--visible");
+    offeneModalStapel = offeneModalStapel.filter((x) => x !== id);
+    offeneModalStapel.push(id);
   }
 
   function schliesseModal(id) {
     const overlay = document.getElementById(id);
     if (overlay) overlay.classList.remove("modal-overlay--visible");
+    offeneModalStapel = offeneModalStapel.filter((x) => x !== id);
   }
 
   document.querySelectorAll("[data-open-modal]").forEach((btn) => {
@@ -469,8 +491,21 @@
   });
   document.querySelectorAll(".modal-overlay").forEach((overlay) => {
     overlay.addEventListener("click", (event) => {
-      if (event.target === overlay) overlay.classList.remove("modal-overlay--visible");
+      if (event.target === overlay) schliesseModal(overlay.id);
     });
+  });
+
+  // ESC schließt zuerst eine ggf. offene Produktauswahl-Dropdown-Liste,
+  // andernfalls den zuletzt geöffneten Dialog (Klick auf ✕, außerhalb des
+  // Fensters und jetzt auch ESC führen also alle zum selben Ergebnis).
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    if (el.bestellungPositionProduktPanel && !el.bestellungPositionProduktPanel.hidden) {
+      schliesseBestellungProduktDropdown();
+      return;
+    }
+    const obersterId = offeneModalStapel[offeneModalStapel.length - 1];
+    if (obersterId) schliesseModal(obersterId);
   });
 
   function fordereLoeschungAn(titel, text, callback) {
@@ -657,12 +692,18 @@
 
   function befuelleProduktSelects() {
     const optionsHtml = produkte.map((p) => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}</option>`).join("");
-    [el.rechnerProdukt, el.bestellungPositionProdukt, el.verkaufProduktInput].forEach((select) => {
+    [el.rechnerProdukt, el.bestellungPositionProdukt].forEach((select) => {
       if (!select) return;
       const vorher = select.value;
       select.innerHTML = optionsHtml || '<option value="">Keine Waren vorhanden</option>';
       if (vorher && produkte.some((p) => p.id === vorher)) select.value = vorher;
     });
+    // Die Bestellungs-Produktauswahl ist ein natives <select> geblieben
+    // (als versteckte, technische Datenquelle inkl. change-Events), wird dem
+    // Nutzer aber über eine eigene dunkle Dropdown-Komponente im
+    // Hofverwaltungs-Stil angezeigt - die muss bei jeder Aktualisierung der
+    // Warenliste mit demselben Datenstand neu befüllt werden.
+    befuelleBestellungProduktDropdown();
   }
 
   function gefiltertProdukte() {
@@ -778,15 +819,25 @@
      ------------------------------------------------------------------------ */
   // Eine Bestellung enthält beliebig viele Produkte, jede Produktzeile ist
   // ein vollständiger PREIS-SCHNAPPSCHUSS zum Zeitpunkt des Hinzufügens -
-  // spätere Änderungen am Produkt-Standardpreis wirken sich NICHT auf schon
-  // bestehende Bestellungen aus, damit die Historie nachvollziehbar bleibt:
+  // spätere Änderungen am Produkt-Standardpreis (oder -Einkaufspreis) wirken
+  // sich NICHT auf schon bestehende Bestellungen aus, damit die Historie und
+  // die daraus abgeleiteten Umsatz-/Gewinnzahlen nachvollziehbar bleiben:
   //   {
   //     unternehmen, ansprechpartner,
   //     produkte: [{ produktId, produktName, menge, standardpreis,
-  //                  rabattProzent, endpreis, gesamtpreis }, ...],
+  //                  einkaufspreis, rabattProzent, endpreis, gesamtpreis }, ...],
   //     status, notiz, archiviert,
-  //     erstelltAm, erstelltVon, bearbeiter
+  //     erstelltAm, erstelltVon, bearbeiter,
+  //     // Automatische Lagerverarbeitung (siehe berechneLagerDeltas):
+  //     lagerVerarbeitet, verarbeiteteProdukte, abgeschlossenAm
   //   }
+  // Eine Bestellung mit status === "Abgeschlossen" IST der Verkauf - es gibt
+  // keine separate Verkaufs-Collection mehr. "lagerVerarbeitet" +
+  // "verarbeiteteProdukte" halten fest, was zuletzt tatsächlich vom Lager
+  // abgezogen wurde, damit Bearbeitungen/Status-Wechsel den Lagerbestand nur
+  // um die Differenz nachbuchen, nie doppelt. "abgeschlossenAm" ist der
+  // Zeitpunkt des (ersten) Abschlusses und Grundlage für die
+  // Verkaufshistorie sowie "Heutiger Umsatz"/"Gesamtgewinn" im Dashboard.
   // "Archiv" ist bewusst KEIN vierter Status, sondern ein eigenes Flag
   // ("archiviert"), das nur bei Status "Abgeschlossen" gesetzt werden kann -
   // archivierte Bestellungen dürfen laut Firestore-Regel nie gelöscht
@@ -807,6 +858,7 @@
           bestellungen = [];
           snap.forEach((docSnap) => bestellungen.push({ id: docSnap.id, produkte: [], archiviert: false, ...docSnap.data() }));
           renderBestellungen();
+          renderVerkaufshistorie();
           renderUebersicht();
           renderStatistiken();
           befuelleUnternehmenDatalist();
@@ -838,6 +890,42 @@
     const mg = Number(menge) || 0;
     const endpreis = sp * (1 - rp / 100);
     return { endpreis, gesamtpreis: endpreis * mg };
+  }
+
+  // Berechnet die Lagerbestands-Differenz zwischen dem zuletzt tatsächlich
+  // verarbeiteten Zustand einer Bestellung ("vorherProdukte") und dem neuen
+  // Zustand ("nachherProdukte"). Rückgabe: { produktId: delta }, wobei ein
+  // POSITIVES Delta den Lagerbestand ERHÖHT (Ware wird gutgeschrieben) und
+  // ein NEGATIVES Delta ihn VERRINGERT (Ware wird abgezogen).
+  //
+  // Dieses diff-basierte Vorgehen (statt einmaligem Abzug) ist nötig, damit
+  // Bearbeiten, Zurücksetzen (weg von "Abgeschlossen") und erneutes
+  // Abschließen einer Bestellung den Lagerbestand immer korrekt nachführen,
+  // ohne jemals doppelt zu verbuchen:
+  //   - Neu abgeschlossen: vorherProdukte = [], nachherProdukte = aktuell
+  //     → Delta = -Menge je Produkt (Ware wird abgezogen).
+  //   - Von "Abgeschlossen" weg geändert: vorherProdukte = zuletzt verarbeitet,
+  //     nachherProdukte = [] → Delta = +Menge je Produkt (Ware wird zurückgebucht).
+  //   - Weiterhin "Abgeschlossen", aber bearbeitet: vorherProdukte = zuletzt
+  //     verarbeitet, nachherProdukte = aktuell → nur die Differenz wird gebucht.
+  function berechneLagerDeltas(vorherProdukte, nachherProdukte) {
+    const mengeJeProdukt = (liste) => {
+      const map = {};
+      (liste || []).forEach((p) => {
+        if (!p || !p.produktId) return;
+        map[p.produktId] = (map[p.produktId] || 0) + (Number(p.menge) || 0);
+      });
+      return map;
+    };
+    const vorher = mengeJeProdukt(vorherProdukte);
+    const nachher = mengeJeProdukt(nachherProdukte);
+    const alleIds = new Set([...Object.keys(vorher), ...Object.keys(nachher)]);
+    const deltas = {};
+    alleIds.forEach((id) => {
+      const delta = (vorher[id] || 0) - (nachher[id] || 0);
+      if (delta !== 0) deltas[id] = delta;
+    });
+    return deltas;
   }
 
   // Fasst eine Produktliste zu den vier Kennzahlen der Zusammenfassung
@@ -1011,6 +1099,138 @@
     el.bestellungPositionVorschauHinweis.hidden = !(produkt && standardpreis === 0);
   }
 
+  /* ------------------------------------------------------------------------
+     Eigene dunkle Dropdown-Komponente für die Produktauswahl im
+     Bestellungs-Modal (ersetzt das native, hell erscheinende Browser-
+     <select>). Das native <select id="bestellung-position-produkt"> bleibt
+     im DOM (nur visuell versteckt) und ist weiterhin die technische
+     Datenquelle: Auswahl hier setzt einfach select.value und feuert ein
+     "change"-Event, sodass die bestehende Logik (aktualisierePositionVorschau
+     usw.) unverändert weiterläuft.
+     ------------------------------------------------------------------------ */
+  function aktuellesBestellungDropdownProdukt() {
+    return produkte.find((p) => p.id === el.bestellungPositionProdukt.value) || null;
+  }
+
+  function aktualisiereBestellungProduktLabel() {
+    if (!el.bestellungPositionProduktLabel) return;
+    const produkt = aktuellesBestellungDropdownProdukt();
+    el.bestellungPositionProduktLabel.textContent = produkt ? produkt.name : produkte.length ? "Produkt wählen" : "Keine Waren vorhanden";
+  }
+
+  function befuelleBestellungProduktDropdown() {
+    if (!el.bestellungPositionProduktPanel) return;
+    const auswahlId = el.bestellungPositionProdukt.value;
+    el.bestellungPositionProduktPanel.innerHTML = produkte.length
+      ? produkte
+          .map(
+            (p) =>
+              `<button type="button" class="custom-select__option ${
+                p.id === auswahlId ? "custom-select__option--aktiv" : ""
+              }" data-produkt-option="${escapeHtml(p.id)}">${escapeHtml(p.name)}</button>`
+          )
+          .join("")
+      : `<div class="custom-select__leer">Keine Waren vorhanden</div>`;
+    aktualisiereBestellungProduktLabel();
+  }
+
+  // Das Panel wird einmalig direkt an <body> gehängt (statt als Kind von
+  // .custom-select im Modal zu bleiben) und per "position: fixed" plus
+  // manuell berechneter Position dargestellt. Grund: die linke Spalte des
+  // Bestellungs-Modals ist selbst scrollbar (overflow-y: auto) - ein
+  // normal positioniertes Dropdown würde dort an der Spalten-Kante
+  // abgeschnitten, egal wie weit unten das Auswahlfeld im Formular steht.
+  if (el.bestellungPositionProduktPanel) {
+    document.body.appendChild(el.bestellungPositionProduktPanel);
+  }
+
+  // Berechnet Position/Breite des Panels anhand der aktuellen Bildschirm-
+  // position des Auswahlfeldes (Trigger) und klappt bei Platzmangel nach
+  // oben statt nach unten auf.
+  function positioniereBestellungProduktPanel() {
+    const trigger = el.bestellungPositionProduktTrigger;
+    const panel = el.bestellungPositionProduktPanel;
+    if (!trigger || !panel) return;
+    const rect = trigger.getBoundingClientRect();
+    const maxPanelHoehe = 280;
+    const platzUnten = window.innerHeight - rect.bottom;
+    const nachObenOeffnen = platzUnten < maxPanelHoehe + 12 && rect.top > platzUnten;
+    panel.style.left = `${rect.left}px`;
+    panel.style.width = `${rect.width}px`;
+    if (nachObenOeffnen) {
+      panel.style.top = "auto";
+      panel.style.bottom = `${window.innerHeight - rect.top + 6}px`;
+    } else {
+      panel.style.bottom = "auto";
+      panel.style.top = `${rect.bottom + 6}px`;
+    }
+  }
+
+  function oeffneBestellungProduktDropdown() {
+    if (!el.bestellungPositionProduktPanel || produkte.length === 0) return;
+    befuelleBestellungProduktDropdown();
+    positioniereBestellungProduktPanel();
+    el.bestellungPositionProduktPanel.hidden = false;
+    el.bestellungPositionProduktTrigger.classList.add("custom-select__trigger--offen");
+  }
+
+  function schliesseBestellungProduktDropdown() {
+    if (!el.bestellungPositionProduktPanel) return;
+    el.bestellungPositionProduktPanel.hidden = true;
+    el.bestellungPositionProduktTrigger.classList.remove("custom-select__trigger--offen");
+  }
+
+  if (el.bestellungPositionProduktTrigger) {
+    el.bestellungPositionProduktTrigger.addEventListener("click", (event) => {
+      event.stopPropagation();
+      if (el.bestellungPositionProduktPanel.hidden) {
+        oeffneBestellungProduktDropdown();
+      } else {
+        schliesseBestellungProduktDropdown();
+      }
+    });
+  }
+
+  if (el.bestellungPositionProduktPanel) {
+    el.bestellungPositionProduktPanel.addEventListener("click", (event) => {
+      const option = event.target.closest("[data-produkt-option]");
+      if (!option) return;
+      el.bestellungPositionProdukt.value = option.getAttribute("data-produkt-option");
+      el.bestellungPositionProdukt.dispatchEvent(new Event("change", { bubbles: true }));
+      schliesseBestellungProduktDropdown();
+    });
+  }
+
+  // Klick außerhalb schließt das Panel - da es jetzt ein Kind von <body>
+  // ist (nicht mehr von .custom-select), muss hier sowohl der Trigger-
+  // Wrapper als auch das Panel selbst als "innerhalb" gezählt werden.
+  document.addEventListener("click", (event) => {
+    if (!el.bestellungPositionProduktPanel || el.bestellungPositionProduktPanel.hidden) return;
+    const imTrigger = el.bestellungPositionProduktDropdown && el.bestellungPositionProduktDropdown.contains(event.target);
+    const imPanel = el.bestellungPositionProduktPanel.contains(event.target);
+    if (!imTrigger && !imPanel) schliesseBestellungProduktDropdown();
+  });
+
+  // Bei Größenänderung oder Scrollen (z. B. innerhalb der scrollbaren
+  // linken Spalte) würde die berechnete Position nicht mehr zum Trigger
+  // passen - einfacher und robuster, das offene Panel dann zu schließen,
+  // statt die Position laufend nachzuführen.
+  window.addEventListener("resize", () => schliesseBestellungProduktDropdown());
+  document.addEventListener(
+    "scroll",
+    (event) => {
+      if (!el.bestellungPositionProduktPanel || el.bestellungPositionProduktPanel.hidden) return;
+      if (event.target && el.bestellungPositionProduktPanel.contains(event.target)) return;
+      schliesseBestellungProduktDropdown();
+    },
+    true
+  );
+
+  // Aktualisiert das sichtbare Label, sobald sich der Wert des zugrunde
+  // liegenden <select> ändert (z. B. durch Produktwahl über das Dropdown
+  // selbst, oder wenn befuelleProduktSelects einen vorherigen Wert erhält).
+  if (el.bestellungPositionProdukt) el.bestellungPositionProdukt.addEventListener("change", aktualisiereBestellungProduktLabel);
+
   // Live-Vorschau im Hinzufügen-Formular: sofort bei Produktwahl (Standard-
   // preis wird direkt beim Auswählen aus der Datenbank übernommen) und bei
   // jeder Tastatureingabe in Menge/Rabatt neu berechnen - kein zusätzlicher
@@ -1030,6 +1250,11 @@
       if (!isFinite(menge) || menge < 1) return zeigeFeldFehler(el.bestellungError, "Bitte gib eine gültige Menge ein.");
 
       const standardpreis = Number(produkt.verkaufspreis) || 0;
+      // Einkaufspreis wird als Schnappschuss mit in die Position übernommen,
+      // damit spätere Gewinnberechnungen (Umsatz - Einkaufspreis) auch dann
+      // noch historisch korrekt bleiben, wenn sich der aktuelle Einkaufspreis
+      // im Produktkatalog danach ändert.
+      const einkaufspreis = Number(produkt.einkaufspreis) || 0;
 
       // Zeilen werden nur zusammengeführt, wenn Produkt UND Rabatt
       // übereinstimmen - unterschiedliche Rabatte auf dasselbe Produkt
@@ -1042,12 +1267,14 @@
         // eine zusammengeführte Zeile nicht an einem veralteten Preis von
         // vorher hängen bleibt.
         vorhanden.standardpreis = standardpreis;
+        vorhanden.einkaufspreis = einkaufspreis;
       } else {
         bestellungEntwurfPositionen.push({
           produktId: produkt.id,
           produktName: produkt.name,
           menge,
           standardpreis,
+          einkaufspreis,
           rabattProzent,
         });
       }
@@ -1123,6 +1350,8 @@
     // Zeigt sofort den Standardpreis des aktuell (ggf. automatisch als
     // erste Option) ausgewählten Produkts an - ohne dass extra etwas
     // angeklickt werden muss.
+    aktualisiereBestellungProduktLabel();
+    schliesseBestellungProduktDropdown();
     aktualisierePositionVorschau();
 
     el.bestellungArchivHinweis.hidden = !bestellungModalArchiviert;
@@ -1152,9 +1381,29 @@
       const id = el.bestellungEditingId.value;
       if (!id) return;
       fordereLoeschungAn("Bestellung löschen", "Möchtest du diese Bestellung wirklich löschen?", async () => {
-        await db.collection(BESTELLUNGEN_COLLECTION).doc(id).delete();
-        schliesseModal("modal-bestellung");
-        zeigeToast("Bestellung gelöscht.");
+        try {
+          const bestellung = bestellungen.find((b) => b.id === id);
+          const batch = db.batch();
+          batch.delete(db.collection(BESTELLUNGEN_COLLECTION).doc(id));
+          // War die Bestellung bereits abgeschlossen (und damit vom Lager
+          // abgezogen), wird die Ware beim Löschen wieder gutgeschrieben -
+          // sonst würde der Lagerbestand dauerhaft zu niedrig bleiben.
+          if (bestellung && bestellung.lagerVerarbeitet) {
+            const deltas = berechneLagerDeltas(bestellung.verarbeiteteProdukte || [], []);
+            Object.entries(deltas).forEach(([produktId, delta]) => {
+              if (!delta) return;
+              batch.update(db.collection(PRODUKTE_COLLECTION).doc(produktId), {
+                lagerMenge: firebase.firestore.FieldValue.increment(delta),
+              });
+            });
+          }
+          await batch.commit();
+          schliesseModal("modal-bestellung");
+          zeigeToast("Bestellung gelöscht.");
+        } catch (fehler) {
+          console.error(fehler);
+          zeigeToast("Bestellung konnte nicht gelöscht werden.");
+        }
       });
     });
   }
@@ -1187,36 +1436,84 @@
       if (bestellungEntwurfPositionen.length === 0)
         return zeigeFeldFehler(el.bestellungError, "Bitte füge mindestens ein Produkt zur Bestellung hinzu.");
 
+      const neuerStatus = el.bestellungStatusInput.value;
+      const nachherProdukte = bestellungEntwurfPositionen.map((p) => {
+        const { endpreis, gesamtpreis } = berechneBestellungPositionPreise(p.standardpreis, p.rabattProzent, p.menge);
+        return {
+          produktId: p.produktId,
+          produktName: p.produktName,
+          menge: p.menge,
+          standardpreis: Number(p.standardpreis) || 0,
+          einkaufspreis: Number(p.einkaufspreis) || 0,
+          rabattProzent: Number(p.rabattProzent) || 0,
+          endpreis,
+          gesamtpreis,
+        };
+      });
+
       const daten = {
         unternehmen,
         ansprechpartner: el.bestellungAnsprechpartnerInput.value.trim(),
-        produkte: bestellungEntwurfPositionen.map((p) => {
-          const { endpreis, gesamtpreis } = berechneBestellungPositionPreise(p.standardpreis, p.rabattProzent, p.menge);
-          return {
-            produktId: p.produktId,
-            produktName: p.produktName,
-            menge: p.menge,
-            standardpreis: Number(p.standardpreis) || 0,
-            rabattProzent: Number(p.rabattProzent) || 0,
-            endpreis,
-            gesamtpreis,
-          };
-        }),
-        status: el.bestellungStatusInput.value,
+        produkte: nachherProdukte,
+        status: neuerStatus,
         notiz: el.bestellungNotizInput.value.trim(),
         bearbeiter: aktuellerNutzer ? aktuellerNutzer.name : null,
       };
 
+      const id = el.bestellungEditingId.value;
+      const alteBestellung = id ? bestellungen.find((b) => b.id === id) : null;
+      const vorherVerarbeitet = !!(alteBestellung && alteBestellung.lagerVerarbeitet);
+      const vorherVerarbeiteteProdukte = vorherVerarbeitet ? alteBestellung.verarbeiteteProdukte || [] : [];
+
+      // Automatische Verarbeitung: Eine abgeschlossene Bestellung IST der
+      // Verkauf - Lagerbestand, Lagerwert, Umsatz, Gewinn, Statistiken und
+      // Dashboard werden ausschließlich daraus abgeleitet (siehe
+      // renderVerkaufshistorie/renderStatistiken/renderUebersicht). Über
+      // "verarbeiteteProdukte" + "lagerVerarbeitet" wird nachgehalten, was
+      // zuletzt tatsächlich vom Lager abgezogen wurde, damit spätere
+      // Bearbeitungen, Status-Rücksetzungen oder erneute Abschlüsse nur die
+      // Differenz nachbuchen (siehe berechneLagerDeltas) statt doppelt zu
+      // verbuchen.
+      let lagerDeltas = {};
+      if (neuerStatus === "Abgeschlossen") {
+        lagerDeltas = berechneLagerDeltas(vorherVerarbeiteteProdukte, nachherProdukte);
+        daten.lagerVerarbeitet = true;
+        daten.verarbeiteteProdukte = nachherProdukte.map((p) => ({ produktId: p.produktId, menge: p.menge }));
+        daten.abgeschlossenAm =
+          alteBestellung && alteBestellung.status === "Abgeschlossen" && alteBestellung.abgeschlossenAm
+            ? alteBestellung.abgeschlossenAm
+            : firebase.firestore.FieldValue.serverTimestamp();
+      } else if (vorherVerarbeitet) {
+        // Status wird von "Abgeschlossen" weg geändert - die zuvor
+        // abgezogene Ware wird dem Lager wieder vollständig gutgeschrieben.
+        lagerDeltas = berechneLagerDeltas(vorherVerarbeiteteProdukte, []);
+        daten.lagerVerarbeitet = false;
+        daten.verarbeiteteProdukte = [];
+        daten.abgeschlossenAm = null;
+      }
+
       try {
-        const id = el.bestellungEditingId.value;
+        const batch = db.batch();
+        let ref;
         if (id) {
-          await db.collection(BESTELLUNGEN_COLLECTION).doc(id).update(daten);
+          ref = db.collection(BESTELLUNGEN_COLLECTION).doc(id);
+          batch.update(ref, daten);
         } else {
           daten.archiviert = false;
           daten.erstelltAm = firebase.firestore.FieldValue.serverTimestamp();
           daten.erstelltVon = aktuellerNutzer ? aktuellerNutzer.name : null;
-          await db.collection(BESTELLUNGEN_COLLECTION).add(daten);
+          ref = db.collection(BESTELLUNGEN_COLLECTION).doc();
+          batch.set(ref, daten);
         }
+
+        Object.entries(lagerDeltas).forEach(([produktId, delta]) => {
+          if (!delta) return;
+          batch.update(db.collection(PRODUKTE_COLLECTION).doc(produktId), {
+            lagerMenge: firebase.firestore.FieldValue.increment(delta),
+          });
+        });
+
+        await batch.commit();
         schliesseModal("modal-bestellung");
         zeigeToast("Bestellung gespeichert.");
       } catch (fehler) {
@@ -1383,6 +1680,7 @@
               produktName: ergebnis.produkt.name,
               menge: ergebnis.menge,
               standardpreis: ergebnis.standardpreis || 0,
+              einkaufspreis: ergebnis.ek || 0,
               rabattProzent: Math.round(ergebnis.rabattProzent * 10) / 10,
               endpreis: ergebnis.neuerStueckpreis,
               gesamtpreis: ergebnis.gesamtpreis,
@@ -1653,7 +1951,6 @@
     const namen = new Set();
     kontakte.forEach((k) => k.name && namen.add(k.name));
     bestellungen.forEach((b) => b.unternehmen && namen.add(b.unternehmen));
-    verkaeufe.forEach((v) => v.unternehmen && namen.add(v.unternehmen));
     el.unternehmenListe.innerHTML = Array.from(namen)
       .map((n) => `<option value="${escapeHtml(n)}"></option>`)
       .join("");
@@ -1714,126 +2011,84 @@
   }
 
   /* ------------------------------------------------------------------------
-     14. Verkäufe
+     14. Verkaufshistorie
      ------------------------------------------------------------------------ */
-  function starteVerkaeufeListener() {
-    if (!db) return;
-    if (unsubVerkaeufe) unsubVerkaeufe();
-    unsubVerkaeufe = db
-      .collection(VERKAEUFE_COLLECTION)
-      .orderBy("datum", "desc")
-      .limit(200)
-      .onSnapshot(
-        (snap) => {
-          verkaeufe = [];
-          snap.forEach((docSnap) => verkaeufe.push({ id: docSnap.id, ...docSnap.data() }));
-          renderVerkaeufe();
-          renderUebersicht();
-          renderStatistiken();
-          befuelleUnternehmenDatalist();
-        },
-        (fehler) => console.error("Verkäufe konnten nicht geladen werden:", fehler)
-      );
+  // Es gibt keine eigene "Verkäufe"-Collection mehr: Eine abgeschlossene
+  // Bestellung IST bereits der Verkauf (siehe RP-Workflow: Bestellung
+  // aufnehmen → Ware liefern/abholen lassen → Status "Abgeschlossen"). Die
+  // Verkaufshistorie wird deshalb ausschließlich aus "bestellungen" mit
+  // status === "Abgeschlossen" abgeleitet - keine manuelle Erfassung, keine
+  // doppelte Datenhaltung. Ein Klick auf eine Zeile öffnet dasselbe Modal
+  // wie auf der Bestellungen-Seite, mit allen Details der Bestellung.
+  function abgeschlosseneBestellungen() {
+    return bestellungen.filter((b) => b.status === "Abgeschlossen");
   }
 
-  if (el.verkaufProduktInput) {
-    el.verkaufProduktInput.addEventListener("change", () => {
-      const p = produkte.find((x) => x.id === el.verkaufProduktInput.value);
-      if (p && !el.verkaufPreisInput.value) el.verkaufPreisInput.value = p.verkaufspreis;
-      if (p) el.verkaufPreisInput.value = p.verkaufspreis;
+  // Umsatz = Summe der Zeilen-Gesamtpreise; Gewinn = Summe aus
+  // (Endpreis - Einkaufspreis) × Menge je Zeile. Beide Werte nutzen die
+  // Preis-Schnappschüsse der Bestellung, nicht die aktuellen Katalogpreise -
+  // damit bleibt die Historie auch nach späteren Preisänderungen korrekt.
+  function berechneBestellungKennzahlen(b) {
+    const produkteListe = b.produkte || [];
+    const anzahlProdukte = produkteListe.length;
+    let gesamtmenge = 0;
+    let umsatz = 0;
+    let gewinn = 0;
+    produkteListe.forEach((p) => {
+      const menge = Number(p.menge) || 0;
+      const endpreis = Number(p.endpreis) || 0;
+      const ek = Number(p.einkaufspreis) || 0;
+      gesamtmenge += menge;
+      umsatz += Number(p.gesamtpreis) || 0;
+      gewinn += (endpreis - ek) * menge;
     });
+    return { anzahlProdukte, gesamtmenge, umsatz, gewinn };
   }
 
-  if (el.formVerkauf) {
-    el.formVerkauf.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const unternehmen = el.verkaufUnternehmenInput.value.trim();
-      const produkt = produkte.find((p) => p.id === el.verkaufProduktInput.value);
-      const menge = parseInt(el.verkaufMengeInput.value, 10);
-      const preis = parseFloat(el.verkaufPreisInput.value);
-
-      if (!unternehmen) return zeigeToast("Bitte Unternehmen/Kunde eintragen.");
-      if (!produkt) return zeigeToast("Bitte ein Produkt wählen.");
-      if (!isFinite(menge) || menge < 1) return zeigeToast("Bitte eine gültige Menge eintragen.");
-      if (!isFinite(preis) || preis < 0) return zeigeToast("Bitte einen gültigen Preis eintragen.");
-
-      try {
-        await db.collection(VERKAEUFE_COLLECTION).add({
-          unternehmen,
-          produktId: produkt.id,
-          produktName: produkt.name,
-          menge,
-          preisProStueck: preis,
-          summe: preis * menge,
-          datum: firebase.firestore.FieldValue.serverTimestamp(),
-          erstelltVon: aktuellerNutzer ? aktuellerNutzer.name : null,
-        });
-        await db
-          .collection(PRODUKTE_COLLECTION)
-          .doc(produkt.id)
-          .update({ lagerMenge: firebase.firestore.FieldValue.increment(-menge) })
-          .catch(() => {});
-        el.formVerkauf.reset();
-        el.verkaufMengeInput.value = 1;
-        zeigeToast("Verkauf eingetragen.");
-      } catch (fehler) {
-        console.error(fehler);
-        zeigeToast("Verkauf konnte nicht gespeichert werden.");
-      }
-    });
-  }
-
-  function gefiltertVerkaeufe() {
+  function gefiltertVerkaufshistorie() {
     const begriff = verkaeufeSuche.trim().toLowerCase();
-    if (!begriff) return verkaeufe;
-    return verkaeufe.filter((v) => (v.unternehmen || "").toLowerCase().includes(begriff) || (v.produktName || "").toLowerCase().includes(begriff));
+    const liste = abgeschlosseneBestellungen();
+    if (!begriff) return liste;
+    return liste.filter((b) => (b.unternehmen || "").toLowerCase().includes(begriff));
   }
 
-  function renderVerkaeufe() {
+  function renderVerkaufshistorie() {
     if (!el.verkaeufeTableBody) return;
-    const liste = gefiltertVerkaeufe();
-    el.verkaeufeEmpty.hidden = verkaeufe.length !== 0;
+    const alle = abgeschlosseneBestellungen();
+    const liste = gefiltertVerkaufshistorie();
+    el.verkaeufeEmpty.hidden = alle.length !== 0;
+    if (el.verkaeufeNoResults) el.verkaeufeNoResults.hidden = !(alle.length > 0 && liste.length === 0);
 
     el.verkaeufeTableBody.innerHTML = liste
-      .slice(0, 100)
-      .map(
-        (v) => `<div class="reg-row reg-row--body" style="grid-template-columns: 16fr 18fr 20fr 12fr 14fr 14fr 10fr;">
-          <span>${formatDatumUhrzeit(v.datum)}</span>
-          <span class="reg-name">${escapeHtml(v.unternehmen)}</span>
-          <span>${escapeHtml(v.produktName)}</span>
-          <span>${v.menge}</span>
-          <span>${formatGeld(v.preisProStueck)}</span>
-          <span>${formatGeld(v.summe)}</span>
-          <span class="reg-row__actions-col">${istAdmin() ? `<button class="icon-btn icon-btn--delete" data-verkauf-delete="${v.id}" title="Löschen">🗑</button>` : ""}</span>
-        </div>`
-      )
+      .slice(0, 200)
+      .map((b) => {
+        const { anzahlProdukte, gesamtmenge, umsatz, gewinn } = berechneBestellungKennzahlen(b);
+        return `<div class="reg-row reg-row--body bestellungen-row" style="grid-template-columns: 16fr 22fr 16fr 14fr 14fr 14fr 14fr;" data-verkauf-oeffnen="${b.id}">
+          <span>${formatDatum(b.abgeschlossenAm || b.erstelltAm)}</span>
+          <span class="reg-name">${escapeHtml(b.unternehmen)}</span>
+          <span>${anzahlProdukte}</span>
+          <span>${gesamtmenge}</span>
+          <span>${formatGeld(umsatz)}</span>
+          <span>${formatGeld(gewinn)}</span>
+          <span>${escapeHtml(b.bearbeiter || b.erstelltVon || "—")}</span>
+        </div>`;
+      })
       .join("");
   }
 
   if (el.verkaeufeSearch) {
     el.verkaeufeSearch.addEventListener("input", () => {
       verkaeufeSuche = el.verkaeufeSearch.value;
-      renderVerkaeufe();
+      renderVerkaufshistorie();
     });
   }
 
   if (el.verkaeufeTableBody) {
     el.verkaeufeTableBody.addEventListener("click", (event) => {
-      const delBtn = event.target.closest("[data-verkauf-delete]");
-      if (!delBtn) return;
-      const id = delBtn.getAttribute("data-verkauf-delete");
-      const v = verkaeufe.find((x) => x.id === id);
-      fordereLoeschungAn("Verkauf löschen", "Möchtest du diesen Verkauf wirklich löschen? Die Menge wird dem Lager wieder gutgeschrieben.", async () => {
-        await db.collection(VERKAEUFE_COLLECTION).doc(id).delete();
-        if (v && v.produktId) {
-          await db
-            .collection(PRODUKTE_COLLECTION)
-            .doc(v.produktId)
-            .update({ lagerMenge: firebase.firestore.FieldValue.increment(v.menge) })
-            .catch(() => {});
-        }
-        zeigeToast("Verkauf gelöscht.");
-      });
+      const zeile = event.target.closest("[data-verkauf-oeffnen]");
+      if (!zeile) return;
+      const b = bestellungen.find((x) => x.id === zeile.getAttribute("data-verkauf-oeffnen"));
+      if (b) oeffneBestellungModal(b);
     });
   }
 
@@ -1937,16 +2192,19 @@
      ------------------------------------------------------------------------ */
   function renderStatistiken() {
     if (!el.statVerkaeufeAnzahl) return;
-    el.statVerkaeufeAnzahl.textContent = String(verkaeufe.length);
-    el.statUmsatzGesamt.textContent = formatGeld(verkaeufe.reduce((sum, v) => sum + (v.summe || 0), 0));
+    const abgeschlossen = abgeschlosseneBestellungen();
+    el.statVerkaeufeAnzahl.textContent = String(abgeschlossen.length);
+    el.statUmsatzGesamt.textContent = formatGeld(abgeschlossen.reduce((sum, b) => sum + berechneBestellungKennzahlen(b).umsatz, 0));
     el.statBestellungenGesamt.textContent = String(bestellungen.length);
     el.statStatOffene.textContent = String(bestellungen.filter((b) => b.status !== "Abgeschlossen").length);
 
     const proWare = {};
     const proKunde = {};
-    verkaeufe.forEach((v) => {
-      proWare[v.produktName] = (proWare[v.produktName] || 0) + (v.menge || 0);
-      proKunde[v.unternehmen] = (proKunde[v.unternehmen] || 0) + (v.summe || 0);
+    abgeschlossen.forEach((b) => {
+      (b.produkte || []).forEach((p) => {
+        proWare[p.produktName] = (proWare[p.produktName] || 0) + (Number(p.menge) || 0);
+      });
+      proKunde[b.unternehmen] = (proKunde[b.unternehmen] || 0) + berechneBestellungKennzahlen(b).umsatz;
     });
 
     const topWaren = Object.entries(proWare)
@@ -1983,20 +2241,19 @@
     el.statOffeneBestellungen.textContent = String(offen.length);
     el.statOffeneBestellungenSub.textContent = `${offen.length} Bestellung${offen.length === 1 ? "" : "en"} zu erledigen`;
 
-    const heutigeVerkaeufe = verkaeufe.filter((v) => istHeute(v.datum));
-    const heuteSumme = heutigeVerkaeufe.reduce((sum, v) => sum + (v.summe || 0), 0);
-    el.statHeuteVerkauft.textContent = formatGeld(heuteSumme);
-    el.statHeuteVerkauftSub.textContent = `Aus ${heutigeVerkaeufe.length} Verkauf${heutigeVerkaeufe.length === 1 ? "" : "en"}`;
+    // Alle Kennzahlen unten werden ausschließlich aus abgeschlossenen
+    // Bestellungen berechnet (eine abgeschlossene Bestellung IST der
+    // Verkauf) - es gibt keine separate Verkaufs-Collection mehr.
+    const abgeschlossen = abgeschlosseneBestellungen();
 
-    const produkteById = {};
-    produkte.forEach((p) => (produkteById[p.id] = p));
-    const monatsGewinn = verkaeufe
-      .filter((v) => istDiesenMonat(v.datum))
-      .reduce((sum, v) => {
-        const p = produkteById[v.produktId];
-        const ek = p && p.einkaufspreis != null ? p.einkaufspreis : 0;
-        return sum + ((v.preisProStueck || 0) - ek) * (v.menge || 0);
-      }, 0);
+    const heutigeAbgeschlossen = abgeschlossen.filter((b) => istHeute(b.abgeschlossenAm || b.erstelltAm));
+    const heuteSumme = heutigeAbgeschlossen.reduce((sum, b) => sum + berechneBestellungKennzahlen(b).umsatz, 0);
+    el.statHeuteVerkauft.textContent = formatGeld(heuteSumme);
+    el.statHeuteVerkauftSub.textContent = `Aus ${heutigeAbgeschlossen.length} abgeschlossenen Bestellung${heutigeAbgeschlossen.length === 1 ? "" : "en"}`;
+
+    const monatsGewinn = abgeschlossen
+      .filter((b) => istDiesenMonat(b.abgeschlossenAm || b.erstelltAm))
+      .reduce((sum, b) => sum + berechneBestellungKennzahlen(b).gewinn, 0);
     el.statGesamtgewinn.textContent = formatGeld(monatsGewinn);
 
     const gesamtLagerwert = produkte.reduce((sum, p) => sum + (p.lagerMenge || 0) * (p.verkaufspreis || 0), 0);
@@ -2013,15 +2270,20 @@
       )
       .join("");
 
-    el.dashKuerzlicheVerkaeufeEmpty.hidden = verkaeufe.length !== 0;
-    el.dashKuerzlicheVerkaeufe.innerHTML = verkaeufe
+    const kuerzlichAbgeschlossen = abgeschlossen
+      .slice()
+      .sort((a, b) => zeitstempelWert(b.abgeschlossenAm || b.erstelltAm) - zeitstempelWert(a.abgeschlossenAm || a.erstelltAm));
+
+    el.dashKuerzlicheVerkaeufeEmpty.hidden = kuerzlichAbgeschlossen.length !== 0;
+    el.dashKuerzlicheVerkaeufe.innerHTML = kuerzlichAbgeschlossen
       .slice(0, 6)
-      .map(
-        (v) => `<div class="dash-mini-row">
-          <div class="dash-mini-row__top"><span>${escapeHtml(v.unternehmen)}</span><span>${formatGeld(v.summe)}</span></div>
-          <div class="dash-mini-row__bottom"><span>${escapeHtml(v.produktName)} · ${v.menge} Stück</span><span>${formatDatum(v.datum)}</span></div>
-        </div>`
-      )
+      .map((b) => {
+        const { umsatz } = berechneBestellungKennzahlen(b);
+        return `<div class="dash-mini-row">
+          <div class="dash-mini-row__top"><span>${escapeHtml(b.unternehmen)}</span><span>${formatGeld(umsatz)}</span></div>
+          <div class="dash-mini-row__bottom"><span>${escapeHtml(bestellungProdukteText(b.produkte))}</span><span>${formatDatum(b.abgeschlossenAm || b.erstelltAm)}</span></div>
+        </div>`;
+      })
       .join("");
 
     el.dashWichtigeKontakteEmpty.hidden = kontakte.length !== 0;
@@ -2299,7 +2561,6 @@
     starteAngeboteListener();
     starteKontakteRollenListener();
     starteKontakteListener();
-    starteVerkaeufeListener();
     starteHofbuchListener();
     if (istAdmin()) starteBenutzerverwaltung();
 
@@ -2323,13 +2584,13 @@
     }
     renderWaren();
     renderKontakteRollenVerwaltung();
-    renderVerkaeufe();
+    renderVerkaufshistorie();
   }
 
   function stoppeApp() {
     aktuellerNutzer = null;
-    [unsubProdukte, unsubBestellungen, unsubAngebote, unsubKontakte, unsubVerkaeufe, unsubHofbuch, unsubKontakteRollen].forEach((unsub) => unsub && unsub());
-    unsubProdukte = unsubBestellungen = unsubAngebote = unsubKontakte = unsubVerkaeufe = unsubHofbuch = unsubKontakteRollen = null;
+    [unsubProdukte, unsubBestellungen, unsubAngebote, unsubKontakte, unsubHofbuch, unsubKontakteRollen].forEach((unsub) => unsub && unsub());
+    unsubProdukte = unsubBestellungen = unsubAngebote = unsubKontakte = unsubHofbuch = unsubKontakteRollen = null;
     stoppeBenutzerverwaltung();
     stoppeHeartbeat();
     clearInterval(versionCheckTimer);
@@ -2337,7 +2598,6 @@
     bestellungen = [];
     angebote = [];
     kontakte = [];
-    verkaeufe = [];
     hofbuchEintraege = [];
   }
 
