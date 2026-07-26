@@ -25,7 +25,7 @@
   z-index: 0;
   background:
     linear-gradient(180deg, rgba(8, 5, 2, 0.58) 0%, rgba(8, 5, 2, 0.36) 30%, rgba(8, 5, 2, 0.52) 70%, rgba(8, 5, 2, 0.78) 100%),
-    url("../assets/background/login-background.webp.png") center 42% / cover no-repeat;
+    url("../../assets/background/login-background.webp.png") center 42% / cover no-repeat;
 }
 
 .auth-screen__vignette {

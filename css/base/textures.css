@@ -3,7 +3,7 @@
    -------------------------------------------------------------------------- */
 .tex-wood {
   background-color: var(--wood-800);
-  background-image: url("../assets/textures/wood-panel.webp.png");
+  background-image: url("../../assets/textures/wood-panel.webp.png");
   background-size: 340px auto;
   background-repeat: repeat;
 }
@@ -20,7 +20,7 @@
   position: relative;
   background:
     linear-gradient(180deg, rgba(8, 5, 2, 0.84) 0%, rgba(8, 5, 2, 0.74) 45%, rgba(8, 5, 2, 0.88) 100%),
-    url("../assets/background/dashboard-background.webp.png") center 38% / cover fixed no-repeat;
+    url("../../assets/background/dashboard-background.webp.png") center 38% / cover fixed no-repeat;
 }
 
 .farm-scene,
