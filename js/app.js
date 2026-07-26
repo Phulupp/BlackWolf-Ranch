@@ -19,7 +19,7 @@
   /* ------------------------------------------------------------------------
      1. Konstanten
      ------------------------------------------------------------------------ */
-  const VERSION_AKTUELL = 10;
+  const VERSION_AKTUELL = 12;
 
   // Ränge des Hofes (rein organisatorisch — Verwalterrechte sind unabhängig
   // davon und werden separat je Benutzer vergeben, siehe isAdmin).
@@ -338,6 +338,167 @@
     updateBanner: document.getElementById("update-banner"),
     updateBannerBtn: document.getElementById("update-banner-btn"),
   };
+
+  /* ------------------------------------------------------------------------
+     3b. Generisches Custom-Dropdown für alle <select>-Felder
+     ------------------------------------------------------------------------
+     Verwandelt ein ganz normales <select class="field-input"> automatisch in
+     dieselbe dunkle/goldene Dropdown-Optik, die für die Produktauswahl im
+     Bestellungs-Fenster bereits gebaut wurde (.custom-select) - damit
+     NIRGENDWO auf der Seite mehr das helle Standard-Dropdown des Browsers
+     auftaucht. Das ursprüngliche <select> bleibt unsichtbar als einzige
+     "Wahrheitsquelle" bestehen (Wert, Optionen, bestehende change-Listener
+     funktionieren unverändert weiter) - es wird nur visuell durch einen
+     Button + eine aufklappbare Liste ersetzt. Ein MutationObserver hält die
+     sichtbare Liste automatisch synchron, wenn eine Funktion die Optionen
+     des <select> später per innerHTML neu befüllt (z. B. befuelleProduktSelects). */
+  const customSelectRegistry = new Map();
+
+  function aktualisiereCustomSelect(select) {
+    const eintrag = select && customSelectRegistry.get(select);
+    if (eintrag) eintrag.sync();
+  }
+
+  function erzeugeCustomSelect(select) {
+    if (!select || select.dataset.customSelectInit || !select.parentNode) return;
+    select.dataset.customSelectInit = "1";
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "custom-select";
+
+    const trigger = document.createElement("button");
+    trigger.type = "button";
+    trigger.className = "custom-select__trigger";
+
+    const label = document.createElement("span");
+    const chevron = document.createElement("span");
+    chevron.className = "custom-select__chevron";
+    chevron.textContent = "⌄";
+    trigger.appendChild(label);
+    trigger.appendChild(chevron);
+
+    const panel = document.createElement("div");
+    panel.className = "custom-select__panel";
+    panel.hidden = true;
+
+    // Manche <select>-Felder haben ein Inline-style für ihre Breite im
+    // Layout (z. B. flex: 0 0 160px bei der Kontakt-Rolle, max-width beim
+    // Startseite-Feld) - dieses muss auf den neuen, sichtbaren Wrapper
+    // übertragen werden, sonst würde der Wrapper (der jetzt statt des
+    // <select> die Breite im Layout bestimmt) einfach die volle Breite
+    // einnehmen und das Formular verrutschen lassen.
+    const inlineStyle = select.getAttribute("style");
+    if (inlineStyle) wrapper.setAttribute("style", inlineStyle);
+
+    select.parentNode.insertBefore(wrapper, select);
+    wrapper.appendChild(trigger);
+    wrapper.appendChild(panel);
+    wrapper.appendChild(select);
+    select.classList.add("visually-hidden");
+    select.setAttribute("tabindex", "-1");
+    select.setAttribute("aria-hidden", "true");
+    document.body.appendChild(panel);
+
+    function sync() {
+      const deaktiviert = !!select.disabled;
+      trigger.disabled = deaktiviert;
+      trigger.classList.toggle("custom-select__trigger--disabled", deaktiviert);
+      const gewaehlt = select.options[select.selectedIndex];
+      label.textContent = gewaehlt ? gewaehlt.textContent : select.options.length ? "Bitte wählen" : "Keine Optionen vorhanden";
+      panel.innerHTML = select.options.length
+        ? Array.from(select.options)
+            .map(
+              (option, index) =>
+                `<button type="button" class="custom-select__option ${
+                  index === select.selectedIndex ? "custom-select__option--aktiv" : ""
+                }" data-index="${index}">${escapeHtml(option.textContent)}</button>`
+            )
+            .join("")
+        : `<div class="custom-select__leer">Keine Optionen vorhanden</div>`;
+    }
+
+    function positioniere() {
+      const rect = trigger.getBoundingClientRect();
+      const maxPanelHoehe = 280;
+      const platzUnten = window.innerHeight - rect.bottom;
+      const nachObenOeffnen = platzUnten < maxPanelHoehe + 12 && rect.top > platzUnten;
+      panel.style.left = `${rect.left}px`;
+      panel.style.width = `${rect.width}px`;
+      if (nachObenOeffnen) {
+        panel.style.top = "auto";
+        panel.style.bottom = `${window.innerHeight - rect.top + 6}px`;
+      } else {
+        panel.style.bottom = "auto";
+        panel.style.top = `${rect.bottom + 6}px`;
+      }
+    }
+
+    function oeffnen() {
+      if (select.disabled || !select.options.length) return;
+      sync();
+      positioniere();
+      panel.hidden = false;
+      trigger.classList.add("custom-select__trigger--offen");
+    }
+
+    function schliessen() {
+      panel.hidden = true;
+      trigger.classList.remove("custom-select__trigger--offen");
+    }
+
+    trigger.addEventListener("click", (event) => {
+      event.stopPropagation();
+      if (panel.hidden) oeffnen();
+      else schliessen();
+    });
+
+    panel.addEventListener("click", (event) => {
+      const option = event.target.closest("[data-index]");
+      if (!option) return;
+      const index = parseInt(option.getAttribute("data-index"), 10);
+      if (select.selectedIndex !== index) {
+        select.selectedIndex = index;
+        select.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+      schliessen();
+    });
+
+    document.addEventListener("click", (event) => {
+      if (panel.hidden) return;
+      if (!wrapper.contains(event.target) && !panel.contains(event.target)) schliessen();
+    });
+    window.addEventListener("resize", schliessen);
+    document.addEventListener(
+      "scroll",
+      (event) => {
+        if (panel.hidden) return;
+        if (event.target && panel.contains(event.target)) return;
+        schliessen();
+      },
+      true
+    );
+
+    // Fängt Fälle ab, in denen eine Funktion die Optionsliste des <select>
+    // per innerHTML neu aufbaut (z. B. befuelleProduktSelects,
+    // befuelleKontakteRollenSelects) - die sichtbare Liste bleibt dadurch
+    // automatisch aktuell, auch ohne dass jede Stelle im Code extra Bescheid
+    // geben muss.
+    new MutationObserver(sync).observe(select, { childList: true });
+    select.addEventListener("change", sync);
+
+    sync();
+    customSelectRegistry.set(select, { sync, schliessen });
+  }
+
+  // Alle noch verbliebenen "normalen" <select>-Felder der Seite auf das
+  // dunkle Custom-Dropdown umstellen (Status, Produktauswahl im
+  // Handelsrechner, Rollen-Auswahl bei Kontakten, Startseite, Rang bei
+  // neuen Benutzern). Die Produktauswahl im Bestellungs-Fenster hat bereits
+  // ihr eigenes, älteres Custom-Dropdown (siehe Abschnitt "Bestellungen")
+  // und wird hier bewusst nicht noch einmal angefasst.
+  [el.bestellungStatusInput, el.rechnerProdukt, el.kontaktBerufInput, el.kontaktEditRolle, el.startseiteSelect, el.neuerBenutzerRolleInput].forEach(
+    erzeugeCustomSelect
+  );
 
   /* ------------------------------------------------------------------------
      4. Firebase-Konfigurationsprüfung
@@ -1383,6 +1544,7 @@
     el.bestellungBestelldatumAnzeige.textContent = bestellung ? formatDatumUhrzeit(bestellung.erstelltAm) : "Wird beim Speichern gesetzt";
     el.bestellungBearbeiterAnzeige.textContent = bestellung ? bestellung.bearbeiter || bestellung.erstelltVon || "—" : "—";
     el.bestellungStatusInput.value = bestellung ? bestellung.status : "Offen";
+    aktualisiereCustomSelect(el.bestellungStatusInput);
     el.bestellungNotizInput.value = bestellung ? bestellung.notiz || "" : "";
     bestellungEntwurfPositionen = bestellung ? (bestellung.produkte || []).map((p) => ({ ...p })) : [];
     el.bestellungPositionMenge.value = 1;
@@ -1630,7 +1792,10 @@
   }
 
   function renderHandelsrechner() {
-    if (el.rechnerProdukt && !el.rechnerProdukt.value && produkte[0]) el.rechnerProdukt.value = produkte[0].id;
+    if (el.rechnerProdukt && !el.rechnerProdukt.value && produkte[0]) {
+      el.rechnerProdukt.value = produkte[0].id;
+      aktualisiereCustomSelect(el.rechnerProdukt);
+    }
     berechneHandelsrechner();
     renderAngebote();
   }
@@ -1957,6 +2122,7 @@
         el.kontaktEditNummer.value = k.nummer;
         el.kontaktEditName.value = k.name;
         el.kontaktEditRolle.value = k.rolle || KONTAKTE_ROLLEN_FALLBACK;
+        aktualisiereCustomSelect(el.kontaktEditRolle);
         el.kontaktEditNotiz.value = k.notiz || "";
         versteckeFeldFehler(el.kontaktEditError);
         oeffneModal("modal-kontakt-edit");
@@ -2382,7 +2548,10 @@
 
   function ladeStartseite() {
     const gespeichert = localStorage.getItem(STARTSEITE_KEY);
-    if (el.startseiteSelect && gespeichert) el.startseiteSelect.value = gespeichert;
+    if (el.startseiteSelect && gespeichert) {
+      el.startseiteSelect.value = gespeichert;
+      aktualisiereCustomSelect(el.startseiteSelect);
+    }
     return gespeichert && VIEW_META[gespeichert] ? gespeichert : "uebersicht";
   }
 
@@ -2608,7 +2777,19 @@
       /* still, kein Problem falls offline */
     }
   }
-  if (el.updateBannerBtn) el.updateBannerBtn.addEventListener("click", () => window.location.reload());
+  if (el.updateBannerBtn) {
+    el.updateBannerBtn.addEventListener("click", () => {
+      // Ein normales reload() kann in manchen Browsern trotzdem noch
+      // gecachte Dateien (index.html/app.js/style.css) wiederverwenden,
+      // wenn die URL exakt gleich bleibt. Ein frischer, eindeutiger
+      // Query-Parameter zwingt den Browser zu einem echten Neu-Abruf vom
+      // Server, statt (möglicherweise veraltete) Dateien aus dem Cache zu
+      // nehmen.
+      const url = new URL(window.location.href);
+      url.searchParams.set("frisch", Date.now().toString());
+      window.location.href = url.toString();
+    });
+  }
 
   /* ------------------------------------------------------------------------
      21. Start / Stop der App (reagiert auf js/auth.js-Events)
