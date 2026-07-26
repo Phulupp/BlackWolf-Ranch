@@ -19,7 +19,7 @@
   /* ------------------------------------------------------------------------
      1. Konstanten
      ------------------------------------------------------------------------ */
-  const VERSION_AKTUELL = 8;
+  const VERSION_AKTUELL = 9;
 
   // Ränge des Hofes (rein organisatorisch — Verwalterrechte sind unabhängig
   // davon und werden separat je Benutzer vergeben, siehe isAdmin).
@@ -650,11 +650,41 @@
   /* ------------------------------------------------------------------------
      9. Waren & Preise
      ------------------------------------------------------------------------ */
+  // --- Automatischer Wiederholungsversuch bei "permission-denied" ----------
+  // Direkt nach dem Login kann es einen kurzen Moment geben, in dem der
+  // Auth-Token noch nicht vollständig für Firestore-Anfragen bereitsteht -
+  // ein zu diesem Zeitpunkt gestarteter Listener bekommt dann fälschlich
+  // "permission-denied", obwohl der Nutzer eigentlich freigegeben ist. Ein
+  // onSnapshot-Listener, der einmal mit einem Fehler abbricht, versucht es
+  // danach NIE wieder von selbst - die betroffene Seite bliebe für immer
+  // leer (z. B. "Waren & Preise"), obwohl ein erneuter Versuch kurz danach
+  // problemlos funktionieren würde. Diese kleine Hilfsfunktion fängt genau
+  // diesen Fall ab und startet den betroffenen Listener automatisch neu
+  // (mit steigender Wartezeit, maximal 5 Versuche - danach wird der Fehler
+  // ganz normal wie zuvor nur noch geloggt, falls es doch ein echtes
+  // Rechte-Problem sein sollte).
+  const listenerRetryVersuche = {};
+  function planeListenerNeustart(name, startFn, fehler) {
+    if (fehler && fehler.code === "permission-denied") {
+      const versuch = (listenerRetryVersuche[name] || 0) + 1;
+      listenerRetryVersuche[name] = versuch;
+      if (versuch <= 5) {
+        const wartezeit = Math.min(800 * versuch, 4000);
+        console.warn(`${name}: Zugriff kurzzeitig verweigert (Versuch ${versuch}/5) - erneuter Versuch in ${wartezeit}ms ...`);
+        setTimeout(startFn, wartezeit);
+        return true;
+      }
+      console.error(`${name}: Zugriff dauerhaft verweigert nach ${versuch} Versuchen.`);
+    }
+    return false;
+  }
+
   function starteProdukteListener() {
     if (!db) return;
     if (unsubProdukte) unsubProdukte();
     unsubProdukte = db.collection(PRODUKTE_COLLECTION).onSnapshot(
       async (snap) => {
+        listenerRetryVersuche["Waren"] = 0;
         if (snap.empty) {
           await seedeStandardprodukte();
           return;
@@ -679,7 +709,11 @@
           console.error("Waren konnten nicht verarbeitet werden (fehlerhaftes Produkt-Dokument?):", fehler);
         }
       },
-      (fehler) => console.error("Waren konnten nicht geladen werden:", fehler)
+      (fehler) => {
+        if (!planeListenerNeustart("Waren", starteProdukteListener, fehler)) {
+          console.error("Waren konnten nicht geladen werden:", fehler);
+        }
+      }
     );
   }
 
@@ -866,6 +900,7 @@
       .orderBy("erstelltAm", "desc")
       .onSnapshot(
         (snap) => {
+          listenerRetryVersuche["Bestellungen"] = 0;
           bestellungen = [];
           snap.forEach((docSnap) => bestellungen.push({ id: docSnap.id, produkte: [], archiviert: false, ...docSnap.data() }));
           renderBestellungen();
@@ -874,7 +909,11 @@
           renderStatistiken();
           befuelleUnternehmenDatalist();
         },
-        (fehler) => console.error("Bestellungen konnten nicht geladen werden:", fehler)
+        (fehler) => {
+          if (!planeListenerNeustart("Bestellungen", starteBestellungenListener, fehler)) {
+            console.error("Bestellungen konnten nicht geladen werden:", fehler);
+          }
+        }
       );
   }
 
@@ -1722,11 +1761,16 @@
       .limit(10)
       .onSnapshot(
         (snap) => {
+          listenerRetryVersuche["Angebote"] = 0;
           angebote = [];
           snap.forEach((docSnap) => angebote.push({ id: docSnap.id, ...docSnap.data() }));
           renderAngebote();
         },
-        (fehler) => console.error("Angebote konnten nicht geladen werden:", fehler)
+        (fehler) => {
+          if (!planeListenerNeustart("Angebote", starteAngeboteListener, fehler)) {
+            console.error("Angebote konnten nicht geladen werden:", fehler);
+          }
+        }
       );
   }
 
@@ -1757,6 +1801,7 @@
     if (unsubKontakteRollen) unsubKontakteRollen();
     unsubKontakteRollen = db.doc(KONTAKTE_ROLLEN_DOC).onSnapshot(
       async (snap) => {
+        listenerRetryVersuche["Rollen-Katalog"] = 0;
         if (!snap.exists) {
           await db.doc(KONTAKTE_ROLLEN_DOC).set({ rollen: DEFAULT_KONTAKTE_ROLLEN }).catch(() => {});
           return;
@@ -1766,7 +1811,11 @@
         renderKontakteRollenVerwaltung();
         renderKontakte();
       },
-      (fehler) => console.error("Rollen-Katalog konnte nicht geladen werden:", fehler)
+      (fehler) => {
+        if (!planeListenerNeustart("Rollen-Katalog", starteKontakteRollenListener, fehler)) {
+          console.error("Rollen-Katalog konnte nicht geladen werden:", fehler);
+        }
+      }
     );
   }
 
@@ -1839,6 +1888,7 @@
     if (unsubKontakte) unsubKontakte();
     unsubKontakte = db.collection(KONTAKTE_COLLECTION).onSnapshot(
       (snap) => {
+        listenerRetryVersuche["Kontakte"] = 0;
         kontakte = [];
         snap.forEach((docSnap) => kontakte.push({ id: docSnap.id, ...docSnap.data() }));
         kontakte.sort((a, b) => (a.nummer || "").localeCompare(b.nummer || "", undefined, { numeric: true }));
@@ -1846,7 +1896,11 @@
         renderUebersicht();
         befuelleUnternehmenDatalist();
       },
-      (fehler) => console.error("Kontakte konnten nicht geladen werden:", fehler)
+      (fehler) => {
+        if (!planeListenerNeustart("Kontakte", starteKontakteListener, fehler)) {
+          console.error("Kontakte konnten nicht geladen werden:", fehler);
+        }
+      }
     );
   }
 
@@ -2117,11 +2171,16 @@
       .limit(200)
       .onSnapshot(
         (snap) => {
+          listenerRetryVersuche["Hofbuch"] = 0;
           hofbuchEintraege = [];
           snap.forEach((docSnap) => hofbuchEintraege.push({ id: docSnap.id, ...docSnap.data() }));
           renderHofbuch();
         },
-        (fehler) => console.error("Hofbuch konnte nicht geladen werden:", fehler)
+        (fehler) => {
+          if (!planeListenerNeustart("Hofbuch", starteHofbuchListener, fehler)) {
+            console.error("Hofbuch konnte nicht geladen werden:", fehler);
+          }
+        }
       );
   }
 
