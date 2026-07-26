@@ -14,7 +14,7 @@
     rel="stylesheet"
   />
 
-  <link rel="stylesheet" href="css/style.css?v=10" />
+  <link rel="stylesheet" href="css/style.css?v=11" />
 
   <!-- Firebase SDK (Authentifizierung + Datenbank). "defer" statt normaler
        blockierender <script>-Tags: der Browser kann so den Rest der Seite
@@ -837,7 +837,7 @@
       <div class="modal__body">
         <input type="hidden" id="bestellung-editing-id" value="" />
 
-        <!-- LINKE SPALTE: Allgemeine Infos + Produkt hinzufügen -->
+        <!-- LINKE SPALTE: Allgemeine Infos -->
         <div class="bestellung-spalte bestellung-spalte--links">
           <span class="status-pill" id="bestellung-archiv-hinweis" hidden style="margin-bottom:14px;">Im Archiv – nur ansehen</span>
 
@@ -881,10 +881,13 @@
               </div>
             </div>
           </div>
+        </div>
 
+        <!-- RECHTE SPALTE: Produkt hinzufügen (kompakt) + Live-Zusammenfassung -->
+        <div class="bestellung-spalte bestellung-spalte--rechts">
           <p class="field-label" style="margin-bottom:8px;">Produkt hinzufügen</p>
-          <div class="bestellung-position-form bestellung-position-form--vertikal" id="bestellung-position-form">
-            <div class="field-group">
+          <div class="bestellung-position-form bestellung-position-form--kompakt" id="bestellung-position-form">
+            <div class="field-group field-group--produkt">
               <span class="field-label field-label--klein">Produkt</span>
               <div class="custom-select" id="bestellung-position-produkt-dropdown">
                 <button type="button" class="custom-select__trigger" id="bestellung-position-produkt-trigger">
@@ -895,11 +898,11 @@
                 <select id="bestellung-position-produkt" class="visually-hidden" tabindex="-1" aria-hidden="true"></select>
               </div>
             </div>
-            <div class="field-group">
+            <div class="field-group field-group--menge">
               <span class="field-label field-label--klein">Menge</span>
               <input type="number" id="bestellung-position-menge" class="field-input" min="1" step="1" value="1" placeholder="Menge" />
             </div>
-            <div class="field-group">
+            <div class="field-group field-group--rabatt">
               <span class="field-label field-label--klein">Rabatt %</span>
               <input type="number" id="bestellung-position-rabatt" class="field-input" min="0" max="100" step="0.1" value="0" placeholder="Rabatt %" title="Rabatt anpassen (falls berechtigt)" />
             </div>
@@ -911,13 +914,9 @@
             <span>Gesamtpreis <strong id="bestellung-position-vorschau-gesamt">–</strong></span>
             <span class="bestellung-position-vorschau__hinweis" id="bestellung-position-vorschau-hinweis" hidden>Kein Standardpreis hinterlegt – bitte in „Waren &amp; Preise" prüfen.</span>
           </div>
-
           <p class="field-error" id="bestellung-error" hidden></p>
-        </div>
 
-        <!-- RECHTE SPALTE: Live-Zusammenfassung -->
-        <div class="bestellung-spalte bestellung-spalte--rechts">
-          <p class="field-label" style="margin-bottom:8px;">Produkte in dieser Bestellung</p>
+          <p class="field-label" style="margin: 14px 0 8px;">Produkte in dieser Bestellung</p>
           <div class="bestellung-positionen-tabelle" id="bestellung-positionen-wrap">
             <div class="bestellung-positionen-zeile bestellung-positionen-zeile--kopf">
               <span>Produkt</span>
@@ -1101,8 +1100,8 @@
        diese Reihenfolge korrekt erhalten, obwohl die SDK-Skripte jetzt im
        <head> stehen. js/auth.js ist als type="module" ohnehin automatisch
        "deferred" und reiht sich an derselben Stelle ein. -->
-  <script defer src="js/firebase-config.js?v=10"></script>
-  <script defer src="js/app.js?v=10"></script>
-  <script type="module" src="js/auth.js?v=10"></script>
+  <script defer src="js/firebase-config.js?v=11"></script>
+  <script defer src="js/app.js?v=11"></script>
+  <script type="module" src="js/auth.js?v=11"></script>
 </body>
 </html>
