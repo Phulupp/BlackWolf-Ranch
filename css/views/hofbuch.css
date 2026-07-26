@@ -1,0 +1,95 @@
+/* --------------------------------------------------------------------------
+   22. Hofbuch (dunkles Leder-Panel wie der Rest der Anwendung, kein Pergament)
+   -------------------------------------------------------------------------- */
+.hofbuch-card {
+  background: var(--leather-800);
+  border: 1px solid var(--leather-edge);
+  border-top: 2px solid var(--brass);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 32px 36px;
+  min-height: 380px;
+}
+
+.hofbuch-card__form-wrap h3 {
+  font-family: var(--font-brand);
+  font-size: 20px;
+  text-align: center;
+  margin-bottom: 14px;
+  color: var(--wood-text);
+}
+
+.hofbuch-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: flex-start;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.hofbuch-rope-divider {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  height: 1px;
+  margin: 22px auto;
+  background: var(--leather-edge);
+}
+
+#hofbuch-eintraege {
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Jeder Eintrag ist eine eigene, klar abgegrenzte Karte — konsistent mit den
+   übrigen Leder-Panels der Anwendung, statt nur einer Trennlinie. */
+.hofbuch-eintrag {
+  background: var(--leather-700);
+  border: 1px solid var(--leather-edge);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+}
+
+.hofbuch-eintrag__kopf {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.hofbuch-eintrag__kopf-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.hofbuch-eintrag__titel {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15.5px;
+  color: var(--wood-text);
+}
+
+.hofbuch-eintrag__meta {
+  font-size: 10.5px;
+  color: var(--wood-text-soft);
+  white-space: nowrap;
+}
+
+.hofbuch-eintrag__delete {
+  flex-shrink: 0;
+}
+
+.hofbuch-eintrag__text {
+  font-size: 13px;
+  color: var(--wood-text-muted);
+  line-height: 1.65;
+  white-space: pre-wrap;
+}
+

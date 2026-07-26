@@ -1,0 +1,77 @@
+/* ==========================================================================
+   HORNHAUSEN-HOF — Hofverwaltung (1899)
+   ---------------------------------------------------------------------------
+   Moderne, ruhige Hofverwaltung im Stil von Red Dead Redemption 2: dunkles
+   Leder und Holz mit Messing-/Gold-Akzenten als Rahmen und Highlights. Kein
+   Pergament/Papier mehr als Hintergrund für Karten, Formulare oder Tabellen
+   irgendwo in der Anwendung — der Fokus liegt auf Lesbarkeit und Funktion.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Design-Tokens
+   -------------------------------------------------------------------------- */
+:root {
+  /* Dunkles Holz (Sidebar, Kopfleisten, Footer) — kräftiger, sattes Rotbraun
+     statt eines flachen Graubraun, damit es natürlicher/wärmer wirkt. */
+  --wood-950: #0d0704;
+  --wood-900: #170e07;
+  --wood-850: #1e1208;
+  --wood-800: #33200f;
+  --wood-700: #4f3016;
+  --wood-600: #714623;
+  --wood-line: #090402;
+  --wood-grain: rgba(0, 0, 0, 0.32);
+  --wood-grain-light: rgba(255, 208, 140, 0.06);
+
+  /* Warmer Akzentton (nur noch als Textfarbe, z. B. auf dem Übersicht-Hero) */
+  --parch-200: #cdb277;
+
+  /* Leder-Panels: die gesamte Anwendung (Karten, Tabellen, Modals, Login,
+     Hofbuch) nutzt dunkles, halbtransparent wirkendes Leder mit feiner
+     Messing-Kante statt Pergament oder Papier. */
+  --leather-900: #19110b;
+  --leather-800: #241a11;
+  --leather-700: #332417;
+  --leather-600: #46331f;
+  --leather-edge: rgba(189, 145, 67, 0.28);
+  --leather-edge-soft: rgba(189, 145, 67, 0.16);
+
+  /* Text auf dunklem Holz/Leder */
+  --wood-text: #e7d5a8;
+  --wood-text-muted: #b9976a;
+  --wood-text-soft: #8a6b47;
+
+  /* Messing/Gold-Akzent — etwas gedämpfter, antiker statt hell-golden */
+  --brass: #916d2c;
+  --brass-bright: #bd9143;
+  --brass-deep: #6b4c1a;
+  --brass-soft: rgba(189, 145, 67, 0.18);
+
+  /* Status-Akzente (gedämpft, erdig) */
+  --status-open: #9c4e33;      /* Offen / warm ochre-red */
+  --status-open-soft: rgba(156, 78, 51, 0.18);
+  --status-progress: #71601f;
+  --status-progress-soft: rgba(113, 96, 31, 0.2);
+  --status-done: #43593a;      /* übernommen/geschlossen, gedämpftes Grün */
+  --status-done-soft: rgba(67, 89, 58, 0.2);
+  --status-danger: #6e2317;
+  --status-danger-soft: rgba(110, 35, 23, 0.18);
+  --status-danger-bright: #e2836b; /* Rot-Text auf dunklen Leder-Flächen */
+
+  --radius-sm: 3px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+
+  --shadow-card: 0 4px 13px rgba(25, 14, 5, 0.34), 0 1px 0 rgba(255, 240, 200, 0.18) inset;
+  --shadow-raised: 0 16px 38px rgba(10, 5, 2, 0.5);
+  --shadow-modal: 0 32px 76px rgba(6, 3, 1, 0.68);
+
+  --sidebar-width: 232px;
+  --content-width: 1360px;
+
+  --font-brand: "Rye", "Playfair Display", serif;
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-body: "Vollkorn", Georgia, "Times New Roman", serif;
+  --font-mono: "Vollkorn", Georgia, serif;
+}
+

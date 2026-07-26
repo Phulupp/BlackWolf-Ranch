@@ -1,0 +1,271 @@
+/* --------------------------------------------------------------------------
+   5. Login-Bildschirm (Farmtor mit Holzschild)
+   -------------------------------------------------------------------------- */
+@keyframes auth-fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.auth-screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #100a06;
+}
+
+/* Foto-Hintergrund: echtes Bild des Hofes bei Sonnenuntergang aus dem neuen
+   Asset-Pack (assets/background/login-background.webp) - liegt als eigene
+   Ebene hinter der Vignette, die weiterhin für Tiefe/Kontrast sorgt. */
+.auth-screen__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    linear-gradient(180deg, rgba(8, 5, 2, 0.58) 0%, rgba(8, 5, 2, 0.36) 30%, rgba(8, 5, 2, 0.52) 70%, rgba(8, 5, 2, 0.78) 100%),
+    url("../assets/background/login-background.webp.png") center 42% / cover no-repeat;
+}
+
+.auth-screen__vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    radial-gradient(ellipse 1300px 950px at 50% 32%, transparent 45%, rgba(8, 5, 2, 0.5) 100%),
+    linear-gradient(180deg, rgba(8, 5, 2, 0.28) 0%, transparent 12%, transparent 82%, rgba(6, 3, 1, 0.4) 100%);
+  pointer-events: none;
+}
+
+.auth-gate {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  animation: auth-fade-in 0.7s ease both;
+}
+
+.auth-gate__sign-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Echtes Hänge-Schild-Foto aus dem Asset-Pack (assets/logo/hornhausen-sign),
+   das große Logo der Login-Seite. */
+.auth-gate__sign-img {
+  display: block;
+  width: 290px;
+  max-width: 60vw;
+  height: auto;
+  filter: drop-shadow(0 14px 22px rgba(6, 3, 1, 0.5));
+}
+
+/* Schlichte, hochwertige Anmelde-Karte: dunkles Leder mit Messing-Kante,
+   damit Login und Anwendung optisch aus einem Guss wirken. */
+.auth-card {
+  width: 420px;
+  background: var(--leather-800);
+  border: 1px solid var(--leather-edge);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-modal);
+  padding: 40px 40px 36px;
+  position: relative;
+  animation: auth-fade-in 0.75s ease 0.05s both;
+}
+
+.auth-card__brand {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.auth-card__eyebrow {
+  display: block;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--brass-bright);
+}
+
+.auth-card__heading {
+  display: block;
+  margin-top: 5px;
+  font-family: var(--font-brand);
+  font-size: 30px;
+  letter-spacing: 0.03em;
+  color: var(--wood-text);
+}
+
+.auth-form {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.auth-form--active {
+  display: flex;
+}
+
+.auth-submit {
+  margin-top: 16px;
+  width: 100%;
+}
+
+.auth-hint {
+  margin-top: 18px;
+  font-size: 12px;
+  color: var(--status-danger-bright);
+  background: var(--status-danger-soft);
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(122, 46, 33, 0.3);
+}
+
+.auth-hint code {
+  font-family: monospace;
+  font-size: 11px;
+}
+
+.auth-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+  align-items: center;
+}
+
+.auth-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 12px;
+  color: var(--wood-text-muted);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-style: italic;
+  transition: color 0.15s ease;
+}
+
+.auth-link:hover {
+  color: var(--brass-bright);
+}
+
+.auth-status {
+  display: none;
+  flex-direction: column;
+  gap: 16px;
+  text-align: center;
+}
+
+.auth-status--active {
+  display: flex;
+}
+
+.auth-status__text {
+  font-size: 13.5px;
+  color: var(--wood-text-muted);
+  line-height: 1.65;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 10px 0;
+  color: var(--wood-text-soft);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--leather-edge);
+}
+
+/* Eingabefelder mit Icon (nur im Login-Bereich, keine Änderung an den
+   geteilten Basis-Klassen .field-label/.field-input, die auch anderswo
+   in der App verwendet werden) */
+#auth-screen .field-icon-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+#auth-screen .field-icon {
+  position: absolute;
+  left: 12px;
+  width: 15px;
+  height: 15px;
+  color: var(--wood-text-soft);
+  pointer-events: none;
+  transition: color 0.15s ease;
+}
+
+#auth-screen .field-input--icon {
+  padding-left: 36px;
+}
+
+#auth-screen .field-icon-wrap:focus-within .field-icon {
+  color: var(--brass-bright);
+}
+
+#auth-screen .field-checkbox-row {
+  margin-top: 14px;
+  cursor: pointer;
+  user-select: none;
+}
+
+#auth-screen .field-checkbox-row span {
+  font-style: italic;
+}
+
+/* Auf niedrigeren Bildschirmen (kleine Laptop-Fenster) etwas kompakter, damit
+   Schild + Pergament-Karte + Footer nicht durch die feste Bildschirmhöhe
+   abgeschnitten werden. */
+@media (max-height: 800px) {
+  .auth-gate {
+    gap: 14px;
+  }
+
+  .auth-gate__sign-img {
+    width: 240px;
+  }
+
+  .auth-card {
+    padding: 32px 32px 26px;
+  }
+
+  .auth-card__brand {
+    margin-bottom: 12px;
+  }
+}
+
+@media (max-height: 700px) {
+  .auth-gate__sign-img {
+    width: 190px;
+  }
+
+  .auth-card {
+    padding: 24px 28px 20px;
+  }
+
+  .auth-card__brand {
+    margin-bottom: 6px;
+  }
+
+  #auth-screen .field-label {
+    margin: 8px 0 4px;
+  }
+}
+

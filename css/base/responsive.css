@@ -1,0 +1,20 @@
+/* --------------------------------------------------------------------------
+   23. Responsive Grundschutz (reine Desktop-Optik, minimaler Umbruch)
+   -------------------------------------------------------------------------- */
+@media (max-width: 1180px) {
+  .dash-columns {
+    grid-template-columns: 1fr;
+  }
+  .dash-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .dash-quicklinks {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .rechner-layout {
+    grid-template-columns: 1fr;
+  }
+  .hofbuch-card {
+    padding: 28px 24px 30px;
+  }
+}

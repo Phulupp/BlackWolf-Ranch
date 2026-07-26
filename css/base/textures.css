@@ -1,0 +1,30 @@
+/* --------------------------------------------------------------------------
+   3. Holz-Textur & Pergament-Textur (echte Foto-Assets statt CSS-Verläufen)
+   -------------------------------------------------------------------------- */
+.tex-wood {
+  background-color: var(--wood-800);
+  background-image: url("../assets/textures/wood-panel.webp.png");
+  background-size: 340px auto;
+  background-repeat: repeat;
+}
+
+.tex-parchment {
+  background-color: transparent;
+}
+
+
+/* --------------------------------------------------------------------------
+   4. Hintergrund der gesamten App (echtes Hof-Foto hinter Sidebar + Inhalt)
+   -------------------------------------------------------------------------- */
+.app {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(8, 5, 2, 0.84) 0%, rgba(8, 5, 2, 0.74) 45%, rgba(8, 5, 2, 0.88) 100%),
+    url("../assets/background/dashboard-background.webp.png") center 38% / cover fixed no-repeat;
+}
+
+.farm-scene,
+.farm-scene--dark {
+  display: none;
+}
+

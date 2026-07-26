@@ -1,0 +1,138 @@
+/* --------------------------------------------------------------------------
+   17. Modals: einheitlich dunkles Leder mit Messing-Kante für alle Dialoge,
+   inklusive Datenschutz/Informationen — keine Pergament-Optik mehr.
+   -------------------------------------------------------------------------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 9, 4, 0.6);
+  backdrop-filter: blur(2px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+
+.modal-overlay--visible {
+  display: flex;
+  opacity: 1;
+}
+
+.modal {
+  width: 420px;
+  background: var(--leather-800);
+  border: 1px solid var(--leather-edge);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-modal);
+  padding: 30px;
+  transform: translateY(8px) scale(0.98);
+  transition: transform 0.18s ease;
+}
+
+
+.modal-overlay--visible .modal {
+  transform: translateY(0) scale(1);
+}
+
+.modal--small {
+  width: 380px;
+}
+
+.modal--large {
+  width: 580px;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+/* Großes, zweispaltiges Bestellungs-Fenster: breites Verwaltungsfenster
+   statt schmalem, langem Formular - links Allgemeine Infos + Produkt
+   hinzufügen, rechts die Live-Zusammenfassung mit der Produkttabelle. Header/
+   Footer bleiben fix, nur die beiden Spalten (.bestellung-spalte--links/
+   --rechts, siehe Abschnitt 14) scrollen bei Bedarf für sich. */
+.modal--xlarge {
+  width: 88vw;
+  max-width: 1360px;
+  height: 88vh;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+}
+
+.modal--xlarge .modal__header {
+  flex: 0 0 auto;
+  padding: 26px 34px 18px;
+  margin-bottom: 0;
+  border-bottom: 1px solid var(--leather-edge);
+}
+
+.modal--xlarge .modal__body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  padding: 0;
+}
+
+.modal--xlarge .modal__footer {
+  flex: 0 0 auto;
+  margin-top: 0;
+  padding: 16px 34px 22px;
+  border-top: 1px solid var(--leather-edge);
+}
+
+@media (max-width: 900px) {
+  .modal--xlarge {
+    width: 96vw;
+    max-width: 96vw;
+  }
+  .modal--xlarge .modal__body {
+    flex-direction: column;
+    overflow-y: auto;
+  }
+}
+
+.modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.modal__header h3 {
+  font-size: 19px;
+}
+
+.modal__close {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--wood-text-muted);
+}
+
+.modal__close:hover {
+  background: rgba(189, 145, 67, 0.1);
+}
+
+.modal__body {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal__hint {
+  font-size: 12.5px;
+  color: var(--wood-text-muted);
+  margin-bottom: 4px;
+}
+
+.modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+

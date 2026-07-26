@@ -1,0 +1,53 @@
+/* --------------------------------------------------------------------------
+   19. Toast, Update-Banner
+   -------------------------------------------------------------------------- */
+.toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--wood-850);
+  color: var(--brass-bright);
+  padding: 13px 22px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: var(--shadow-raised);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 200;
+  border: 1px solid var(--brass-deep);
+}
+
+.toast--visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.update-banner {
+  position: sticky;
+  top: 0;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: var(--brass-bright);
+  color: #2a1c0a;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.update-banner__logo {
+  width: 26px;
+  height: auto;
+  flex-shrink: 0;
+}
+
+.update-banner .btn {
+  background: var(--wood-900);
+  color: var(--brass-bright);
+}
+

@@ -1,0 +1,36 @@
+/* --------------------------------------------------------------------------
+   10. Karten: dunkles Leder mit feiner Messing-Kante statt Pergament —
+   die eigentliche Anwendung ist jetzt ein modernes, ruhiges Verwaltungs-
+   system; Pergament bleibt Dokumenten (Hofbuch, Datenschutz/Informationen)
+   vorbehalten.
+   -------------------------------------------------------------------------- */
+.parch-card {
+  background: var(--leather-800);
+  border: 1px solid var(--leather-edge);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 26px 28px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.parch-card h3 {
+  font-size: 17px;
+  margin-bottom: 8px;
+}
+
+.parch-card__hint {
+  font-size: 12.5px;
+  color: var(--wood-text-muted);
+  margin-bottom: 18px;
+  line-height: 1.6;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 36px 20px;
+  color: var(--wood-text-soft);
+  font-size: 13px;
+  font-style: italic;
+}
+

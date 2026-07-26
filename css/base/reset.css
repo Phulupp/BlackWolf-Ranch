@@ -1,0 +1,97 @@
+/* --------------------------------------------------------------------------
+   2. Reset & Basis
+   -------------------------------------------------------------------------- */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  background: var(--wood-900);
+  color: var(--wood-text-muted);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.55;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: inherit;
+}
+
+input,
+select,
+textarea {
+  font-family: inherit;
+  color: inherit;
+}
+
+a {
+  color: inherit;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+::selection {
+  background: var(--brass-bright);
+  color: var(--wood-950);
+}
+
+::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--leather-600);
+  border-radius: 999px;
+  border: 3px solid var(--wood-900);
+}
+
+:focus-visible {
+  outline: 2px solid var(--brass-bright);
+  outline-offset: 2px;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--wood-text);
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+/* Schlichter Trenner: dünne Linie statt Bild-Ranke, für ein ruhigeres,
+   weniger dekoratives Erscheinungsbild. */
+.ornament-divider {
+  display: block;
+  width: 56px;
+  height: 2px;
+  margin: 14px auto;
+  background: var(--brass);
+  opacity: 0.55;
+  border-radius: 999px;
+}
+

@@ -1,0 +1,115 @@
+/* --------------------------------------------------------------------------
+   12. Tabellen (CSS-Grid statt <table>)
+   -------------------------------------------------------------------------- */
+.reg-table {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.reg-row {
+  display: grid;
+  align-items: center;
+  column-gap: 14px;
+}
+
+.reg-row--head {
+  padding: 12px 22px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--wood-text-muted);
+  border-bottom: 2px solid var(--leather-edge);
+}
+
+.reg-row--body {
+  padding: 13px 22px;
+  font-size: 13px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  transition: background 0.15s ease;
+}
+
+.reg-row--body:last-child {
+  border-bottom: none;
+}
+
+.reg-row--body:hover {
+  background: rgba(189, 145, 67, 0.06);
+}
+
+.reg-row__actions-col {
+  text-align: right;
+}
+
+.reg-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--wood-text);
+}
+
+.reg-num {
+  font-weight: 700;
+  color: var(--wood-text);
+}
+
+.table-card {
+  background: var(--leather-800);
+  border: 1px solid var(--leather-edge);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 4px;
+  margin-bottom: 20px;
+}
+
+/* Toolbar oberhalb von Tabellen */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.toolbar__buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.search-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--leather-800);
+  border: 1.5px solid var(--leather-edge);
+  border-radius: var(--radius-md);
+  padding: 11px 16px;
+  box-shadow: var(--shadow-card);
+  flex: 1;
+  min-width: 220px;
+}
+
+.search-field input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 13px;
+  width: 100%;
+  color: var(--wood-text);
+  font-family: var(--font-body);
+}
+
+.search-field input::placeholder {
+  color: var(--wood-text-soft);
+  font-style: italic;
+}
+
+/* Lager: Gesamtwert-Zusammenfassung direkt unter der Seitenüberschrift, mit
+   Messing-Akzent oben, damit sie sofort ins Auge fällt. */
+.lager-summary {
+  border-top: 2px solid var(--brass);
+}
+
