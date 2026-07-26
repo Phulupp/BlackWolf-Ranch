@@ -3,6 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Verhindert, dass diese HTML-Datei selbst (index.html) vom Browser oder
+       einem zwischengeschalteten Cache/CDN zwischengespeichert wird. Ohne
+       das kann es passieren, dass nach einem Update weiterhin eine alte,
+       gecachte Version dieser Seite ausgeliefert wird - die dann auch
+       weiterhin auf eine alte app.js/style.css-Version (altes "?v=") zeigt,
+       obwohl längst neue Dateien hochgeladen wurden. Der Update-Banner würde
+       dann fälschlich dauerhaft anzeigen, dass eine neue Version verfügbar
+       ist, weil das eigentlich schon geladene app.js selbst noch die alte
+       Versionsnummer enthält. */
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>Hornhausen-Hof — Hofverwaltung</title>
   <link rel="icon" type="image/png" href="assets/logo/hornhausen-sign-small.png.png" />
 
@@ -14,7 +26,7 @@
     rel="stylesheet"
   />
 
-  <link rel="stylesheet" href="css/style.css?v=11" />
+  <link rel="stylesheet" href="css/style.css?v=12" />
 
   <!-- Firebase SDK (Authentifizierung + Datenbank). "defer" statt normaler
        blockierender <script>-Tags: der Browser kann so den Rest der Seite
@@ -1100,8 +1112,8 @@
        diese Reihenfolge korrekt erhalten, obwohl die SDK-Skripte jetzt im
        <head> stehen. js/auth.js ist als type="module" ohnehin automatisch
        "deferred" und reiht sich an derselben Stelle ein. -->
-  <script defer src="js/firebase-config.js?v=11"></script>
-  <script defer src="js/app.js?v=11"></script>
-  <script type="module" src="js/auth.js?v=11"></script>
+  <script defer src="js/firebase-config.js?v=12"></script>
+  <script defer src="js/app.js?v=12"></script>
+  <script type="module" src="js/auth.js?v=12"></script>
 </body>
 </html>
