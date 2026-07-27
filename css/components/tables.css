@@ -38,6 +38,33 @@
   background: rgba(189, 145, 67, 0.06);
 }
 
+/* Dezente Bereichs-Überschrift/Summe, um lange Tabellen (z. B. Lager) in
+   logische Abschnitte zu gliedern, ohne die Tabellenoptik zu verändern. */
+.reg-row--kategorie {
+  padding: 16px 22px 4px;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--brass-bright);
+  border-top: 1px solid var(--leather-edge);
+}
+
+.reg-row--kategorie:first-child {
+  border-top: none;
+  padding-top: 12px;
+}
+
+.reg-row--summe {
+  padding: 4px 22px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--wood-text-muted);
+  justify-content: flex-end;
+  text-align: right;
+}
+
 .reg-row__actions-col {
   text-align: right;
 }
