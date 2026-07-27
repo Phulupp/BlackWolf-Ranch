@@ -32,6 +32,16 @@
     return `${formatDatum(ts)} ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")} Uhr`;
   }
 
+  // Wie formatDatumUhrzeit, nur mit vertauschter Reihenfolge (Uhrzeit vor
+  // Datum) - z. B. für die Bestellübersicht, wo mehrere Bestellungen
+  // desselben Tages auf einen Blick anhand der Uhrzeit unterscheidbar sein
+  // sollen.
+  function formatUhrzeitDatum(ts) {
+    if (!ts) return "—";
+    const d = typeof ts.toDate === "function" ? ts.toDate() : new Date(ts);
+    return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")} Uhr · ${formatDatum(ts)}`;
+  }
+
   function istHeute(ts) {
     if (!ts) return false;
     const d = typeof ts.toDate === "function" ? ts.toDate() : new Date(ts);

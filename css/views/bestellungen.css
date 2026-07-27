@@ -2,11 +2,34 @@
    14. Bestellungen
    -------------------------------------------------------------------------- */
 .bestellungen-row {
-  grid-template-columns: 28fr 20fr 18fr 18fr 16fr;
+  grid-template-columns: 24fr 20fr 32fr 20fr;
 }
 
 .reg-row--body.bestellungen-row {
   cursor: pointer;
+}
+
+/* Gruppierung nach Unternehmen: pro Unternehmen eine hervorgehobene
+   Überschriftenzeile, darunter eingerückt die einzelnen Bestellungen - so
+   bleibt sofort erkennbar, welche Bestellungen zu welchem Unternehmen
+   gehören, auch wenn ein Unternehmen mehrere Bestellungen hat. */
+.bestellungen-gruppe:not(:first-child) .bestellungen-gruppe__kopf {
+  border-top: 1px solid var(--leather-edge);
+}
+
+.bestellungen-gruppe__kopf {
+  padding: 11px 22px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14.5px;
+  letter-spacing: 0.02em;
+  color: var(--brass-bright);
+  background: rgba(189, 145, 67, 0.09);
+  border-bottom: 1px solid var(--leather-edge);
+}
+
+.bestellungen-gruppe .reg-row--body.bestellungen-row {
+  padding-left: 40px;
 }
 
 .notiz-text {

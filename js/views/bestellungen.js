@@ -14,16 +14,16 @@
   //                  einkaufspreis, rabattProzent, endpreis, gesamtpreis }, ...],
   //     status, notiz, archiviert,
   //     erstelltAm, erstelltVon, bearbeiter,
-  //     // Automatische Lagerverarbeitung (siehe berechneLagerDeltas):
-  //     lagerVerarbeitet, verarbeiteteProdukte, abgeschlossenAm
+  //     abgeschlossenAm
   //   }
   // Eine Bestellung mit status === "Abgeschlossen" IST der Verkauf - es gibt
-  // keine separate Verkaufs-Collection mehr. "lagerVerarbeitet" +
-  // "verarbeiteteProdukte" halten fest, was zuletzt tatsächlich vom Lager
-  // abgezogen wurde, damit Bearbeitungen/Status-Wechsel den Lagerbestand nur
-  // um die Differenz nachbuchen, nie doppelt. "abgeschlossenAm" ist der
+  // keine separate Verkaufs-Collection mehr. "abgeschlossenAm" ist der
   // Zeitpunkt des (ersten) Abschlusses und Grundlage für die
   // Verkaufshistorie sowie "Heutiger Umsatz"/"Gesamtgewinn" im Dashboard.
+  // Die Lager-Seite (siehe lager.js) ist bewusst NICHT mit Bestellungen
+  // verknüpft - "lagerMenge" wird ausschließlich manuell auf der Lager-Seite
+  // gepflegt und dient nur als eigene Bestandsinfo, unabhängig vom
+  // Bestellstatus.
   // "Archiv" ist bewusst KEIN vierter Status, sondern ein eigenes Flag
   // ("archiviert"), das nur bei Status "Abgeschlossen" gesetzt werden kann -
   // archivierte Bestellungen dürfen laut Firestore-Regel nie gelöscht
@@ -83,42 +83,6 @@
     return { endpreis, gesamtpreis: endpreis * mg };
   }
 
-  // Berechnet die Lagerbestands-Differenz zwischen dem zuletzt tatsächlich
-  // verarbeiteten Zustand einer Bestellung ("vorherProdukte") und dem neuen
-  // Zustand ("nachherProdukte"). Rückgabe: { produktId: delta }, wobei ein
-  // POSITIVES Delta den Lagerbestand ERHÖHT (Ware wird gutgeschrieben) und
-  // ein NEGATIVES Delta ihn VERRINGERT (Ware wird abgezogen).
-  //
-  // Dieses diff-basierte Vorgehen (statt einmaligem Abzug) ist nötig, damit
-  // Bearbeiten, Zurücksetzen (weg von "Abgeschlossen") und erneutes
-  // Abschließen einer Bestellung den Lagerbestand immer korrekt nachführen,
-  // ohne jemals doppelt zu verbuchen:
-  //   - Neu abgeschlossen: vorherProdukte = [], nachherProdukte = aktuell
-  //     → Delta = -Menge je Produkt (Ware wird abgezogen).
-  //   - Von "Abgeschlossen" weg geändert: vorherProdukte = zuletzt verarbeitet,
-  //     nachherProdukte = [] → Delta = +Menge je Produkt (Ware wird zurückgebucht).
-  //   - Weiterhin "Abgeschlossen", aber bearbeitet: vorherProdukte = zuletzt
-  //     verarbeitet, nachherProdukte = aktuell → nur die Differenz wird gebucht.
-  function berechneLagerDeltas(vorherProdukte, nachherProdukte) {
-    const mengeJeProdukt = (liste) => {
-      const map = {};
-      (liste || []).forEach((p) => {
-        if (!p || !p.produktId) return;
-        map[p.produktId] = (map[p.produktId] || 0) + (Number(p.menge) || 0);
-      });
-      return map;
-    };
-    const vorher = mengeJeProdukt(vorherProdukte);
-    const nachher = mengeJeProdukt(nachherProdukte);
-    const alleIds = new Set([...Object.keys(vorher), ...Object.keys(nachher)]);
-    const deltas = {};
-    alleIds.forEach((id) => {
-      const delta = (vorher[id] || 0) - (nachher[id] || 0);
-      if (delta !== 0) deltas[id] = delta;
-    });
-    return deltas;
-  }
-
   // Fasst eine Produktliste zu den vier Kennzahlen der Zusammenfassung
   // zusammen: Anzahl Produkte, Gesamtmenge, Gesamtrabatt (in $ gespart) und
   // Gesamtsumme.
@@ -160,26 +124,53 @@
     return liste;
   }
 
-  // Kompakte Übersichtstabelle: nur Unternehmen, Anzahl der Produkte,
-  // Gesamtmenge, Bestelldatum und Status - alles Weitere (Ansprechpartner,
-  // Notiz, Preise, Rabatte, Bearbeiter) ist erst nach dem Anklicken im
-  // Detail-Modal sichtbar.
+  // Fasst eine (bereits gefilterte, nach erstelltAm absteigend sortierte)
+  // Liste von Bestellungen zu Gruppen je Unternehmen zusammen. Die
+  // Reihenfolge der Gruppen richtet sich nach der jeweils NEUESTEN
+  // Bestellung des Unternehmens (erste Fundstelle in der sortierten Liste),
+  // damit Unternehmen mit den zuletzt aktivsten Bestellungen oben stehen.
+  function gruppiereBestellungenNachUnternehmen(liste) {
+    const gruppenNachName = new Map();
+    liste.forEach((b) => {
+      const name = b.unternehmen || "—";
+      if (!gruppenNachName.has(name)) gruppenNachName.set(name, []);
+      gruppenNachName.get(name).push(b);
+    });
+    return Array.from(gruppenNachName.entries()).map(([unternehmen, bestellungenListe]) => ({
+      unternehmen,
+      bestellungen: bestellungenListe,
+    }));
+  }
+
+  // Kompakte Übersichtstabelle, gruppiert nach Unternehmen: pro Unternehmen
+  // eine Überschriftenzeile, darunter eingerückt jede einzelne Bestellung
+  // mit Anzahl der Produkte, Gesamtmenge, Erstellungszeitpunkt und Status -
+  // alles Weitere (Ansprechpartner, Notiz, Preise, Rabatte, Bearbeiter) ist
+  // erst nach dem Anklicken im Detail-Modal sichtbar.
   function renderBestellungen() {
     if (!el.bestellungenTableBody) return;
     const liste = gefilterteBestellungen();
     el.bestellungenEmpty.hidden = bestellungen.length !== 0;
     el.bestellungenNoResults.hidden = !(bestellungen.length > 0 && liste.length === 0);
 
-    el.bestellungenTableBody.innerHTML = liste
-      .map((b) => {
-        const anzahl = (b.produkte || []).length;
-        const gesamtmenge = bestellungProdukteZeilen(b.produkte);
-        return `<div class="reg-row reg-row--body bestellungen-row" data-bestellung-oeffnen="${b.id}">
-            <span class="reg-name">${escapeHtml(b.unternehmen || "—")}</span>
-            <span>${anzahl} Produkt${anzahl === 1 ? "" : "e"}</span>
-            <span>${gesamtmenge} Stück</span>
-            <span>${formatDatum(b.erstelltAm)}</span>
-            <span><span class="status-pill ${statusPillKlasse(b.status)}">${escapeHtml(b.status || "—")}</span></span>
+    const gruppen = gruppiereBestellungenNachUnternehmen(liste);
+    el.bestellungenTableBody.innerHTML = gruppen
+      .map((gruppe) => {
+        const zeilen = gruppe.bestellungen
+          .map((b) => {
+            const anzahl = (b.produkte || []).length;
+            const gesamtmenge = bestellungProdukteZeilen(b.produkte);
+            return `<div class="reg-row reg-row--body bestellungen-row" data-bestellung-oeffnen="${b.id}">
+                <span>${anzahl} Produkt${anzahl === 1 ? "" : "e"}</span>
+                <span>${gesamtmenge} Stück</span>
+                <span>${formatUhrzeitDatum(b.erstelltAm)}</span>
+                <span><span class="status-pill ${statusPillKlasse(b.status)}">${escapeHtml(b.status || "—")}</span></span>
+              </div>`;
+          })
+          .join("");
+        return `<div class="bestellungen-gruppe">
+            <div class="bestellungen-gruppe__kopf">${escapeHtml(gruppe.unternehmen)}</div>
+            ${zeilen}
           </div>`;
       })
       .join("");
@@ -601,22 +592,7 @@
       if (!id) return;
       fordereLoeschungAn("Bestellung löschen", "Möchtest du diese Bestellung wirklich löschen?", async () => {
         try {
-          const bestellung = bestellungen.find((b) => b.id === id);
-          const batch = db.batch();
-          batch.delete(db.collection(BESTELLUNGEN_COLLECTION).doc(id));
-          // War die Bestellung bereits abgeschlossen (und damit vom Lager
-          // abgezogen), wird die Ware beim Löschen wieder gutgeschrieben -
-          // sonst würde der Lagerbestand dauerhaft zu niedrig bleiben.
-          if (bestellung && bestellung.lagerVerarbeitet) {
-            const deltas = berechneLagerDeltas(bestellung.verarbeiteteProdukte || [], []);
-            Object.entries(deltas).forEach(([produktId, delta]) => {
-              if (!delta) return;
-              batch.update(db.collection(PRODUKTE_COLLECTION).doc(produktId), {
-                lagerMenge: firebase.firestore.FieldValue.increment(delta),
-              });
-            });
-          }
-          await batch.commit();
+          await db.collection(BESTELLUNGEN_COLLECTION).doc(id).delete();
           schliesseModal("modal-bestellung");
           zeigeToast("Bestellung gelöscht.");
         } catch (fehler) {
@@ -696,58 +672,31 @@
 
       const id = el.bestellungEditingId.value;
       const alteBestellung = id ? bestellungen.find((b) => b.id === id) : null;
-      const vorherVerarbeitet = !!(alteBestellung && alteBestellung.lagerVerarbeitet);
-      const vorherVerarbeiteteProdukte = vorherVerarbeitet ? alteBestellung.verarbeiteteProdukte || [] : [];
 
-      // Automatische Verarbeitung: Eine abgeschlossene Bestellung IST der
-      // Verkauf - Lagerbestand, Lagerwert, Umsatz, Gewinn, Statistiken und
-      // Dashboard werden ausschließlich daraus abgeleitet (siehe
-      // renderVerkaufshistorie/renderStatistiken/renderUebersicht). Über
-      // "verarbeiteteProdukte" + "lagerVerarbeitet" wird nachgehalten, was
-      // zuletzt tatsächlich vom Lager abgezogen wurde, damit spätere
-      // Bearbeitungen, Status-Rücksetzungen oder erneute Abschlüsse nur die
-      // Differenz nachbuchen (siehe berechneLagerDeltas) statt doppelt zu
-      // verbuchen.
-      let lagerDeltas = {};
+      // Eine abgeschlossene Bestellung IST der Verkauf - Umsatz, Gewinn,
+      // Statistiken und Dashboard werden ausschließlich daraus abgeleitet
+      // (siehe renderVerkaufshistorie/renderStatistiken/renderUebersicht).
+      // "abgeschlossenAm" ist der Zeitpunkt des (ersten) Abschlusses. Die
+      // Lager-Seite wird hier bewusst NICHT berührt - "lagerMenge" ist eine
+      // rein manuell gepflegte Bestandsinfo, unabhängig vom Bestellstatus.
       if (neuerStatus === "Abgeschlossen") {
-        lagerDeltas = berechneLagerDeltas(vorherVerarbeiteteProdukte, nachherProdukte);
-        daten.lagerVerarbeitet = true;
-        daten.verarbeiteteProdukte = nachherProdukte.map((p) => ({ produktId: p.produktId, menge: p.menge }));
         daten.abgeschlossenAm =
           alteBestellung && alteBestellung.status === "Abgeschlossen" && alteBestellung.abgeschlossenAm
             ? alteBestellung.abgeschlossenAm
             : firebase.firestore.FieldValue.serverTimestamp();
-      } else if (vorherVerarbeitet) {
-        // Status wird von "Abgeschlossen" weg geändert - die zuvor
-        // abgezogene Ware wird dem Lager wieder vollständig gutgeschrieben.
-        lagerDeltas = berechneLagerDeltas(vorherVerarbeiteteProdukte, []);
-        daten.lagerVerarbeitet = false;
-        daten.verarbeiteteProdukte = [];
+      } else {
         daten.abgeschlossenAm = null;
       }
 
       try {
-        const batch = db.batch();
-        let ref;
         if (id) {
-          ref = db.collection(BESTELLUNGEN_COLLECTION).doc(id);
-          batch.update(ref, daten);
+          await db.collection(BESTELLUNGEN_COLLECTION).doc(id).update(daten);
         } else {
           daten.archiviert = false;
           daten.erstelltAm = firebase.firestore.FieldValue.serverTimestamp();
           daten.erstelltVon = aktuellerNutzer ? aktuellerNutzer.name : null;
-          ref = db.collection(BESTELLUNGEN_COLLECTION).doc();
-          batch.set(ref, daten);
+          await db.collection(BESTELLUNGEN_COLLECTION).add(daten);
         }
-
-        Object.entries(lagerDeltas).forEach(([produktId, delta]) => {
-          if (!delta) return;
-          batch.update(db.collection(PRODUKTE_COLLECTION).doc(produktId), {
-            lagerMenge: firebase.firestore.FieldValue.increment(delta),
-          });
-        });
-
-        await batch.commit();
         schliesseModal("modal-bestellung");
         zeigeToast("Bestellung gespeichert.");
       } catch (fehler) {
