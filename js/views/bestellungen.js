@@ -121,14 +121,19 @@
           (b.produkte || []).some((p) => (p.produktName || "").toLowerCase().includes(begriff))
       );
     }
+    // Älteste Bestellung zuerst (statt neueste zuerst wie die Firestore-
+    // Abfrage sie liefert) - so steht die am längsten wartende Bestellung
+    // ganz oben und wird zuerst abgearbeitet.
+    liste = liste.slice().sort((a, b) => zeitstempelWert(a.erstelltAm) - zeitstempelWert(b.erstelltAm));
     return liste;
   }
 
-  // Fasst eine (bereits gefilterte, nach erstelltAm absteigend sortierte)
+  // Fasst eine (bereits gefilterte, nach erstelltAm aufsteigend sortierte)
   // Liste von Bestellungen zu Gruppen je Unternehmen zusammen. Die
-  // Reihenfolge der Gruppen richtet sich nach der jeweils NEUESTEN
+  // Reihenfolge der Gruppen richtet sich nach der jeweils ÄLTESTEN
   // Bestellung des Unternehmens (erste Fundstelle in der sortierten Liste),
-  // damit Unternehmen mit den zuletzt aktivsten Bestellungen oben stehen.
+  // damit das Unternehmen mit der am längsten wartenden Bestellung oben
+  // steht und zuerst abgearbeitet wird.
   function gruppiereBestellungenNachUnternehmen(liste) {
     const gruppenNachName = new Map();
     liste.forEach((b) => {
