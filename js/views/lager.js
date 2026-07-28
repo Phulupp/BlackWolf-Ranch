@@ -3,15 +3,6 @@
   /* ------------------------------------------------------------------------
      13. Lager
      ------------------------------------------------------------------------ */
-  // Feste Einteilung der Lagerliste in Bereiche, rein für die Darstellung.
-  // Waren, die zu keiner Liste gehören (z. B. später neu angelegte Produkte),
-  // landen automatisch im Sammelbereich "Sonstige Waren".
-  const LAGER_KATEGORIEN = [
-    { label: "Feldfrüchte", namen: ["Weizen", "Mais", "Zuckerrohr", "Hopfen", "Zwiebel", "Kartoffel", "Salatkopf", "Tomaten", "Karotten", "Thymian", "Oregano", "Blaubeere"] },
-    { label: "Tierprodukte", namen: ["Milch", "Eier", "Rindfleisch", "Schweinefleisch", "Lammfleisch", "Speck"] },
-    { label: "Verarbeitete Waren", namen: ["Mehl", "Zucker", "Mehlsack", "Zuckersack", "Stoff", "Maisbrot"] },
-  ];
-
   function gefiltertLager() {
     const begriff = lagerSuche.trim().toLowerCase();
     if (!begriff) return produkte;
@@ -23,8 +14,8 @@
     const liste = gefiltertLager();
     el.lagerEmpty.hidden = produkte.length !== 0;
 
-    const zugeordneteNamen = new Set(LAGER_KATEGORIEN.flatMap((kat) => kat.namen));
-    const bereiche = LAGER_KATEGORIEN.slice();
+    const zugeordneteNamen = new Set(PRODUKT_KATEGORIEN.flatMap((kat) => kat.namen));
+    const bereiche = PRODUKT_KATEGORIEN.slice();
     if (produkte.some((p) => !zugeordneteNamen.has(p.name))) {
       bereiche.push({ label: "Sonstige Waren", namen: null });
     }

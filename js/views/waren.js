@@ -117,20 +117,36 @@
     el.warenNoResults.hidden = !(produkte.length > 0 && liste.length === 0);
     el.btnAddWare.hidden = !istAdmin();
 
-    el.warenTableBody.innerHTML = liste
-      .map((p) => {
-        const aktionen = istAdmin()
-          ? `<div class="row-actions">
-               <button class="icon-btn" data-ware-edit="${p.id}" title="Bearbeiten">✎</button>
-               <button class="icon-btn icon-btn--delete" data-ware-delete="${p.id}" title="Löschen">🗑</button>
-             </div>`
-          : "";
-        return `<div class="reg-row reg-row--body waren-row">
-            <span class="reg-name">${escapeHtml(p.name)}</span>
-            <span>${formatGeld(p.verkaufspreis)}</span>
-            <span>${p.einkaufspreis == null || p.einkaufspreis === "" ? "–" : formatGeld(p.einkaufspreis)}</span>
-            <span class="reg-row__actions-col">${aktionen}</span>
-          </div>`;
+    const zugeordneteNamen = new Set(PRODUKT_KATEGORIEN.flatMap((kat) => kat.namen));
+    const bereiche = PRODUKT_KATEGORIEN.slice();
+    if (produkte.some((p) => !zugeordneteNamen.has(p.name))) {
+      bereiche.push({ label: "Sonstige Waren", namen: null });
+    }
+
+    el.warenTableBody.innerHTML = bereiche
+      .map((kat) => {
+        const gehoertZuKategorie = (p) => (kat.namen ? kat.namen.includes(p.name) : !zugeordneteNamen.has(p.name));
+        const sichtbareProdukte = liste.filter(gehoertZuKategorie);
+        if (sichtbareProdukte.length === 0) return "";
+
+        const zeilen = sichtbareProdukte
+          .map((p) => {
+            const aktionen = istAdmin()
+              ? `<div class="row-actions">
+                   <button class="icon-btn" data-ware-edit="${p.id}" title="Bearbeiten">✎</button>
+                   <button class="icon-btn icon-btn--delete" data-ware-delete="${p.id}" title="Löschen">🗑</button>
+                 </div>`
+              : "";
+            return `<div class="reg-row reg-row--body waren-row">
+                <span class="reg-name">${escapeHtml(p.name)}</span>
+                <span>${formatGeld(p.verkaufspreis)}</span>
+                <span>${p.einkaufspreis == null || p.einkaufspreis === "" ? "–" : formatGeld(p.einkaufspreis)}</span>
+                <span class="reg-row__actions-col">${aktionen}</span>
+              </div>`;
+          })
+          .join("");
+
+        return `<div class="reg-row reg-row--kategorie"><span>${escapeHtml(kat.label)}</span></div>${zeilen}`;
       })
       .join("");
   }

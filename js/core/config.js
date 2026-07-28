@@ -18,7 +18,7 @@
   /* ------------------------------------------------------------------------
      1. Konstanten
      ------------------------------------------------------------------------ */
-  const VERSION_AKTUELL = 18;
+  const VERSION_AKTUELL = 19;
 
   // Ränge des Hofes (rein organisatorisch — Verwalterrechte sind unabhängig
   // davon und werden separat je Benutzer vergeben, siehe isAdmin).
@@ -67,6 +67,17 @@
     { name: "Speck", verkaufspreis: 0.5, einkaufspreis: null, lagerMenge: 0, reihenfolge: 22 },
     { name: "Schweinefleisch", verkaufspreis: 0.5, einkaufspreis: null, lagerMenge: 0, reihenfolge: 23 },
     { name: "Lammfleisch", verkaufspreis: 0.5, einkaufspreis: null, lagerMenge: 0, reihenfolge: 24 },
+  ];
+
+  // Feste Einteilung der Waren in Bereiche, rein für die Darstellung (Waren &
+  // Preise, Lager) - beide Seiten nutzen dieselbe Liste, damit sie immer
+  // identisch gruppiert bleiben. Waren, die zu keiner Liste gehören (z. B.
+  // später neu angelegte Produkte), landen automatisch im Sammelbereich
+  // "Sonstige Waren".
+  const PRODUKT_KATEGORIEN = [
+    { label: "Feldfrüchte", namen: ["Weizen", "Mais", "Zuckerrohr", "Hopfen", "Zwiebel", "Kartoffel", "Salatkopf", "Tomaten", "Karotten", "Thymian", "Oregano", "Blaubeere"] },
+    { label: "Tierprodukte", namen: ["Milch", "Eier", "Rindfleisch", "Schweinefleisch", "Lammfleisch", "Speck"] },
+    { label: "Verarbeitete Waren", namen: ["Mehl", "Zucker", "Mehlsack", "Zuckersack", "Stoff", "Maisbrot"] },
   ];
 
   const VIEW_META = {
