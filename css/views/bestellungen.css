@@ -107,6 +107,30 @@
   padding: 8px 12px;
 }
 
+/* Unternehmen ist die wichtigste Angabe der linken Spalte und soll den
+   Blick zuerst auf sich ziehen - größer/kräftiger als die übrigen Felder. */
+.field-input--titel {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  padding: 11px 14px;
+}
+
+/* Bestelldatum/Bearbeiter/Notiz sind Nebeninformationen und bleiben bewusst
+   dezent im Hintergrund, damit Unternehmen, Produkttabelle und Gesamtsumme
+   die Aufmerksamkeit behalten. */
+.bestellung-form-zeile--dezent .field-label,
+.bestellung-form-zeile--dezent .field-static {
+  opacity: 0.72;
+}
+
+.field-input--dezent {
+  font-size: 12.5px;
+  padding: 8px 12px;
+  color: var(--wood-text-muted);
+  background: rgba(0, 0, 0, 0.16);
+}
+
 .field-group {
   flex: 1 1 0;
   min-width: 160px;
@@ -430,12 +454,17 @@ select.field-input option {
   font-weight: 700;
 }
 
+/* Zusammenfassungsleiste: Gesamtsumme ist die wichtigste Kennzahl der
+   Bestellung und wird deutlich größer/kräftiger dargestellt als die drei
+   übrigen, eher unterstützenden Werte (Anzahl/Menge/Rabatt). */
 .bestellung-zusammenfassung {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 22px;
-  padding: 12px 16px;
-  background: rgba(189, 145, 67, 0.1);
+  padding: 14px 20px;
+  background: rgba(189, 145, 67, 0.12);
+  border-top: 2px solid var(--brass);
   border-radius: var(--radius-sm);
   font-size: 13px;
   color: var(--wood-text-muted);
@@ -446,6 +475,38 @@ select.field-input option {
   color: var(--wood-text);
   font-family: var(--font-display);
   font-variant-numeric: tabular-nums;
+}
+
+.bestellung-zusammenfassung__mini {
+  font-size: 12px;
+}
+
+.bestellung-zusammenfassung .bestellung-zusammenfassung__mini strong {
+  font-size: 13px;
+  color: var(--wood-text-muted);
+}
+
+.bestellung-zusammenfassung__haupt {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  margin-left: auto;
+}
+
+.bestellung-zusammenfassung__haupt-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--wood-text-muted);
+}
+
+.bestellung-zusammenfassung .bestellung-zusammenfassung__haupt-wert {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--brass-bright);
 }
 
 .field-input:disabled,
