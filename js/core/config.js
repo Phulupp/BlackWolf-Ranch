@@ -18,7 +18,7 @@
   /* ------------------------------------------------------------------------
      1. Konstanten
      ------------------------------------------------------------------------ */
-  const VERSION_AKTUELL = 21;
+  const VERSION_AKTUELL = 22;
 
   // Ränge des Hofes (rein organisatorisch — Verwalterrechte sind unabhängig
   // davon und werden separat je Benutzer vergeben, siehe isAdmin).
@@ -33,7 +33,34 @@
   const PRESENCE_COLLECTION = "presence";
   const KONTAKTE_ROLLEN_DOC = "kataloge/kontakte-rollen";
   const KONTAKTE_ROLLEN_FALLBACK = "Sonstiges";
-  const DEFAULT_KONTAKTE_ROLLEN = ["Bürger", "Hofmeister", "Sheriff", "Rancher", "Schmied", "Händler", KONTAKTE_ROLLEN_FALLBACK];
+  // Jede Rolle ist ein Objekt { name, farbe } - "farbe" ist ein Hex-Wert fürs
+  // Rollen-Badge im Kontaktbuch (siehe kontakteRolleFarbe in kontakte.js).
+  // "farbe: null" beim Sammelbecken "Sonstiges" sorgt dafür, dass dieses
+  // Badge weiterhin die ursprüngliche, feste Messing-Optik behält.
+  const DEFAULT_KONTAKTE_ROLLEN = [
+    { name: "Bürger", farbe: "#9c8a5c" },
+    { name: "Hofmeister", farbe: "#bd9143" },
+    { name: "Sheriff", farbe: "#5b7a99" },
+    { name: "Rancher", farbe: "#6f8f5b" },
+    { name: "Schmied", farbe: "#a15c3a" },
+    { name: "Händler", farbe: "#8c5b8a" },
+    { name: KONTAKTE_ROLLEN_FALLBACK, farbe: null },
+  ];
+  // Farbpalette für neu angelegte Rollen (dezente, zum Braun-/Gold-Design
+  // passende Töne) - wird reihum vorgeschlagen, ist im Color Picker der
+  // Rollenverwaltung aber frei überschreibbar.
+  const KONTAKTE_ROLLEN_FARBEN_PALETTE = [
+    "#bd9143",
+    "#5b7a99",
+    "#6f8f5b",
+    "#a15c3a",
+    "#8c5b8a",
+    "#9c8a5c",
+    "#4f8f8a",
+    "#a68a3a",
+    "#7a5b99",
+    "#8a6f4f",
+  ];
 
   const ONLINE_SCHWELLE_MS = 45 * 1000;
   const HEARTBEAT_INTERVALL_MS = 20 * 1000;

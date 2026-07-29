@@ -29,6 +29,11 @@
   let bestellungenSuche = "";
   let warenSuche = "";
   let kontakteSuche = "";
+  // Sortierung merkt sich der Browser über die letzte Sitzung hinaus
+  // (siehe Anforderung "Sortierung merken" im Kontaktbuch).
+  let kontakteSortierung = localStorage.getItem("kontakteSortierung") || "name"; // "name" | "nummer" | "rolle"
+  let kontakteRollenFilter = "alle";
+  let kontakteGruppierenNachRolle = false;
   let lagerSuche = "";
   let verkaeufeSuche = "";
   let hofbuchSuche = "";

@@ -151,6 +151,9 @@
     kontakteEmpty: document.getElementById("kontakte-empty"),
     kontakteNoResults: document.getElementById("kontakte-no-results"),
     kontakteSearch: document.getElementById("kontakte-search"),
+    kontakteRollenFilter: document.getElementById("kontakte-rollen-filter"),
+    kontakteSortierung: document.getElementById("kontakte-sortierung"),
+    btnToggleKontakteGruppierung: document.getElementById("btn-toggle-kontakte-gruppierung"),
     btnToggleKontakteRollen: document.getElementById("btn-toggle-kontakte-rollen"),
     kontakteRollenVerwaltung: document.getElementById("kontakte-rollen-verwaltung"),
     modalKontaktEdit: document.getElementById("modal-kontakt-edit"),
@@ -385,7 +388,7 @@
   // neuen Benutzern). Die Produktauswahl im Bestellungs-Fenster hat bereits
   // ihr eigenes, älteres Custom-Dropdown (siehe Abschnitt "Bestellungen")
   // und wird hier bewusst nicht noch einmal angefasst.
-  [el.bestellungStatusInput, el.rechnerProdukt, el.kontaktBerufInput, el.kontaktEditRolle, el.startseiteSelect, el.neuerBenutzerRolleInput].forEach(
+  [el.bestellungStatusInput, el.rechnerProdukt, el.kontaktBerufInput, el.kontaktEditRolle, el.kontakteSortierung, el.startseiteSelect, el.neuerBenutzerRolleInput].forEach(
     erzeugeCustomSelect
   );
 
