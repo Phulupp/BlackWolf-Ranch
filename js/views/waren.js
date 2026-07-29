@@ -117,16 +117,14 @@
     el.warenNoResults.hidden = !(produkte.length > 0 && liste.length === 0);
     el.btnAddWare.hidden = !istAdmin();
 
-    const zugeordneteNamen = new Set(PRODUKT_KATEGORIEN.flatMap((kat) => kat.namen));
     const bereiche = PRODUKT_KATEGORIEN.slice();
-    if (produkte.some((p) => !zugeordneteNamen.has(p.name))) {
-      bereiche.push({ label: "Sonstige Waren", namen: null });
+    if (produkte.some((p) => ermittleProduktKategorie(p) === PRODUKT_KATEGORIE_SONSTIGE)) {
+      bereiche.push({ id: PRODUKT_KATEGORIE_SONSTIGE, label: PRODUKT_KATEGORIE_SONSTIGE_LABEL });
     }
 
     el.warenTableBody.innerHTML = bereiche
       .map((kat) => {
-        const gehoertZuKategorie = (p) => (kat.namen ? kat.namen.includes(p.name) : !zugeordneteNamen.has(p.name));
-        const sichtbareProdukte = liste.filter(gehoertZuKategorie);
+        const sichtbareProdukte = liste.filter((p) => ermittleProduktKategorie(p) === kat.id);
         if (sichtbareProdukte.length === 0) return "";
 
         const zeilen = sichtbareProdukte
@@ -163,6 +161,8 @@
       el.modalWareTitel.textContent = "Neues Produkt";
       el.wareEditingId.value = "";
       el.wareNameInput.value = "";
+      el.wareKategorieInput.value = PRODUKT_KATEGORIE_SONSTIGE;
+      aktualisiereCustomSelect(el.wareKategorieInput);
       el.wareVerkaufspreisInput.value = "";
       el.wareEinkaufspreisInput.value = "";
       versteckeFeldFehler(el.wareError);
@@ -180,6 +180,8 @@
         el.modalWareTitel.textContent = "Produkt bearbeiten";
         el.wareEditingId.value = p.id;
         el.wareNameInput.value = p.name;
+        el.wareKategorieInput.value = ermittleProduktKategorie(p);
+        aktualisiereCustomSelect(el.wareKategorieInput);
         el.wareVerkaufspreisInput.value = p.verkaufspreis;
         el.wareEinkaufspreisInput.value = p.einkaufspreis == null ? "" : p.einkaufspreis;
         versteckeFeldFehler(el.wareError);
@@ -199,6 +201,7 @@
     el.btnConfirmWare.addEventListener("click", async () => {
       versteckeFeldFehler(el.wareError);
       const name = el.wareNameInput.value.trim();
+      const kategorie = el.wareKategorieInput.value || PRODUKT_KATEGORIE_SONSTIGE;
       const vk = parseFloat(el.wareVerkaufspreisInput.value);
       const ekRoh = el.wareEinkaufspreisInput.value.trim();
       const ek = ekRoh === "" ? null : parseFloat(ekRoh);
@@ -209,10 +212,11 @@
       const id = el.wareEditingId.value;
       try {
         if (id) {
-          await db.collection(PRODUKTE_COLLECTION).doc(id).update({ name, verkaufspreis: vk, einkaufspreis: ek });
+          await db.collection(PRODUKTE_COLLECTION).doc(id).update({ name, kategorie, verkaufspreis: vk, einkaufspreis: ek });
         } else {
           await db.collection(PRODUKTE_COLLECTION).add({
             name,
+            kategorie,
             verkaufspreis: vk,
             einkaufspreis: ek,
             lagerMenge: 0,

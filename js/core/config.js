@@ -18,7 +18,7 @@
   /* ------------------------------------------------------------------------
      1. Konstanten
      ------------------------------------------------------------------------ */
-  const VERSION_AKTUELL = 20;
+  const VERSION_AKTUELL = 21;
 
   // Ränge des Hofes (rein organisatorisch — Verwalterrechte sind unabhängig
   // davon und werden separat je Benutzer vergeben, siehe isAdmin).
@@ -69,16 +69,32 @@
     { name: "Lammfleisch", verkaufspreis: 0.5, einkaufspreis: null, lagerMenge: 0, reihenfolge: 24 },
   ];
 
-  // Feste Einteilung der Waren in Bereiche, rein für die Darstellung (Waren &
-  // Preise, Lager) - beide Seiten nutzen dieselbe Liste, damit sie immer
-  // identisch gruppiert bleiben. Waren, die zu keiner Liste gehören (z. B.
-  // später neu angelegte Produkte), landen automatisch im Sammelbereich
-  // "Sonstige Waren".
+  // Einteilung der Waren in Bereiche für die Darstellung (Waren & Preise,
+  // Lager) - beide Seiten nutzen dieselbe Liste, damit sie immer identisch
+  // gruppiert bleiben. Jedes Produkt trägt seine Kategorie inzwischen selbst
+  // als Feld "kategorie" (id aus dieser Liste), einstellbar im
+  // Bearbeitungsmodal bei Waren & Preise. Die "namen"-Listen bleiben nur als
+  // Fallback für ältere Produkt-Dokumente ohne "kategorie"-Feld erhalten
+  // (siehe ermittleProduktKategorie). Waren ohne Zuordnung landen automatisch
+  // im Sammelbereich "Sonstige Waren".
   const PRODUKT_KATEGORIEN = [
-    { label: "Feldfrüchte", namen: ["Weizen", "Mais", "Zuckerrohr", "Hopfen", "Zwiebel", "Kartoffel", "Salatkopf", "Tomaten", "Karotten", "Thymian", "Oregano", "Blaubeere"] },
-    { label: "Tierprodukte", namen: ["Milch", "Eier", "Rindfleisch", "Schweinefleisch", "Lammfleisch", "Speck"] },
-    { label: "Verarbeitete Waren", namen: ["Mehl", "Zucker", "Mehlsack", "Zuckersack", "Stoff", "Maisbrot"] },
+    { id: "feldfruechte", label: "Feldfrüchte", namen: ["Weizen", "Mais", "Zuckerrohr", "Hopfen", "Zwiebel", "Kartoffel", "Salatkopf", "Tomaten", "Karotten", "Thymian", "Oregano", "Blaubeere"] },
+    { id: "tierprodukte", label: "Tierprodukte", namen: ["Milch", "Eier", "Rindfleisch", "Schweinefleisch", "Lammfleisch", "Speck"] },
+    { id: "verarbeitet", label: "Verarbeitete Waren", namen: ["Mehl", "Zucker", "Mehlsack", "Zuckersack", "Stoff", "Maisbrot"] },
   ];
+  const PRODUKT_KATEGORIE_SONSTIGE = "sonstige";
+  const PRODUKT_KATEGORIE_SONSTIGE_LABEL = "Sonstige Waren";
+
+  // Liefert die Kategorie-id eines Produkts: bevorzugt das explizite Feld
+  // "kategorie", fällt für ältere Produkte ohne dieses Feld auf die
+  // namensbasierte Zuordnung von PRODUKT_KATEGORIEN zurück, sonst "sonstige".
+  function ermittleProduktKategorie(p) {
+    if (p.kategorie && (p.kategorie === PRODUKT_KATEGORIE_SONSTIGE || PRODUKT_KATEGORIEN.some((k) => k.id === p.kategorie))) {
+      return p.kategorie;
+    }
+    const treffer = PRODUKT_KATEGORIEN.find((k) => k.namen.includes(p.name));
+    return treffer ? treffer.id : PRODUKT_KATEGORIE_SONSTIGE;
+  }
 
   const VIEW_META = {
     uebersicht: { title: "Übersicht", subtitle: "Hier behältst du alles im Blick." },

@@ -101,6 +101,7 @@
     modalWareTitel: document.getElementById("modal-ware-titel"),
     wareEditingId: document.getElementById("ware-editing-id"),
     wareNameInput: document.getElementById("ware-name-input"),
+    wareKategorieInput: document.getElementById("ware-kategorie-input"),
     wareVerkaufspreisInput: document.getElementById("ware-verkaufspreis-input"),
     wareEinkaufspreisInput: document.getElementById("ware-einkaufspreis-input"),
     wareError: document.getElementById("ware-error"),

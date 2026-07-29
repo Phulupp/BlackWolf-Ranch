@@ -14,15 +14,14 @@
     const liste = gefiltertLager();
     el.lagerEmpty.hidden = produkte.length !== 0;
 
-    const zugeordneteNamen = new Set(PRODUKT_KATEGORIEN.flatMap((kat) => kat.namen));
     const bereiche = PRODUKT_KATEGORIEN.slice();
-    if (produkte.some((p) => !zugeordneteNamen.has(p.name))) {
-      bereiche.push({ label: "Sonstige Waren", namen: null });
+    if (produkte.some((p) => ermittleProduktKategorie(p) === PRODUKT_KATEGORIE_SONSTIGE)) {
+      bereiche.push({ id: PRODUKT_KATEGORIE_SONSTIGE, label: PRODUKT_KATEGORIE_SONSTIGE_LABEL });
     }
 
     el.lagerTableBody.innerHTML = bereiche
       .map((kat) => {
-        const gehoertZuKategorie = (p) => (kat.namen ? kat.namen.includes(p.name) : !zugeordneteNamen.has(p.name));
+        const gehoertZuKategorie = (p) => ermittleProduktKategorie(p) === kat.id;
         const sichtbareProdukte = liste.filter(gehoertZuKategorie);
         if (sichtbareProdukte.length === 0) return "";
 
