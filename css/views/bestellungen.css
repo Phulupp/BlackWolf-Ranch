@@ -295,6 +295,25 @@ select.field-input option {
   font-style: italic;
 }
 
+/* Bereichs-Überschrift innerhalb der Produktauswahl-Liste (Feldfrüchte/
+   Tierprodukte/Verarbeitete Waren/Sonstige) - gleiche Gruppierung wie bei
+   Waren & Preise/Lager, damit die Liste nicht mehr eine einzige lange,
+   unsortierte Aufzählung ist. */
+.custom-select__kategorie {
+  padding: 10px 12px 4px;
+  font-family: var(--font-display);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--brass-bright);
+}
+
+.custom-select__kategorie:not(:first-child) {
+  margin-top: 4px;
+  border-top: 1px solid var(--leather-edge);
+}
+
 /* Zeilen-Erfassung im Bestellungs-Modal (Produkt + Menge + Rabatt + Hinzufügen).
    Kompakt in EINER Zeile nebeneinander (Produkt wächst, Menge/Rabatt haben
    eine feste, normale Breite, Button richtet sich nach seinem Text) - so
@@ -452,6 +471,26 @@ select.field-input option {
   color: var(--status-danger-bright);
   cursor: help;
   font-weight: 700;
+}
+
+/* Bereichs-Überschrift (Feldfrüchte/Tierprodukte/Verarbeitete Waren/
+   Sonstige) innerhalb der Produkttabelle - dieselbe Gruppierung wie bei
+   Waren & Preise/Lager. Anders als die übrigen Zeilen nicht im 7-Spalten-
+   Grid, sondern eine einzelne durchgehende Zeile. */
+.bestellung-positionen-zeile--kategorie {
+  display: block;
+  padding: 10px 16px 4px;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--brass-bright);
+  background: var(--leather-800);
+}
+
+.bestellung-positionen-zeile--kategorie:first-child {
+  padding-top: 8px;
 }
 
 /* Zusammenfassungsleiste: Gesamtsumme ist die wichtigste Kennzahl der

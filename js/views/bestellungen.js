@@ -218,6 +218,15 @@
     if (el.bestellungErhaltenInput) el.bestellungErhaltenInput.disabled = bestellungModalArchiviert;
   }
 
+  // Liefert die Kategorie-id einer Bestellposition: sucht das zugehörige
+  // Produkt-Dokument über produktId (liefert dann dieselbe Einteilung wie
+  // Waren & Preise/Lager) - existiert das Produkt nicht mehr (gelöscht), wird
+  // anhand des gespeicherten Namens zurückgefallen, sonst "Sonstige Waren".
+  function ermittlePositionKategorie(p) {
+    const produkt = produkte.find((pr) => pr.id === p.produktId);
+    return ermittleProduktKategorie(produkt || { name: p.produktName });
+  }
+
   // Rendert die komplette Produkt-Tabelle INNERHALB des offenen Bestellungs-
   // Modals, auf Basis von bestellungEntwurfPositionen. Wird beim Öffnen des
   // Modals sowie beim Hinzufügen/Entfernen einer Position aufgerufen (dort
@@ -231,24 +240,24 @@
     const admin = istAdmin();
 
     el.bestellungPositionenLeer.hidden = positionen.length !== 0;
-    el.bestellungPositionenListe.innerHTML = positionen
-      .map((p, index) => {
-        const { endpreis, gesamtpreis } = berechneBestellungPositionPreise(p.standardpreis, p.rabattProzent, p.menge);
-        const mengeFeld = bestellungModalArchiviert
-          ? `<span>${escapeHtml(p.menge)}</span>`
-          : `<input type="number" class="field-input" min="1" step="1" value="${p.menge}" data-position-menge="${index}" />`;
-        const rabattFeld =
-          !bestellungModalArchiviert && admin
-            ? `<input type="number" class="field-input" min="0" max="100" step="0.1" value="${p.rabattProzent || 0}" data-position-rabatt="${index}" />`
-            : `<span>${formatProzent(p.rabattProzent || 0, 1)}</span>`;
-        const entfernenBtn = bestellungModalArchiviert
-          ? ""
-          : `<button type="button" class="icon-btn icon-btn--delete" data-position-entfernen="${index}" title="Entfernen">✕</button>`;
-        const standardpreisHinweis =
-          !p.standardpreis || Number(p.standardpreis) === 0
-            ? ` <span class="bestellung-positionen-zeile__kein-preis" title="Für dieses Produkt ist kein Standardpreis hinterlegt.">⚠</span>`
-            : "";
-        return `<div class="bestellung-positionen-zeile">
+
+    const renderZeile = (p, index) => {
+      const { endpreis, gesamtpreis } = berechneBestellungPositionPreise(p.standardpreis, p.rabattProzent, p.menge);
+      const mengeFeld = bestellungModalArchiviert
+        ? `<span>${escapeHtml(p.menge)}</span>`
+        : `<input type="number" class="field-input" min="1" step="1" value="${p.menge}" data-position-menge="${index}" />`;
+      const rabattFeld =
+        !bestellungModalArchiviert && admin
+          ? `<input type="number" class="field-input" min="0" max="100" step="0.1" value="${p.rabattProzent || 0}" data-position-rabatt="${index}" />`
+          : `<span>${formatProzent(p.rabattProzent || 0, 1)}</span>`;
+      const entfernenBtn = bestellungModalArchiviert
+        ? ""
+        : `<button type="button" class="icon-btn icon-btn--delete" data-position-entfernen="${index}" title="Entfernen">✕</button>`;
+      const standardpreisHinweis =
+        !p.standardpreis || Number(p.standardpreis) === 0
+          ? ` <span class="bestellung-positionen-zeile__kein-preis" title="Für dieses Produkt ist kein Standardpreis hinterlegt.">⚠</span>`
+          : "";
+      return `<div class="bestellung-positionen-zeile">
           <span class="bestellung-positionen-zeile__name">${escapeHtml(p.produktName)}</span>
           ${mengeFeld}
           <span>${formatGeld(p.standardpreis)}${standardpreisHinweis}</span>
@@ -257,6 +266,26 @@
           <span class="bestellung-positionen-zeile__gesamt" data-gesamt-anzeige="${index}">${formatGeld(gesamtpreis)}</span>
           <span>${entfernenBtn}</span>
         </div>`;
+    };
+
+    // Gleiche Bereichs-Einteilung (Feldfrüchte/Tierprodukte/Verarbeitete
+    // Waren/Sonstige) wie bei Waren & Preise und Lager, damit lange
+    // Bestellungen übersichtlich gruppiert erscheinen statt als eine lange,
+    // unsortierte Liste. Die ursprünglichen Array-Indizes bleiben dabei
+    // erhalten (data-position-menge etc. referenzieren bestellungEntwurfPositionen).
+    const bereiche = PRODUKT_KATEGORIEN.slice();
+    if (positionen.some((p) => ermittlePositionKategorie(p) === PRODUKT_KATEGORIE_SONSTIGE)) {
+      bereiche.push({ id: PRODUKT_KATEGORIE_SONSTIGE, label: PRODUKT_KATEGORIE_SONSTIGE_LABEL });
+    }
+
+    el.bestellungPositionenListe.innerHTML = bereiche
+      .map((kat) => {
+        const zeilenDieserKategorie = positionen
+          .map((p, index) => ({ p, index }))
+          .filter(({ p }) => ermittlePositionKategorie(p) === kat.id);
+        if (zeilenDieserKategorie.length === 0) return "";
+        const zeilen = zeilenDieserKategorie.map(({ p, index }) => renderZeile(p, index)).join("");
+        return `<div class="bestellung-positionen-zeile bestellung-positionen-zeile--kategorie"><span>${escapeHtml(kat.label)}</span></div>${zeilen}`;
       })
       .join("");
 
@@ -325,16 +354,36 @@
   function befuelleBestellungProduktDropdown() {
     if (!el.bestellungPositionProduktPanel) return;
     const auswahlId = el.bestellungPositionProdukt.value;
-    el.bestellungPositionProduktPanel.innerHTML = produkte.length
-      ? produkte
+
+    if (!produkte.length) {
+      el.bestellungPositionProduktPanel.innerHTML = `<div class="custom-select__leer">Keine Waren vorhanden</div>`;
+      aktualisiereBestellungProduktLabel();
+      return;
+    }
+
+    // Gleiche Bereichs-Einteilung wie bei Waren & Preise/Lager/der
+    // Produkttabelle oben, damit die Auswahlliste beim Hinzufügen ebenso
+    // aufgeräumt gruppiert erscheint statt als eine lange, unsortierte Liste.
+    const bereiche = PRODUKT_KATEGORIEN.slice();
+    if (produkte.some((p) => ermittleProduktKategorie(p) === PRODUKT_KATEGORIE_SONSTIGE)) {
+      bereiche.push({ id: PRODUKT_KATEGORIE_SONSTIGE, label: PRODUKT_KATEGORIE_SONSTIGE_LABEL });
+    }
+
+    el.bestellungPositionProduktPanel.innerHTML = bereiche
+      .map((kat) => {
+        const produkteDieserKategorie = produkte.filter((p) => ermittleProduktKategorie(p) === kat.id);
+        if (produkteDieserKategorie.length === 0) return "";
+        const optionen = produkteDieserKategorie
           .map(
             (p) =>
               `<button type="button" class="custom-select__option ${
                 p.id === auswahlId ? "custom-select__option--aktiv" : ""
               }" data-produkt-option="${escapeHtml(p.id)}">${escapeHtml(p.name)}</button>`
           )
-          .join("")
-      : `<div class="custom-select__leer">Keine Waren vorhanden</div>`;
+          .join("");
+        return `<div class="custom-select__kategorie"><span>${escapeHtml(kat.label)}</span></div>${optionen}`;
+      })
+      .join("");
     aktualisiereBestellungProduktLabel();
   }
 
