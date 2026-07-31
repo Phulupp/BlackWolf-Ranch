@@ -177,8 +177,10 @@
 
   // Liefert die nächste freie BW-ID: die kleinste positive, noch nicht
   // vergebene Zahl (schließt auch Lücken durch gelöschte Kontakte, statt
-  // immer nur hochzuzählen) - siehe Anforderung "automatisch die nächste
-  // freie BW-ID".
+  // immer nur hochzuzählen). Dient nur als Vorschlag/Vorbelegung im
+  // Eintragen-Formular - die Nummer bleibt frei editierbar, damit z. B.
+  // eine bestimmte, vorher mündlich vergebene Telegramm-Nummer eingetragen
+  // werden kann.
   function ermittleNaechsteKontaktNummer() {
     const belegt = new Set(
       kontakte.map((k) => parseInt(k.nummer, 10)).filter((n) => Number.isInteger(n) && n > 0)
@@ -189,7 +191,7 @@
   }
 
   function aktualisiereNaechsteKontaktNummer() {
-    if (el.kontaktNummerInput) el.kontaktNummerInput.value = ermittleNaechsteKontaktNummer();
+    if (el.kontaktNummerInput && !el.kontaktNummerInput.value) el.kontaktNummerInput.value = ermittleNaechsteKontaktNummer();
   }
 
   function starteKontakteListener() {
@@ -403,15 +405,15 @@
   if (el.formKontakt) {
     el.formKontakt.addEventListener("submit", async (event) => {
       event.preventDefault();
-      // Die BW-ID wird nie aus dem (schreibgeschützten) Eingabefeld
-      // übernommen, sondern unmittelbar vor dem Speichern anhand des
-      // aktuellen Datenstands frisch ermittelt - das minimiert das Risiko,
-      // dass zwei Nutzer nahezu gleichzeitig dieselbe Nummer vergeben.
-      const nummer = ermittleNaechsteKontaktNummer();
+      // Die BW-ID wird beim Eintragen frei vergeben (das Feld ist lediglich
+      // mit der nächsten freien Nummer vorbelegt) - nur nachträgliches
+      // Ändern einer bereits vergebenen BW-ID ist ausgeschlossen (siehe
+      // Bearbeiten-Modal).
+      const nummer = el.kontaktNummerInput.value.trim();
       const name = el.kontaktNameInput.value.trim();
       const rolle = el.kontaktBerufInput.value;
       const notiz = el.kontaktNotizInput.value.trim();
-      if (!name) return zeigeToast("Bitte einen Namen eintragen.");
+      if (!nummer || !name) return zeigeToast("Bitte Telegrammnummer und Name eintragen.");
 
       try {
         await db
