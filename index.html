@@ -16,8 +16,8 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>Hornhausen-Hof — Hofverwaltung</title>
-  <link rel="icon" type="image/png" href="assets/logo/favicon-mais.png?v=30" />
-  <link rel="apple-touch-icon" href="assets/logo/favicon-mais.png?v=30" />
+  <link rel="icon" type="image/png" href="assets/logo/favicon-mais.png?v=31" />
+  <link rel="apple-touch-icon" href="assets/logo/favicon-mais.png?v=31" />
 
   <!-- Google Fonts: Rye (Farmschild/Wordmark), Playfair Display (Überschriften), Vollkorn (Fließtext/Pergament) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -31,27 +31,27 @@
        style.css - nur jetzt nach Zweck aufgeteilt (base > layout >
        components > views), damit man den passenden Abschnitt schneller
        findet. Reihenfolge ist wichtig und darf nicht vertauscht werden. -->
-  <link rel="stylesheet" href="css/base/tokens.css?v=30" />
-  <link rel="stylesheet" href="css/base/reset.css?v=30" />
-  <link rel="stylesheet" href="css/base/textures.css?v=30" />
-  <link rel="stylesheet" href="css/views/auth.css?v=30" />
-  <link rel="stylesheet" href="css/components/forms.css?v=30" />
-  <link rel="stylesheet" href="css/components/buttons.css?v=30" />
-  <link rel="stylesheet" href="css/layout/shell.css?v=30" />
-  <link rel="stylesheet" href="css/components/cards.css?v=30" />
-  <link rel="stylesheet" href="css/views/dashboard.css?v=30" />
-  <link rel="stylesheet" href="css/components/tables.css?v=30" />
-  <link rel="stylesheet" href="css/views/waren.css?v=30" />
-  <link rel="stylesheet" href="css/views/bestellungen.css?v=30" />
-  <link rel="stylesheet" href="css/views/kontakte.css?v=30" />
-  <link rel="stylesheet" href="css/views/handelsrechner.css?v=30" />
-  <link rel="stylesheet" href="css/components/modals.css?v=30" />
-  <link rel="stylesheet" href="css/views/admin.css?v=30" />
-  <link rel="stylesheet" href="css/components/toast.css?v=30" />
-  <link rel="stylesheet" href="css/layout/footer.css?v=30" />
-  <link rel="stylesheet" href="css/components/kataloge.css?v=30" />
-  <link rel="stylesheet" href="css/views/hofbuch.css?v=30" />
-  <link rel="stylesheet" href="css/base/responsive.css?v=30" />
+  <link rel="stylesheet" href="css/base/tokens.css?v=31" />
+  <link rel="stylesheet" href="css/base/reset.css?v=31" />
+  <link rel="stylesheet" href="css/base/textures.css?v=31" />
+  <link rel="stylesheet" href="css/views/auth.css?v=31" />
+  <link rel="stylesheet" href="css/components/forms.css?v=31" />
+  <link rel="stylesheet" href="css/components/buttons.css?v=31" />
+  <link rel="stylesheet" href="css/layout/shell.css?v=31" />
+  <link rel="stylesheet" href="css/components/cards.css?v=31" />
+  <link rel="stylesheet" href="css/views/dashboard.css?v=31" />
+  <link rel="stylesheet" href="css/components/tables.css?v=31" />
+  <link rel="stylesheet" href="css/views/waren.css?v=31" />
+  <link rel="stylesheet" href="css/views/bestellungen.css?v=31" />
+  <link rel="stylesheet" href="css/views/kontakte.css?v=31" />
+  <link rel="stylesheet" href="css/views/handelsrechner.css?v=31" />
+  <link rel="stylesheet" href="css/components/modals.css?v=31" />
+  <link rel="stylesheet" href="css/views/admin.css?v=31" />
+  <link rel="stylesheet" href="css/components/toast.css?v=31" />
+  <link rel="stylesheet" href="css/layout/footer.css?v=31" />
+  <link rel="stylesheet" href="css/components/kataloge.css?v=31" />
+  <link rel="stylesheet" href="css/views/hofbuch.css?v=31" />
+  <link rel="stylesheet" href="css/base/responsive.css?v=31" />
 
   <!-- Firebase SDK (Authentifizierung + Datenbank). "defer" statt normaler
        blockierender <script>-Tags: der Browser kann so den Rest der Seite
@@ -1097,41 +1097,55 @@
   <!-- MODAL: Kunde                  -->
   <!-- ============================ -->
   <div class="modal-overlay" id="modal-kunde">
-    <div class="modal modal--large">
+    <div class="modal modal--xlarge">
       <div class="modal__header">
         <h3 id="modal-kunde-titel">Kunde</h3>
         <button class="modal__close" data-close-modal="modal-kunde">✕</button>
       </div>
       <div class="modal__body">
-        <input type="hidden" id="kunde-editing-id" value="" />
-        <label class="field-label" for="kunde-name-input">Name</label>
-        <input type="text" id="kunde-name-input" class="field-input field-input--titel" />
-        <label class="field-label" for="kunde-notiz-input" style="margin-top: 14px;">Notiz</label>
-        <textarea id="kunde-notiz-input" class="field-input field-textarea" rows="2" placeholder="z. B. bevorzugt Lieferung, guter Stammkunde..."></textarea>
-        <p class="field-error" id="kunde-error" hidden></p>
+        <!-- LINKE SPALTE: Profil (Name/Notiz) + Kennzahlen -->
+        <div class="bestellung-spalte bestellung-spalte--links">
+          <input type="hidden" id="kunde-editing-id" value="" />
+          <div class="bestellung-form-zeile">
+            <div class="field-group">
+              <label class="field-label" for="kunde-name-input">Name</label>
+              <input type="text" id="kunde-name-input" class="field-input field-input--titel" />
+            </div>
+          </div>
+          <div class="bestellung-form-zeile" style="margin-top: 16px;">
+            <div class="field-group">
+              <label class="field-label" for="kunde-notiz-input">Notiz</label>
+              <textarea id="kunde-notiz-input" class="field-input field-textarea" rows="4" placeholder="z. B. bevorzugt Lieferung, guter Stammkunde..."></textarea>
+            </div>
+          </div>
+          <p class="field-error" id="kunde-error" hidden></p>
 
-        <div class="dash-stats" style="grid-template-columns: repeat(3, 1fr); margin: 20px 0;">
-          <div class="dash-stat">
-            <span class="dash-stat__label">Bestellungen gesamt</span>
-            <span class="dash-stat__value" id="kunde-stat-anzahl">0</span>
-          </div>
-          <div class="dash-stat">
-            <span class="dash-stat__label">Gesamtumsatz</span>
-            <span class="dash-stat__value" id="kunde-stat-umsatz">0,00 $</span>
-          </div>
-          <div class="dash-stat">
-            <span class="dash-stat__label">Letzte Bestellung</span>
-            <span class="dash-stat__value" id="kunde-stat-letzte" style="font-size: 17px;">—</span>
+          <div class="dash-stats" style="grid-template-columns: 1fr; gap: 12px; margin-top: 24px;">
+            <div class="dash-stat">
+              <span class="dash-stat__label">Bestellungen gesamt</span>
+              <span class="dash-stat__value" id="kunde-stat-anzahl">0</span>
+            </div>
+            <div class="dash-stat">
+              <span class="dash-stat__label">Gesamtumsatz</span>
+              <span class="dash-stat__value" id="kunde-stat-umsatz">0,00 $</span>
+            </div>
+            <div class="dash-stat">
+              <span class="dash-stat__label">Letzte Bestellung</span>
+              <span class="dash-stat__value" id="kunde-stat-letzte" style="font-size: 22px;">—</span>
+            </div>
           </div>
         </div>
 
-        <p class="field-label" style="margin-bottom: 8px;">Meistgekaufte Waren</p>
-        <div id="kunde-top-waren"></div>
-        <p class="empty-state" id="kunde-top-waren-empty" hidden>Noch keine abgeschlossenen Bestellungen.</p>
+        <!-- RECHTE SPALTE: Meistgekaufte Waren + Bestellhistorie -->
+        <div class="bestellung-spalte bestellung-spalte--rechts">
+          <p class="field-label" style="margin-bottom: 8px;">Meistgekaufte Waren</p>
+          <div id="kunde-top-waren"></div>
+          <p class="empty-state" id="kunde-top-waren-empty" hidden>Noch keine abgeschlossenen Bestellungen.</p>
 
-        <p class="field-label" style="margin: 18px 0 8px;">Bestellhistorie</p>
-        <div id="kunde-bestellungen"></div>
-        <p class="empty-state" id="kunde-bestellungen-empty" hidden>Noch keine Bestellungen.</p>
+          <p class="field-label" style="margin: 22px 0 8px;">Bestellhistorie</p>
+          <div id="kunde-bestellungen"></div>
+          <p class="empty-state" id="kunde-bestellungen-empty" hidden>Noch keine Bestellungen.</p>
+        </div>
       </div>
       <div class="modal__footer">
         <button class="btn btn--danger" id="btn-kunde-loeschen" style="margin-right: auto;">Löschen</button>
@@ -1261,28 +1275,28 @@
        teilen können. Die Reihenfolge entspricht exakt den frueheren
        nummerierten Abschnitten in app.js und darf nicht vertauscht werden:
        js/main.js muss immer zuletzt kommen, da es die App erst startet. -->
-  <script defer src="js/firebase-config.js?v=30"></script>
-  <script defer src="js/core/config.js?v=30"></script>
-  <script defer src="js/core/state.js?v=30"></script>
-  <script defer src="js/core/dom.js?v=30"></script>
-  <script defer src="js/core/firebase-init.js?v=30"></script>
-  <script defer src="js/core/utils.js?v=30"></script>
-  <script defer src="js/ui/modals.js?v=30"></script>
-  <script defer src="js/ui/nav.js?v=30"></script>
-  <script defer src="js/ui/presence.js?v=30"></script>
-  <script defer src="js/views/waren.js?v=30"></script>
-  <script defer src="js/views/bestellungen.js?v=30"></script>
-  <script defer src="js/views/handelsrechner.js?v=30"></script>
-  <script defer src="js/views/kontakte.js?v=30"></script>
-  <script defer src="js/views/verkaeufe.js?v=30"></script>
-  <script defer src="js/views/kunden.js?v=30"></script>
-  <script defer src="js/views/hofbuch.js?v=30"></script>
-  <script defer src="js/views/statistiken.js?v=30"></script>
-  <script defer src="js/views/dashboard.js?v=30"></script>
-  <script defer src="js/views/einstellungen.js?v=30"></script>
-  <script defer src="js/views/admin.js?v=30"></script>
-  <script defer src="js/ui/version-check.js?v=30"></script>
-  <script defer src="js/main.js?v=30"></script>
-  <script type="module" src="js/auth.js?v=30"></script>
+  <script defer src="js/firebase-config.js?v=31"></script>
+  <script defer src="js/core/config.js?v=31"></script>
+  <script defer src="js/core/state.js?v=31"></script>
+  <script defer src="js/core/dom.js?v=31"></script>
+  <script defer src="js/core/firebase-init.js?v=31"></script>
+  <script defer src="js/core/utils.js?v=31"></script>
+  <script defer src="js/ui/modals.js?v=31"></script>
+  <script defer src="js/ui/nav.js?v=31"></script>
+  <script defer src="js/ui/presence.js?v=31"></script>
+  <script defer src="js/views/waren.js?v=31"></script>
+  <script defer src="js/views/bestellungen.js?v=31"></script>
+  <script defer src="js/views/handelsrechner.js?v=31"></script>
+  <script defer src="js/views/kontakte.js?v=31"></script>
+  <script defer src="js/views/verkaeufe.js?v=31"></script>
+  <script defer src="js/views/kunden.js?v=31"></script>
+  <script defer src="js/views/hofbuch.js?v=31"></script>
+  <script defer src="js/views/statistiken.js?v=31"></script>
+  <script defer src="js/views/dashboard.js?v=31"></script>
+  <script defer src="js/views/einstellungen.js?v=31"></script>
+  <script defer src="js/views/admin.js?v=31"></script>
+  <script defer src="js/ui/version-check.js?v=31"></script>
+  <script defer src="js/main.js?v=31"></script>
+  <script type="module" src="js/auth.js?v=31"></script>
 </body>
 </html>
