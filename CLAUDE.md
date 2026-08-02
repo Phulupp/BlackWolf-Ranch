@@ -80,7 +80,7 @@ without conflict. Because ES modules can't implicitly touch `window`,
   `nav.js` (sidebar view switching, tabs), `modals.js`, `presence.js`
   ("who's online" heartbeat), `version-check.js`.
 - `js/views/*.js` — one file per sidebar view (Waren, Bestellungen,
-  Handelsrechner, Kontakte, Lager, Verkäufe, Hofbuch, Statistiken,
+  Handelsrechner, Kontakte, Verkäufe, Hofbuch, Statistiken,
   Einstellungen, Admin). Each owns its own Firestore `onSnapshot` listener,
   render function, and form/modal handlers for that section.
 - `js/main.js` — wires `hof:auth-*` events to app start/stop; must load last.

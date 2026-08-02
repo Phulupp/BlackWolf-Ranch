@@ -134,9 +134,3 @@
   font-style: italic;
 }
 
-/* Lager: Gesamtwert-Zusammenfassung direkt unter der Seitenüberschrift, mit
-   Messing-Akzent oben, damit sie sofort ins Auge fällt. */
-.lager-summary {
-  border-top: 2px solid var(--brass);
-}
-

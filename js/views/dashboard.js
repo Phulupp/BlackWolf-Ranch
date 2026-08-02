@@ -25,18 +25,26 @@
       .reduce((sum, b) => sum + berechneBestellungKennzahlen(b).gewinn, 0);
     el.statGesamtgewinn.textContent = formatGeld(monatsGewinn);
 
-    const gesamtLagerwert = produkte.reduce((sum, p) => sum + (p.lagerMenge || 0) * (p.verkaufspreis || 0), 0);
-    el.statLagerwert.textContent = formatGeld(gesamtLagerwert);
+    // Älteste offene Bestellung zuerst (statt neueste), damit eine
+    // Bestellung, die schon lange wartet, hier eher auffällt statt von
+    // frischeren Bestellungen aus den obersten 6 Plätzen verdrängt zu werden
+    // (siehe istBestellungAlt-Warnhinweis unten).
+    const offenNachAlter = offen
+      .slice()
+      .sort((a, b) => zeitstempelWert(a.erstelltAm) - zeitstempelWert(b.erstelltAm));
 
     el.dashOffeneBestellungenEmpty.hidden = offen.length !== 0;
-    el.dashOffeneBestellungen.innerHTML = offen
+    el.dashOffeneBestellungen.innerHTML = offenNachAlter
       .slice(0, 6)
-      .map(
-        (b) => `<div class="dash-mini-row">
-          <div class="dash-mini-row__top"><span>${escapeHtml(b.unternehmen)}</span><span class="status-pill ${statusPillKlasse(b.status)}">${escapeHtml(b.status)}</span></div>
+      .map((b) => {
+        const altBadge = istBestellungAlt(b)
+          ? `<span class="bestellung-alt-badge" title="Seit ${bestellungTageOffen(b)} Tagen offen">⚠ ${bestellungTageOffen(b)}d</span>`
+          : "";
+        return `<div class="dash-mini-row">
+          <div class="dash-mini-row__top"><span>${escapeHtml(b.unternehmen)}</span><span style="display:flex; align-items:center; gap:6px;"><span class="status-pill ${statusPillKlasse(b.status)}">${escapeHtml(b.status)}</span>${altBadge}</span></div>
           <div class="dash-mini-row__bottom"><span>${escapeHtml(bestellungProdukteText(b.produkte))}</span><span>${(b.produkte || []).length} Produkt${(b.produkte || []).length === 1 ? "" : "e"}</span></div>
-        </div>`
-      )
+        </div>`;
+      })
       .join("");
 
     const kuerzlichAbgeschlossen = abgeschlossen

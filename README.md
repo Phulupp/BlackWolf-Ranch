@@ -1,7 +1,7 @@
 # Hornhausen-Hof
 
 Internes Verwaltungsprogramm für den privaten **Hornhausen-Hof** (RedM Roleplay, Jahr 1899).
-Waren, Preise, Bestellungen, ein Handelsrechner, das Telegramm-Verzeichnis, Lager, Verkäufe, das
+Waren, Preise, Bestellungen, ein Handelsrechner, das Telegramm-Verzeichnis, Verkäufe, das
 Hofbuch und die Benutzerverwaltung des Hofes laufen alle in Echtzeit über **Firebase**
 (Authentication + Firestore) – Änderungen sind sofort bei allen angemeldeten Mitarbeitern sichtbar.
 
@@ -20,9 +20,9 @@ statt moderner Dashboard-Optik – im Stil einer hochwertigen internen Hofverwal
   Schutzmechanismus für „unantastbare" Accounts, die nicht versehentlich degradiert oder gesperrt
   werden können.
 - **Übersicht (Dashboard)** – Begrüßung mit Foto-Kopfbereich, Kennzahlen (offene Bestellungen,
-  Tagesumsatz, Lagerwert, Gesamtgewinn), Schnellzugriff und die letzten Bestellungen/Verkäufe/
+  Tagesumsatz, Gesamtgewinn), Schnellzugriff und die letzten Bestellungen/Verkäufe/
   Kontakte auf einen Blick.
-- **Waren & Preise** – Produktliste mit Verkaufs- und Einkaufspreis, Lagerbestand; Anlegen/
+- **Waren & Preise** – Produktliste mit Verkaufs- und Einkaufspreis; Anlegen/
   Bearbeiten/Löschen nur für Verwalter, Ansicht für alle freigegebenen Nutzer.
 - **Bestellungen** – Eine Bestellung kann mehrere Produkte enthalten (Produkt auswählen, Menge
   eingeben, hinzufügen – beliebig oft, editierbar/entfernbar), mit automatischer Zusammenfassung
@@ -31,7 +31,6 @@ statt moderner Dashboard-Optik – im Stil einer hochwertigen internen Hofverwal
   Angebot lässt sich direkt als neue Bestellung übernehmen.
 - **Kontakte** – Telegramm-Verzeichnis mit `BW-`-Nummern und Rollen (Bürger, Hofmeister, Sheriff,
   Rancher, Schmied, Händler, …), verwaltbare Rollenliste.
-- **Lager** – Bestandsführung je Ware, inkl. Warenwert für die Übersicht.
 - **Verkäufe** – Verkaufslog mit automatischer Tagesstatistik.
 - **Hofbuch** – die Chronik des Hofes: jeder freigegebene Mitarbeiter kann Einträge (Überschrift +
   Text) verfassen, die chronologisch in einem aufgeschlagenen Buch dargestellt werden.
@@ -92,7 +91,7 @@ Hornhausen-Hof/
 | `adminLog`    | Unveränderliches Log aller Verwalter-Aktionen                   |
 | `presence`    | „Wer ist online"-Heartbeat                                      |
 | `kontakte`    | Telegramm-Verzeichnis                                            |
-| `produkte`    | Waren & Preise, Lagerbestand                                     |
+| `produkte`    | Waren & Preise                                                    |
 | `bestellungen`| Bestellungen (Produkte als Array je Bestellung)                 |
 | `angebote`    | Historie der Handelsrechner-Angebote                             |
 | `verkaeufe`   | Verkaufslog                                                       |

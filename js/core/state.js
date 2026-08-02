@@ -16,6 +16,8 @@
   let unsubKontakte = null;
   let hofbuchEintraege = [];
   let unsubHofbuch = null;
+  let kunden = [];
+  let unsubKunden = null;
   let unsubPresence = null;
   let unsubKontakteRollen = null;
   let kontakteRollenKatalog = [];
@@ -34,8 +36,8 @@
   let kontakteSortierung = localStorage.getItem("kontakteSortierung") || "name"; // "name" | "nummer" | "rolle"
   let kontakteRollenFilter = "alle";
   let kontakteGruppierenNachRolle = false;
-  let lagerSuche = "";
   let verkaeufeSuche = "";
+  let kundenSuche = "";
   let hofbuchSuche = "";
   let hofbuchAeltesteZuerst = false;
   let benutzerSuche = "";

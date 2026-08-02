@@ -20,10 +20,6 @@
   // keine separate Verkaufs-Collection mehr. "abgeschlossenAm" ist der
   // Zeitpunkt des (ersten) Abschlusses und Grundlage für die
   // Verkaufshistorie sowie "Heutiger Umsatz"/"Gesamtgewinn" im Dashboard.
-  // Die Lager-Seite (siehe lager.js) ist bewusst NICHT mit Bestellungen
-  // verknüpft - "lagerMenge" wird ausschließlich manuell auf der Lager-Seite
-  // gepflegt und dient nur als eigene Bestandsinfo, unabhängig vom
-  // Bestellstatus.
   // "Archiv" ist bewusst KEIN vierter Status, sondern ein eigenes Flag
   // ("archiviert"), das nur bei Status "Abgeschlossen" gesetzt werden kann -
   // archivierte Bestellungen dürfen laut Firestore-Regel nie gelöscht
@@ -55,6 +51,11 @@
           renderUebersicht();
           renderStatistiken();
           befuelleUnternehmenDatalist();
+          // Legt für neue/bisher unbekannte "unternehmen"-Namen automatisch
+          // ein Kundenprofil an (siehe kunden.js) und hält die Kunden-Liste
+          // mit den aktuellen Bestellungen synchron.
+          sorgeFuerKundenBackfill();
+          renderKunden();
         },
         (fehler) => {
           if (!planeListenerNeustart("Bestellungen", starteBestellungenListener, fehler)) {
@@ -66,6 +67,22 @@
 
   function bestellungProdukteZeilen(produkteListe) {
     return (produkteListe || []).reduce((sum, p) => sum + (Number(p.menge) || 0), 0);
+  }
+
+  // Anzahl voller Tage seit Erstellung der Bestellung - Grundlage für die
+  // "alte Bestellung"-Warnung (siehe istBestellungAlt).
+  function bestellungTageOffen(b) {
+    const erstelltMs = zeitstempelWert(b.erstelltAm);
+    if (!erstelltMs) return 0;
+    return Math.floor((Date.now() - erstelltMs) / (1000 * 60 * 60 * 24));
+  }
+
+  // Eine Bestellung gilt als "alt", wenn sie seit mindestens
+  // BESTELLUNG_ALT_SCHWELLE_TAGE Tagen weder abgeschlossen noch archiviert
+  // wurde - wird als Warnhinweis in der Bestellliste und im Dashboard
+  // angezeigt, damit keine offene Bestellung untergeht.
+  function istBestellungAlt(b) {
+    return b.status !== "Abgeschlossen" && b.archiviert !== true && bestellungTageOffen(b) >= BESTELLUNG_ALT_SCHWELLE_TAGE;
   }
 
   // Kleine Zusammenfassung einer Produktliste, z. B. "Zucker, Mehl, Eier +1
@@ -174,11 +191,14 @@
             const lieferungBadge = b.lieferung
               ? `<span class="bestellung-lieferung-badge" title="Lieferung gewünscht (+${formatGeld(BESTELLUNG_LIEFERPAUSCHALE)})">Lieferung</span>`
               : "";
+            const altBadge = istBestellungAlt(b)
+              ? `<span class="bestellung-alt-badge" title="Seit ${bestellungTageOffen(b)} Tagen offen">⚠ Seit ${bestellungTageOffen(b)} Tagen offen</span>`
+              : "";
             return `<div class="reg-row reg-row--body bestellungen-row" data-bestellung-oeffnen="${b.id}">
                 <span>${anzahl} Produkt${anzahl === 1 ? "" : "e"}</span>
                 <span>${gesamtmenge} Stück</span>
                 <span>${formatUhrzeitDatum(b.erstelltAm)}</span>
-                <span><span class="status-pill ${statusPillKlasse(b.status)}">${escapeHtml(b.status || "—")}</span>${lieferungBadge}</span>
+                <span><span class="status-pill ${statusPillKlasse(b.status)}">${escapeHtml(b.status || "—")}</span>${lieferungBadge}${altBadge}</span>
               </div>`;
           })
           .join("");
@@ -209,8 +229,6 @@
     el.bestellungZusammenfassungAnzahl.textContent = String(werte.anzahl);
     el.bestellungZusammenfassungMenge.textContent = String(werte.gesamtmenge);
     el.bestellungZusammenfassungRabatt.textContent = formatGeld(werte.gesamtrabatt);
-    if (el.bestellungZusammenfassungLieferungZeile) el.bestellungZusammenfassungLieferungZeile.hidden = !bestellungEntwurfLieferung;
-    if (el.bestellungZusammenfassungLieferung) el.bestellungZusammenfassungLieferung.textContent = formatGeld(lieferpauschale);
     el.bestellungZusammenfassungSumme.textContent = formatGeld(gesamtsummeMitLieferung);
     // Die berechnete Gesamtsumme im "Zahlung"-Bereich (siehe
     // aktualisiereZahlungBereich) muss bei jeder Produktänderung mit
@@ -764,9 +782,7 @@
       // Eine abgeschlossene Bestellung IST der Verkauf - Umsatz, Gewinn,
       // Statistiken und Dashboard werden ausschließlich daraus abgeleitet
       // (siehe renderVerkaufshistorie/renderStatistiken/renderUebersicht).
-      // "abgeschlossenAm" ist der Zeitpunkt des (ersten) Abschlusses. Die
-      // Lager-Seite wird hier bewusst NICHT berührt - "lagerMenge" ist eine
-      // rein manuell gepflegte Bestandsinfo, unabhängig vom Bestellstatus.
+      // "abgeschlossenAm" ist der Zeitpunkt des (ersten) Abschlusses.
       if (neuerStatus === "Abgeschlossen") {
         daten.abgeschlossenAm =
           alteBestellung && alteBestellung.status === "Abgeschlossen" && alteBestellung.abgeschlossenAm

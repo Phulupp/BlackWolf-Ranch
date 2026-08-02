@@ -24,6 +24,25 @@
   white-space: nowrap;
 }
 
+/* Warnhinweis für Bestellungen, die schon länger als
+   BESTELLUNG_ALT_SCHWELLE_TAGE unbearbeitet offen sind (siehe
+   istBestellungAlt in bestellungen.js) - fällt bewusst in der Warnfarbe auf,
+   damit keine wartende Bestellung übersehen wird. */
+.bestellung-alt-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+  padding: 3px 10px;
+  border: 1px solid var(--status-danger-bright);
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--status-danger-bright);
+  background: var(--status-danger-soft);
+  white-space: nowrap;
+}
+
 .reg-row--body.bestellungen-row {
   cursor: pointer;
 }
@@ -512,24 +531,21 @@ select.field-input option {
   padding-top: 8px;
 }
 
-/* Lieferung-Umschalter: eigene Zeile zwischen Produkttabelle und
-   Zusammenfassung - ein Klick markiert die Bestellung als Lieferung
-   (Haken erscheint) und die Pauschale fließt automatisch in die
-   Gesamtsumme ein (siehe aktualisiereBestellungZusammenfassung). */
-.bestellung-lieferung-zeile {
-  margin: 4px 0 10px;
-}
-
+/* Lieferung-Umschalter: sitzt inline in der Zusammenfassungsleiste, direkt
+   neben "Rabatt gesamt" - ein Klick markiert die Bestellung als Lieferung
+   (Haken erscheint) und die Pauschale fließt automatisch mit in die
+   Gesamtsumme ein (siehe aktualisiereBestellungZusammenfassung), ohne
+   selbst als eigener Zahlenwert in der Leiste angezeigt zu werden. */
 .bestellung-lieferung-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 9px 16px;
+  gap: 8px;
+  padding: 6px 12px;
   background: rgba(0, 0, 0, 0.16);
   border: 1.5px solid var(--leather-edge);
   border-radius: var(--radius-sm);
   color: var(--wood-text-muted);
-  font-size: 13px;
+  font-size: 12.5px;
   transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
 }
 
@@ -542,13 +558,13 @@ select.field-input option {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
+  width: 15px;
+  height: 15px;
   border: 1.5px solid var(--leather-edge);
   border-radius: 4px;
   color: transparent;
   background: rgba(0, 0, 0, 0.25);
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 700;
   transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
 }

@@ -4,13 +4,13 @@
    Zugang: echtes Login-/Benutzersystem (siehe js/auth.js). Diese Datei
    (js/app.js) nutzt weiterhin das "Compat"-SDK (firebase.firestore()) für
    alle fachlichen Daten (Waren, Bestellungen, Handelsrechner, Kontakte,
-   Lager, Verkaufshistorie, Statistiken) und reagiert nur auf die Events,
+   Verkaufshistorie, Statistiken) und reagiert nur auf die Events,
    die js/auth.js verschickt, sobald jemand eingeloggt UND freigegeben ist.
    Die Bestellung ist die zentrale Datenbasis: Sobald eine Bestellung den
-   Status "Abgeschlossen" erhält, gilt sie als Verkauf. Lagerbestand,
-   Lagerwert, Umsatz, Gewinn, Statistiken und Dashboard werden ausschließlich
-   aus abgeschlossenen Bestellungen abgeleitet - es gibt keine separate
-   Verkaufs-Collection mehr (siehe Abschnitt "14. Verkaufshistorie").
+   Status "Abgeschlossen" erhält, gilt sie als Verkauf. Umsatz, Gewinn,
+   Statistiken und Dashboard werden ausschließlich aus abgeschlossenen
+   Bestellungen abgeleitet - es gibt keine separate Verkaufs-Collection mehr
+   (siehe Abschnitt "14. Verkaufshistorie").
    ========================================================================== */
 
 "use strict";
@@ -18,7 +18,7 @@
   /* ------------------------------------------------------------------------
      1. Konstanten
      ------------------------------------------------------------------------ */
-  const VERSION_AKTUELL = 24;
+  const VERSION_AKTUELL = 28;
 
   // Ränge des Hofes (rein organisatorisch — Verwalterrechte sind unabhängig
   // davon und werden separat je Benutzer vergeben, siehe isAdmin).
@@ -30,6 +30,7 @@
   const ANGEBOTE_COLLECTION = "angebote";
   const KONTAKTE_COLLECTION = "kontakte";
   const HOFBUCH_COLLECTION = "hofbuch";
+  const KUNDEN_COLLECTION = "kunden";
   const PRESENCE_COLLECTION = "presence";
   const KONTAKTE_ROLLEN_DOC = "kataloge/kontakte-rollen";
   const KONTAKTE_ROLLEN_FALLBACK = "Sonstiges";
@@ -72,6 +73,12 @@
   // aktualisiereBestellungZusammenfassung in bestellungen.js).
   const BESTELLUNG_LIEFERPAUSCHALE = 5;
 
+  // Ab wie vielen Tagen eine noch nicht abgeschlossene Bestellung als "alt"
+  // markiert wird (Warnhinweis in der Bestellliste und im Dashboard, siehe
+  // istBestellungAlt in bestellungen.js) - so geht keine offene Bestellung
+  // vergessen.
+  const BESTELLUNG_ALT_SCHWELLE_TAGE = 3;
+
   // Startbestand an Waren, falls die Collection "produkte" noch leer ist —
   // orientiert sich an den Mockups (Weizen, Mais, Zucker, ...).
   const DEFAULT_PRODUKTE = [
@@ -102,8 +109,8 @@
   ];
 
   // Einteilung der Waren in Bereiche für die Darstellung (Waren & Preise,
-  // Lager) - beide Seiten nutzen dieselbe Liste, damit sie immer identisch
-  // gruppiert bleiben. Jedes Produkt trägt seine Kategorie inzwischen selbst
+  // Bestellungen) - alle Seiten nutzen dieselbe Liste, damit sie immer
+  // identisch gruppiert bleiben. Jedes Produkt trägt seine Kategorie inzwischen selbst
   // als Feld "kategorie" (id aus dieser Liste), einstellbar im
   // Bearbeitungsmodal bei Waren & Preise. Die "namen"-Listen bleiben nur als
   // Fallback für ältere Produkt-Dokumente ohne "kategorie"-Feld erhalten
@@ -134,9 +141,9 @@
     waren: { title: "Waren & Preise", subtitle: "Verwalte die Verkaufspreise und Einkaufspreise." },
     handelsrechner: { title: "Handelsrechner", subtitle: "Berechne Angebote und Handelskonditionen für Unternehmen." },
     kontakte: { title: "Kontakte", subtitle: "Verwalte deine Kontakte und Telegrammnummern." },
-    lager: { title: "Lager", subtitle: "Aktueller Warenbestand und Lagerwert." },
+    kunden: { title: "Kunden", subtitle: "Profile aller Kunden — Gesamtumsatz und Kaufverhalten auf einen Blick." },
     verkaeufe: { title: "Verkaufshistorie", subtitle: "Automatisch aus abgeschlossenen Bestellungen — keine manuelle Erfassung." },
-    hofbuch: { title: "Hofbuch", subtitle: "Die Chronik des Hofes — wichtige Ereignisse und Notizen." },
+    hofbuch: { title: "Schwarzes Brett", subtitle: "Notizen und Nachrichten fürs Team." },
     statistiken: { title: "Statistiken", subtitle: "Auswertung abgeschlossener Bestellungen." },
     einstellungen: { title: "Einstellungen", subtitle: "Konfiguration der Hofverwaltung." },
     admin: { title: "Verwaltung", subtitle: "Benutzerverwaltung — nur für Verwalter sichtbar." },

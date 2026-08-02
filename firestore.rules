@@ -247,6 +247,14 @@ service cloud.firestore {
       allow write: if istAdmin();
     }
 
+    // Kunden: ein Profil pro "unternehmen"-Namen aus den Bestellungen, wird
+    // automatisch angelegt (siehe sorgeFuerKundenBackfill in js/views/kunden.js) -
+    // jeder freigegebene Nutzer darf Profile lesen, automatisch anlegen,
+    // umbenennen (inkl. Notiz) und löschen, genau wie bei Kontakte.
+    match /kunden/{dokument} {
+      allow read, write: if istFreigegeben();
+    }
+
     // Hofbuch: die Chronik des Hofes. Jeder freigegebene Nutzer darf Einträge
     // schreiben und lesen. Löschen dürfen Verwalter (jeden Eintrag) sowie der
     // Verfasser selbst (nur den eigenen Eintrag, anhand der beim Anlegen

@@ -46,7 +46,7 @@
           // In ein try/catch gefasst: ein einzelnes fehlerhaftes Produkt-
           // Dokument (z. B. ohne "name", etwa durch eine manuelle Änderung
           // direkt in der Firebase-Konsole) darf nicht die komplette
-          // Aktualisierung von Waren & Preise, Lager, Handelsrechner,
+          // Aktualisierung von Waren & Preise, Handelsrechner,
           // Bestellungs-Produktauswahl und Dashboard verhindern - sonst
           // bliebe z. B. die Produktauswahl im Bestellfenster dauerhaft
           // leer/veraltet, obwohl auf "Waren & Preise" Produkte existieren.
@@ -55,7 +55,6 @@
           produkte.sort((a, b) => (a.reihenfolge || 0) - (b.reihenfolge || 0) || (a.name || "").localeCompare(b.name || "", "de"));
           befuelleProduktSelects();
           renderWaren();
-          renderLager();
           renderHandelsrechner();
           renderUebersicht();
         } catch (fehler) {

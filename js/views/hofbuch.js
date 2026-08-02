@@ -3,8 +3,8 @@
   /* ------------------------------------------------------------------------
      15. Hofbuch
      ------------------------------------------------------------------------ */
-  // Chronik des Hofes: freie Textnotizen mit Überschrift, für alle
-  // freigegebenen Nutzer lesbar/schreibbar (analog zu Kontakte/Bestellungen).
+  // Schwarzes Brett: freie Notizen/Nachrichten ans Team mit Überschrift, für
+  // alle freigegebenen Nutzer lesbar/schreibbar (analog zu Kontakte/Bestellungen).
   function starteHofbuchListener() {
     if (!db) return;
     if (unsubHofbuch) unsubHofbuch();
@@ -130,7 +130,7 @@
           erstelltAm: firebase.firestore.FieldValue.serverTimestamp(),
         });
         el.formHofbuch.reset();
-        zeigeToast("Eintrag ins Hofbuch geschrieben.");
+        zeigeToast("Notiz ans Schwarze Brett geheftet.");
       } catch (fehler) {
         console.error(fehler);
         zeigeToast("Eintrag konnte nicht gespeichert werden.");
@@ -183,7 +183,7 @@
         oeffneModal("modal-hofbuch-edit");
       } else if (delBtn) {
         const id = delBtn.getAttribute("data-hofbuch-delete");
-        fordereLoeschungAn("Hofbucheintrag löschen", "Möchtest du diesen Hofbucheintrag wirklich löschen?", async () => {
+        fordereLoeschungAn("Notiz löschen", "Möchtest du diese Notiz wirklich löschen?", async () => {
           await db.collection(HOFBUCH_COLLECTION).doc(id).delete();
           zeigeToast("Eintrag gelöscht.");
         });

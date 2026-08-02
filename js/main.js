@@ -21,6 +21,7 @@
     starteAngeboteListener();
     starteKontakteRollenListener();
     starteKontakteListener();
+    starteKundenListener();
     starteHofbuchListener();
     if (istAdmin()) starteBenutzerverwaltung();
 
@@ -49,8 +50,10 @@
 
   function stoppeApp() {
     aktuellerNutzer = null;
-    [unsubProdukte, unsubBestellungen, unsubAngebote, unsubKontakte, unsubHofbuch, unsubKontakteRollen].forEach((unsub) => unsub && unsub());
-    unsubProdukte = unsubBestellungen = unsubAngebote = unsubKontakte = unsubHofbuch = unsubKontakteRollen = null;
+    [unsubProdukte, unsubBestellungen, unsubAngebote, unsubKontakte, unsubKunden, unsubHofbuch, unsubKontakteRollen].forEach(
+      (unsub) => unsub && unsub()
+    );
+    unsubProdukte = unsubBestellungen = unsubAngebote = unsubKontakte = unsubKunden = unsubHofbuch = unsubKontakteRollen = null;
     stoppeBenutzerverwaltung();
     stoppeHeartbeat();
     clearInterval(versionCheckTimer);
@@ -58,6 +61,8 @@
     bestellungen = [];
     angebote = [];
     kontakte = [];
+    kunden = [];
+    kundenGeladen = false;
     hofbuchEintraege = [];
   }
 

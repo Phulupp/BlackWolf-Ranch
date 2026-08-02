@@ -16,8 +16,8 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>Hornhausen-Hof — Hofverwaltung</title>
-  <link rel="icon" type="image/png" href="assets/logo/favicon-mais.png?v=24" />
-  <link rel="apple-touch-icon" href="assets/logo/favicon-mais.png?v=24" />
+  <link rel="icon" type="image/png" href="assets/logo/favicon-mais.png?v=28" />
+  <link rel="apple-touch-icon" href="assets/logo/favicon-mais.png?v=28" />
 
   <!-- Google Fonts: Rye (Farmschild/Wordmark), Playfair Display (Überschriften), Vollkorn (Fließtext/Pergament) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -31,27 +31,27 @@
        style.css - nur jetzt nach Zweck aufgeteilt (base > layout >
        components > views), damit man den passenden Abschnitt schneller
        findet. Reihenfolge ist wichtig und darf nicht vertauscht werden. -->
-  <link rel="stylesheet" href="css/base/tokens.css?v=24" />
-  <link rel="stylesheet" href="css/base/reset.css?v=24" />
-  <link rel="stylesheet" href="css/base/textures.css?v=24" />
-  <link rel="stylesheet" href="css/views/auth.css?v=24" />
-  <link rel="stylesheet" href="css/components/forms.css?v=24" />
-  <link rel="stylesheet" href="css/components/buttons.css?v=24" />
-  <link rel="stylesheet" href="css/layout/shell.css?v=24" />
-  <link rel="stylesheet" href="css/components/cards.css?v=24" />
-  <link rel="stylesheet" href="css/views/dashboard.css?v=24" />
-  <link rel="stylesheet" href="css/components/tables.css?v=24" />
-  <link rel="stylesheet" href="css/views/waren.css?v=24" />
-  <link rel="stylesheet" href="css/views/bestellungen.css?v=24" />
-  <link rel="stylesheet" href="css/views/kontakte.css?v=24" />
-  <link rel="stylesheet" href="css/views/handelsrechner.css?v=24" />
-  <link rel="stylesheet" href="css/components/modals.css?v=24" />
-  <link rel="stylesheet" href="css/views/admin.css?v=24" />
-  <link rel="stylesheet" href="css/components/toast.css?v=24" />
-  <link rel="stylesheet" href="css/layout/footer.css?v=24" />
-  <link rel="stylesheet" href="css/components/kataloge.css?v=24" />
-  <link rel="stylesheet" href="css/views/hofbuch.css?v=24" />
-  <link rel="stylesheet" href="css/base/responsive.css?v=24" />
+  <link rel="stylesheet" href="css/base/tokens.css?v=28" />
+  <link rel="stylesheet" href="css/base/reset.css?v=28" />
+  <link rel="stylesheet" href="css/base/textures.css?v=28" />
+  <link rel="stylesheet" href="css/views/auth.css?v=28" />
+  <link rel="stylesheet" href="css/components/forms.css?v=28" />
+  <link rel="stylesheet" href="css/components/buttons.css?v=28" />
+  <link rel="stylesheet" href="css/layout/shell.css?v=28" />
+  <link rel="stylesheet" href="css/components/cards.css?v=28" />
+  <link rel="stylesheet" href="css/views/dashboard.css?v=28" />
+  <link rel="stylesheet" href="css/components/tables.css?v=28" />
+  <link rel="stylesheet" href="css/views/waren.css?v=28" />
+  <link rel="stylesheet" href="css/views/bestellungen.css?v=28" />
+  <link rel="stylesheet" href="css/views/kontakte.css?v=28" />
+  <link rel="stylesheet" href="css/views/handelsrechner.css?v=28" />
+  <link rel="stylesheet" href="css/components/modals.css?v=28" />
+  <link rel="stylesheet" href="css/views/admin.css?v=28" />
+  <link rel="stylesheet" href="css/components/toast.css?v=28" />
+  <link rel="stylesheet" href="css/layout/footer.css?v=28" />
+  <link rel="stylesheet" href="css/components/kataloge.css?v=28" />
+  <link rel="stylesheet" href="css/views/hofbuch.css?v=28" />
+  <link rel="stylesheet" href="css/base/responsive.css?v=28" />
 
   <!-- Firebase SDK (Authentifizierung + Datenbank). "defer" statt normaler
        blockierender <script>-Tags: der Browser kann so den Rest der Seite
@@ -247,7 +247,7 @@
         </button>
         <button class="sidebar__item" data-view="hofbuch">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5.5C10 4 6.5 3.6 4 4.3v14.3c2.5-.7 6-.3 8 1.2"/><path d="M12 5.5c2-1.5 5.5-1.9 8-1.2v14.3c-2.5-.7-6-.3-8 1.2Z"/><line x1="12" y1="5.5" x2="12" y2="19.8"/></svg>
-          <span>Hofbuch</span>
+          <span>Schwarzes Brett</span>
         </button>
         <button class="sidebar__item" data-view="bestellungen">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="12" height="17" rx="1.5"/><path d="M9 4V3.3A1.3 1.3 0 0 1 10.3 2h3.4A1.3 1.3 0 0 1 15 3.3V4"/><line x1="9" y1="10.5" x2="15" y2="10.5"/><line x1="9" y1="14" x2="15" y2="14"/><line x1="9" y1="17.5" x2="13" y2="17.5"/></svg>
@@ -265,13 +265,9 @@
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h3l1.5 4.5-2 1.5a11 11 0 0 0 5.5 5.5l1.5-2L20 14v3a2 2 0 0 1-2 2C10.8 19 5 13.2 5 6a2 2 0 0 1 1-3z"/></svg>
           <span>Kontakte</span>
         </button>
-        <button class="sidebar__item" data-view="lager">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 4l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Z"/><path d="M9 21v-7h6v7"/></svg>
-          <span>Lager</span>
-        </button>
-        <button class="sidebar__item" data-view="verkaeufe">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M9.7 14.6c.3.9 1.2 1.5 2.3 1.5 1.4 0 2.4-.8 2.4-1.9 0-1.2-1-1.6-2.4-2-1.4-.4-2.4-.9-2.4-2 0-1.1 1-1.9 2.4-1.9 1.1 0 2 .6 2.3 1.5"/><line x1="12" y1="6.7" x2="12" y2="17.3"/></svg>
-          <span>Verkaufshistorie</span>
+        <button class="sidebar__item" data-view="kunden">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8" r="3.2"/><path d="M2.5 19c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M15.5 5.3a3.2 3.2 0 0 1 0 6.2"/><path d="M15 13.6c2.9.3 4.9 2.4 4.9 5.4"/></svg>
+          <span>Kunden</span>
         </button>
         <button class="sidebar__item" data-view="statistiken">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="20" x2="19" y2="20"/><rect x="6" y="12" width="3.4" height="8"/><rect x="10.3" y="7" width="3.4" height="13"/><rect x="14.6" y="10" width="3.4" height="10"/></svg>
@@ -354,11 +350,6 @@
                 <span class="dash-stat__sub" id="stat-heute-verkauft-sub">Aus 0 abgeschlossenen Bestellungen</span>
               </div>
               <div class="dash-stat">
-                <span class="dash-stat__label">Lagerwert</span>
-                <span class="dash-stat__value" id="stat-lagerwert">0,00 $</span>
-                <span class="dash-stat__sub">Aktueller Warenwert</span>
-              </div>
-              <div class="dash-stat">
                 <span class="dash-stat__label">Gesamtgewinn</span>
                 <span class="dash-stat__value" id="stat-gesamtgewinn">0,00 $</span>
                 <span class="dash-stat__sub">Diesen Monat</span>
@@ -380,7 +371,7 @@
               <button type="button" class="dash-quicklink" data-quicklink="waren">
                 <svg class="dash-quicklink__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5 12 4l9 4.5-9 4.5-9-4.5Z"/><path d="M3 8.5v7L12 20l9-4.5v-7"/></svg>
                 <span class="dash-quicklink__titel">Ware hinzufügen</span>
-                <span class="dash-quicklink__text">Lagerbestand</span>
+                <span class="dash-quicklink__text">Neue Ware anlegen</span>
               </button>
               <button type="button" class="dash-quicklink" data-quicklink="kontakte">
                 <svg class="dash-quicklink__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h3l1.5 4.5-2 1.5a11 11 0 0 0 5.5 5.5l1.5-2L20 14v3a2 2 0 0 1-2 2C10.8 19 5 13.2 5 6a2 2 0 0 1 1-3z"/></svg>
@@ -669,30 +660,31 @@
           </section>
 
           <!-- ============================ -->
-          <!-- VIEW: LAGER                   -->
+          <!-- VIEW: KUNDEN                  -->
           <!-- ============================ -->
-          <section class="view" id="view-lager">
-            <div class="parch-card lager-summary">
-              <span class="dash-stat__label">Gesamter Lagerwert</span>
-              <p class="dash-stat__value" id="lager-gesamtwert" style="font-size: 30px; margin-top: 6px;">0,00 $</p>
-            </div>
+          <!-- Kundenprofile werden automatisch angelegt, sobald in einer
+               Bestellung ein neues Unternehmen auftaucht (siehe
+               sorgeFuerKundenBackfill in kunden.js) - keine manuelle
+               Neuanlage nötig, nur Umbenennen/Notizen bearbeiten/Löschen. -->
+          <section class="view" id="view-kunden">
             <div class="toolbar">
               <div class="search-field">
-                <input type="text" id="lager-search" placeholder="Ware suchen..." autocomplete="off" />
+                <input type="text" id="kunden-search" placeholder="Nach Kundenname suchen..." autocomplete="off" />
               </div>
             </div>
             <div class="table-card">
               <div class="reg-table">
-                <div class="reg-row reg-row--head" style="grid-template-columns: 34fr 20fr 22fr 24fr;">
-                  <span>Produkt</span>
-                  <span>Bestand</span>
-                  <span>Stückwert (VK)</span>
-                  <span>Gesamtwert</span>
+                <div class="reg-row reg-row--head" style="grid-template-columns: 34fr 18fr 20fr 20fr;">
+                  <span>Kunde</span>
+                  <span>Bestellungen</span>
+                  <span>Gesamtumsatz</span>
+                  <span>Letzte Bestellung</span>
                 </div>
-                <div id="lager-table-body"></div>
+                <div id="kunden-table-body"></div>
               </div>
-              <p class="empty-state" id="lager-empty" hidden>Noch keine Waren im Lager erfasst.</p>
+              <p class="empty-state" id="kunden-empty" hidden>Noch keine Kunden — sobald eine Bestellung für ein Unternehmen angelegt wird, erscheint hier automatisch ein Profil.</p>
             </div>
+            <p class="empty-state" id="kunden-no-results" hidden>Keine Kunden gefunden, die zu deiner Suche passen.</p>
           </section>
 
           <!-- ============================ -->
@@ -734,11 +726,11 @@
           <section class="view" id="view-hofbuch">
             <div class="hofbuch-card">
               <div class="hofbuch-card__form-wrap">
-                <h3>Neuen Eintrag ins Hofbuch schreiben</h3>
+                <h3>Neue Notiz ans Schwarze Brett heften</h3>
                 <form class="hofbuch-form" id="form-hofbuch">
-                  <input type="text" id="hofbuch-titel-input" class="field-input" placeholder="Überschrift, z. B. Ernte eingebracht" required style="flex: 1 1 240px;" />
+                  <input type="text" id="hofbuch-titel-input" class="field-input" placeholder="Überschrift, z. B. Preise ab morgen geändert" required style="flex: 1 1 240px;" />
                   <button type="submit" class="btn btn--primary">Eintragen</button>
-                  <textarea id="hofbuch-text-input" class="field-input field-textarea" placeholder="Was ist geschehen?" style="flex: 1 1 100%;" rows="3" required></textarea>
+                  <textarea id="hofbuch-text-input" class="field-input field-textarea" placeholder="Was möchtest du dem Team mitteilen?" style="flex: 1 1 100%;" rows="3" required></textarea>
                 </form>
               </div>
 
@@ -754,7 +746,7 @@
               </div>
 
               <div id="hofbuch-eintraege"></div>
-              <p class="empty-state" id="hofbuch-empty" hidden>Das Hofbuch ist noch leer — trage den ersten Eintrag ein.</p>
+              <p class="empty-state" id="hofbuch-empty" hidden>Das Schwarze Brett ist noch leer — trage die erste Notiz ein.</p>
               <p class="empty-state" id="hofbuch-no-results" hidden>Keine Einträge gefunden, die zu deiner Suche passen.</p>
             </div>
           </section>
@@ -789,7 +781,10 @@
                 <p class="empty-state" id="statistik-top-waren-empty" hidden>Noch keine abgeschlossenen Bestellungen.</p>
               </div>
               <div class="dash-panel">
-                <div class="dash-panel__header"><span class="dash-panel__title">Beste Kunden nach Umsatz</span></div>
+                <div class="dash-panel__header">
+                  <span class="dash-panel__title">Beste Kunden nach Umsatz</span>
+                  <button type="button" class="dash-panel__more" data-quicklink="verkaeufe">Verkaufshistorie ›</button>
+                </div>
                 <div class="dash-panel__body" id="statistik-top-kunden"></div>
                 <p class="empty-state" id="statistik-top-kunden-empty" hidden>Noch keine abgeschlossenen Bestellungen.</p>
               </div>
@@ -805,12 +800,12 @@
               <p class="parch-card__hint">Diese Seite öffnet sich automatisch, sobald du dich anmeldest — nur in deinem eigenen Browser gespeichert.</p>
               <select id="startseite-select" class="field-input" style="max-width: 320px;">
                 <option value="uebersicht">Übersicht</option>
-                <option value="hofbuch">Hofbuch</option>
+                <option value="hofbuch">Schwarzes Brett</option>
                 <option value="bestellungen">Bestellungen</option>
                 <option value="waren">Waren &amp; Preise</option>
                 <option value="handelsrechner">Handelsrechner</option>
                 <option value="kontakte">Kontakte</option>
-                <option value="lager">Lager</option>
+                <option value="kunden">Kunden</option>
                 <option value="verkaeufe">Verkaufshistorie</option>
                 <option value="statistiken">Statistiken</option>
               </select>
@@ -987,18 +982,14 @@
           </div>
           <p class="empty-state" id="bestellung-positionen-leer" style="padding:16px 0;">Noch keine Produkte hinzugefügt.</p>
 
-          <div class="bestellung-lieferung-zeile">
-            <button type="button" class="bestellung-lieferung-toggle" id="btn-bestellung-lieferung" aria-pressed="false">
-              <span class="bestellung-lieferung-toggle__box">✓</span>
-              <span class="bestellung-lieferung-toggle__label">Lieferung gewünscht <span class="bestellung-lieferung-toggle__pauschale">(+5,00 $ Pauschale)</span></span>
-            </button>
-          </div>
-
           <div class="bestellung-zusammenfassung" id="bestellung-zusammenfassung" hidden>
             <span class="bestellung-zusammenfassung__mini"><strong id="bestellung-zusammenfassung-anzahl">0</strong> Produkte</span>
             <span class="bestellung-zusammenfassung__mini"><strong id="bestellung-zusammenfassung-menge">0</strong> Stück gesamt</span>
             <span class="bestellung-zusammenfassung__mini"><strong id="bestellung-zusammenfassung-rabatt">0,00 $</strong> Rabatt gesamt</span>
-            <span class="bestellung-zusammenfassung__mini" id="bestellung-zusammenfassung-lieferung-zeile" hidden><strong id="bestellung-zusammenfassung-lieferung">0,00 $</strong> Lieferung</span>
+            <button type="button" class="bestellung-lieferung-toggle" id="btn-bestellung-lieferung" aria-pressed="false">
+              <span class="bestellung-lieferung-toggle__box">✓</span>
+              <span class="bestellung-lieferung-toggle__label">Lieferung gewünscht <span class="bestellung-lieferung-toggle__pauschale">(+5,00 $ Pauschale)</span></span>
+            </button>
             <span class="bestellung-zusammenfassung__haupt">
               <span class="bestellung-zusammenfassung__haupt-label">Gesamtsumme</span>
               <strong id="bestellung-zusammenfassung-summe" class="bestellung-zusammenfassung__haupt-wert">0,00 $</strong>
@@ -1102,10 +1093,58 @@
     </div>
   </div>
 
+  <!-- ============================ -->
+  <!-- MODAL: Kunde                  -->
+  <!-- ============================ -->
+  <div class="modal-overlay" id="modal-kunde">
+    <div class="modal modal--large">
+      <div class="modal__header">
+        <h3 id="modal-kunde-titel">Kunde</h3>
+        <button class="modal__close" data-close-modal="modal-kunde">✕</button>
+      </div>
+      <div class="modal__body">
+        <input type="hidden" id="kunde-editing-id" value="" />
+        <label class="field-label" for="kunde-name-input">Name</label>
+        <input type="text" id="kunde-name-input" class="field-input field-input--titel" />
+        <label class="field-label" for="kunde-notiz-input" style="margin-top: 14px;">Notiz</label>
+        <textarea id="kunde-notiz-input" class="field-input field-textarea" rows="2" placeholder="z. B. bevorzugt Lieferung, guter Stammkunde..."></textarea>
+        <p class="field-error" id="kunde-error" hidden></p>
+
+        <div class="dash-stats" style="grid-template-columns: repeat(3, 1fr); margin: 20px 0;">
+          <div class="dash-stat">
+            <span class="dash-stat__label">Bestellungen gesamt</span>
+            <span class="dash-stat__value" id="kunde-stat-anzahl">0</span>
+          </div>
+          <div class="dash-stat">
+            <span class="dash-stat__label">Gesamtumsatz</span>
+            <span class="dash-stat__value" id="kunde-stat-umsatz">0,00 $</span>
+          </div>
+          <div class="dash-stat">
+            <span class="dash-stat__label">Letzte Bestellung</span>
+            <span class="dash-stat__value" id="kunde-stat-letzte" style="font-size: 17px;">—</span>
+          </div>
+        </div>
+
+        <p class="field-label" style="margin-bottom: 8px;">Meistgekaufte Waren</p>
+        <div id="kunde-top-waren"></div>
+        <p class="empty-state" id="kunde-top-waren-empty" hidden>Noch keine abgeschlossenen Bestellungen.</p>
+
+        <p class="field-label" style="margin: 18px 0 8px;">Bestellhistorie</p>
+        <div id="kunde-bestellungen"></div>
+        <p class="empty-state" id="kunde-bestellungen-empty" hidden>Noch keine Bestellungen.</p>
+      </div>
+      <div class="modal__footer">
+        <button class="btn btn--danger" id="btn-kunde-loeschen" style="margin-right: auto;">Löschen</button>
+        <button class="btn btn--ghost" data-close-modal="modal-kunde">Abbrechen</button>
+        <button class="btn btn--primary" id="btn-confirm-kunde">Speichern</button>
+      </div>
+    </div>
+  </div>
+
   <div class="modal-overlay" id="modal-hofbuch-edit">
     <div class="modal">
       <div class="modal__header">
-        <h3>Hofbucheintrag bearbeiten</h3>
+        <h3>Notiz bearbeiten</h3>
         <button class="modal__close" data-close-modal="modal-hofbuch-edit">✕</button>
       </div>
       <div class="modal__body">
@@ -1222,28 +1261,28 @@
        teilen können. Die Reihenfolge entspricht exakt den frueheren
        nummerierten Abschnitten in app.js und darf nicht vertauscht werden:
        js/main.js muss immer zuletzt kommen, da es die App erst startet. -->
-  <script defer src="js/firebase-config.js?v=24"></script>
-  <script defer src="js/core/config.js?v=24"></script>
-  <script defer src="js/core/state.js?v=24"></script>
-  <script defer src="js/core/dom.js?v=24"></script>
-  <script defer src="js/core/firebase-init.js?v=24"></script>
-  <script defer src="js/core/utils.js?v=24"></script>
-  <script defer src="js/ui/modals.js?v=24"></script>
-  <script defer src="js/ui/nav.js?v=24"></script>
-  <script defer src="js/ui/presence.js?v=24"></script>
-  <script defer src="js/views/waren.js?v=24"></script>
-  <script defer src="js/views/bestellungen.js?v=24"></script>
-  <script defer src="js/views/handelsrechner.js?v=24"></script>
-  <script defer src="js/views/kontakte.js?v=24"></script>
-  <script defer src="js/views/lager.js?v=24"></script>
-  <script defer src="js/views/verkaeufe.js?v=24"></script>
-  <script defer src="js/views/hofbuch.js?v=24"></script>
-  <script defer src="js/views/statistiken.js?v=24"></script>
-  <script defer src="js/views/dashboard.js?v=24"></script>
-  <script defer src="js/views/einstellungen.js?v=24"></script>
-  <script defer src="js/views/admin.js?v=24"></script>
-  <script defer src="js/ui/version-check.js?v=24"></script>
-  <script defer src="js/main.js?v=24"></script>
-  <script type="module" src="js/auth.js?v=24"></script>
+  <script defer src="js/firebase-config.js?v=28"></script>
+  <script defer src="js/core/config.js?v=28"></script>
+  <script defer src="js/core/state.js?v=28"></script>
+  <script defer src="js/core/dom.js?v=28"></script>
+  <script defer src="js/core/firebase-init.js?v=28"></script>
+  <script defer src="js/core/utils.js?v=28"></script>
+  <script defer src="js/ui/modals.js?v=28"></script>
+  <script defer src="js/ui/nav.js?v=28"></script>
+  <script defer src="js/ui/presence.js?v=28"></script>
+  <script defer src="js/views/waren.js?v=28"></script>
+  <script defer src="js/views/bestellungen.js?v=28"></script>
+  <script defer src="js/views/handelsrechner.js?v=28"></script>
+  <script defer src="js/views/kontakte.js?v=28"></script>
+  <script defer src="js/views/verkaeufe.js?v=28"></script>
+  <script defer src="js/views/kunden.js?v=28"></script>
+  <script defer src="js/views/hofbuch.js?v=28"></script>
+  <script defer src="js/views/statistiken.js?v=28"></script>
+  <script defer src="js/views/dashboard.js?v=28"></script>
+  <script defer src="js/views/einstellungen.js?v=28"></script>
+  <script defer src="js/views/admin.js?v=28"></script>
+  <script defer src="js/ui/version-check.js?v=28"></script>
+  <script defer src="js/main.js?v=28"></script>
+  <script type="module" src="js/auth.js?v=28"></script>
 </body>
 </html>

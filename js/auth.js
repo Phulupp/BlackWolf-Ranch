@@ -3,7 +3,7 @@
    ==========================================================================
    Diese Datei ist bewusst KOMPLETT GETRENNT vom Rest der App (js/app.js).
    Der ganze Rest der Website (Bestellungen, Waren & Preise, Handelsrechner,
-   Kontakte, Lager, Verkäufe, Statistiken, ...) benutzt weiterhin die "alte"
+   Kontakte, Verkäufe, Statistiken, ...) benutzt weiterhin die "alte"
    Firebase-Schreibweise (das "Compat SDK", z. B. `db.collection("...").doc(
    "...")`). Diese Datei hier benutzt bewusst die NEUE, moderne Firebase-
    Schreibweise (das "Modular SDK", z. B. `doc(db, "users", uid)`). Beide
