@@ -2,6 +2,6 @@
    13. Waren & Preise
    -------------------------------------------------------------------------- */
 .waren-row {
-  grid-template-columns: 34fr 18fr 18fr 30fr;
+  grid-template-columns: 44fr 26fr 30fr;
 }
 

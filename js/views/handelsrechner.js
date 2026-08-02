@@ -15,7 +15,6 @@
     const produkt = aktuellesRechnerProdukt();
     const menge = Math.max(0, parseInt(el.rechnerMenge.value, 10) || 0);
     const standardpreis = produkt ? Number(produkt.verkaufspreis) : null;
-    const ek = produkt && produkt.einkaufspreis != null && produkt.einkaufspreis !== "" ? Number(produkt.einkaufspreis) : null;
 
     let rabattProzent = 0;
     let neuerStueckpreis = standardpreis || 0;
@@ -32,18 +31,10 @@
     }
 
     const gesamtpreis = neuerStueckpreis * menge;
-    const gewinnStueck = ek != null ? neuerStueckpreis - ek : null;
-    const gesamtgewinn = gewinnStueck != null ? gewinnStueck * menge : null;
-    const gewinnmarge = gewinnStueck != null && neuerStueckpreis > 0 ? (gewinnStueck / neuerStueckpreis) * 100 : null;
 
     el.rechnerStandardpreis.textContent = standardpreis != null ? formatGeld(standardpreis) : "–";
-    el.rechnerEk.textContent = ek != null ? formatGeld(ek) : "–";
     el.rechnerNeuerStueckpreis.textContent = formatGeld(neuerStueckpreis);
     el.rechnerGesamtpreis.textContent = formatGeld(gesamtpreis);
-    el.rechnerGewinnStueck.textContent = gewinnStueck != null ? formatGeld(gewinnStueck) : "–";
-    el.rechnerGesamtgewinn.textContent = gesamtgewinn != null ? formatGeld(gesamtgewinn) : "–";
-    el.rechnerGewinnmarge.textContent = gewinnmarge != null ? formatProzent(gewinnmarge) : "–";
-    el.rechnerEkHinweis.hidden = ek != null;
 
     el.vorschauUnternehmen.textContent = el.rechnerUnternehmen.value.trim() || "—";
     el.vorschauProdukt.textContent = produkt ? produkt.name : "—";
@@ -53,7 +44,7 @@
     el.vorschauNeuerPreis.textContent = formatGeld(neuerStueckpreis);
     el.vorschauGesamtpreis.textContent = formatGeld(gesamtpreis);
 
-    return { produkt, menge, standardpreis, ek, rabattProzent, neuerStueckpreis, gesamtpreis, gewinnStueck, gesamtgewinn, gewinnmarge };
+    return { produkt, menge, standardpreis, rabattProzent, neuerStueckpreis, gesamtpreis };
   }
 
   function renderHandelsrechner() {
@@ -160,7 +151,6 @@
               produktName: ergebnis.produkt.name,
               menge: ergebnis.menge,
               standardpreis: ergebnis.standardpreis || 0,
-              einkaufspreis: ergebnis.ek || 0,
               rabattProzent: Math.round(ergebnis.rabattProzent * 10) / 10,
               endpreis: ergebnis.neuerStueckpreis,
               gesamtpreis: ergebnis.gesamtpreis,

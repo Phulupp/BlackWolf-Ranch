@@ -14,15 +14,14 @@
     return bestellungen.filter((b) => b.status === "Abgeschlossen");
   }
 
-  // Umsatz = Summe der Zeilen-Gesamtpreise; Gewinn = Summe aus
-  // (Endpreis - Einkaufspreis) × Menge je Zeile. Beide Werte nutzen die
-  // Preis-Schnappschüsse der Bestellung, nicht die aktuellen Katalogpreise -
-  // damit bleibt die Historie auch nach späteren Preisänderungen korrekt.
-  // Zentrale Stelle für Umsatz/Gewinn EINER Bestellung - wird von
-  // Verkaufshistorie, Statistiken und Übersicht/Dashboard gleichermaßen
-  // genutzt, damit "tatsächlich erhaltener Betrag" (siehe Zahlung-Bereich im
-  // Bestellungs-Fenster) überall automatisch statt des rein rechnerischen
-  // Werts einfließt, ohne dass jede Stelle einzeln angepasst werden muss.
+  // Umsatz = Summe der Zeilen-Gesamtpreise. Nutzt die Preis-Schnappschüsse
+  // der Bestellung, nicht die aktuellen Katalogpreise - damit bleibt die
+  // Historie auch nach späteren Preisänderungen korrekt. Zentrale Stelle für
+  // Umsatz/Gewinn EINER Bestellung - wird von Verkaufshistorie, Statistiken
+  // und Übersicht/Dashboard gleichermaßen genutzt, damit "tatsächlich
+  // erhaltener Betrag" (siehe Zahlung-Bereich im Bestellungs-Fenster)
+  // überall automatisch statt des rein rechnerischen Werts einfließt, ohne
+  // dass jede Stelle einzeln angepasst werden muss.
   //   - berechneterUmsatz: Summe aus Menge × Endpreis je Position - der
   //     rechnerisch/vertraglich vereinbarte Verkaufspreis, bleibt immer als
   //     Beleg erhalten (siehe "produkte" auf der Bestellung).
@@ -31,28 +30,27 @@
   //     Trinkgeld, vor Ort nachverhandelt), sonst fällt er automatisch auf
   //     den berechneten Umsatz zurück (ältere Bestellungen ohne dieses Feld,
   //     oder falls einfach nichts eingetragen wurde).
-  //   - gewinn: tatsächlicher Umsatz minus Einkaufskosten - spiegelt damit
-  //     ebenfalls den echten Zahlungseingang wider, nicht nur den Plan-Wert.
+  //   - gewinn: es wird bewusst kein Einkaufspreis erfasst/verrechnet (siehe
+  //     "EK-Preise" - keine Bestandsbuchhaltung gewünscht), "Gewinn"
+  //     entspricht deshalb 1:1 dem Umsatz. Bleibt trotzdem als eigenes Feld
+  //     bestehen, damit Dashboard/Verkaufshistorie unverändert "Gewinn"
+  //     anzeigen können, ohne an jeder Stelle extra angepasst zu werden.
   function berechneBestellungKennzahlen(b) {
     const produkteListe = b.produkte || [];
     const anzahlProdukte = produkteListe.length;
     let gesamtmenge = 0;
     let berechneterUmsatz = 0;
-    let kosten = 0;
     produkteListe.forEach((p) => {
       const menge = Number(p.menge) || 0;
-      const endpreis = Number(p.endpreis) || 0;
-      const ek = Number(p.einkaufspreis) || 0;
       gesamtmenge += menge;
       berechneterUmsatz += Number(p.gesamtpreis) || 0;
-      kosten += ek * menge;
     });
     // Lieferpauschale (siehe Lieferung-Umschalter im Bestellungs-Modal) zählt
-    // voll als Umsatz/Gewinn mit, ohne eigene Kosten - reine Dienstleistung.
+    // voll als Umsatz/Gewinn mit - reine Dienstleistung.
     if (b.lieferung) berechneterUmsatz += BESTELLUNG_LIEFERPAUSCHALE;
     const hatErhaltenenBetrag = b.erhaltenerBetrag !== null && b.erhaltenerBetrag !== undefined && b.erhaltenerBetrag !== "";
     const umsatz = hatErhaltenenBetrag ? Number(b.erhaltenerBetrag) || 0 : berechneterUmsatz;
-    const gewinn = umsatz - kosten;
+    const gewinn = umsatz;
     return { anzahlProdukte, gesamtmenge, berechneterUmsatz, umsatz, gewinn };
   }
 

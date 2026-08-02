@@ -16,8 +16,8 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>Hornhausen-Hof — Hofverwaltung</title>
-  <link rel="icon" type="image/png" href="assets/logo/favicon-mais.png?v=32" />
-  <link rel="apple-touch-icon" href="assets/logo/favicon-mais.png?v=32" />
+  <link rel="icon" type="image/png" href="assets/logo/favicon-mais.png?v=33" />
+  <link rel="apple-touch-icon" href="assets/logo/favicon-mais.png?v=33" />
 
   <!-- Google Fonts: Rye (Farmschild/Wordmark), Playfair Display (Überschriften), Vollkorn (Fließtext/Pergament) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -31,27 +31,27 @@
        style.css - nur jetzt nach Zweck aufgeteilt (base > layout >
        components > views), damit man den passenden Abschnitt schneller
        findet. Reihenfolge ist wichtig und darf nicht vertauscht werden. -->
-  <link rel="stylesheet" href="css/base/tokens.css?v=32" />
-  <link rel="stylesheet" href="css/base/reset.css?v=32" />
-  <link rel="stylesheet" href="css/base/textures.css?v=32" />
-  <link rel="stylesheet" href="css/views/auth.css?v=32" />
-  <link rel="stylesheet" href="css/components/forms.css?v=32" />
-  <link rel="stylesheet" href="css/components/buttons.css?v=32" />
-  <link rel="stylesheet" href="css/layout/shell.css?v=32" />
-  <link rel="stylesheet" href="css/components/cards.css?v=32" />
-  <link rel="stylesheet" href="css/views/dashboard.css?v=32" />
-  <link rel="stylesheet" href="css/components/tables.css?v=32" />
-  <link rel="stylesheet" href="css/views/waren.css?v=32" />
-  <link rel="stylesheet" href="css/views/bestellungen.css?v=32" />
-  <link rel="stylesheet" href="css/views/kontakte.css?v=32" />
-  <link rel="stylesheet" href="css/views/handelsrechner.css?v=32" />
-  <link rel="stylesheet" href="css/components/modals.css?v=32" />
-  <link rel="stylesheet" href="css/views/admin.css?v=32" />
-  <link rel="stylesheet" href="css/components/toast.css?v=32" />
-  <link rel="stylesheet" href="css/layout/footer.css?v=32" />
-  <link rel="stylesheet" href="css/components/kataloge.css?v=32" />
-  <link rel="stylesheet" href="css/views/hofbuch.css?v=32" />
-  <link rel="stylesheet" href="css/base/responsive.css?v=32" />
+  <link rel="stylesheet" href="css/base/tokens.css?v=33" />
+  <link rel="stylesheet" href="css/base/reset.css?v=33" />
+  <link rel="stylesheet" href="css/base/textures.css?v=33" />
+  <link rel="stylesheet" href="css/views/auth.css?v=33" />
+  <link rel="stylesheet" href="css/components/forms.css?v=33" />
+  <link rel="stylesheet" href="css/components/buttons.css?v=33" />
+  <link rel="stylesheet" href="css/layout/shell.css?v=33" />
+  <link rel="stylesheet" href="css/components/cards.css?v=33" />
+  <link rel="stylesheet" href="css/views/dashboard.css?v=33" />
+  <link rel="stylesheet" href="css/components/tables.css?v=33" />
+  <link rel="stylesheet" href="css/views/waren.css?v=33" />
+  <link rel="stylesheet" href="css/views/bestellungen.css?v=33" />
+  <link rel="stylesheet" href="css/views/kontakte.css?v=33" />
+  <link rel="stylesheet" href="css/views/handelsrechner.css?v=33" />
+  <link rel="stylesheet" href="css/components/modals.css?v=33" />
+  <link rel="stylesheet" href="css/views/admin.css?v=33" />
+  <link rel="stylesheet" href="css/components/toast.css?v=33" />
+  <link rel="stylesheet" href="css/layout/footer.css?v=33" />
+  <link rel="stylesheet" href="css/components/kataloge.css?v=33" />
+  <link rel="stylesheet" href="css/views/hofbuch.css?v=33" />
+  <link rel="stylesheet" href="css/base/responsive.css?v=33" />
 
   <!-- Firebase SDK (Authentifizierung + Datenbank). "defer" statt normaler
        blockierender <script>-Tags: der Browser kann so den Rest der Seite
@@ -466,7 +466,6 @@
                 <div class="reg-row reg-row--head waren-row">
                   <span>Produkt</span>
                   <span>Verkaufspreis</span>
-                  <span>Einkaufspreis (EK)</span>
                   <span class="reg-row__actions-col">Aktionen</span>
                 </div>
                 <div id="waren-table-body"></div>
@@ -474,7 +473,6 @@
               <p class="empty-state" id="waren-empty" hidden>Noch keine Waren hinterlegt.</p>
             </div>
             <p class="empty-state" id="waren-no-results" hidden>Keine Waren gefunden, die zu deiner Suche passen.</p>
-            <p class="parch-card__hint" style="padding: 0 6px;">Die Einkaufspreise (EK) können später eingetragen werden — sie bleiben so lange leer, bis sie hinterlegt werden.</p>
           </section>
 
           <!-- ============================ -->
@@ -528,39 +526,20 @@
 
                 <div class="parch-card">
                   <p class="rechner-section-title">Berechnung</p>
-                  <div class="rechner-grid-3" style="margin-bottom: 14px;">
+                  <div class="rechner-grid-3">
                     <div class="rechner-field-box">
                       <div class="rechner-field-box__label">Standardpreis</div>
                       <div class="rechner-field-box__value"><span id="rechner-standardpreis">–</span><span class="rechner-field-box__unit">pro Stück</span></div>
                     </div>
                     <div class="rechner-field-box">
-                      <div class="rechner-field-box__label">Einkaufspreis (EK)</div>
-                      <div class="rechner-field-box__value"><span id="rechner-ek">–</span><span class="rechner-field-box__unit">pro Stück</span></div>
-                    </div>
-                    <div class="rechner-field-box">
                       <div class="rechner-field-box__label">Neuer Stückpreis</div>
                       <div class="rechner-field-box__value"><span id="rechner-neuer-stueckpreis">–</span><span class="rechner-field-box__unit">pro Stück</span></div>
                     </div>
-                  </div>
-                  <div class="rechner-grid-3">
                     <div class="rechner-field-box">
                       <div class="rechner-field-box__label">Gesamtpreis</div>
                       <div class="rechner-field-box__value"><span id="rechner-gesamtpreis">–</span></div>
                     </div>
-                    <div class="rechner-field-box">
-                      <div class="rechner-field-box__label">Gewinn pro Stück</div>
-                      <div class="rechner-field-box__value"><span id="rechner-gewinn-stueck">–</span></div>
-                    </div>
-                    <div class="rechner-field-box">
-                      <div class="rechner-field-box__label">Gewinnmarge</div>
-                      <div class="rechner-field-box__value"><span id="rechner-gewinnmarge">–</span></div>
-                    </div>
                   </div>
-                  <div class="rechner-field-box" style="margin-top: 14px;">
-                    <div class="rechner-field-box__label">Gesamtgewinn</div>
-                    <div class="rechner-field-box__value"><span id="rechner-gesamtgewinn">–</span></div>
-                  </div>
-                  <p class="rechner-hinweis" id="rechner-ek-hinweis" hidden>Der Einkaufspreis (EK) ist noch nicht hinterlegt. Gewinn und Gewinnmarge werden angezeigt, sobald der EK eingetragen ist.</p>
                 </div>
               </div>
 
@@ -1058,9 +1037,6 @@
         <label class="field-label" for="ware-verkaufspreis-input">Verkaufspreis ($)</label>
         <input type="number" id="ware-verkaufspreis-input" class="field-input" min="0" step="0.01" />
 
-        <label class="field-label" for="ware-einkaufspreis-input">Einkaufspreis / EK ($, optional)</label>
-        <input type="number" id="ware-einkaufspreis-input" class="field-input" min="0" step="0.01" placeholder="Noch nicht hinterlegt" />
-
         <p class="field-error" id="ware-error" hidden></p>
       </div>
       <div class="modal__footer">
@@ -1283,28 +1259,28 @@
        teilen können. Die Reihenfolge entspricht exakt den frueheren
        nummerierten Abschnitten in app.js und darf nicht vertauscht werden:
        js/main.js muss immer zuletzt kommen, da es die App erst startet. -->
-  <script defer src="js/firebase-config.js?v=32"></script>
-  <script defer src="js/core/config.js?v=32"></script>
-  <script defer src="js/core/state.js?v=32"></script>
-  <script defer src="js/core/dom.js?v=32"></script>
-  <script defer src="js/core/firebase-init.js?v=32"></script>
-  <script defer src="js/core/utils.js?v=32"></script>
-  <script defer src="js/ui/modals.js?v=32"></script>
-  <script defer src="js/ui/nav.js?v=32"></script>
-  <script defer src="js/ui/presence.js?v=32"></script>
-  <script defer src="js/views/waren.js?v=32"></script>
-  <script defer src="js/views/bestellungen.js?v=32"></script>
-  <script defer src="js/views/handelsrechner.js?v=32"></script>
-  <script defer src="js/views/kontakte.js?v=32"></script>
-  <script defer src="js/views/verkaeufe.js?v=32"></script>
-  <script defer src="js/views/kunden.js?v=32"></script>
-  <script defer src="js/views/hofbuch.js?v=32"></script>
-  <script defer src="js/views/statistiken.js?v=32"></script>
-  <script defer src="js/views/dashboard.js?v=32"></script>
-  <script defer src="js/views/einstellungen.js?v=32"></script>
-  <script defer src="js/views/admin.js?v=32"></script>
-  <script defer src="js/ui/version-check.js?v=32"></script>
-  <script defer src="js/main.js?v=32"></script>
-  <script type="module" src="js/auth.js?v=32"></script>
+  <script defer src="js/firebase-config.js?v=33"></script>
+  <script defer src="js/core/config.js?v=33"></script>
+  <script defer src="js/core/state.js?v=33"></script>
+  <script defer src="js/core/dom.js?v=33"></script>
+  <script defer src="js/core/firebase-init.js?v=33"></script>
+  <script defer src="js/core/utils.js?v=33"></script>
+  <script defer src="js/ui/modals.js?v=33"></script>
+  <script defer src="js/ui/nav.js?v=33"></script>
+  <script defer src="js/ui/presence.js?v=33"></script>
+  <script defer src="js/views/waren.js?v=33"></script>
+  <script defer src="js/views/bestellungen.js?v=33"></script>
+  <script defer src="js/views/handelsrechner.js?v=33"></script>
+  <script defer src="js/views/kontakte.js?v=33"></script>
+  <script defer src="js/views/verkaeufe.js?v=33"></script>
+  <script defer src="js/views/kunden.js?v=33"></script>
+  <script defer src="js/views/hofbuch.js?v=33"></script>
+  <script defer src="js/views/statistiken.js?v=33"></script>
+  <script defer src="js/views/dashboard.js?v=33"></script>
+  <script defer src="js/views/einstellungen.js?v=33"></script>
+  <script defer src="js/views/admin.js?v=33"></script>
+  <script defer src="js/ui/version-check.js?v=33"></script>
+  <script defer src="js/main.js?v=33"></script>
+  <script type="module" src="js/auth.js?v=33"></script>
 </body>
 </html>

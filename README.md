@@ -22,7 +22,7 @@ statt moderner Dashboard-Optik – im Stil einer hochwertigen internen Hofverwal
 - **Übersicht (Dashboard)** – Begrüßung mit Foto-Kopfbereich, Kennzahlen (offene Bestellungen,
   Tagesumsatz, Gesamtgewinn), Schnellzugriff und die letzten Bestellungen/Verkäufe/
   Kontakte auf einen Blick.
-- **Waren & Preise** – Produktliste mit Verkaufs- und Einkaufspreis; Anlegen/
+- **Waren & Preise** – Produktliste mit Verkaufspreis; Anlegen/
   Bearbeiten/Löschen nur für Verwalter, Ansicht für alle freigegebenen Nutzer.
 - **Bestellungen** – Eine Bestellung kann mehrere Produkte enthalten (Produkt auswählen, Menge
   eingeben, hinzufügen – beliebig oft, editierbar/entfernbar), mit automatischer Zusammenfassung

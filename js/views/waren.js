@@ -137,7 +137,6 @@
             return `<div class="reg-row reg-row--body waren-row">
                 <span class="reg-name">${escapeHtml(p.name)}</span>
                 <span>${formatGeld(p.verkaufspreis)}</span>
-                <span>${p.einkaufspreis == null || p.einkaufspreis === "" ? "–" : formatGeld(p.einkaufspreis)}</span>
                 <span class="reg-row__actions-col">${aktionen}</span>
               </div>`;
           })
@@ -163,7 +162,6 @@
       el.wareKategorieInput.value = PRODUKT_KATEGORIE_SONSTIGE;
       aktualisiereCustomSelect(el.wareKategorieInput);
       el.wareVerkaufspreisInput.value = "";
-      el.wareEinkaufspreisInput.value = "";
       versteckeFeldFehler(el.wareError);
       oeffneModal("modal-ware");
     });
@@ -182,7 +180,6 @@
         el.wareKategorieInput.value = ermittleProduktKategorie(p);
         aktualisiereCustomSelect(el.wareKategorieInput);
         el.wareVerkaufspreisInput.value = p.verkaufspreis;
-        el.wareEinkaufspreisInput.value = p.einkaufspreis == null ? "" : p.einkaufspreis;
         versteckeFeldFehler(el.wareError);
         oeffneModal("modal-ware");
       } else if (delBtn) {
@@ -202,8 +199,6 @@
       const name = el.wareNameInput.value.trim();
       const kategorie = el.wareKategorieInput.value || PRODUKT_KATEGORIE_SONSTIGE;
       const vk = parseFloat(el.wareVerkaufspreisInput.value);
-      const ekRoh = el.wareEinkaufspreisInput.value.trim();
-      const ek = ekRoh === "" ? null : parseFloat(ekRoh);
 
       if (!name) return zeigeFeldFehler(el.wareError, "Bitte gib einen Produktnamen ein.");
       if (!isFinite(vk) || vk < 0) return zeigeFeldFehler(el.wareError, "Bitte gib einen gültigen Verkaufspreis ein.");
@@ -211,13 +206,12 @@
       const id = el.wareEditingId.value;
       try {
         if (id) {
-          await db.collection(PRODUKTE_COLLECTION).doc(id).update({ name, kategorie, verkaufspreis: vk, einkaufspreis: ek });
+          await db.collection(PRODUKTE_COLLECTION).doc(id).update({ name, kategorie, verkaufspreis: vk });
         } else {
           await db.collection(PRODUKTE_COLLECTION).add({
             name,
             kategorie,
             verkaufspreis: vk,
-            einkaufspreis: ek,
             lagerMenge: 0,
             reihenfolge: produkte.length + 1,
           });

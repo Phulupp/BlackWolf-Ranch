@@ -5,13 +5,13 @@
      ------------------------------------------------------------------------ */
   // Eine Bestellung enthält beliebig viele Produkte, jede Produktzeile ist
   // ein vollständiger PREIS-SCHNAPPSCHUSS zum Zeitpunkt des Hinzufügens -
-  // spätere Änderungen am Produkt-Standardpreis (oder -Einkaufspreis) wirken
-  // sich NICHT auf schon bestehende Bestellungen aus, damit die Historie und
-  // die daraus abgeleiteten Umsatz-/Gewinnzahlen nachvollziehbar bleiben:
+  // spätere Änderungen am Produkt-Standardpreis wirken sich NICHT auf schon
+  // bestehende Bestellungen aus, damit die Historie und die daraus
+  // abgeleiteten Umsatzzahlen nachvollziehbar bleiben:
   //   {
   //     unternehmen, ansprechpartner,
   //     produkte: [{ produktId, produktName, menge, standardpreis,
-  //                  einkaufspreis, rabattProzent, endpreis, gesamtpreis }, ...],
+  //                  rabattProzent, endpreis, gesamtpreis }, ...],
   //     status, notiz, archiviert,
   //     erstelltAm, erstelltVon, bearbeiter,
   //     abgeschlossenAm
@@ -543,11 +543,6 @@
       if (!isFinite(menge) || menge < 1) return zeigeFeldFehler(el.bestellungError, "Bitte gib eine gültige Menge ein.");
 
       const standardpreis = Number(produkt.verkaufspreis) || 0;
-      // Einkaufspreis wird als Schnappschuss mit in die Position übernommen,
-      // damit spätere Gewinnberechnungen (Umsatz - Einkaufspreis) auch dann
-      // noch historisch korrekt bleiben, wenn sich der aktuelle Einkaufspreis
-      // im Produktkatalog danach ändert.
-      const einkaufspreis = Number(produkt.einkaufspreis) || 0;
 
       // Zeilen werden nur zusammengeführt, wenn Produkt UND Rabatt
       // übereinstimmen - unterschiedliche Rabatte auf dasselbe Produkt
@@ -560,14 +555,12 @@
         // eine zusammengeführte Zeile nicht an einem veralteten Preis von
         // vorher hängen bleibt.
         vorhanden.standardpreis = standardpreis;
-        vorhanden.einkaufspreis = einkaufspreis;
       } else {
         bestellungEntwurfPositionen.push({
           produktId: produkt.id,
           produktName: produkt.name,
           menge,
           standardpreis,
-          einkaufspreis,
           rabattProzent,
         });
       }
@@ -744,7 +737,6 @@
           produktName: p.produktName,
           menge: p.menge,
           standardpreis: Number(p.standardpreis) || 0,
-          einkaufspreis: Number(p.einkaufspreis) || 0,
           rabattProzent: Number(p.rabattProzent) || 0,
           endpreis,
           gesamtpreis,
