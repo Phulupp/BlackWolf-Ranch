@@ -172,7 +172,7 @@
             const anzahl = (b.produkte || []).length;
             const gesamtmenge = bestellungProdukteZeilen(b.produkte);
             const lieferungBadge = b.lieferung
-              ? `<span class="bestellung-lieferung-badge" title="Lieferung gewünscht (+${formatGeld(BESTELLUNG_LIEFERPAUSCHALE)})">🚚</span>`
+              ? `<span class="bestellung-lieferung-badge" title="Lieferung gewünscht (+${formatGeld(BESTELLUNG_LIEFERPAUSCHALE)})">Lieferung</span>`
               : "";
             return `<div class="reg-row reg-row--body bestellungen-row" data-bestellung-oeffnen="${b.id}">
                 <span>${anzahl} Produkt${anzahl === 1 ? "" : "e"}</span>

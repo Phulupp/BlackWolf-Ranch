@@ -5,13 +5,23 @@
   grid-template-columns: 24fr 20fr 32fr 20fr;
 }
 
-/* Kleines Lieferwagen-Symbol neben dem Status-Pill in der Bestellungsliste,
-   sobald der Lieferung-Umschalter im Modal aktiviert wurde - so ist auf
-   einen Blick erkennbar, welche Bestellungen geliefert werden sollen, ohne
-   das Detail-Modal öffnen zu müssen. */
+/* Kleines Textlabel neben dem Status-Pill in der Bestellungsliste, sobald der
+   Lieferung-Umschalter im Modal aktiviert wurde - so ist auf einen Blick
+   erkennbar, welche Bestellungen geliefert werden sollen, ohne das
+   Detail-Modal öffnen zu müssen. */
 .bestellung-lieferung-badge {
+  display: inline-flex;
+  align-items: center;
   margin-left: 8px;
-  font-size: 13px;
+  padding: 3px 10px;
+  border: 1px solid var(--brass);
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--brass-bright);
+  white-space: nowrap;
 }
 
 .reg-row--body.bestellungen-row {
