@@ -254,6 +254,21 @@
             bearbeiter,
             bearbeitetAm: firebase.firestore.FieldValue.serverTimestamp(),
           });
+          // WICHTIG: den lokalen kunden-Datensatz SYNCHRON (also VOR dem
+          // await) auf den neuen Namen nachziehen. Grund: der Batch ändert
+          // sowohl die Bestellungen als auch das Kundenprofil gleichzeitig,
+          // aber die beiden Firestore-Listener (Bestellungen/Kunden) können
+          // in beliebiger Reihenfolge zurückkommen. Kommt der Bestellungen-
+          // Snapshot (jetzt mit neuem Namen) zuerst zurück, während der
+          // lokale kunden-Array-Eintrag noch den alten Namen trägt, hält
+          // sorgeFuerKundenBackfill() den neuen Namen fälschlich für einen
+          // "unbekannten Kunden" und legt ein zweites, doppeltes Profil an
+          // (das war der Bug: derselbe Kunde tauchte nach dem Umbenennen
+          // doppelt auf). Weil JS-Code bis zum nächsten "await" ununter-
+          // brochen läuft, kann kein Snapshot-Callback dazwischenfunken,
+          // solange diese Zuweisung VOR dem await steht.
+          kunde.name = neuerName;
+          kunde.notiz = notiz;
           await batch.commit();
         } else {
           await db.collection(KUNDEN_COLLECTION).doc(id).update({
