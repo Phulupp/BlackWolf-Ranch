@@ -47,6 +47,9 @@
       berechneterUmsatz += Number(p.gesamtpreis) || 0;
       kosten += ek * menge;
     });
+    // Lieferpauschale (siehe Lieferung-Umschalter im Bestellungs-Modal) zählt
+    // voll als Umsatz/Gewinn mit, ohne eigene Kosten - reine Dienstleistung.
+    if (b.lieferung) berechneterUmsatz += BESTELLUNG_LIEFERPAUSCHALE;
     const hatErhaltenenBetrag = b.erhaltenerBetrag !== null && b.erhaltenerBetrag !== undefined && b.erhaltenerBetrag !== "";
     const umsatz = hatErhaltenenBetrag ? Number(b.erhaltenerBetrag) || 0 : berechneterUmsatz;
     const gewinn = umsatz - kosten;

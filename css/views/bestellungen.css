@@ -5,6 +5,15 @@
   grid-template-columns: 24fr 20fr 32fr 20fr;
 }
 
+/* Kleines Lieferwagen-Symbol neben dem Status-Pill in der Bestellungsliste,
+   sobald der Lieferung-Umschalter im Modal aktiviert wurde - so ist auf
+   einen Blick erkennbar, welche Bestellungen geliefert werden sollen, ohne
+   das Detail-Modal öffnen zu müssen. */
+.bestellung-lieferung-badge {
+  margin-left: 8px;
+  font-size: 13px;
+}
+
 .reg-row--body.bestellungen-row {
   cursor: pointer;
 }
@@ -491,6 +500,68 @@ select.field-input option {
 
 .bestellung-positionen-zeile--kategorie:first-child {
   padding-top: 8px;
+}
+
+/* Lieferung-Umschalter: eigene Zeile zwischen Produkttabelle und
+   Zusammenfassung - ein Klick markiert die Bestellung als Lieferung
+   (Haken erscheint) und die Pauschale fließt automatisch in die
+   Gesamtsumme ein (siehe aktualisiereBestellungZusammenfassung). */
+.bestellung-lieferung-zeile {
+  margin: 4px 0 10px;
+}
+
+.bestellung-lieferung-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 16px;
+  background: rgba(0, 0, 0, 0.16);
+  border: 1.5px solid var(--leather-edge);
+  border-radius: var(--radius-sm);
+  color: var(--wood-text-muted);
+  font-size: 13px;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.bestellung-lieferung-toggle:hover {
+  border-color: var(--brass);
+  color: var(--wood-text);
+}
+
+.bestellung-lieferung-toggle__box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--leather-edge);
+  border-radius: 4px;
+  color: transparent;
+  background: rgba(0, 0, 0, 0.25);
+  font-size: 12px;
+  font-weight: 700;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.bestellung-lieferung-toggle__pauschale {
+  opacity: 0.75;
+}
+
+.bestellung-lieferung-toggle--aktiv {
+  border-color: var(--brass);
+  background: rgba(189, 145, 67, 0.14);
+  color: var(--brass-bright);
+}
+
+.bestellung-lieferung-toggle--aktiv .bestellung-lieferung-toggle__box {
+  border-color: var(--brass);
+  background: var(--brass);
+  color: var(--leather-900);
+}
+
+.bestellung-lieferung-toggle:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 /* Zusammenfassungsleiste: Gesamtsumme ist die wichtigste Kennzahl der

@@ -16,8 +16,8 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>Hornhausen-Hof — Hofverwaltung</title>
-  <link rel="icon" type="image/png" href="assets/logo/favicon-mais.png?v=23" />
-  <link rel="apple-touch-icon" href="assets/logo/favicon-mais.png?v=23" />
+  <link rel="icon" type="image/png" href="assets/logo/favicon-mais.png?v=24" />
+  <link rel="apple-touch-icon" href="assets/logo/favicon-mais.png?v=24" />
 
   <!-- Google Fonts: Rye (Farmschild/Wordmark), Playfair Display (Überschriften), Vollkorn (Fließtext/Pergament) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -31,27 +31,27 @@
        style.css - nur jetzt nach Zweck aufgeteilt (base > layout >
        components > views), damit man den passenden Abschnitt schneller
        findet. Reihenfolge ist wichtig und darf nicht vertauscht werden. -->
-  <link rel="stylesheet" href="css/base/tokens.css?v=23" />
-  <link rel="stylesheet" href="css/base/reset.css?v=23" />
-  <link rel="stylesheet" href="css/base/textures.css?v=23" />
-  <link rel="stylesheet" href="css/views/auth.css?v=23" />
-  <link rel="stylesheet" href="css/components/forms.css?v=23" />
-  <link rel="stylesheet" href="css/components/buttons.css?v=23" />
-  <link rel="stylesheet" href="css/layout/shell.css?v=23" />
-  <link rel="stylesheet" href="css/components/cards.css?v=23" />
-  <link rel="stylesheet" href="css/views/dashboard.css?v=23" />
-  <link rel="stylesheet" href="css/components/tables.css?v=23" />
-  <link rel="stylesheet" href="css/views/waren.css?v=23" />
-  <link rel="stylesheet" href="css/views/bestellungen.css?v=23" />
-  <link rel="stylesheet" href="css/views/kontakte.css?v=23" />
-  <link rel="stylesheet" href="css/views/handelsrechner.css?v=23" />
-  <link rel="stylesheet" href="css/components/modals.css?v=23" />
-  <link rel="stylesheet" href="css/views/admin.css?v=23" />
-  <link rel="stylesheet" href="css/components/toast.css?v=23" />
-  <link rel="stylesheet" href="css/layout/footer.css?v=23" />
-  <link rel="stylesheet" href="css/components/kataloge.css?v=23" />
-  <link rel="stylesheet" href="css/views/hofbuch.css?v=23" />
-  <link rel="stylesheet" href="css/base/responsive.css?v=23" />
+  <link rel="stylesheet" href="css/base/tokens.css?v=24" />
+  <link rel="stylesheet" href="css/base/reset.css?v=24" />
+  <link rel="stylesheet" href="css/base/textures.css?v=24" />
+  <link rel="stylesheet" href="css/views/auth.css?v=24" />
+  <link rel="stylesheet" href="css/components/forms.css?v=24" />
+  <link rel="stylesheet" href="css/components/buttons.css?v=24" />
+  <link rel="stylesheet" href="css/layout/shell.css?v=24" />
+  <link rel="stylesheet" href="css/components/cards.css?v=24" />
+  <link rel="stylesheet" href="css/views/dashboard.css?v=24" />
+  <link rel="stylesheet" href="css/components/tables.css?v=24" />
+  <link rel="stylesheet" href="css/views/waren.css?v=24" />
+  <link rel="stylesheet" href="css/views/bestellungen.css?v=24" />
+  <link rel="stylesheet" href="css/views/kontakte.css?v=24" />
+  <link rel="stylesheet" href="css/views/handelsrechner.css?v=24" />
+  <link rel="stylesheet" href="css/components/modals.css?v=24" />
+  <link rel="stylesheet" href="css/views/admin.css?v=24" />
+  <link rel="stylesheet" href="css/components/toast.css?v=24" />
+  <link rel="stylesheet" href="css/layout/footer.css?v=24" />
+  <link rel="stylesheet" href="css/components/kataloge.css?v=24" />
+  <link rel="stylesheet" href="css/views/hofbuch.css?v=24" />
+  <link rel="stylesheet" href="css/base/responsive.css?v=24" />
 
   <!-- Firebase SDK (Authentifizierung + Datenbank). "defer" statt normaler
        blockierender <script>-Tags: der Browser kann so den Rest der Seite
@@ -987,10 +987,18 @@
           </div>
           <p class="empty-state" id="bestellung-positionen-leer" style="padding:16px 0;">Noch keine Produkte hinzugefügt.</p>
 
+          <div class="bestellung-lieferung-zeile">
+            <button type="button" class="bestellung-lieferung-toggle" id="btn-bestellung-lieferung" aria-pressed="false">
+              <span class="bestellung-lieferung-toggle__box">✓</span>
+              <span class="bestellung-lieferung-toggle__label">Lieferung gewünscht <span class="bestellung-lieferung-toggle__pauschale">(+5,00 $ Pauschale)</span></span>
+            </button>
+          </div>
+
           <div class="bestellung-zusammenfassung" id="bestellung-zusammenfassung" hidden>
             <span class="bestellung-zusammenfassung__mini"><strong id="bestellung-zusammenfassung-anzahl">0</strong> Produkte</span>
             <span class="bestellung-zusammenfassung__mini"><strong id="bestellung-zusammenfassung-menge">0</strong> Stück gesamt</span>
             <span class="bestellung-zusammenfassung__mini"><strong id="bestellung-zusammenfassung-rabatt">0,00 $</strong> Rabatt gesamt</span>
+            <span class="bestellung-zusammenfassung__mini" id="bestellung-zusammenfassung-lieferung-zeile" hidden>🚚 <strong id="bestellung-zusammenfassung-lieferung">0,00 $</strong> Lieferung</span>
             <span class="bestellung-zusammenfassung__haupt">
               <span class="bestellung-zusammenfassung__haupt-label">Gesamtsumme</span>
               <strong id="bestellung-zusammenfassung-summe" class="bestellung-zusammenfassung__haupt-wert">0,00 $</strong>
@@ -1214,28 +1222,28 @@
        teilen können. Die Reihenfolge entspricht exakt den frueheren
        nummerierten Abschnitten in app.js und darf nicht vertauscht werden:
        js/main.js muss immer zuletzt kommen, da es die App erst startet. -->
-  <script defer src="js/firebase-config.js?v=23"></script>
-  <script defer src="js/core/config.js?v=23"></script>
-  <script defer src="js/core/state.js?v=23"></script>
-  <script defer src="js/core/dom.js?v=23"></script>
-  <script defer src="js/core/firebase-init.js?v=23"></script>
-  <script defer src="js/core/utils.js?v=23"></script>
-  <script defer src="js/ui/modals.js?v=23"></script>
-  <script defer src="js/ui/nav.js?v=23"></script>
-  <script defer src="js/ui/presence.js?v=23"></script>
-  <script defer src="js/views/waren.js?v=23"></script>
-  <script defer src="js/views/bestellungen.js?v=23"></script>
-  <script defer src="js/views/handelsrechner.js?v=23"></script>
-  <script defer src="js/views/kontakte.js?v=23"></script>
-  <script defer src="js/views/lager.js?v=23"></script>
-  <script defer src="js/views/verkaeufe.js?v=23"></script>
-  <script defer src="js/views/hofbuch.js?v=23"></script>
-  <script defer src="js/views/statistiken.js?v=23"></script>
-  <script defer src="js/views/dashboard.js?v=23"></script>
-  <script defer src="js/views/einstellungen.js?v=23"></script>
-  <script defer src="js/views/admin.js?v=23"></script>
-  <script defer src="js/ui/version-check.js?v=23"></script>
-  <script defer src="js/main.js?v=23"></script>
-  <script type="module" src="js/auth.js?v=23"></script>
+  <script defer src="js/firebase-config.js?v=24"></script>
+  <script defer src="js/core/config.js?v=24"></script>
+  <script defer src="js/core/state.js?v=24"></script>
+  <script defer src="js/core/dom.js?v=24"></script>
+  <script defer src="js/core/firebase-init.js?v=24"></script>
+  <script defer src="js/core/utils.js?v=24"></script>
+  <script defer src="js/ui/modals.js?v=24"></script>
+  <script defer src="js/ui/nav.js?v=24"></script>
+  <script defer src="js/ui/presence.js?v=24"></script>
+  <script defer src="js/views/waren.js?v=24"></script>
+  <script defer src="js/views/bestellungen.js?v=24"></script>
+  <script defer src="js/views/handelsrechner.js?v=24"></script>
+  <script defer src="js/views/kontakte.js?v=24"></script>
+  <script defer src="js/views/lager.js?v=24"></script>
+  <script defer src="js/views/verkaeufe.js?v=24"></script>
+  <script defer src="js/views/hofbuch.js?v=24"></script>
+  <script defer src="js/views/statistiken.js?v=24"></script>
+  <script defer src="js/views/dashboard.js?v=24"></script>
+  <script defer src="js/views/einstellungen.js?v=24"></script>
+  <script defer src="js/views/admin.js?v=24"></script>
+  <script defer src="js/ui/version-check.js?v=24"></script>
+  <script defer src="js/main.js?v=24"></script>
+  <script type="module" src="js/auth.js?v=24"></script>
 </body>
 </html>

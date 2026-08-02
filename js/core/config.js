@@ -18,7 +18,7 @@
   /* ------------------------------------------------------------------------
      1. Konstanten
      ------------------------------------------------------------------------ */
-  const VERSION_AKTUELL = 23;
+  const VERSION_AKTUELL = 24;
 
   // Ränge des Hofes (rein organisatorisch — Verwalterrechte sind unabhängig
   // davon und werden separat je Benutzer vergeben, siehe isAdmin).
@@ -66,6 +66,11 @@
   const HEARTBEAT_INTERVALL_MS = 20 * 1000;
 
   const BESTELLUNG_STATUS = ["Offen", "In Bearbeitung", "Abgeschlossen"];
+
+  // Pauschale, die automatisch zur Gesamtsumme addiert wird, sobald der
+  // Lieferung-Umschalter im Bestellungs-Modal aktiviert ist (siehe
+  // aktualisiereBestellungZusammenfassung in bestellungen.js).
+  const BESTELLUNG_LIEFERPAUSCHALE = 5;
 
   // Startbestand an Waren, falls die Collection "produkte" noch leer ist —
   // orientiert sich an den Mockups (Weizen, Mais, Zucker, ...).

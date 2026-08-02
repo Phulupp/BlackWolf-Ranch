@@ -32,6 +32,12 @@
   // während das Bestellungs-Modal offen ist (siehe oeffneBestellungModal).
   let bestellungEntwurfPositionen = [];
   let bestellungModalArchiviert = false;
+  // Ob im offenen Bestellungs-Modal die Lieferung-Option aktiviert ist (siehe
+  // Lieferung-Umschalter unter der Produkttabelle) - fließt als Pauschale
+  // (BESTELLUNG_LIEFERPAUSCHALE) zusätzlich zu den Produktpreisen in die
+  // Gesamtsumme ein und wird als Feld "lieferung" auf der Bestellung
+  // gespeichert.
+  let bestellungEntwurfLieferung = false;
 
   function starteBestellungenListener() {
     if (!db) return;
@@ -165,11 +171,14 @@
           .map((b) => {
             const anzahl = (b.produkte || []).length;
             const gesamtmenge = bestellungProdukteZeilen(b.produkte);
+            const lieferungBadge = b.lieferung
+              ? `<span class="bestellung-lieferung-badge" title="Lieferung gewünscht (+${formatGeld(BESTELLUNG_LIEFERPAUSCHALE)})">🚚</span>`
+              : "";
             return `<div class="reg-row reg-row--body bestellungen-row" data-bestellung-oeffnen="${b.id}">
                 <span>${anzahl} Produkt${anzahl === 1 ? "" : "e"}</span>
                 <span>${gesamtmenge} Stück</span>
                 <span>${formatUhrzeitDatum(b.erstelltAm)}</span>
-                <span><span class="status-pill ${statusPillKlasse(b.status)}">${escapeHtml(b.status || "—")}</span></span>
+                <span><span class="status-pill ${statusPillKlasse(b.status)}">${escapeHtml(b.status || "—")}</span>${lieferungBadge}</span>
               </div>`;
           })
           .join("");
@@ -194,16 +203,29 @@
   // Live-Neuberechnung bei jeder Tastatureingabe aufgerufen.
   function aktualisiereBestellungZusammenfassung() {
     const werte = bestellungZusammenfassungWerte(bestellungEntwurfPositionen);
+    const lieferpauschale = bestellungEntwurfLieferung ? BESTELLUNG_LIEFERPAUSCHALE : 0;
+    const gesamtsummeMitLieferung = werte.gesamtsumme + lieferpauschale;
     el.bestellungZusammenfassung.hidden = bestellungEntwurfPositionen.length === 0;
     el.bestellungZusammenfassungAnzahl.textContent = String(werte.anzahl);
     el.bestellungZusammenfassungMenge.textContent = String(werte.gesamtmenge);
     el.bestellungZusammenfassungRabatt.textContent = formatGeld(werte.gesamtrabatt);
-    el.bestellungZusammenfassungSumme.textContent = formatGeld(werte.gesamtsumme);
+    if (el.bestellungZusammenfassungLieferungZeile) el.bestellungZusammenfassungLieferungZeile.hidden = !bestellungEntwurfLieferung;
+    if (el.bestellungZusammenfassungLieferung) el.bestellungZusammenfassungLieferung.textContent = formatGeld(lieferpauschale);
+    el.bestellungZusammenfassungSumme.textContent = formatGeld(gesamtsummeMitLieferung);
     // Die berechnete Gesamtsumme im "Zahlung"-Bereich (siehe
     // aktualisiereZahlungBereich) muss bei jeder Produktänderung mit
     // aktuell bleiben, auch wenn die Bestellung schon abgeschlossen ist und
     // z. B. nachträglich noch eine Menge korrigiert wird.
-    if (el.bestellungZahlungBerechnet) el.bestellungZahlungBerechnet.textContent = formatGeld(werte.gesamtsumme);
+    if (el.bestellungZahlungBerechnet) el.bestellungZahlungBerechnet.textContent = formatGeld(gesamtsummeMitLieferung);
+  }
+
+  // Spiegelt bestellungEntwurfLieferung im Umschalter-Button (Haken +
+  // hervorgehobener Rahmen bei aktiver Lieferung).
+  function aktualisiereBestellungLieferungButton() {
+    if (!el.btnBestellungLieferung) return;
+    el.btnBestellungLieferung.classList.toggle("bestellung-lieferung-toggle--aktiv", bestellungEntwurfLieferung);
+    el.btnBestellungLieferung.setAttribute("aria-pressed", String(bestellungEntwurfLieferung));
+    el.btnBestellungLieferung.disabled = bestellungModalArchiviert;
   }
 
   // Zeigt den "Zahlung"-Bereich (berechnete Gesamtsumme + tatsächlich
@@ -538,6 +560,15 @@
     });
   }
 
+  if (el.btnBestellungLieferung) {
+    el.btnBestellungLieferung.addEventListener("click", () => {
+      if (bestellungModalArchiviert) return;
+      bestellungEntwurfLieferung = !bestellungEntwurfLieferung;
+      aktualisiereBestellungLieferungButton();
+      aktualisiereBestellungZusammenfassung();
+    });
+  }
+
   if (el.bestellungPositionenListe) {
     el.bestellungPositionenListe.addEventListener("click", (event) => {
       const entfernenBtn = event.target.closest("[data-position-entfernen]");
@@ -593,6 +624,8 @@
     aktualisiereZahlungBereich();
     el.bestellungNotizInput.value = bestellung ? bestellung.notiz || "" : "";
     bestellungEntwurfPositionen = bestellung ? (bestellung.produkte || []).map((p) => ({ ...p })) : [];
+    bestellungEntwurfLieferung = bestellung ? !!bestellung.lieferung : false;
+    aktualisiereBestellungLieferungButton();
     el.bestellungPositionMenge.value = 1;
     el.bestellungPositionRabatt.value = 0;
     el.bestellungPositionRabatt.disabled = !istAdmin();
@@ -722,6 +755,7 @@
         notiz: el.bestellungNotizInput.value.trim(),
         bearbeiter: aktuellerNutzer ? aktuellerNutzer.name : null,
         erhaltenerBetrag,
+        lieferung: bestellungEntwurfLieferung,
       };
 
       const id = el.bestellungEditingId.value;
