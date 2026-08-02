@@ -47,22 +47,25 @@
     );
   }
 
-  // Firestore-Dokument-IDs dürfen kein "/" enthalten - der Name wird sonst
-  // 1:1 als ID verwendet (statt einer zufälligen add()-ID), damit das
-  // automatische Anlegen über eine Transaktion (siehe unten) unabhängig
-  // davon eindeutig bleibt, welcher Client zuerst dran ist.
-  function kundenDocIdFuerName(name) {
-    const id = name.replace(/\//g, "-").slice(0, 300).trim();
-    return id && id !== "." && id !== ".." ? id : null;
-  }
-
   // Legt für jeden "unternehmen"-Namen aus den Bestellungen, der noch kein
   // Kundenprofil hat, automatisch eines an. Läuft nach jeder Änderung an
   // Bestellungen ODER Kunden (siehe Aufruf hier und in bestellungen.js).
-  // Jede Anlage läuft über eine Transaktion, die vorher prüft, ob das
-  // Dokument bereits existiert - so führt es NICHT zu doppelten/überschriebenen
-  // Profilen, wenn mehrere Mitarbeiter gleichzeitig die App offen haben und
-  // zeitgleich dieselbe neue Bestellung sehen.
+  //
+  // WICHTIG: "bekannteNamen" unten ist nur eine lokale Vorab-Filterung, um
+  // nicht bei jeder Kleinigkeit eine Transaktion loszuschicken - sie darf
+  // veraltet sein (z. B. weil der eigene Kunden-Listener nach einer
+  // Umbenennung durch EINEN Mitarbeiter noch nicht zurück ist, während der
+  // Bestellungen-Listener - bei diesem oder einem ANDEREN gerade
+  // geöffneten Client - den neuen Namen schon zeigt). Die eigentliche,
+  // verbindliche Prüfung "gibt es diesen Namen wirklich schon?" passiert
+  // INNERHALB der Transaktion über eine Live-Abfrage direkt gegen den
+  // Server (tx.get(query)), nicht gegen den lokalen Zwischenspeicher -
+  // dadurch entscheidet am Ende immer der tatsächliche Datenbankstand, egal
+  // wie viele Clients gleichzeitig offen sind oder in welcher Reihenfolge
+  // ihre Listener zurückkommen. Genau das hat vorher gefehlt: eine frühere
+  // Fassung verglich nur gegen den (u. U. veralteten) lokalen Kunden-Array
+  // und legte dadurch nach einem Umbenennen gelegentlich ein doppeltes
+  // Profil an.
   function sorgeFuerKundenBackfill() {
     if (!db || !kundenGeladen) return;
     const bekannteNamen = new Set(kunden.map((k) => k.name));
@@ -73,14 +76,11 @@
     });
 
     fehlendeNamen.forEach((name) => {
-      const id = kundenDocIdFuerName(name);
-      if (!id) return;
       kundenBackfillLaufend.add(name);
-      const ref = db.collection(KUNDEN_COLLECTION).doc(id);
       db.runTransaction(async (tx) => {
-        const snap = await tx.get(ref);
-        if (!snap.exists) {
-          tx.set(ref, {
+        const treffer = await tx.get(db.collection(KUNDEN_COLLECTION).where("name", "==", name).limit(1));
+        if (treffer.empty) {
+          tx.set(db.collection(KUNDEN_COLLECTION).doc(), {
             name,
             notiz: "",
             erstelltAm: firebase.firestore.FieldValue.serverTimestamp(),
