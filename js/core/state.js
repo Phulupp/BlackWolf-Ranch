@@ -38,6 +38,10 @@
   let kontakteGruppierenNachRolle = false;
   let verkaeufeSuche = "";
   let kundenSuche = "";
+  // Standard: höchster Umsatz zuerst, damit die wichtigsten (meist- bzw.
+  // umsatzstärksten) Kunden ohne weiteres Zutun ganz oben stehen - merkt
+  // sich die Auswahl über die letzte Sitzung hinaus wie bei Kontakte.
+  let kundenSortierung = localStorage.getItem("kundenSortierung") || "umsatz"; // "umsatz" | "anzahl" | "letzte" | "name"
   let hofbuchSuche = "";
   let hofbuchAeltesteZuerst = false;
   let benutzerSuche = "";

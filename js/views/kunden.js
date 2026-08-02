@@ -128,11 +128,33 @@
     return { anzahl: alle.length, umsatz, topWaren, letzteBestellungAm, bestellungen: alle };
   }
 
+  // Liefert die gefilterte, sortierte Kundenliste - jeweils zusammen mit den
+  // (einmalig berechneten) Kennzahlen, damit renderKunden() diese nicht ein
+  // zweites Mal berechnen muss. Standard-Sortierung ist "umsatz" (höchster
+  // Umsatz zuerst), damit die wichtigsten Kunden ohne weiteres Zutun ganz
+  // oben stehen - über den Sortierung-Umschalter im Toolbar umstellbar
+  // (siehe el.kundenSortierung weiter unten), Auswahl bleibt sitzungsübergreifend
+  // gemerkt (localStorage, analog zur Kontakte-Sortierung).
   function gefiltertKunden() {
     const begriff = kundenSuche.trim().toLowerCase();
     let liste = kunden;
     if (begriff) liste = liste.filter((k) => (k.name || "").toLowerCase().includes(begriff));
-    return liste.slice().sort((a, b) => (a.name || "").localeCompare(b.name || "", "de"));
+
+    const angereichert = liste.map((k) => ({ kunde: k, kennzahlen: kundeKennzahlen(k.name) }));
+    angereichert.sort((a, b) => {
+      switch (kundenSortierung) {
+        case "anzahl":
+          return b.kennzahlen.anzahl - a.kennzahlen.anzahl;
+        case "letzte":
+          return zeitstempelWert(b.kennzahlen.letzteBestellungAm) - zeitstempelWert(a.kennzahlen.letzteBestellungAm);
+        case "name":
+          return (a.kunde.name || "").localeCompare(b.kunde.name || "", "de");
+        case "umsatz":
+        default:
+          return b.kennzahlen.umsatz - a.kennzahlen.umsatz;
+      }
+    });
+    return angereichert;
   }
 
   function renderKunden() {
@@ -142,8 +164,8 @@
     el.kundenNoResults.hidden = !(kunden.length > 0 && liste.length === 0);
 
     el.kundenTableBody.innerHTML = liste
-      .map((k) => {
-        const { anzahl, umsatz, letzteBestellungAm } = kundeKennzahlen(k.name);
+      .map(({ kunde: k, kennzahlen }) => {
+        const { anzahl, umsatz, letzteBestellungAm } = kennzahlen;
         return `<div class="reg-row reg-row--body" style="grid-template-columns: 34fr 18fr 20fr 20fr; cursor: pointer;" data-kunde-oeffnen="${k.id}">
             <span class="reg-name">${escapeHtml(k.name)}</span>
             <span>${anzahl}</span>
@@ -157,6 +179,15 @@
   if (el.kundenSearch) {
     el.kundenSearch.addEventListener("input", () => {
       kundenSuche = el.kundenSearch.value;
+      renderKunden();
+    });
+  }
+
+  if (el.kundenSortierung) {
+    el.kundenSortierung.value = kundenSortierung;
+    el.kundenSortierung.addEventListener("change", () => {
+      kundenSortierung = el.kundenSortierung.value;
+      localStorage.setItem("kundenSortierung", kundenSortierung);
       renderKunden();
     });
   }

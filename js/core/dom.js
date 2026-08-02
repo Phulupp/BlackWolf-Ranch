@@ -167,6 +167,7 @@
 
     // Kunden (automatisch aus den "unternehmen"-Namen der Bestellungen)
     kundenSearch: document.getElementById("kunden-search"),
+    kundenSortierung: document.getElementById("kunden-sortierung"),
     kundenTableBody: document.getElementById("kunden-table-body"),
     kundenEmpty: document.getElementById("kunden-empty"),
     kundenNoResults: document.getElementById("kunden-no-results"),
