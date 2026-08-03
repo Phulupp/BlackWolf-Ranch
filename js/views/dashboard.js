@@ -73,5 +73,57 @@
         </div>`
       )
       .join("");
+
+    aktualisiereBestellungenHinweis(offen);
+    aktualisiereLagerHinweis();
+  }
+
+  // Zeigt auf der Übersicht einen kleinen, anklickbaren Hinweis, sobald
+  // mindestens eine offene Bestellung "alt" ist (siehe istBestellungAlt in
+  // bestellungen.js, Schwelle BESTELLUNG_ALT_SCHWELLE_TAGE) - ergänzt das
+  // ⚠-Badge in der Bestellliste um einen Blickfang direkt auf der Übersicht,
+  // nach demselben Muster wie aktualisiereLagerHinweis.
+  function aktualisiereBestellungenHinweis(offen) {
+    if (!el.dashBestellungenHinweis) return;
+    const alte = (offen || bestellungen.filter((b) => b.status !== "Abgeschlossen")).filter(istBestellungAlt);
+    if (alte.length === 0) {
+      el.dashBestellungenHinweis.hidden = true;
+      return;
+    }
+    el.dashBestellungenHinweisText.textContent =
+      alte.length === 1
+        ? "1 Bestellung ist schon länger offen — jetzt ansehen ›"
+        : `${alte.length} Bestellungen sind schon länger offen — jetzt ansehen ›`;
+    el.dashBestellungenHinweis.hidden = false;
+  }
+
+  // Zeigt auf der Übersicht einen kleinen, anklickbaren Hinweis, sobald der
+  // Lagerbestand seit LAGER_HINWEIS_SCHWELLE_STUNDEN (24h) von niemandem
+  // mehr korrigiert wurde (oder noch nie erfasst wurde) - team-weiter Stand
+  // aus lagerStatus/status (siehe starteLagerStatusListener in lager.js),
+  // nicht pro Browser. Läuft zusätzlich per Timer (siehe main.js), damit
+  // der Hinweis auch ohne neue Firestore-Daten rechtzeitig erscheint, wenn
+  // die Seite lange geöffnet bleibt.
+  function aktualisiereLagerHinweis() {
+    if (!el.dashLagerHinweis) return;
+
+    if (!lagerStatus || !lagerStatus.letzteAktualisierung) {
+      el.dashLagerHinweisText.textContent = "Lagerbestand noch nicht erfasst — jetzt eintragen ›";
+      el.dashLagerHinweis.hidden = false;
+      return;
+    }
+
+    const stundenHer = (Date.now() - zeitstempelWert(lagerStatus.letzteAktualisierung)) / (60 * 60 * 1000);
+    if (stundenHer < LAGER_HINWEIS_SCHWELLE_STUNDEN) {
+      el.dashLagerHinweis.hidden = true;
+      return;
+    }
+
+    const tageHer = Math.floor(stundenHer / 24);
+    el.dashLagerHinweisText.textContent =
+      tageHer >= 1
+        ? `Lagerbestand seit ${tageHer} Tag${tageHer === 1 ? "" : "en"} nicht aktualisiert — jetzt überprüfen ›`
+        : "Lagerbestand seit über 24 Stunden nicht aktualisiert — jetzt überprüfen ›";
+    el.dashLagerHinweis.hidden = false;
   }
 

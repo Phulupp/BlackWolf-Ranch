@@ -84,6 +84,20 @@
   border-top: 1px solid var(--leather-edge);
 }
 
+/* Handelsrechner: seit Version 36 kein eigener Sidebar-Reiter mehr, sondern
+   ein Modal, aufrufbar über den Eckknopf in Waren & Preise (bzw. den
+   Dashboard-Schnellzugriff) - der normale ".modal__body { flex-direction:
+   column }" reicht hier (anders als bei ".modal--xlarge"), weil der Inhalt
+   selbst schon sein eigenes zweispaltiges Grid (".rechner-layout", siehe
+   css/views/handelsrechner.css) mitbringt und die Angebotsliste darunter
+   einfach weiterfließen soll. */
+.modal--rechner {
+  width: 92vw;
+  max-width: 1180px;
+  max-height: 88vh;
+  overflow-y: auto;
+}
+
 @media (max-width: 900px) {
   .modal--xlarge {
     width: 96vw;

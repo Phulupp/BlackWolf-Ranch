@@ -17,6 +17,7 @@
 
     starteHeartbeat();
     starteProdukteListener();
+    starteLagerStatusListener();
     starteBestellungenListener();
     starteAngeboteListener();
     starteKontakteRollenListener();
@@ -29,6 +30,17 @@
     pruefeVersion();
     clearInterval(versionCheckTimer);
     versionCheckTimer = setInterval(pruefeVersion, 5 * 60 * 1000);
+
+    // Aktualisiert die Übersicht-Hinweise (Lager, alte Bestellungen) auch
+    // ohne neue Firestore-Daten laufend - beide Schwellen (24h bzw.
+    // BESTELLUNG_ALT_SCHWELLE_TAGE) können sonst erst mit der nächsten
+    // Datenänderung erkannt werden, obwohl sie rein zeitbasiert sind (siehe
+    // aktualisiereLagerHinweis/aktualisiereBestellungenHinweis in dashboard.js).
+    clearInterval(dashHinweisTimer);
+    dashHinweisTimer = setInterval(() => {
+      aktualisiereLagerHinweis();
+      aktualisiereBestellungenHinweis();
+    }, 15 * 60 * 1000);
   }
 
   function aktualisiereNutzerProfil(detail) {
@@ -50,14 +62,16 @@
 
   function stoppeApp() {
     aktuellerNutzer = null;
-    [unsubProdukte, unsubBestellungen, unsubAngebote, unsubKontakte, unsubKunden, unsubHofbuch, unsubKontakteRollen].forEach(
+    [unsubProdukte, unsubLagerStatus, unsubBestellungen, unsubAngebote, unsubKontakte, unsubKunden, unsubHofbuch, unsubKontakteRollen].forEach(
       (unsub) => unsub && unsub()
     );
-    unsubProdukte = unsubBestellungen = unsubAngebote = unsubKontakte = unsubKunden = unsubHofbuch = unsubKontakteRollen = null;
+    unsubProdukte = unsubLagerStatus = unsubBestellungen = unsubAngebote = unsubKontakte = unsubKunden = unsubHofbuch = unsubKontakteRollen = null;
     stoppeBenutzerverwaltung();
     stoppeHeartbeat();
     clearInterval(versionCheckTimer);
+    clearInterval(dashHinweisTimer);
     produkte = [];
+    lagerStatus = null;
     bestellungen = [];
     angebote = [];
     kontakte = [];

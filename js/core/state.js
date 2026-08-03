@@ -8,6 +8,10 @@
 
   let produkte = [];
   let unsubProdukte = null;
+  // { letzteAktualisierung, aktualisiertVon } aus lagerStatus/status - team-
+  // weiter Stand für den 24h-Hinweis auf der Übersicht (siehe lager.js).
+  let lagerStatus = null;
+  let unsubLagerStatus = null;
   let bestellungen = [];
   let unsubBestellungen = null;
   let angebote = [];
@@ -30,6 +34,13 @@
   let bestellungenStatusFilter = "Offen";
   let bestellungenSuche = "";
   let warenSuche = "";
+  let lagerSuche = "";
+  // "kategorie" (Standard, gruppiert wie Waren & Preise) | "bestand-auf" |
+  // "bestand-ab" | "name" - bei allem außer "kategorie" wird die Kategorie-
+  // Gruppierung verlassen und stattdessen eine flache, sortierte Liste
+  // gezeigt (siehe renderLager in lager.js), damit z. B. "niedrigster
+  // Bestand zuerst" wirklich über alle Kategorien hinweg sortiert.
+  let lagerSortierung = localStorage.getItem("lagerSortierung") || "kategorie";
   let kontakteSuche = "";
   // Sortierung merkt sich der Browser über die letzte Sitzung hinaus
   // (siehe Anforderung "Sortierung merken" im Kontaktbuch).
@@ -51,6 +62,7 @@
   let heartbeatTimer = null;
   let onlineRecomputeTimer = null;
   let versionCheckTimer = null;
+  let dashHinweisTimer = null;
   let sessionId = null;
 
   let pendingDeleteCallback = null;

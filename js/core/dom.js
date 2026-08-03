@@ -43,6 +43,10 @@
     dashKuerzlicheVerkaeufeEmpty: document.getElementById("dash-kuerzliche-verkaeufe-empty"),
     dashWichtigeKontakte: document.getElementById("dash-wichtige-kontakte"),
     dashWichtigeKontakteEmpty: document.getElementById("dash-wichtige-kontakte-empty"),
+    dashBestellungenHinweis: document.getElementById("dash-bestellungen-hinweis"),
+    dashBestellungenHinweisText: document.getElementById("dash-bestellungen-hinweis-text"),
+    dashLagerHinweis: document.getElementById("dash-lager-hinweis"),
+    dashLagerHinweisText: document.getElementById("dash-lager-hinweis-text"),
 
     // Bestellungen
     bestellungenTabs: document.getElementById("bestellungen-tabs"),
@@ -105,6 +109,14 @@
     wareVerkaufspreisInput: document.getElementById("ware-verkaufspreis-input"),
     wareError: document.getElementById("ware-error"),
     btnConfirmWare: document.getElementById("btn-confirm-ware"),
+
+    // Lager
+    lagerSearch: document.getElementById("lager-search"),
+    lagerSortierung: document.getElementById("lager-sortierung"),
+    lagerTableBody: document.getElementById("lager-table-body"),
+    lagerEmpty: document.getElementById("lager-empty"),
+    lagerNoResults: document.getElementById("lager-no-results"),
+    lagerGesamtwert: document.getElementById("lager-gesamtwert"),
 
     // Handelsrechner
     unternehmenListe: document.getElementById("unternehmen-liste"),
@@ -398,7 +410,7 @@
   // neuen Benutzern). Die Produktauswahl im Bestellungs-Fenster hat bereits
   // ihr eigenes, älteres Custom-Dropdown (siehe Abschnitt "Bestellungen")
   // und wird hier bewusst nicht noch einmal angefasst.
-  [el.bestellungStatusInput, el.rechnerProdukt, el.kontaktBerufInput, el.kontaktEditRolle, el.kontakteSortierung, el.startseiteSelect, el.neuerBenutzerRolleInput].forEach(
+  [el.bestellungStatusInput, el.rechnerProdukt, el.kontaktBerufInput, el.kontaktEditRolle, el.kontakteSortierung, el.startseiteSelect, el.neuerBenutzerRolleInput, el.lagerSortierung].forEach(
     erzeugeCustomSelect
   );
 

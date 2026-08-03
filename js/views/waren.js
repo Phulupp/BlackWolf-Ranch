@@ -55,6 +55,7 @@
           produkte.sort((a, b) => (a.reihenfolge || 0) - (b.reihenfolge || 0) || (a.name || "").localeCompare(b.name || "", "de"));
           befuelleProduktSelects();
           renderWaren();
+          renderLager();
           renderHandelsrechner();
           renderUebersicht();
         } catch (fehler) {

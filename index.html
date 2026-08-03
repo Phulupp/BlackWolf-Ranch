@@ -24,8 +24,8 @@
        blieb das Tab-/Lesezeichen-Icon in genau diesen Fällen leer, selbst
        wenn das PNG unten technisch korrekt eingebunden war. -->
   <link rel="shortcut icon" href="/favicon.ico" />
-  <link rel="icon" type="image/png" href="assets/logo/favicon-mais.png?v=34" />
-  <link rel="apple-touch-icon" href="assets/logo/favicon-mais.png?v=34" />
+  <link rel="icon" type="image/png" href="assets/logo/favicon-mais.png?v=37" />
+  <link rel="apple-touch-icon" href="assets/logo/favicon-mais.png?v=37" />
 
   <!-- Google Fonts: Rye (Farmschild/Wordmark), Playfair Display (Überschriften), Vollkorn (Fließtext/Pergament) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -39,27 +39,28 @@
        style.css - nur jetzt nach Zweck aufgeteilt (base > layout >
        components > views), damit man den passenden Abschnitt schneller
        findet. Reihenfolge ist wichtig und darf nicht vertauscht werden. -->
-  <link rel="stylesheet" href="css/base/tokens.css?v=34" />
-  <link rel="stylesheet" href="css/base/reset.css?v=34" />
-  <link rel="stylesheet" href="css/base/textures.css?v=34" />
-  <link rel="stylesheet" href="css/views/auth.css?v=34" />
-  <link rel="stylesheet" href="css/components/forms.css?v=34" />
-  <link rel="stylesheet" href="css/components/buttons.css?v=34" />
-  <link rel="stylesheet" href="css/layout/shell.css?v=34" />
-  <link rel="stylesheet" href="css/components/cards.css?v=34" />
-  <link rel="stylesheet" href="css/views/dashboard.css?v=34" />
-  <link rel="stylesheet" href="css/components/tables.css?v=34" />
-  <link rel="stylesheet" href="css/views/waren.css?v=34" />
-  <link rel="stylesheet" href="css/views/bestellungen.css?v=34" />
-  <link rel="stylesheet" href="css/views/kontakte.css?v=34" />
-  <link rel="stylesheet" href="css/views/handelsrechner.css?v=34" />
-  <link rel="stylesheet" href="css/components/modals.css?v=34" />
-  <link rel="stylesheet" href="css/views/admin.css?v=34" />
-  <link rel="stylesheet" href="css/components/toast.css?v=34" />
-  <link rel="stylesheet" href="css/layout/footer.css?v=34" />
-  <link rel="stylesheet" href="css/components/kataloge.css?v=34" />
-  <link rel="stylesheet" href="css/views/hofbuch.css?v=34" />
-  <link rel="stylesheet" href="css/base/responsive.css?v=34" />
+  <link rel="stylesheet" href="css/base/tokens.css?v=37" />
+  <link rel="stylesheet" href="css/base/reset.css?v=37" />
+  <link rel="stylesheet" href="css/base/textures.css?v=37" />
+  <link rel="stylesheet" href="css/views/auth.css?v=37" />
+  <link rel="stylesheet" href="css/components/forms.css?v=37" />
+  <link rel="stylesheet" href="css/components/buttons.css?v=37" />
+  <link rel="stylesheet" href="css/layout/shell.css?v=37" />
+  <link rel="stylesheet" href="css/components/cards.css?v=37" />
+  <link rel="stylesheet" href="css/views/dashboard.css?v=37" />
+  <link rel="stylesheet" href="css/components/tables.css?v=37" />
+  <link rel="stylesheet" href="css/views/waren.css?v=37" />
+  <link rel="stylesheet" href="css/views/lager.css?v=37" />
+  <link rel="stylesheet" href="css/views/bestellungen.css?v=37" />
+  <link rel="stylesheet" href="css/views/kontakte.css?v=37" />
+  <link rel="stylesheet" href="css/views/handelsrechner.css?v=37" />
+  <link rel="stylesheet" href="css/components/modals.css?v=37" />
+  <link rel="stylesheet" href="css/views/admin.css?v=37" />
+  <link rel="stylesheet" href="css/components/toast.css?v=37" />
+  <link rel="stylesheet" href="css/layout/footer.css?v=37" />
+  <link rel="stylesheet" href="css/components/kataloge.css?v=37" />
+  <link rel="stylesheet" href="css/views/hofbuch.css?v=37" />
+  <link rel="stylesheet" href="css/base/responsive.css?v=37" />
 
   <!-- Firebase SDK (Authentifizierung + Datenbank). "defer" statt normaler
        blockierender <script>-Tags: der Browser kann so den Rest der Seite
@@ -265,23 +266,23 @@
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5 12 4l9 4.5-9 4.5-9-4.5Z"/><path d="M3 8.5v7L12 20l9-4.5v-7"/><path d="M12 13v7"/></svg>
           <span>Waren &amp; Preise</span>
         </button>
-        <button class="sidebar__item" data-view="handelsrechner">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="3" x2="12" y2="19"/><path d="M5 7h14"/><path d="M5 7 2 13a3 3 0 0 0 6 0Z"/><path d="M19 7l-3 6a3 3 0 0 0 6 0Z"/><line x1="7" y1="21" x2="17" y2="21"/></svg>
-          <span>Handelsrechner</span>
-        </button>
-        <button class="sidebar__item" data-view="kontakte">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h3l1.5 4.5-2 1.5a11 11 0 0 0 5.5 5.5l1.5-2L20 14v3a2 2 0 0 1-2 2C10.8 19 5 13.2 5 6a2 2 0 0 1 1-3z"/></svg>
-          <span>Kontakte</span>
+        <button class="sidebar__item" data-view="lager">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 4l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Z"/><path d="M9 21v-7h6v7"/></svg>
+          <span>Lager</span>
         </button>
         <button class="sidebar__item" data-view="kunden">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8" r="3.2"/><path d="M2.5 19c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M15.5 5.3a3.2 3.2 0 0 1 0 6.2"/><path d="M15 13.6c2.9.3 4.9 2.4 4.9 5.4"/></svg>
           <span>Kunden</span>
         </button>
+        <button class="sidebar__item" data-view="kontakte">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h3l1.5 4.5-2 1.5a11 11 0 0 0 5.5 5.5l1.5-2L20 14v3a2 2 0 0 1-2 2C10.8 19 5 13.2 5 6a2 2 0 0 1 1-3z"/></svg>
+          <span>Kontakte</span>
+        </button>
+        <div class="sidebar__divider"></div>
         <button class="sidebar__item" data-view="statistiken">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="20" x2="19" y2="20"/><rect x="6" y="12" width="3.4" height="8"/><rect x="10.3" y="7" width="3.4" height="13"/><rect x="14.6" y="10" width="3.4" height="10"/></svg>
           <span>Statistiken</span>
         </button>
-        <div class="sidebar__divider"></div>
         <button class="sidebar__item" data-view="einstellungen">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 13.5a7.6 7.6 0 0 0 0-3l2-1.5-2-3.5-2.4.8a7.6 7.6 0 0 0-2.6-1.5L14 2h-4l-.4 2.3a7.6 7.6 0 0 0-2.6 1.5l-2.4-.8-2 3.5 2 1.5a7.6 7.6 0 0 0 0 3l-2 1.5 2 3.5 2.4-.8a7.6 7.6 0 0 0 2.6 1.5L10 22h4l.4-2.3a7.6 7.6 0 0 0 2.6-1.5l2.4.8 2-3.5Z"/></svg>
           <span>Einstellungen</span>
@@ -346,6 +347,13 @@
               </div>
             </div>
 
+            <button type="button" class="dash-hinweis" id="dash-bestellungen-hinweis" data-quicklink="bestellungen" hidden>
+              <span id="dash-bestellungen-hinweis-text">Bestellungen überprüfen</span>
+            </button>
+            <button type="button" class="dash-hinweis" id="dash-lager-hinweis" data-quicklink="lager" hidden>
+              <span id="dash-lager-hinweis-text">Lagerbestand überprüfen</span>
+            </button>
+
             <div class="dash-stats">
               <div class="dash-stat">
                 <span class="dash-stat__label">Offene Bestellungen</span>
@@ -371,7 +379,7 @@
                 <span class="dash-quicklink__titel">Neue Bestellung</span>
                 <span class="dash-quicklink__text">Bestellung hinzufügen</span>
               </button>
-              <button type="button" class="dash-quicklink" data-quicklink="handelsrechner">
+              <button type="button" class="dash-quicklink" data-open-modal="modal-handelsrechner">
                 <svg class="dash-quicklink__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="3" x2="12" y2="19"/><path d="M5 7h14"/><path d="M5 7 2 13a3 3 0 0 0 6 0Z"/><path d="M19 7l-3 6a3 3 0 0 0 6 0Z"/></svg>
                 <span class="dash-quicklink__titel">Handelsrechner</span>
                 <span class="dash-quicklink__text">Angebot erstellen</span>
@@ -465,6 +473,7 @@
                 <input type="text" id="waren-search" placeholder="Ware suchen..." autocomplete="off" />
               </div>
               <div class="toolbar__buttons">
+                <button class="btn btn--ghost" data-open-modal="modal-handelsrechner">Handelsrechner</button>
                 <button class="btn btn--primary" id="btn-add-ware" hidden>＋ Produkt hinzufügen</button>
               </div>
             </div>
@@ -484,112 +493,39 @@
           </section>
 
           <!-- ============================ -->
-          <!-- VIEW: HANDELSRECHNER          -->
+          <!-- VIEW: LAGER                   -->
           <!-- ============================ -->
-          <section class="view" id="view-handelsrechner">
-            <div class="rechner-layout">
-              <div>
-                <div class="parch-card">
-                  <p class="rechner-section-title">Angebot erstellen</p>
-                  <div class="rechner-grid-3">
-                    <div>
-                      <label class="field-label" for="rechner-unternehmen">Unternehmen</label>
-                      <input type="text" id="rechner-unternehmen" class="field-input" list="unternehmen-liste" placeholder="z. B. Blackwater Saloon" />
-                      <datalist id="unternehmen-liste"></datalist>
-                    </div>
-                    <div>
-                      <label class="field-label" for="rechner-produkt">Produkt</label>
-                      <select id="rechner-produkt" class="field-input"></select>
-                    </div>
-                    <div>
-                      <label class="field-label" for="rechner-menge">Menge</label>
-                      <input type="number" id="rechner-menge" class="field-input" min="1" step="1" value="1" />
-                    </div>
-                  </div>
-                </div>
-
-                <div class="parch-card">
-                  <p class="rechner-section-title">Handelskonditionen</p>
-                  <div class="rechner-toggle">
-                    <label class="rechner-radio"><input type="radio" name="rechner-modus" value="rabatt" checked /> Rabatt in %</label>
-                    <label class="rechner-radio"><input type="radio" name="rechner-modus" value="preis" /> Neuer Stückpreis</label>
-                  </div>
-
-                  <div id="rechner-modus-rabatt">
-                    <label class="field-label" for="rechner-rabatt-input">Rabatt</label>
-                    <div class="rechner-slider-row">
-                      <button type="button" class="rechner-slider-btn" id="rechner-rabatt-minus">−</button>
-                      <input type="range" id="rechner-rabatt-range" min="0" max="100" value="0" step="1" />
-                      <button type="button" class="rechner-slider-btn" id="rechner-rabatt-plus">+</button>
-                      <input type="number" id="rechner-rabatt-input" class="field-input" style="max-width: 90px;" min="0" max="100" value="0" />
-                    </div>
-                    <div class="rechner-slider-scale"><span>0%</span><span>50%</span><span>100%</span></div>
-                  </div>
-
-                  <div id="rechner-modus-preis" hidden>
-                    <label class="field-label" for="rechner-preis-input">Neuer Stückpreis ($)</label>
-                    <input type="number" id="rechner-preis-input" class="field-input" min="0" step="0.01" />
-                  </div>
-                </div>
-
-                <div class="parch-card">
-                  <p class="rechner-section-title">Berechnung</p>
-                  <div class="rechner-grid-3">
-                    <div class="rechner-field-box">
-                      <div class="rechner-field-box__label">Standardpreis</div>
-                      <div class="rechner-field-box__value"><span id="rechner-standardpreis">–</span><span class="rechner-field-box__unit">pro Stück</span></div>
-                    </div>
-                    <div class="rechner-field-box">
-                      <div class="rechner-field-box__label">Neuer Stückpreis</div>
-                      <div class="rechner-field-box__value"><span id="rechner-neuer-stueckpreis">–</span><span class="rechner-field-box__unit">pro Stück</span></div>
-                    </div>
-                    <div class="rechner-field-box">
-                      <div class="rechner-field-box__label">Gesamtpreis</div>
-                      <div class="rechner-field-box__value"><span id="rechner-gesamtpreis">–</span></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <div class="parch-card rechner-preview">
-                  <p class="rechner-section-title">Angebotsvorschau</p>
-                  <div class="rechner-preview__row"><span class="rechner-preview__label">Unternehmen</span><span class="rechner-preview__value" id="vorschau-unternehmen">—</span></div>
-                  <div class="rechner-preview__row"><span class="rechner-preview__label">Produkt</span><span class="rechner-preview__value" id="vorschau-produkt">—</span></div>
-                  <div class="rechner-preview__row"><span class="rechner-preview__label">Menge</span><span class="rechner-preview__value" id="vorschau-menge">— Stück</span></div>
-                  <div class="rechner-preview__row"><span class="rechner-preview__label">Standardpreis</span><span class="rechner-preview__value" id="vorschau-standardpreis">–</span></div>
-                  <div class="rechner-preview__row"><span class="rechner-preview__label">Rabatt</span><span class="rechner-preview__value" id="vorschau-rabatt">0 %</span></div>
-                  <div class="rechner-preview__row"><span class="rechner-preview__label">Neuer Stückpreis</span><span class="rechner-preview__value" id="vorschau-neuer-preis">–</span></div>
-                  <div class="rechner-preview__total"><span class="rechner-preview__total-label">Gesamtpreis</span><span class="rechner-preview__total-value" id="vorschau-gesamtpreis">0,00 $</span></div>
-
-                  <p class="rechner-preview__notice">Dieses Angebot ist noch nicht gespeichert. Übernimm es als Bestellung, um es in deiner Übersicht zu sehen.</p>
-
-                  <button type="button" class="btn btn--primary btn--full" id="btn-angebot-uebernehmen">📜 Angebot übernehmen</button>
-                  <button type="button" class="btn btn--ghost btn--full" id="btn-rechner-reset" style="margin-top: 10px;">↺ Zurücksetzen</button>
-                </div>
-              </div>
+          <section class="view" id="view-lager">
+            <div class="parch-card lager-summary">
+              <span class="dash-stat__label">Gesamter Lagerwert</span>
+              <p class="dash-stat__value lager-summary__wert" id="lager-gesamtwert">0,00 $</p>
             </div>
 
-            <div class="parch-card" style="margin-top: 8px;">
-              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 14px;">
-                <h3>Letzte Angebote</h3>
+            <div class="toolbar">
+              <div class="search-field">
+                <input type="text" id="lager-search" placeholder="Ware suchen, z. B. Mais..." autocomplete="off" />
               </div>
+              <select id="lager-sortierung" class="field-input" style="max-width: 240px;">
+                <option value="kategorie">Nach Kategorie</option>
+                <option value="bestand-auf">Niedrigster Bestand zuerst</option>
+                <option value="bestand-ab">Höchster Bestand zuerst</option>
+                <option value="name">Alphabetisch (A-Z)</option>
+              </select>
+            </div>
+
+            <div class="table-card">
               <div class="reg-table">
-                <div class="reg-row reg-row--head rechner-angebote-row">
-                  <span>Datum</span>
-                  <span>Unternehmen</span>
+                <div class="reg-row reg-row--head lager-row">
                   <span>Produkt</span>
-                  <span>Menge</span>
-                  <span>Rabatt</span>
-                  <span>Stückpreis</span>
-                  <span>Gesamtpreis</span>
-                  <span>Status</span>
-                  <span>Aktionen</span>
+                  <span>Bestand</span>
+                  <span>Stückwert (VK)</span>
+                  <span>Gesamtwert</span>
                 </div>
-                <div id="angebote-table-body"></div>
+                <div id="lager-table-body"></div>
               </div>
-              <p class="empty-state" id="angebote-empty" hidden>Noch keine Angebote erstellt.</p>
+              <p class="empty-state" id="lager-empty" hidden>Noch keine Waren im Lager erfasst.</p>
             </div>
+            <p class="empty-state" id="lager-no-results" hidden>Keine Waren gefunden, die zu deiner Suche passen.</p>
           </section>
 
           <!-- ============================ -->
@@ -798,9 +734,9 @@
                 <option value="hofbuch">Schwarzes Brett</option>
                 <option value="bestellungen">Bestellungen</option>
                 <option value="waren">Waren &amp; Preise</option>
-                <option value="handelsrechner">Handelsrechner</option>
-                <option value="kontakte">Kontakte</option>
+                <option value="lager">Lager</option>
                 <option value="kunden">Kunden</option>
+                <option value="kontakte">Kontakte</option>
                 <option value="verkaeufe">Verkaufshistorie</option>
                 <option value="statistiken">Statistiken</option>
               </select>
@@ -1055,6 +991,123 @@
   </div>
 
   <!-- ============================ -->
+  <!-- MODAL: Handelsrechner         -->
+  <!-- ============================ -->
+  <div class="modal-overlay" id="modal-handelsrechner">
+    <div class="modal modal--rechner">
+      <div class="modal__header">
+        <h3>Handelsrechner</h3>
+        <button class="modal__close" data-close-modal="modal-handelsrechner">✕</button>
+      </div>
+      <div class="modal__body">
+        <div class="rechner-layout">
+          <div>
+            <div class="parch-card">
+              <p class="rechner-section-title">Angebot erstellen</p>
+              <div class="rechner-grid-3">
+                <div>
+                  <label class="field-label" for="rechner-unternehmen">Unternehmen</label>
+                  <input type="text" id="rechner-unternehmen" class="field-input" list="unternehmen-liste" placeholder="z. B. Blackwater Saloon" />
+                  <datalist id="unternehmen-liste"></datalist>
+                </div>
+                <div>
+                  <label class="field-label" for="rechner-produkt">Produkt</label>
+                  <select id="rechner-produkt" class="field-input"></select>
+                </div>
+                <div>
+                  <label class="field-label" for="rechner-menge">Menge</label>
+                  <input type="number" id="rechner-menge" class="field-input" min="1" step="1" value="1" />
+                </div>
+              </div>
+            </div>
+
+            <div class="parch-card">
+              <p class="rechner-section-title">Handelskonditionen</p>
+              <div class="rechner-toggle">
+                <label class="rechner-radio"><input type="radio" name="rechner-modus" value="rabatt" checked /> Rabatt in %</label>
+                <label class="rechner-radio"><input type="radio" name="rechner-modus" value="preis" /> Neuer Stückpreis</label>
+              </div>
+
+              <div id="rechner-modus-rabatt">
+                <label class="field-label" for="rechner-rabatt-input">Rabatt</label>
+                <div class="rechner-slider-row">
+                  <button type="button" class="rechner-slider-btn" id="rechner-rabatt-minus">−</button>
+                  <input type="range" id="rechner-rabatt-range" min="0" max="100" value="0" step="1" />
+                  <button type="button" class="rechner-slider-btn" id="rechner-rabatt-plus">+</button>
+                  <input type="number" id="rechner-rabatt-input" class="field-input" style="max-width: 90px;" min="0" max="100" value="0" />
+                </div>
+                <div class="rechner-slider-scale"><span>0%</span><span>50%</span><span>100%</span></div>
+              </div>
+
+              <div id="rechner-modus-preis" hidden>
+                <label class="field-label" for="rechner-preis-input">Neuer Stückpreis ($)</label>
+                <input type="number" id="rechner-preis-input" class="field-input" min="0" step="0.01" />
+              </div>
+            </div>
+
+            <div class="parch-card">
+              <p class="rechner-section-title">Berechnung</p>
+              <div class="rechner-grid-3">
+                <div class="rechner-field-box">
+                  <div class="rechner-field-box__label">Standardpreis</div>
+                  <div class="rechner-field-box__value"><span id="rechner-standardpreis">–</span><span class="rechner-field-box__unit">pro Stück</span></div>
+                </div>
+                <div class="rechner-field-box">
+                  <div class="rechner-field-box__label">Neuer Stückpreis</div>
+                  <div class="rechner-field-box__value"><span id="rechner-neuer-stueckpreis">–</span><span class="rechner-field-box__unit">pro Stück</span></div>
+                </div>
+                <div class="rechner-field-box">
+                  <div class="rechner-field-box__label">Gesamtpreis</div>
+                  <div class="rechner-field-box__value"><span id="rechner-gesamtpreis">–</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="parch-card rechner-preview">
+              <p class="rechner-section-title">Angebotsvorschau</p>
+              <div class="rechner-preview__row"><span class="rechner-preview__label">Unternehmen</span><span class="rechner-preview__value" id="vorschau-unternehmen">—</span></div>
+              <div class="rechner-preview__row"><span class="rechner-preview__label">Produkt</span><span class="rechner-preview__value" id="vorschau-produkt">—</span></div>
+              <div class="rechner-preview__row"><span class="rechner-preview__label">Menge</span><span class="rechner-preview__value" id="vorschau-menge">— Stück</span></div>
+              <div class="rechner-preview__row"><span class="rechner-preview__label">Standardpreis</span><span class="rechner-preview__value" id="vorschau-standardpreis">–</span></div>
+              <div class="rechner-preview__row"><span class="rechner-preview__label">Rabatt</span><span class="rechner-preview__value" id="vorschau-rabatt">0 %</span></div>
+              <div class="rechner-preview__row"><span class="rechner-preview__label">Neuer Stückpreis</span><span class="rechner-preview__value" id="vorschau-neuer-preis">–</span></div>
+              <div class="rechner-preview__total"><span class="rechner-preview__total-label">Gesamtpreis</span><span class="rechner-preview__total-value" id="vorschau-gesamtpreis">0,00 $</span></div>
+
+              <p class="rechner-preview__notice">Dieses Angebot ist noch nicht gespeichert. Übernimm es als Bestellung, um es in deiner Übersicht zu sehen.</p>
+
+              <button type="button" class="btn btn--primary btn--full" id="btn-angebot-uebernehmen">📜 Angebot übernehmen</button>
+              <button type="button" class="btn btn--ghost btn--full" id="btn-rechner-reset" style="margin-top: 10px;">↺ Zurücksetzen</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="parch-card" style="margin-top: 8px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 14px;">
+            <h3>Letzte Angebote</h3>
+          </div>
+          <div class="reg-table">
+            <div class="reg-row reg-row--head rechner-angebote-row">
+              <span>Datum</span>
+              <span>Unternehmen</span>
+              <span>Produkt</span>
+              <span>Menge</span>
+              <span>Rabatt</span>
+              <span>Stückpreis</span>
+              <span>Gesamtpreis</span>
+              <span>Status</span>
+              <span>Aktionen</span>
+            </div>
+            <div id="angebote-table-body"></div>
+          </div>
+          <p class="empty-state" id="angebote-empty" hidden>Noch keine Angebote erstellt.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================ -->
   <!-- MODAL: Kontakt bearbeiten     -->
   <!-- ============================ -->
   <div class="modal-overlay" id="modal-kontakt-edit">
@@ -1267,28 +1320,29 @@
        teilen können. Die Reihenfolge entspricht exakt den frueheren
        nummerierten Abschnitten in app.js und darf nicht vertauscht werden:
        js/main.js muss immer zuletzt kommen, da es die App erst startet. -->
-  <script defer src="js/firebase-config.js?v=34"></script>
-  <script defer src="js/core/config.js?v=34"></script>
-  <script defer src="js/core/state.js?v=34"></script>
-  <script defer src="js/core/dom.js?v=34"></script>
-  <script defer src="js/core/firebase-init.js?v=34"></script>
-  <script defer src="js/core/utils.js?v=34"></script>
-  <script defer src="js/ui/modals.js?v=34"></script>
-  <script defer src="js/ui/nav.js?v=34"></script>
-  <script defer src="js/ui/presence.js?v=34"></script>
-  <script defer src="js/views/waren.js?v=34"></script>
-  <script defer src="js/views/bestellungen.js?v=34"></script>
-  <script defer src="js/views/handelsrechner.js?v=34"></script>
-  <script defer src="js/views/kontakte.js?v=34"></script>
-  <script defer src="js/views/verkaeufe.js?v=34"></script>
-  <script defer src="js/views/kunden.js?v=34"></script>
-  <script defer src="js/views/hofbuch.js?v=34"></script>
-  <script defer src="js/views/statistiken.js?v=34"></script>
-  <script defer src="js/views/dashboard.js?v=34"></script>
-  <script defer src="js/views/einstellungen.js?v=34"></script>
-  <script defer src="js/views/admin.js?v=34"></script>
-  <script defer src="js/ui/version-check.js?v=34"></script>
-  <script defer src="js/main.js?v=34"></script>
-  <script type="module" src="js/auth.js?v=34"></script>
+  <script defer src="js/firebase-config.js?v=37"></script>
+  <script defer src="js/core/config.js?v=37"></script>
+  <script defer src="js/core/state.js?v=37"></script>
+  <script defer src="js/core/dom.js?v=37"></script>
+  <script defer src="js/core/firebase-init.js?v=37"></script>
+  <script defer src="js/core/utils.js?v=37"></script>
+  <script defer src="js/ui/modals.js?v=37"></script>
+  <script defer src="js/ui/nav.js?v=37"></script>
+  <script defer src="js/ui/presence.js?v=37"></script>
+  <script defer src="js/views/waren.js?v=37"></script>
+  <script defer src="js/views/lager.js?v=37"></script>
+  <script defer src="js/views/bestellungen.js?v=37"></script>
+  <script defer src="js/views/handelsrechner.js?v=37"></script>
+  <script defer src="js/views/kontakte.js?v=37"></script>
+  <script defer src="js/views/verkaeufe.js?v=37"></script>
+  <script defer src="js/views/kunden.js?v=37"></script>
+  <script defer src="js/views/hofbuch.js?v=37"></script>
+  <script defer src="js/views/statistiken.js?v=37"></script>
+  <script defer src="js/views/dashboard.js?v=37"></script>
+  <script defer src="js/views/einstellungen.js?v=37"></script>
+  <script defer src="js/views/admin.js?v=37"></script>
+  <script defer src="js/ui/version-check.js?v=37"></script>
+  <script defer src="js/main.js?v=37"></script>
+  <script type="module" src="js/auth.js?v=37"></script>
 </body>
 </html>

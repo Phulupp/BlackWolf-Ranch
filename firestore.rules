@@ -223,6 +223,16 @@ service cloud.firestore {
                     || (istFreigegeben() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['lagerMenge']));
     }
 
+    // lagerStatus/status — ein einzelnes Dokument, das nur festhält, WANN
+    // zuletzt jemand einen Lagerbestand (lagerMenge) korrigiert hat (siehe
+    // aktualisiereLagerStatus in js/views/lager.js). Dient ausschließlich dem
+    // team-weiten 24h-Hinweis "Lagerbestand überprüfen" auf der Übersicht -
+    // enthält keine Produktdaten selbst, daher dieselben, unkritischen
+    // Rechte wie bei presence/kontakte.
+    match /lagerStatus/{dokument} {
+      allow read, write: if istFreigegeben();
+    }
+
     // Bestellungen: jeder freigegebene Nutzer darf Bestellungen anlegen und
     // bearbeiten (z. B. Status ändern, Produkte/Preise/Rabatte anpassen).
     // Löschen ist NUR erlaubt, solange die Bestellung noch nicht archiviert

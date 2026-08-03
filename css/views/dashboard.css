@@ -44,6 +44,39 @@
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.65);
 }
 
+/* Kleine, anklickbare Hinweiskacheln auf der Übersicht, die nur erscheinen,
+   wenn etwas Aufmerksamkeit braucht - Lagerbestand seit
+   LAGER_HINWEIS_SCHWELLE_STUNDEN (24h) nicht korrigiert (siehe
+   aktualisiereLagerHinweis) bzw. offene Bestellungen seit
+   BESTELLUNG_ALT_SCHWELLE_TAGE unbearbeitet (siehe
+   aktualisiereBestellungenHinweis), beide in js/views/dashboard.js. Bewusst
+   dezent gehalten (kein Modal/Banner über der ganzen Seite), da es sich nur
+   um Erinnerungen, keine Fehler handelt. */
+.dash-hinweis {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background: var(--status-open-soft);
+  border: 1px solid var(--status-open);
+  border-radius: var(--radius-md);
+  padding: 12px 18px;
+  margin-bottom: 12px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--status-open);
+  text-align: left;
+  transition: filter 0.15s ease;
+}
+
+.dash-hinweis:last-of-type {
+  margin-bottom: 22px;
+}
+
+.dash-hinweis:hover {
+  filter: brightness(1.1);
+}
+
 .dash-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

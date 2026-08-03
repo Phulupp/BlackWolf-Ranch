@@ -1,0 +1,21 @@
+/* --------------------------------------------------------------------------
+   14. Lager
+   -------------------------------------------------------------------------- */
+.lager-row {
+  grid-template-columns: 34fr 20fr 22fr 24fr;
+}
+
+.lager-menge-input {
+  padding: 6px 8px;
+  max-width: 100px;
+}
+
+.lager-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lager-summary__wert {
+  font-size: 30px;
+}

@@ -18,7 +18,7 @@
   /* ------------------------------------------------------------------------
      1. Konstanten
      ------------------------------------------------------------------------ */
-  const VERSION_AKTUELL = 34;
+  const VERSION_AKTUELL = 37;
 
   // Ränge des Hofes (rein organisatorisch — Verwalterrechte sind unabhängig
   // davon und werden separat je Benutzer vergeben, siehe isAdmin).
@@ -26,6 +26,12 @@
   const NEUER_BENUTZER_STANDARD_RANG = "Tagelöhner";
 
   const PRODUKTE_COLLECTION = "produkte";
+  const LAGER_STATUS_COLLECTION = "lagerStatus";
+  const LAGER_STATUS_DOC_ID = "status";
+  // Ab wie vielen Stunden ohne Bestandskorrektur der Hinweis "Lagerbestand
+  // überprüfen" auf der Übersicht erscheint (siehe aktualisiereLagerHinweis
+  // in js/views/dashboard.js).
+  const LAGER_HINWEIS_SCHWELLE_STUNDEN = 24;
   const BESTELLUNGEN_COLLECTION = "bestellungen";
   const ANGEBOTE_COLLECTION = "angebote";
   const KONTAKTE_COLLECTION = "kontakte";
@@ -139,7 +145,7 @@
     uebersicht: { title: "Übersicht", subtitle: "Hier behältst du alles im Blick." },
     bestellungen: { title: "Bestellungen", subtitle: "Verwalte alle Bestellungen und Lieferungen." },
     waren: { title: "Waren & Preise", subtitle: "Verwalte die Verkaufspreise." },
-    handelsrechner: { title: "Handelsrechner", subtitle: "Berechne Angebote und Handelskonditionen für Unternehmen." },
+    lager: { title: "Lager", subtitle: "Aktueller Warenbestand und Lagerwert." },
     kontakte: { title: "Kontakte", subtitle: "Verwalte deine Kontakte und Telegrammnummern." },
     kunden: { title: "Kunden", subtitle: "Profile aller Kunden — Gesamtumsatz und Kaufverhalten auf einen Blick." },
     verkaeufe: { title: "Verkaufshistorie", subtitle: "Automatisch aus abgeschlossenen Bestellungen — keine manuelle Erfassung." },
