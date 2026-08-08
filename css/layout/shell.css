@@ -56,7 +56,7 @@
 .sidebar__brand-icon {
   display: block;
   width: 52px;
-  height: auto;
+  aspect-ratio: 100 / 70;
   margin: 0 auto 8px;
   filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5));
 }
@@ -288,36 +288,38 @@
   position: relative;
 }
 
-/* Kleine dekorative Ranke, die über der Online-Anzeige hängt und rechts ein
-   Stück herunterbaumelt, plus ein Moos-Saum unten am Rand (::after weiter
+/* Kleine dekorative Efeu-Ranke über der Online-Anzeige (baumelt rechts ein
+   Stück herunter) und ein kleiner Zweig unten am Rand (::after weiter
    unten) - beides rein optisch ohne Funktion, per SVG-Hintergrund auf
    Pseudo-Elementen (pointer-events: none, damit der Button darunter weiter
-   klickbar bleibt). */
+   klickbar bleibt). Beide SVGs nutzen dieselbe wiederverwendete Blatt-Form
+   (<defs><path id='l'>), einheitlich entlang eines Stängel-Pfads verteilt -
+   das ergibt ein klar lesbares Ranken-Muster statt einzelner verstreuter
+   Flecken. */
 .online-widget::before {
   content: "";
   position: absolute;
   top: -12px;
   left: -4px;
-  right: -24px;
-  height: 64px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 260 70'%3E%3Cpath d='M2,16 C40,4 60,28 100,16 C140,4 165,28 200,16 C212,11 220,13 228,17' fill='none' stroke='%235b7a4c' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M228,17 C246,23 252,38 240,48 C231,55 236,63 246,68' fill='none' stroke='%235b7a4c' stroke-width='2' stroke-linecap='round'/%3E%3Cg fill='%236f8f57'%3E%3Cellipse cx='20' cy='10' rx='7' ry='3.2' transform='rotate(-30 20 10)'/%3E%3Cellipse cx='50' cy='24' rx='7' ry='3.2' transform='rotate(25 50 24)'/%3E%3Cellipse cx='85' cy='8' rx='7' ry='3.2' transform='rotate(-20 85 8)'/%3E%3Cellipse cx='115' cy='25' rx='7' ry='3.2' transform='rotate(30 115 25)'/%3E%3Cellipse cx='150' cy='8' rx='7' ry='3.2' transform='rotate(-25 150 8)'/%3E%3Cellipse cx='185' cy='24' rx='7' ry='3.2' transform='rotate(20 185 24)'/%3E%3Cellipse cx='210' cy='12' rx='6' ry='2.8' transform='rotate(-15 210 12)'/%3E%3Cellipse cx='238' cy='30' rx='6.5' ry='3' transform='rotate(50 238 30)'/%3E%3Cellipse cx='244' cy='44' rx='6' ry='2.8' transform='rotate(-40 244 44)'/%3E%3Cellipse cx='236' cy='58' rx='5.5' ry='2.6' transform='rotate(35 236 58)'/%3E%3C/g%3E%3Cg fill='%2389a86c'%3E%3Cellipse cx='35' cy='18' rx='5.5' ry='2.6' transform='rotate(15 35 18)'/%3E%3Cellipse cx='68' cy='14' rx='5.5' ry='2.6' transform='rotate(-20 68 14)'/%3E%3Cellipse cx='100' cy='26' rx='5.5' ry='2.6' transform='rotate(25 100 26)'/%3E%3Cellipse cx='133' cy='16' rx='5.5' ry='2.6' transform='rotate(-15 133 16)'/%3E%3Cellipse cx='167' cy='12' rx='5.5' ry='2.6' transform='rotate(20 167 12)'/%3E%3Cellipse cx='197' cy='22' rx='5' ry='2.4' transform='rotate(-10 197 22)'/%3E%3Cellipse cx='250' cy='38' rx='5' ry='2.4' transform='rotate(-30 250 38)'/%3E%3Cellipse cx='250' cy='52' rx='4.6' ry='2.2' transform='rotate(45 250 52)'/%3E%3C/g%3E%3Cg fill='%23d9b26a'%3E%3Ccircle cx='50' cy='24' r='1.6'/%3E%3Ccircle cx='115' cy='25' r='1.6'/%3E%3Ccircle cx='185' cy='24' r='1.6'/%3E%3Ccircle cx='240' cy='48' r='1.5'/%3E%3C/g%3E%3C/svg%3E");
+  right: -20px;
+  height: 58px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 62'%3E%3Cdefs%3E%3Cpath id='l' d='M0,0 C-6,-3 -7,-10 0,-15 C7,-10 6,-3 0,0 Z'/%3E%3C/defs%3E%3Cpath d='M4,10 C30,2 50,16 80,10 C110,2 130,16 160,10 C172,8 180,9 188,12' fill='none' stroke='%233f5f38' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M188,12 C204,16 210,28 200,38 C193,45 197,52 205,58' fill='none' stroke='%233f5f38' stroke-width='2' stroke-linecap='round'/%3E%3Cuse href='%23l' transform='translate(16,8) rotate(-50)' fill='%234f7a45'/%3E%3Cuse href='%23l' transform='translate(34,16) rotate(35)' fill='%236f9955'/%3E%3Cuse href='%23l' transform='translate(52,4) rotate(-25)' fill='%234f7a45'/%3E%3Cuse href='%23l' transform='translate(72,15) rotate(30)' fill='%236f9955'/%3E%3Cuse href='%23l' transform='translate(92,5) rotate(-35)' fill='%234f7a45'/%3E%3Cuse href='%23l' transform='translate(112,15) rotate(25)' fill='%236f9955'/%3E%3Cuse href='%23l' transform='translate(132,4) rotate(-30)' fill='%234f7a45'/%3E%3Cuse href='%23l' transform='translate(150,14) rotate(20)' fill='%236f9955'/%3E%3Cuse href='%23l' transform='translate(168,9) rotate(-15)' fill='%234f7a45'/%3E%3Cuse href='%23l' transform='translate(196,20) rotate(70)' fill='%236f9955'/%3E%3Cuse href='%23l' transform='translate(203,32) rotate(-65)' fill='%234f7a45'/%3E%3Cuse href='%23l' transform='translate(196,44) rotate(75)' fill='%236f9955'/%3E%3Cuse href='%23l' transform='translate(203,56) rotate(-55)' fill='%234f7a45'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   pointer-events: none;
   z-index: 0;
 }
 
-/* Kleiner Moos-Saum am unteren Rand des Buttons, mit ein paar herabhängenden
-   Fäden - zusammen mit der Ranke oben soll die Anzeige insgesamt ein wenig
-   "überwuchert"/verwittert wirken. */
+/* Kleiner Efeu-Zweig am unteren Rand des Buttons, mit zwei kurzen
+   herabhängenden Ranken. */
 .online-widget::after {
   content: "";
   position: absolute;
   top: calc(100% - 5px);
   left: -4px;
   right: -4px;
-  height: 18px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 34'%3E%3Cg fill='%236f8f57'%3E%3Cellipse cx='15' cy='6' rx='9' ry='5'/%3E%3Cellipse cx='40' cy='8' rx='11' ry='6'/%3E%3Cellipse cx='70' cy='5' rx='8' ry='4.5'/%3E%3Cellipse cx='100' cy='9' rx='12' ry='6'/%3E%3Cellipse cx='135' cy='5' rx='9' ry='5'/%3E%3Cellipse cx='165' cy='8' rx='11' ry='6'/%3E%3Cellipse cx='195' cy='5' rx='9' ry='5'/%3E%3Cellipse cx='222' cy='7' rx='9' ry='5'/%3E%3C/g%3E%3Cg fill='%23577048'%3E%3Cellipse cx='28' cy='9' rx='6' ry='3.4'/%3E%3Cellipse cx='55' cy='11' rx='6' ry='3.4'/%3E%3Cellipse cx='85' cy='10' rx='6' ry='3.4'/%3E%3Cellipse cx='118' cy='11' rx='6' ry='3.4'/%3E%3Cellipse cx='150' cy='10' rx='6' ry='3.4'/%3E%3Cellipse cx='180' cy='11' rx='6' ry='3.4'/%3E%3Cellipse cx='210' cy='10' rx='6' ry='3.4'/%3E%3C/g%3E%3Cg fill='none' stroke='%235b7a4c' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M45,10 C43,18 46,24 44,32'/%3E%3Cpath d='M118,11 C116,20 120,26 118,34'/%3E%3Cpath d='M195,9 C198,18 194,25 197,33'/%3E%3C/g%3E%3C/svg%3E");
+  height: 26px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 34'%3E%3Cdefs%3E%3Cpath id='l' d='M0,0 C-6,-3 -7,-10 0,-15 C7,-10 6,-3 0,0 Z'/%3E%3C/defs%3E%3Cpath d='M6,4 C40,10 60,-2 90,6 C120,-2 145,8 175,2 C188,0 196,4 206,4' fill='none' stroke='%233f5f38' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M55,7 C53,16 57,22 55,30' fill='none' stroke='%233f5f38' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M150,6 C148,15 152,21 150,29' fill='none' stroke='%233f5f38' stroke-width='2' stroke-linecap='round'/%3E%3Cuse href='%23l' transform='translate(20,6) rotate(160)' fill='%234f7a45'/%3E%3Cuse href='%23l' transform='translate(45,9) rotate(-160)' fill='%236f9955'/%3E%3Cuse href='%23l' transform='translate(70,4) rotate(150)' fill='%234f7a45'/%3E%3Cuse href='%23l' transform='translate(95,8) rotate(-150)' fill='%236f9955'/%3E%3Cuse href='%23l' transform='translate(120,3) rotate(155)' fill='%234f7a45'/%3E%3Cuse href='%23l' transform='translate(145,8) rotate(-145)' fill='%236f9955'/%3E%3Cuse href='%23l' transform='translate(170,3) rotate(160)' fill='%234f7a45'/%3E%3Cuse href='%23l' transform='translate(196,6) rotate(-155)' fill='%236f9955'/%3E%3Cuse href='%23l' transform='translate(55,30) rotate(170)' fill='%234f7a45'/%3E%3Cuse href='%23l' transform='translate(150,29) rotate(-170)' fill='%236f9955'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   pointer-events: none;
