@@ -16,15 +16,41 @@
   display: flex;
   flex-direction: column;
   border-right: 1px solid rgba(0, 0, 0, 0.4);
-  box-shadow: 6px 0 18px rgba(0, 0, 0, 0.3);
+  box-shadow: 6px 0 18px rgba(0, 0, 0, 0.3), -1px 0 0 rgba(201, 163, 78, 0.06) inset;
   z-index: 20;
-  background: linear-gradient(180deg, var(--wood-900) 0%, var(--wood-950) 100%);
+  /* assets/textures/sidebar-background.webp.png - eigens für die Sidebar
+     vorgesehenes Holzpaneel-Foto mit Eisenbeschlägen (siehe README), bisher
+     nirgends eingebunden. Gleiche Technik wie beim App-Hintergrund weiter
+     unten (.app): abgedunkelter Verlauf über dem Foto statt reiner
+     Flächenfarbe, damit Text/Icons weiterhin gut lesbar bleiben. */
+  background-image: linear-gradient(180deg, rgba(11, 6, 3, 0.82) 0%, rgba(7, 4, 2, 0.9) 100%),
+    url("../../assets/textures/sidebar-background.webp.png");
+  background-repeat: no-repeat, no-repeat;
+  background-size: cover, cover;
+  background-position: center, center;
 }
 
 .sidebar__brand {
   padding: 26px 22px 20px;
   text-align: center;
   border-bottom: 1px solid rgba(201, 163, 78, 0.22);
+  position: relative;
+}
+
+/* Dezenter warmer Schein hinter dem Logo - negatives z-index, damit er
+   garantiert hinter Icon/Titel/Untertitel bleibt (auch wenn die selbst nicht
+   positioniert sind). */
+.sidebar__brand::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 16px;
+  width: 90px;
+  height: 90px;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, rgba(189, 145, 67, 0.16) 0%, rgba(189, 145, 67, 0) 72%);
+  pointer-events: none;
+  z-index: -1;
 }
 
 .sidebar__brand-icon {
@@ -67,29 +93,44 @@
   align-items: center;
   gap: 12px;
   padding: 11px 14px;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.02em;
   color: var(--wood-text-muted);
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
   text-align: left;
   position: relative;
 }
 
 .sidebar__item svg {
   flex-shrink: 0;
-  opacity: 0.85;
+  opacity: 0.8;
+  transition: opacity 0.15s ease;
 }
 
 .sidebar__item:hover {
   color: var(--wood-text);
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(201, 163, 78, 0.08);
+  transform: translateX(2px);
+}
+
+.sidebar__item:hover svg {
+  opacity: 1;
 }
 
 .sidebar__item--active {
   color: var(--brass-bright);
-  background: rgba(201, 163, 78, 0.12);
+  background: linear-gradient(90deg, rgba(201, 163, 78, 0.18) 0%, rgba(201, 163, 78, 0.08) 100%);
+  box-shadow: 0 1px 0 rgba(255, 224, 170, 0.05) inset, 0 4px 10px rgba(0, 0, 0, 0.18);
+}
+
+.sidebar__item--active:hover {
+  transform: none;
+}
+
+.sidebar__item--active svg {
+  opacity: 1;
 }
 
 .sidebar__item--active::before {
@@ -101,6 +142,7 @@
   width: 3px;
   background: var(--brass-bright);
   border-radius: 0 3px 3px 0;
+  box-shadow: 0 0 6px rgba(201, 163, 78, 0.55);
 }
 
 .sidebar__badge {
@@ -120,7 +162,7 @@
 
 .sidebar__divider {
   height: 1px;
-  background: rgba(201, 163, 78, 0.16);
+  background: linear-gradient(90deg, transparent, rgba(201, 163, 78, 0.28) 50%, transparent);
   margin: 10px 6px;
 }
 
@@ -136,12 +178,12 @@
   gap: 10px;
   width: 100%;
   padding: 8px;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   transition: background 0.15s ease;
 }
 
 .sidebar__user:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(201, 163, 78, 0.08);
 }
 
 .sidebar__user-avatar {
@@ -149,6 +191,7 @@
   height: 36px;
   border-radius: 50%;
   background: linear-gradient(180deg, var(--brass-bright), var(--brass-deep));
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
   color: #2a1c0a;
   font-family: var(--font-display);
   font-weight: 700;
@@ -245,21 +288,40 @@
   position: relative;
 }
 
-/* Kleine dekorative Ranke, die über der Online-Anzeige hängt - rein
-   optischer Rahmen ohne Funktion, per SVG-Hintergrund auf einem
-   Pseudo-Element (pointer-events: none, damit der Button darunter weiter
+/* Kleine dekorative Ranke, die über der Online-Anzeige hängt und rechts ein
+   Stück herunterbaumelt, plus ein Moos-Saum unten am Rand (::after weiter
+   unten) - beides rein optisch ohne Funktion, per SVG-Hintergrund auf
+   Pseudo-Elementen (pointer-events: none, damit der Button darunter weiter
    klickbar bleibt). */
 .online-widget::before {
   content: "";
   position: absolute;
-  top: -11px;
+  top: -12px;
   left: -4px;
-  right: -4px;
-  height: 16px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 30'%3E%3Cpath d='M2,14 C40,2 60,26 100,14 C140,2 160,26 200,14 C215,8 225,10 238,14' fill='none' stroke='%235b7a4c' stroke-width='2' stroke-linecap='round'/%3E%3Cg fill='%236f8f57'%3E%3Cellipse cx='20' cy='8' rx='7' ry='3.2' transform='rotate(-30 20 8)'/%3E%3Cellipse cx='50' cy='22' rx='7' ry='3.2' transform='rotate(25 50 22)'/%3E%3Cellipse cx='85' cy='6' rx='7' ry='3.2' transform='rotate(-20 85 6)'/%3E%3Cellipse cx='115' cy='23' rx='7' ry='3.2' transform='rotate(30 115 23)'/%3E%3Cellipse cx='150' cy='6' rx='7' ry='3.2' transform='rotate(-25 150 6)'/%3E%3Cellipse cx='185' cy='22' rx='7' ry='3.2' transform='rotate(20 185 22)'/%3E%3Cellipse cx='215' cy='9' rx='6' ry='2.8' transform='rotate(-15 215 9)'/%3E%3C/g%3E%3Cg fill='%2389a86c'%3E%3Cellipse cx='35' cy='16' rx='5.5' ry='2.6' transform='rotate(15 35 16)'/%3E%3Cellipse cx='68' cy='12' rx='5.5' ry='2.6' transform='rotate(-20 68 12)'/%3E%3Cellipse cx='100' cy='24' rx='5.5' ry='2.6' transform='rotate(25 100 24)'/%3E%3Cellipse cx='133' cy='14' rx='5.5' ry='2.6' transform='rotate(-15 133 14)'/%3E%3Cellipse cx='167' cy='10' rx='5.5' ry='2.6' transform='rotate(20 167 10)'/%3E%3Cellipse cx='200' cy='22' rx='5.5' ry='2.6' transform='rotate(-10 200 22)'/%3E%3C/g%3E%3Cg fill='%23d9b26a'%3E%3Ccircle cx='50' cy='22' r='1.6'/%3E%3Ccircle cx='115' cy='23' r='1.6'/%3E%3Ccircle cx='185' cy='22' r='1.6'/%3E%3C/g%3E%3C/svg%3E");
+  right: -24px;
+  height: 64px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 260 70'%3E%3Cpath d='M2,16 C40,4 60,28 100,16 C140,4 165,28 200,16 C212,11 220,13 228,17' fill='none' stroke='%235b7a4c' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M228,17 C246,23 252,38 240,48 C231,55 236,63 246,68' fill='none' stroke='%235b7a4c' stroke-width='2' stroke-linecap='round'/%3E%3Cg fill='%236f8f57'%3E%3Cellipse cx='20' cy='10' rx='7' ry='3.2' transform='rotate(-30 20 10)'/%3E%3Cellipse cx='50' cy='24' rx='7' ry='3.2' transform='rotate(25 50 24)'/%3E%3Cellipse cx='85' cy='8' rx='7' ry='3.2' transform='rotate(-20 85 8)'/%3E%3Cellipse cx='115' cy='25' rx='7' ry='3.2' transform='rotate(30 115 25)'/%3E%3Cellipse cx='150' cy='8' rx='7' ry='3.2' transform='rotate(-25 150 8)'/%3E%3Cellipse cx='185' cy='24' rx='7' ry='3.2' transform='rotate(20 185 24)'/%3E%3Cellipse cx='210' cy='12' rx='6' ry='2.8' transform='rotate(-15 210 12)'/%3E%3Cellipse cx='238' cy='30' rx='6.5' ry='3' transform='rotate(50 238 30)'/%3E%3Cellipse cx='244' cy='44' rx='6' ry='2.8' transform='rotate(-40 244 44)'/%3E%3Cellipse cx='236' cy='58' rx='5.5' ry='2.6' transform='rotate(35 236 58)'/%3E%3C/g%3E%3Cg fill='%2389a86c'%3E%3Cellipse cx='35' cy='18' rx='5.5' ry='2.6' transform='rotate(15 35 18)'/%3E%3Cellipse cx='68' cy='14' rx='5.5' ry='2.6' transform='rotate(-20 68 14)'/%3E%3Cellipse cx='100' cy='26' rx='5.5' ry='2.6' transform='rotate(25 100 26)'/%3E%3Cellipse cx='133' cy='16' rx='5.5' ry='2.6' transform='rotate(-15 133 16)'/%3E%3Cellipse cx='167' cy='12' rx='5.5' ry='2.6' transform='rotate(20 167 12)'/%3E%3Cellipse cx='197' cy='22' rx='5' ry='2.4' transform='rotate(-10 197 22)'/%3E%3Cellipse cx='250' cy='38' rx='5' ry='2.4' transform='rotate(-30 250 38)'/%3E%3Cellipse cx='250' cy='52' rx='4.6' ry='2.2' transform='rotate(45 250 52)'/%3E%3C/g%3E%3Cg fill='%23d9b26a'%3E%3Ccircle cx='50' cy='24' r='1.6'/%3E%3Ccircle cx='115' cy='25' r='1.6'/%3E%3Ccircle cx='185' cy='24' r='1.6'/%3E%3Ccircle cx='240' cy='48' r='1.5'/%3E%3C/g%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   pointer-events: none;
+  z-index: 0;
+}
+
+/* Kleiner Moos-Saum am unteren Rand des Buttons, mit ein paar herabhängenden
+   Fäden - zusammen mit der Ranke oben soll die Anzeige insgesamt ein wenig
+   "überwuchert"/verwittert wirken. */
+.online-widget::after {
+  content: "";
+  position: absolute;
+  top: calc(100% - 5px);
+  left: -4px;
+  right: -4px;
+  height: 18px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 34'%3E%3Cg fill='%236f8f57'%3E%3Cellipse cx='15' cy='6' rx='9' ry='5'/%3E%3Cellipse cx='40' cy='8' rx='11' ry='6'/%3E%3Cellipse cx='70' cy='5' rx='8' ry='4.5'/%3E%3Cellipse cx='100' cy='9' rx='12' ry='6'/%3E%3Cellipse cx='135' cy='5' rx='9' ry='5'/%3E%3Cellipse cx='165' cy='8' rx='11' ry='6'/%3E%3Cellipse cx='195' cy='5' rx='9' ry='5'/%3E%3Cellipse cx='222' cy='7' rx='9' ry='5'/%3E%3C/g%3E%3Cg fill='%23577048'%3E%3Cellipse cx='28' cy='9' rx='6' ry='3.4'/%3E%3Cellipse cx='55' cy='11' rx='6' ry='3.4'/%3E%3Cellipse cx='85' cy='10' rx='6' ry='3.4'/%3E%3Cellipse cx='118' cy='11' rx='6' ry='3.4'/%3E%3Cellipse cx='150' cy='10' rx='6' ry='3.4'/%3E%3Cellipse cx='180' cy='11' rx='6' ry='3.4'/%3E%3Cellipse cx='210' cy='10' rx='6' ry='3.4'/%3E%3C/g%3E%3Cg fill='none' stroke='%235b7a4c' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M45,10 C43,18 46,24 44,32'/%3E%3Cpath d='M118,11 C116,20 120,26 118,34'/%3E%3Cpath d='M195,9 C198,18 194,25 197,33'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .online-widget__btn {
