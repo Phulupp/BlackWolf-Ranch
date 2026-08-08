@@ -245,6 +245,23 @@
   position: relative;
 }
 
+/* Kleine dekorative Ranke, die über der Online-Anzeige hängt - rein
+   optischer Rahmen ohne Funktion, per SVG-Hintergrund auf einem
+   Pseudo-Element (pointer-events: none, damit der Button darunter weiter
+   klickbar bleibt). */
+.online-widget::before {
+  content: "";
+  position: absolute;
+  top: -11px;
+  left: -4px;
+  right: -4px;
+  height: 16px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 30'%3E%3Cpath d='M2,14 C40,2 60,26 100,14 C140,2 160,26 200,14 C215,8 225,10 238,14' fill='none' stroke='%235b7a4c' stroke-width='2' stroke-linecap='round'/%3E%3Cg fill='%236f8f57'%3E%3Cellipse cx='20' cy='8' rx='7' ry='3.2' transform='rotate(-30 20 8)'/%3E%3Cellipse cx='50' cy='22' rx='7' ry='3.2' transform='rotate(25 50 22)'/%3E%3Cellipse cx='85' cy='6' rx='7' ry='3.2' transform='rotate(-20 85 6)'/%3E%3Cellipse cx='115' cy='23' rx='7' ry='3.2' transform='rotate(30 115 23)'/%3E%3Cellipse cx='150' cy='6' rx='7' ry='3.2' transform='rotate(-25 150 6)'/%3E%3Cellipse cx='185' cy='22' rx='7' ry='3.2' transform='rotate(20 185 22)'/%3E%3Cellipse cx='215' cy='9' rx='6' ry='2.8' transform='rotate(-15 215 9)'/%3E%3C/g%3E%3Cg fill='%2389a86c'%3E%3Cellipse cx='35' cy='16' rx='5.5' ry='2.6' transform='rotate(15 35 16)'/%3E%3Cellipse cx='68' cy='12' rx='5.5' ry='2.6' transform='rotate(-20 68 12)'/%3E%3Cellipse cx='100' cy='24' rx='5.5' ry='2.6' transform='rotate(25 100 24)'/%3E%3Cellipse cx='133' cy='14' rx='5.5' ry='2.6' transform='rotate(-15 133 14)'/%3E%3Cellipse cx='167' cy='10' rx='5.5' ry='2.6' transform='rotate(20 167 10)'/%3E%3Cellipse cx='200' cy='22' rx='5.5' ry='2.6' transform='rotate(-10 200 22)'/%3E%3C/g%3E%3Cg fill='%23d9b26a'%3E%3Ccircle cx='50' cy='22' r='1.6'/%3E%3Ccircle cx='115' cy='23' r='1.6'/%3E%3Ccircle cx='185' cy='22' r='1.6'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  pointer-events: none;
+}
+
 .online-widget__btn {
   display: flex;
   align-items: center;

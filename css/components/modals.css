@@ -22,10 +22,10 @@
 
 .modal {
   width: 420px;
-  background: var(--leather-800);
-  border: 1px solid var(--leather-edge);
+  background: linear-gradient(165deg, var(--leather-700) 0%, var(--leather-800) 22%, var(--leather-800) 100%);
+  border: 1px solid rgba(189, 145, 67, 0.34);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-modal);
+  box-shadow: var(--shadow-modal), 0 1px 0 rgba(255, 224, 170, 0.05) inset;
   padding: 30px;
   transform: translateY(8px) scale(0.98);
   transition: transform 0.18s ease;

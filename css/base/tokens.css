@@ -30,11 +30,11 @@
      Hofbuch) nutzt dunkles, halbtransparent wirkendes Leder mit feiner
      Messing-Kante statt Pergament oder Papier. */
   --leather-900: #19110b;
-  --leather-800: #241a11;
-  --leather-700: #332417;
-  --leather-600: #46331f;
-  --leather-edge: rgba(189, 145, 67, 0.28);
-  --leather-edge-soft: rgba(189, 145, 67, 0.16);
+  --leather-800: #2b2013;
+  --leather-700: #382919;
+  --leather-600: #4c371f;
+  --leather-edge: rgba(189, 145, 67, 0.4);
+  --leather-edge-soft: rgba(189, 145, 67, 0.22);
 
   /* Text auf dunklem Holz/Leder */
   --wood-text: #e7d5a8;

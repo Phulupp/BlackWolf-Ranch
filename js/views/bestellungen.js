@@ -11,7 +11,7 @@
   //   {
   //     unternehmen, ansprechpartner,
   //     produkte: [{ produktId, produktName, menge, standardpreis,
-  //                  rabattProzent, endpreis, gesamtpreis }, ...],
+  //                  rabattProzent, endpreis, gesamtpreis, erledigt }, ...],
   //     status, notiz, archiviert,
   //     erstelltAm, erstelltVon, bearbeiter,
   //     abgeschlossenAm
@@ -297,8 +297,18 @@
         !p.standardpreis || Number(p.standardpreis) === 0
           ? ` <span class="bestellung-positionen-zeile__kein-preis" title="Für dieses Produkt ist kein Standardpreis hinterlegt.">⚠</span>`
           : "";
-      return `<div class="bestellung-positionen-zeile">
-          <span class="bestellung-positionen-zeile__name">${escapeHtml(p.produktName)}</span>
+      // Rein interner "fertig vorbereitet"-Haken pro Position (p.erledigt) -
+      // hat bewusst KEINE Auswirkung auf Menge/Preise/Bestellstatus, dient nur
+      // als visuelle Markierung fürs Team und wird 1:1 mit gespeichert.
+      const erledigt = !!p.erledigt;
+      const erledigtCheckbox = `<input type="checkbox" class="bestellung-position-erledigt-check" data-position-erledigt="${index}" ${
+        erledigt ? "checked" : ""
+      } ${bestellungModalArchiviert ? "disabled" : ""} title="Als fertig vorbereitet markieren (nur intern, ohne Auswirkung auf die Bestellung)" />`;
+      return `<div class="bestellung-positionen-zeile ${erledigt ? "bestellung-positionen-zeile--erledigt" : ""}">
+          <label class="bestellung-positionen-zeile__name bestellung-position-erledigt">
+            ${erledigtCheckbox}
+            <span>${escapeHtml(p.produktName)}</span>
+          </label>
           ${mengeFeld}
           <span>${formatGeld(p.standardpreis)}${standardpreisHinweis}</span>
           ${rabattFeld}
@@ -610,6 +620,19 @@
         aktualisierePositionsBerechnung(index);
       }
     });
+    // Der "fertig vorbereitet"-Haken wirkt nur auf sich selbst - statt die
+    // ganze Positionsliste neu aufzubauen (würde bei Menge/Rabatt-Feldern in
+    // Bearbeitung Fokus/Cursor zerstören, siehe aktualisierePositionsBerechnung
+    // weiter oben), wird hier nur die Klasse der eigenen Zeile umgeschaltet.
+    el.bestellungPositionenListe.addEventListener("change", (event) => {
+      const erledigtCheck = event.target.closest("[data-position-erledigt]");
+      if (!erledigtCheck) return;
+      const index = parseInt(erledigtCheck.getAttribute("data-position-erledigt"), 10);
+      if (!bestellungEntwurfPositionen[index]) return;
+      bestellungEntwurfPositionen[index].erledigt = erledigtCheck.checked;
+      const zeile = erledigtCheck.closest(".bestellung-positionen-zeile");
+      if (zeile) zeile.classList.toggle("bestellung-positionen-zeile--erledigt", erledigtCheck.checked);
+    });
   }
 
   // Öffnet das Detail-/Bearbeiten-Modal. Ist die Bestellung bereits
@@ -740,6 +763,7 @@
           rabattProzent: Number(p.rabattProzent) || 0,
           endpreis,
           gesamtpreis,
+          erledigt: !!p.erledigt,
         };
       });
 
