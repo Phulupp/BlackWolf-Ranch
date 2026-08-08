@@ -1,6 +1,21 @@
 /* --------------------------------------------------------------------------
    13. Waren & Preise
    -------------------------------------------------------------------------- */
+/* Etwas kompaktere/dezentere Suchleiste nur auf dieser Seite (gescoped mit
+   #view-waren statt die geteilte .search-field-Basis für Bestellungen/
+   Kontakte mitzuverändern). */
+#view-waren .search-field {
+  padding: 8px 14px;
+  border-width: 1px;
+  border-color: rgba(189, 145, 67, 0.28);
+  box-shadow: none;
+  min-width: 200px;
+}
+
+#view-waren .search-field:focus-within {
+  border-color: var(--brass);
+}
+
 /* Bewusst eigene Klassen statt der geteilten .reg-row-Varianten (die
    Kontakte/Lager weiter im bisherigen Tabellen-Look nutzen): Waren & Preise
    soll wie ein altes, gebundenes Warenverzeichnis wirken - eigene, deutlich
@@ -42,12 +57,18 @@
   background: linear-gradient(90deg, var(--brass) 0%, rgba(189, 145, 67, 0.15) 85%, transparent 100%);
 }
 
+/* Zeile = [Name · Preis]-Einheit links (natürliche Breite, KEINE eigene
+   Spalte) + Aktionen rechts. justify-content:space-between wirkt hier nur
+   zwischen diesen zwei Gruppen, nicht zwischen Name und Preis selbst - so
+   bleiben Name und Preis immer nah beieinander ("Weizen · 0,25 $") und der
+   Abstand zu den Aktionen variiert natürlich mit der Namenslänge, statt
+   einer starren Tabellen-Spalte. */
 .warenbuch-zeile {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
   gap: 18px;
-  padding: 7px 20px;
+  padding: 9px 22px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   font-size: 13px;
   transition: background 0.15s ease;
@@ -61,19 +82,46 @@
   background: rgba(189, 145, 67, 0.06);
 }
 
-.warenbuch-zeile__rechts {
+.warenbuch-zeile__eintrag {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
+.warenbuch-zeile__name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--wood-text);
+}
+
+.warenbuch-zeile__trenner {
+  color: var(--brass);
+  opacity: 0.55;
+  font-size: 12px;
+}
+
+.warenbuch-zeile__preis {
+  font-weight: 700;
+  color: var(--brass-bright);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Aktions-Icons bewusst klein und im Ruhezustand kaum sichtbar, damit sie
+   neben Produktname und Preis nicht dominieren - erst beim Überfahren der
+   Zeile werden sie erkennbar, beim direkten Hover/Fokus auf den Button
+   selbst voll sichtbar. */
+.warenbuch-zeile .icon-btn {
+  width: 24px;
+  height: 24px;
+  opacity: 0.38;
   flex-shrink: 0;
 }
 
-/* Aktions-Icons in der Warenliste bewusst kleiner und erst bei Hover/Fokus
-   voll sichtbar, damit sie neben Produktname und Preis nicht ablenken. */
-.warenbuch-zeile .icon-btn {
-  width: 25px;
-  height: 25px;
-  opacity: 0.55;
+.warenbuch-zeile:hover .icon-btn {
+  opacity: 0.7;
 }
 
 .warenbuch-zeile .icon-btn:hover,

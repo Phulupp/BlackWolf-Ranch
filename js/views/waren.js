@@ -147,11 +147,12 @@
                  </div>`
               : "";
             return `<div class="warenbuch-zeile">
-                <span class="reg-name">${escapeHtml(p.name)}</span>
-                <span class="warenbuch-zeile__rechts">
-                  <span class="reg-num">${formatGeld(p.verkaufspreis)}</span>
-                  ${aktionen}
+                <span class="warenbuch-zeile__eintrag">
+                  <span class="warenbuch-zeile__name">${escapeHtml(p.name)}</span>
+                  <span class="warenbuch-zeile__trenner" aria-hidden="true">·</span>
+                  <span class="warenbuch-zeile__preis">${formatGeld(p.verkaufspreis)}</span>
                 </span>
+                ${aktionen}
               </div>`;
           })
           .join("");
