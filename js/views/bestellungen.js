@@ -332,7 +332,14 @@
       .map((kat) => {
         const zeilenDieserKategorie = positionen
           .map((p, index) => ({ p, index }))
-          .filter(({ p }) => ermittlePositionKategorie(p) === kat.id);
+          .filter(({ p }) => ermittlePositionKategorie(p) === kat.id)
+          // Noch offene (nicht abgehakte) Positionen zuerst, fertige rutschen
+          // innerhalb ihrer Kategorie nach unten - nur eine Anzeige-Sortierung
+          // fürs Abarbeiten in der gerade offenen Bestellung, sort() ist
+          // stabil, d. h. die Reihenfolge innerhalb "offen"/"fertig" bleibt
+          // sonst unverändert. Die gespeicherte Reihenfolge in
+          // bestellungEntwurfPositionen selbst wird dabei nicht angefasst.
+          .sort((a, b) => (a.p.erledigt ? 1 : 0) - (b.p.erledigt ? 1 : 0));
         if (zeilenDieserKategorie.length === 0) return "";
         const zeilen = zeilenDieserKategorie.map(({ p, index }) => renderZeile(p, index)).join("");
         return `<div class="bestellung-positionen-zeile bestellung-positionen-zeile--kategorie"><span>${escapeHtml(kat.label)}</span></div>${zeilen}`;
@@ -620,18 +627,18 @@
         aktualisierePositionsBerechnung(index);
       }
     });
-    // Der "fertig vorbereitet"-Haken wirkt nur auf sich selbst - statt die
-    // ganze Positionsliste neu aufzubauen (würde bei Menge/Rabatt-Feldern in
-    // Bearbeitung Fokus/Cursor zerstören, siehe aktualisierePositionsBerechnung
-    // weiter oben), wird hier nur die Klasse der eigenen Zeile umgeschaltet.
+    // Der "fertig vorbereitet"-Haken löst (anders als Menge/Rabatt, die bei
+    // jedem Tastenanschlag per "input" feuern) nur bei jedem Klick einmal
+    // "change" aus - ein voller Neuaufbau der Liste ist hier also unbedenklich
+    // und nötig, damit abgehakte Positionen innerhalb ihrer Kategorie sofort
+    // ans Ende rutschen (siehe Sortierung in renderBestellungPositionen).
     el.bestellungPositionenListe.addEventListener("change", (event) => {
       const erledigtCheck = event.target.closest("[data-position-erledigt]");
       if (!erledigtCheck) return;
       const index = parseInt(erledigtCheck.getAttribute("data-position-erledigt"), 10);
       if (!bestellungEntwurfPositionen[index]) return;
       bestellungEntwurfPositionen[index].erledigt = erledigtCheck.checked;
-      const zeile = erledigtCheck.closest(".bestellung-positionen-zeile");
-      if (zeile) zeile.classList.toggle("bestellung-positionen-zeile--erledigt", erledigtCheck.checked);
+      renderBestellungPositionen();
     });
   }
 

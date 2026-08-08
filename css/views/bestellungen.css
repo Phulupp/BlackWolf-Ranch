@@ -495,8 +495,8 @@ select.field-input option {
 }
 
 .bestellung-position-erledigt-check {
-  width: 15px;
-  height: 15px;
+  width: 11px;
+  height: 11px;
   flex-shrink: 0;
   accent-color: var(--status-done);
   cursor: pointer;
