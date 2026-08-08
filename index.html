@@ -407,6 +407,14 @@
                     <line x1="5" y1="13" x2="4" y2="16" stroke="var(--wood-800)" stroke-width="1.1" stroke-linecap="round" />
                     <line x1="9" y1="13" x2="10" y2="16" stroke="var(--wood-800)" stroke-width="1.1" stroke-linecap="round" />
                   </g>
+                  <!-- Kleiner Pflanzen-Spross - 3 fächerartige Blätter,
+                       optisch anders als das Grasbüschel oben, für etwas
+                       Abwechslung zwischen den Grasbüscheln. -->
+                  <g id="dash-doodle-pflanze">
+                    <path d="M0,8 C-1,4 -4,3 -6,0" fill="none" stroke="#4d7a3a" stroke-width="1.3" stroke-linecap="round" />
+                    <path d="M0,8 C1,4 4,3 6,0" fill="none" stroke="#6fa050" stroke-width="1.3" stroke-linecap="round" />
+                    <path d="M0,8 C0,3 0,1 0,-3" fill="none" stroke="#4d7a3a" stroke-width="1.3" stroke-linecap="round" />
+                  </g>
                 </defs>
 
                 <!-- Sonne, halb hinter der ersten Wolke -->
@@ -427,11 +435,17 @@
                 <path d="M8,44 C2,44 -1,38 4,34 C2,27 10,23 17,26 C20,20 32,19 36,26 C43,24 48,31 43,36 C46,41 41,46 34,43 C30,48 14,48 8,44 Z" fill="#eef3f8" stroke="#8fb8d6" stroke-width="1.6" opacity="0.85" transform="translate(560,-18) scale(0.6)" />
                 <path d="M8,44 C2,44 -1,38 4,34 C2,27 10,23 17,26 C20,20 32,19 36,26 C43,24 48,31 43,36 C46,41 41,46 34,43 C30,48 14,48 8,44 Z" fill="#eef3f8" stroke="#8fb8d6" stroke-width="1.6" opacity="0.85" transform="translate(800,-24) scale(0.5)" />
 
-                <!-- Untergrund: zwei unregelmäßige, wellige Flächen (kein
-                     gerader Horizont, kein Wiederhol-Raster) als Basis für
-                     das Feld - vorne ein Ton heller für Tiefe. -->
-                <path d="M0,160 C40,156 90,163 150,158 C210,153 260,162 320,157 C380,151 430,161 500,155 C560,150 620,160 690,154 C750,148 800,159 860,153 C890,151 910,157 920,155 L920,170 L0,170 Z" fill="#3c5830" opacity="0.65" />
-                <path d="M0,166 C60,163 120,168 200,164 C280,160 350,167 430,163 C510,159 580,167 660,163 C740,159 810,166 880,162 C900,161 915,164 920,163 L920,170 L0,170 Z" fill="#5c7a44" opacity="0.5" />
+                <!-- Untergrund: dezenter Erdton als Basis, darauf einzelne,
+                     unregelmäßig geformte Grasflecken mit Lücken dazwischen
+                     - bewusst NICHT ein durchgehendes Band, damit an den
+                     Lücken sichtbarer Boden durchscheint. -->
+                <rect x="0" y="158" width="920" height="12" fill="#5a4326" opacity="0.35" />
+                <path d="M18,170 L20,157 C45,153 70,159 96,156 C118,154 132,160 138,170 Z" fill="#3c5830" opacity="0.62" />
+                <path d="M178,170 L182,159 C205,155 228,161 252,157 C268,155 278,161 282,170 Z" fill="#5c7a44" opacity="0.5" />
+                <path d="M340,170 L344,156 C368,152 392,159 415,155 C432,153 444,160 450,170 Z" fill="#3c5830" opacity="0.6" />
+                <path d="M520,170 L524,160 C542,156 560,162 580,158 C594,156 604,161 610,170 Z" fill="#5c7a44" opacity="0.5" />
+                <path d="M655,170 L659,157 C682,153 706,160 730,156 C748,154 760,161 766,170 Z" fill="#3c5830" opacity="0.62" />
+                <path d="M795,170 L799,159 C818,155 838,161 858,157 C874,155 886,161 892,170 Z" fill="#5c7a44" opacity="0.55" />
 
                 <!-- Trampelpfad vom Haus in Richtung Feld -->
                 <path d="M105,162 C125,158 145,159 160,155 C180,150 200,152 220,148 C235,145 245,148 255,150 L253,158 C240,156 225,154 210,157 C190,160 170,159 150,163 C133,166 115,167 105,168 Z" fill="#8a6a3f" opacity="0.55" />
@@ -472,6 +486,10 @@
                 <path d="M195,159 C194,154 200,151 212,151 C224,151 230,154 229,159 C230,164 224,167 212,167 C200,167 194,164 195,159 Z" fill="#6b4c30" stroke="var(--wood-800)" stroke-width="1.8" />
                 <path d="M195,152 C198,149 226,149 229,152 C226,155 198,155 195,152 Z" fill="#7ea8c9" stroke="var(--wood-800)" stroke-width="1.2" />
 
+                <!-- Kleiner Eimer neben dem Trog -->
+                <path d="M243,158 C242,163 244,167 247,167 C250,167 252,163 251,158 Z" fill="#8a6a45" stroke="var(--wood-800)" stroke-width="1.3" stroke-linejoin="round" />
+                <path d="M244,158 C246,156 248,156 250,158" fill="none" stroke="var(--wood-800)" stroke-width="1.1" />
+
                 <!-- Großer alter Baum: knorriger Stamm als dicker,
                      geschwungener Strich, unregelmäßige, mehrlappige Krone
                      statt einer glatten Blase. -->
@@ -505,7 +523,7 @@
                 <!-- Kühe im Hintergrund/mittleren Feld - kleiner und höher
                      platziert (perspektivisch weiter weg), teils vom Zaun
                      unten überdeckt, der danach gezeichnet wird. -->
-                <g transform="translate(654.4,105.65) scale(0.55)">
+                <g transform="translate(633,104.5) scale(0.42)">
                   <use href="#dash-doodle-kuh-koerper" fill="#f7f0e6" stroke="var(--wood-800)" stroke-width="2" stroke-linejoin="round" />
                   <path d="M13,9 C16,8 18,10 17,13 C19,15 16,17 13,16 C10,17 9,14 11,12 C9,10 11,8 13,9 Z" fill="#1f1712" />
                   <path d="M28,6 C31,5 33,7 32,10 C34,11 32,14 29,13 C27,14 25,12 27,10 C25,8 26,6 28,6 Z" fill="#1f1712" />
@@ -515,7 +533,7 @@
                 <!-- Besondere kleine Kuh: cremeweiß mit violetten Flecken,
                      bewusst klein und etwas zurückversetzt statt groß in der
                      Mitte, als kleiner Überraschungs-Blickfang. -->
-                <g transform="translate(704,105.5) scale(0.5)">
+                <g transform="translate(695,117.8) scale(0.6)">
                   <use href="#dash-doodle-kuh-koerper" fill="#f7f0e6" stroke="var(--wood-800)" stroke-width="2" stroke-linejoin="round" />
                   <path d="M13,9 C16,8 18,10 17,13 C19,15 16,17 13,16 C10,17 9,14 11,12 C9,10 11,8 13,9 Z" fill="#8a5aa8" />
                   <path d="M28,6 C31,5 33,7 32,10 C34,11 32,14 29,13 C27,14 25,12 27,10 C25,8 26,6 28,6 Z" fill="#8a5aa8" />
@@ -524,7 +542,7 @@
                 </g>
 
                 <!-- Kuh weiter hinten rechts, mittlere Distanz -->
-                <g transform="translate(856,112.25) scale(0.75)">
+                <g transform="translate(848,116) scale(0.68)">
                   <use href="#dash-doodle-kuh-koerper" fill="#f7f0e6" stroke="var(--wood-800)" stroke-width="2" stroke-linejoin="round" />
                   <path d="M13,9 C16,8 18,10 17,13 C19,15 16,17 13,16 C10,17 9,14 11,12 C9,10 11,8 13,9 Z" fill="#1f1712" />
                   <path d="M28,6 C31,5 33,7 32,10 C34,11 32,14 29,13 C27,14 25,12 27,10 C25,8 26,6 28,6 Z" fill="#1f1712" />
@@ -548,7 +566,7 @@
                 <path d="M560,158 C580,156 590,152 600,154 C620,156 635,145 650,142 C670,137 685,135 700,133 C715,131 735,135 750,137 C770,139 790,143 800,147 C815,151 835,153 850,155 C862,157 872,158 880,159" fill="none" stroke="var(--wood-700)" stroke-width="2.6" stroke-linecap="round" />
 
                 <!-- Braun-weiß gefleckte Kuh, im Feld vorm Zaun -->
-                <g transform="translate(586.8,116.55) scale(0.85)">
+                <g transform="translate(580,120) scale(0.8)">
                   <use href="#dash-doodle-kuh-koerper" fill="#f7f0e6" stroke="var(--wood-800)" stroke-width="2" stroke-linejoin="round" />
                   <path d="M13,9 C16,8 18,10 17,13 C19,15 16,17 13,16 C10,17 9,14 11,12 C9,10 11,8 13,9 Z" fill="#7a4a28" />
                   <path d="M28,6 C31,5 33,7 32,10 C34,11 32,14 29,13 C27,14 25,12 27,10 C25,8 26,6 28,6 Z" fill="#7a4a28" />
@@ -557,7 +575,7 @@
                 </g>
 
                 <!-- Schwarz-weiße Kuh vorn im Bild, am größten -->
-                <g transform="translate(769.2,123.45) scale(1.15)">
+                <g transform="translate(780,121.75) scale(1.25)">
                   <use href="#dash-doodle-kuh-koerper" fill="#f7f0e6" stroke="var(--wood-800)" stroke-width="2" stroke-linejoin="round" />
                   <path d="M13,9 C16,8 18,10 17,13 C19,15 16,17 13,16 C10,17 9,14 11,12 C9,10 11,8 13,9 Z" fill="#1f1712" />
                   <path d="M28,6 C31,5 33,7 32,10 C34,11 32,14 29,13 C27,14 25,12 27,10 C25,8 26,6 28,6 Z" fill="#1f1712" />
@@ -565,30 +583,51 @@
                   <use href="#dash-doodle-kuh-beine" />
                 </g>
 
-                <!-- Hühner im Hof/am Pfad -->
+                <!-- Zwei Hühner im Hof/am Pfad -->
                 <use href="#dash-doodle-huhn" transform="translate(140,160) scale(0.85)" />
-                <use href="#dash-doodle-huhn" transform="translate(198,157) scale(-0.7,0.7)" />
-                <use href="#dash-doodle-huhn" transform="translate(168,164) scale(0.65)" />
+                <use href="#dash-doodle-huhn" transform="translate(168,166) scale(-0.65,0.65)" />
 
-                <!-- Grasbüschel: unregelmäßig über die ganze Breite
-                     verstreut statt einer gleichmäßigen Reihe - vorne
-                     (unten/rechts) etwas größer und dichter. -->
-                <use href="#dash-doodle-buschel" transform="translate(30,163) rotate(-5) scale(0.9)" />
-                <use href="#dash-doodle-buschel" transform="translate(70,159) rotate(8) scale(1.1)" />
-                <use href="#dash-doodle-buschel" transform="translate(115,164) rotate(-3) scale(0.8)" />
-                <use href="#dash-doodle-buschel" transform="translate(160,161) rotate(5) scale(1.2)" />
-                <use href="#dash-doodle-buschel" transform="translate(255,163) rotate(-8) scale(0.9)" />
-                <use href="#dash-doodle-buschel" transform="translate(320,160) rotate(3) scale(1)" />
-                <use href="#dash-doodle-buschel" transform="translate(370,165) rotate(-4) scale(1.1)" />
-                <use href="#dash-doodle-buschel" transform="translate(440,159) rotate(7) scale(0.8)" />
-                <use href="#dash-doodle-buschel" transform="translate(500,163) rotate(-6) scale(1)" />
-                <use href="#dash-doodle-buschel" transform="translate(560,166) rotate(4) scale(1.2)" />
-                <use href="#dash-doodle-buschel" transform="translate(610,161) rotate(-3) scale(0.9)" />
-                <use href="#dash-doodle-buschel" transform="translate(660,164) rotate(6) scale(1.1)" />
-                <use href="#dash-doodle-buschel" transform="translate(710,159) rotate(-5) scale(0.8)" />
-                <use href="#dash-doodle-buschel" transform="translate(760,166) rotate(3) scale(1.3)" />
-                <use href="#dash-doodle-buschel" transform="translate(810,162) rotate(-7) scale(1)" />
-                <use href="#dash-doodle-buschel" transform="translate(870,165) rotate(5) scale(1.1)" />
+                <!-- Grasbüschel: bewusst wenige und unregelmäßig verteilt
+                     (unterschiedliche Höhe, nicht auf einer Linie) statt
+                     einer durchgehenden Reihe - dazwischen ein paar kleine
+                     Pflanzen-Sprossen und Blumen für Abwechslung. -->
+                <use href="#dash-doodle-buschel" transform="translate(28,162) rotate(-6) scale(0.9)" />
+                <use href="#dash-doodle-buschel" transform="translate(118,166) rotate(4) scale(1.1)" />
+                <use href="#dash-doodle-pflanze" transform="translate(160,163) rotate(3) scale(0.9)" />
+                <use href="#dash-doodle-buschel" transform="translate(268,160) rotate(-8) scale(0.8)" />
+                <use href="#dash-doodle-buschel" transform="translate(365,167) rotate(5) scale(1.2)" />
+                <use href="#dash-doodle-pflanze" transform="translate(430,161) rotate(-4) scale(0.8)" />
+                <use href="#dash-doodle-buschel" transform="translate(540,165) rotate(-3) scale(1)" />
+                <use href="#dash-doodle-buschel" transform="translate(625,160) rotate(7) scale(0.85)" />
+                <use href="#dash-doodle-pflanze" transform="translate(700,166) rotate(6) scale(1)" />
+                <use href="#dash-doodle-buschel" transform="translate(775,163) rotate(-5) scale(1.15)" />
+                <use href="#dash-doodle-buschel" transform="translate(880,167) rotate(4) scale(0.9)" />
+
+                <!-- Ein paar kleine Blumen, sehr einfach (Stiel + wenige
+                     Punkte), als dezenter Farbtupfer im Gras. -->
+                <g transform="translate(95,166)">
+                  <line x1="0" y1="7" x2="0" y2="0" stroke="#4d7a3a" stroke-width="1.1" stroke-linecap="round" />
+                  <circle cx="0" cy="-2" r="1.5" fill="#c97a8a" />
+                  <circle cx="-2" cy="-0.5" r="1.3" fill="#c97a8a" />
+                  <circle cx="2" cy="-0.5" r="1.3" fill="#c97a8a" />
+                  <circle cx="0" cy="1" r="1.3" fill="#c97a8a" />
+                  <circle cx="0" cy="-0.5" r="1" fill="#e8c542" />
+                </g>
+                <g transform="translate(600,168)">
+                  <line x1="0" y1="6" x2="0" y2="0" stroke="#4d7a3a" stroke-width="1.1" stroke-linecap="round" />
+                  <circle cx="0" cy="-2" r="1.4" fill="#e8c542" />
+                  <circle cx="-1.8" cy="-0.5" r="1.2" fill="#e8c542" />
+                  <circle cx="1.8" cy="-0.5" r="1.2" fill="#e8c542" />
+                  <circle cx="0" cy="-0.5" r="0.9" fill="#a67f34" />
+                </g>
+                <g transform="translate(840,164)">
+                  <line x1="0" y1="7" x2="0" y2="0" stroke="#4d7a3a" stroke-width="1.1" stroke-linecap="round" />
+                  <circle cx="0" cy="-2" r="1.5" fill="#b895d9" />
+                  <circle cx="-2" cy="-0.5" r="1.3" fill="#b895d9" />
+                  <circle cx="2" cy="-0.5" r="1.3" fill="#b895d9" />
+                  <circle cx="0" cy="1" r="1.3" fill="#b895d9" />
+                  <circle cx="0" cy="-0.5" r="1" fill="#e8c542" />
+                </g>
               </svg>
             </div>
 
