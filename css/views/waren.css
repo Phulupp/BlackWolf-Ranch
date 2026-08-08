@@ -57,17 +57,17 @@
   background: linear-gradient(90deg, var(--brass) 0%, rgba(189, 145, 67, 0.15) 85%, transparent 100%);
 }
 
-/* Zeile = [Name · Preis]-Einheit links (natürliche Breite, KEINE eigene
-   Spalte) + Aktionen rechts. justify-content:space-between wirkt hier nur
-   zwischen diesen zwei Gruppen, nicht zwischen Name und Preis selbst - so
-   bleiben Name und Preis immer nah beieinander ("Weizen · 0,25 $") und der
-   Abstand zu den Aktionen variiert natürlich mit der Namenslänge, statt
-   einer starren Tabellen-Spalte. */
+/* Zeile: die Produkt-/Preis-Gruppe (.warenbuch-zeile__eintrag) hat eine
+   feste, für ALLE Zeilen gleiche Breite (siehe dort) und wird über
+   justify-content:center in der Zeile zentriert. Die Aktionen sind bewusst
+   absolut positioniert und damit komplett unabhängig von dieser Zentrierung
+   - sie kleben immer am rechten Rand, ganz gleich wie breit/schmal die
+   zentrierte Gruppe ist. */
 .warenbuch-zeile {
+  position: relative;
   display: flex;
+  justify-content: center;
   align-items: baseline;
-  justify-content: space-between;
-  gap: 18px;
   padding: 9px 22px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   font-size: 13px;
@@ -82,11 +82,15 @@
   background: rgba(189, 145, 67, 0.06);
 }
 
+/* Feste, gemeinsame Breite für Produkt- und Preisspalte statt einer pro
+   Zeile unterschiedlich breiten Gruppe - dadurch stehen Name- und
+   Preisspalte über die ganze Liste hinweg exakt untereinander bündig,
+   wie bei einer klassisch gesetzten Preisliste. */
 .warenbuch-zeile__eintrag {
-  display: flex;
+  display: grid;
+  grid-template-columns: 180px 70px;
+  column-gap: 18px;
   align-items: baseline;
-  gap: 8px;
-  min-width: 0;
 }
 
 .warenbuch-zeile__name {
@@ -96,17 +100,18 @@
   color: var(--wood-text);
 }
 
-.warenbuch-zeile__trenner {
-  color: var(--brass);
-  opacity: 0.55;
-  font-size: 12px;
-}
-
 .warenbuch-zeile__preis {
   font-weight: 700;
   color: var(--brass-bright);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
+}
+
+.warenbuch-zeile .row-actions {
+  position: absolute;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 /* Aktions-Icons bewusst klein und im Ruhezustand kaum sichtbar, damit sie
