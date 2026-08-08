@@ -370,12 +370,26 @@
                 <h1 class="dash-hero__name" id="dashboard-name">—</h1>
                 <p class="dash-hero__sub">Hier behältst du alles im Blick.</p>
               </div>
+              <svg class="dash-hero__doodle" viewBox="0 0 220 130" preserveAspectRatio="xMaxYMax meet" role="img" aria-label="Wiese mit Baum, Kritzelei">
+                <!-- Wiese: einzelne Grasbüschel als Bögen, im selben
+                     Kritzel-Stil wie das Kuh-Logo im Sidebar-Kopf. -->
+                <path d="M0,126 Q6,116 12,126 Q18,114 24,126 Q30,118 36,126 Q42,112 48,126 Q54,120 60,126 Q66,114 72,126 Q78,118 84,126 Q90,112 96,126 Q102,120 108,126 Q114,116 120,126 Q126,120 132,126 Q138,112 144,126 Q150,118 156,126" fill="none" stroke="var(--parch-200)" stroke-width="2" stroke-linecap="round" opacity="0.5" />
+                <!-- Baumstamm -->
+                <path d="M172,127 C170,112 174,98 172,86" fill="none" stroke="var(--parch-200)" stroke-width="4" stroke-linecap="round" opacity="0.45" />
+                <!-- Baumkrone: überlappende Rundungen wie bei den Ohren/dem
+                     Kopf der Kuh-Kritzelei. -->
+                <path d="M150,80 C138,66 150,48 168,52 C170,40 190,38 196,52 C210,50 216,66 204,74 C210,86 196,94 184,88 C176,98 158,94 156,82 Z" fill="var(--parch-200)" opacity="0.16" stroke="var(--parch-200)" stroke-width="2" stroke-linejoin="round" />
+                <circle cx="178" cy="60" r="2" fill="var(--brass-bright)" opacity="0.55" />
+                <circle cx="196" cy="68" r="2" fill="var(--brass-bright)" opacity="0.55" />
+              </svg>
             </div>
 
             <button type="button" class="dash-hinweis" id="dash-bestellungen-hinweis" data-quicklink="bestellungen" hidden>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5 22 20.5H2Z"/><line x1="12" y1="9.5" x2="12" y2="14.5"/><circle cx="12" cy="17.5" r="0.9" fill="currentColor" stroke="none"/></svg>
               <span id="dash-bestellungen-hinweis-text">Bestellungen überprüfen</span>
             </button>
             <button type="button" class="dash-hinweis" id="dash-lager-hinweis" data-quicklink="lager" hidden>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5 22 20.5H2Z"/><line x1="12" y1="9.5" x2="12" y2="14.5"/><circle cx="12" cy="17.5" r="0.9" fill="currentColor" stroke="none"/></svg>
               <span id="dash-lager-hinweis-text">Lagerbestand überprüfen</span>
             </button>
 

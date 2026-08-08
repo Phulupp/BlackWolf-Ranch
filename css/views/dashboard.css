@@ -17,11 +17,28 @@
   gap: 24px;
   margin-bottom: 22px;
   position: relative;
+  overflow: hidden;
 }
 
 .dash-hero__greeting {
   position: relative;
   z-index: 1;
+}
+
+/* Dezente Kritzel-Grafik (Wiese + Baum) rechts im Hero, im selben
+   handgezeichneten Stil wie das Kuh-Logo im Sidebar-Kopf (siehe
+   .sidebar__brand-icon in index.html) - reine Deko, daher pointer-events:
+   none und aria-hidden nicht nötig (role="img" mit aria-label trägt die
+   Beschreibung). */
+.dash-hero__doodle {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  width: auto;
+  max-width: 260px;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .dash-hero__eyebrow {
@@ -57,16 +74,20 @@
   align-items: center;
   gap: 10px;
   width: 100%;
-  background: var(--status-open-soft);
-  border: 1px solid var(--status-open);
+  background: var(--status-danger-soft);
+  border: 1px solid var(--status-danger-bright);
   border-radius: var(--radius-md);
   padding: 12px 18px;
   margin-bottom: 12px;
   font-size: 12.5px;
   font-weight: 700;
-  color: var(--status-open);
+  color: var(--status-danger-bright);
   text-align: left;
-  transition: filter 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.dash-hinweis svg {
+  flex-shrink: 0;
 }
 
 .dash-hinweis:last-of-type {
@@ -74,7 +95,8 @@
 }
 
 .dash-hinweis:hover {
-  filter: brightness(1.1);
+  background: var(--status-danger);
+  color: #f2e4d6;
 }
 
 .dash-stats {
