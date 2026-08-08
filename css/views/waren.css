@@ -109,8 +109,8 @@
    wie bei einer klassisch gesetzten Preisliste. */
 .warenbuch-zeile__eintrag {
   display: grid;
-  grid-template-columns: 180px 70px;
-  column-gap: 18px;
+  grid-template-columns: 180px 16px 70px;
+  column-gap: 10px;
   align-items: baseline;
 }
 
@@ -119,6 +119,16 @@
   font-weight: 700;
   font-size: 14px;
   color: var(--wood-text);
+}
+
+/* Kurzer, dezenter Gedankenstrich statt Punkt oder durchgehender Linie -
+   eigene, feste Spalte (statt Teil des Namens/Preises), damit er über alle
+   Zeilen hinweg exakt bündig steht. */
+.warenbuch-zeile__trenner {
+  text-align: center;
+  color: var(--brass);
+  opacity: 0.65;
+  font-size: 13px;
 }
 
 .warenbuch-zeile__preis {

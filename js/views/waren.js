@@ -149,6 +149,7 @@
             return `<div class="warenbuch-zeile">
                 <span class="warenbuch-zeile__eintrag">
                   <span class="warenbuch-zeile__name">${escapeHtml(p.name)}</span>
+                  <span class="warenbuch-zeile__trenner" aria-hidden="true">–</span>
                   <span class="warenbuch-zeile__preis">${formatGeld(p.verkaufspreis)}</span>
                 </span>
                 ${aktionen}
