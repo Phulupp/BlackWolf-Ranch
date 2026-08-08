@@ -289,37 +289,37 @@
 }
 
 /* Kleine dekorative Efeu-Ranke über der Online-Anzeige (baumelt rechts ein
-   Stück herunter) und ein kleiner Zweig unten am Rand (::after weiter
-   unten) - beides rein optisch ohne Funktion, per SVG-Hintergrund auf
-   Pseudo-Elementen (pointer-events: none, damit der Button darunter weiter
-   klickbar bleibt). Beide SVGs nutzen dieselbe wiederverwendete Blatt-Form
-   (<defs><path id='l'>), einheitlich entlang eines Stängel-Pfads verteilt -
-   das ergibt ein klar lesbares Ranken-Muster statt einzelner verstreuter
-   Flecken. */
+   Stück weiter herunter) und ein kleiner Zweig unten am Rand (::after
+   weiter unten) - beides rein optisch ohne Funktion, per SVG-Hintergrund
+   auf Pseudo-Elementen (pointer-events: none, damit der Button darunter
+   weiter klickbar bleibt). Bewusst nur eine HANDVOLL einzelner, größerer
+   Blatt-Büschel mit Abstand dazwischen statt vieler kleiner Blätter dicht an
+   dicht - bei der winzigen Darstellungsgröße lief die dichte Variante sonst
+   zu einem unklaren dunklen Fleck statt einer erkennbaren Ranke zusammen. */
 .online-widget::before {
   content: "";
   position: absolute;
-  top: -12px;
-  left: -4px;
-  right: -20px;
-  height: 58px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 62'%3E%3Cdefs%3E%3Cpath id='l' d='M0,0 C-6,-3 -7,-10 0,-15 C7,-10 6,-3 0,0 Z'/%3E%3C/defs%3E%3Cpath d='M4,10 C30,2 50,16 80,10 C110,2 130,16 160,10 C172,8 180,9 188,12' fill='none' stroke='%233f5f38' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M188,12 C204,16 210,28 200,38 C193,45 197,52 205,58' fill='none' stroke='%233f5f38' stroke-width='2' stroke-linecap='round'/%3E%3Cuse href='%23l' transform='translate(16,8) rotate(-50)' fill='%234f7a45'/%3E%3Cuse href='%23l' transform='translate(34,16) rotate(35)' fill='%236f9955'/%3E%3Cuse href='%23l' transform='translate(52,4) rotate(-25)' fill='%234f7a45'/%3E%3Cuse href='%23l' transform='translate(72,15) rotate(30)' fill='%236f9955'/%3E%3Cuse href='%23l' transform='translate(92,5) rotate(-35)' fill='%234f7a45'/%3E%3Cuse href='%23l' transform='translate(112,15) rotate(25)' fill='%236f9955'/%3E%3Cuse href='%23l' transform='translate(132,4) rotate(-30)' fill='%234f7a45'/%3E%3Cuse href='%23l' transform='translate(150,14) rotate(20)' fill='%236f9955'/%3E%3Cuse href='%23l' transform='translate(168,9) rotate(-15)' fill='%234f7a45'/%3E%3Cuse href='%23l' transform='translate(196,20) rotate(70)' fill='%236f9955'/%3E%3Cuse href='%23l' transform='translate(203,32) rotate(-65)' fill='%234f7a45'/%3E%3Cuse href='%23l' transform='translate(196,44) rotate(75)' fill='%236f9955'/%3E%3Cuse href='%23l' transform='translate(203,56) rotate(-55)' fill='%234f7a45'/%3E%3C/svg%3E");
+  top: -10px;
+  left: -2px;
+  right: -8px;
+  height: 30px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 34'%3E%3Cdefs%3E%3Cpath id='l' d='M0,0 C-7,-4 -8,-12 0,-18 C8,-12 7,-4 0,0 Z'/%3E%3C/defs%3E%3Cpath d='M10,0 C8,4 12,5 10,8' fill='none' stroke='%233f5f38' stroke-width='2' stroke-linecap='round'/%3E%3Cuse href='%23l' transform='translate(10,8) rotate(178)' fill='%234f7a45'/%3E%3Cpath d='M38,0 C35,6 41,8 38,13' fill='none' stroke='%233f5f38' stroke-width='2' stroke-linecap='round'/%3E%3Cuse href='%23l' transform='translate(38,13) rotate(185)' fill='%236f9955'/%3E%3Cuse href='%23l' transform='translate(37,6) rotate(150)' fill='%234f7a45'/%3E%3Cpath d='M66,0 C64,3 68,4 66,6' fill='none' stroke='%233f5f38' stroke-width='2' stroke-linecap='round'/%3E%3Cuse href='%23l' transform='translate(66,6) rotate(180)' fill='%234f7a45'/%3E%3Cpath d='M94,0 C91,5 97,7 94,11' fill='none' stroke='%233f5f38' stroke-width='2' stroke-linecap='round'/%3E%3Cuse href='%23l' transform='translate(94,11) rotate(190)' fill='%236f9955'/%3E%3Cuse href='%23l' transform='translate(93,5) rotate(145)' fill='%234f7a45'/%3E%3Cpath d='M124,0 C118,8 130,14 124,24' fill='none' stroke='%233f5f38' stroke-width='2' stroke-linecap='round'/%3E%3Cuse href='%23l' transform='translate(124,10) rotate(160)' fill='%236f9955'/%3E%3Cuse href='%23l' transform='translate(126,17) rotate(-160)' fill='%234f7a45'/%3E%3Cuse href='%23l' transform='translate(122,24) rotate(185)' fill='%236f9955'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   pointer-events: none;
   z-index: 0;
 }
 
-/* Kleiner Efeu-Zweig am unteren Rand des Buttons, mit zwei kurzen
-   herabhängenden Ranken. */
+/* Kleiner Efeu-Zweig am unteren Rand des Buttons - gleiche Blatt-Form,
+   ebenso bewusst sparsam gehalten. */
 .online-widget::after {
   content: "";
   position: absolute;
-  top: calc(100% - 5px);
-  left: -4px;
-  right: -4px;
-  height: 26px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 34'%3E%3Cdefs%3E%3Cpath id='l' d='M0,0 C-6,-3 -7,-10 0,-15 C7,-10 6,-3 0,0 Z'/%3E%3C/defs%3E%3Cpath d='M6,4 C40,10 60,-2 90,6 C120,-2 145,8 175,2 C188,0 196,4 206,4' fill='none' stroke='%233f5f38' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M55,7 C53,16 57,22 55,30' fill='none' stroke='%233f5f38' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M150,6 C148,15 152,21 150,29' fill='none' stroke='%233f5f38' stroke-width='2' stroke-linecap='round'/%3E%3Cuse href='%23l' transform='translate(20,6) rotate(160)' fill='%234f7a45'/%3E%3Cuse href='%23l' transform='translate(45,9) rotate(-160)' fill='%236f9955'/%3E%3Cuse href='%23l' transform='translate(70,4) rotate(150)' fill='%234f7a45'/%3E%3Cuse href='%23l' transform='translate(95,8) rotate(-150)' fill='%236f9955'/%3E%3Cuse href='%23l' transform='translate(120,3) rotate(155)' fill='%234f7a45'/%3E%3Cuse href='%23l' transform='translate(145,8) rotate(-145)' fill='%236f9955'/%3E%3Cuse href='%23l' transform='translate(170,3) rotate(160)' fill='%234f7a45'/%3E%3Cuse href='%23l' transform='translate(196,6) rotate(-155)' fill='%236f9955'/%3E%3Cuse href='%23l' transform='translate(55,30) rotate(170)' fill='%234f7a45'/%3E%3Cuse href='%23l' transform='translate(150,29) rotate(-170)' fill='%236f9955'/%3E%3C/svg%3E");
+  top: calc(100% - 4px);
+  left: -2px;
+  right: -2px;
+  height: 22px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 26'%3E%3Cdefs%3E%3Cpath id='l' d='M0,0 C-7,-4 -8,-12 0,-18 C8,-12 7,-4 0,0 Z'/%3E%3C/defs%3E%3Cpath d='M30,0 C27,6 33,8 30,14' fill='none' stroke='%233f5f38' stroke-width='2' stroke-linecap='round'/%3E%3Cuse href='%23l' transform='translate(30,14) rotate(180)' fill='%234f7a45'/%3E%3Cpath d='M70,0 C68,4 72,5 70,9' fill='none' stroke='%233f5f38' stroke-width='2' stroke-linecap='round'/%3E%3Cuse href='%23l' transform='translate(70,9) rotate(178)' fill='%236f9955'/%3E%3Cpath d='M108,0 C104,7 112,10 108,18' fill='none' stroke='%233f5f38' stroke-width='2' stroke-linecap='round'/%3E%3Cuse href='%23l' transform='translate(108,18) rotate(185)' fill='%234f7a45'/%3E%3Cuse href='%23l' transform='translate(107,9) rotate(150)' fill='%236f9955'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   pointer-events: none;
