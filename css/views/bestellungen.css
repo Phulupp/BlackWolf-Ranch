@@ -132,6 +132,45 @@
   }
 }
 
+/* ----------------------------------------------------------------------
+   14a. "Neue Bestellung"-Modal im Kontor-/Warenbuch-Stil
+   ----------------------------------------------------------------------
+   Alles unterhalb ist bewusst mit "#modal-bestellung" gescoped statt die
+   geteilten Basisklassen (.field-input, .field-label, .bestellung-spalte,
+   .custom-select__trigger) direkt zu verändern - dieselben Klassen nutzt
+   auch das Kunde-Modal (siehe .bestellung-spalte in index.html), das von
+   diesem Redesign unberührt bleiben soll. Ziel: weniger sichtbare Kästen,
+   mehr feine goldene Linien statt Rahmen/Flächen - Layout, Größe und
+   Funktion bleiben unverändert. */
+#modal-bestellung .bestellung-spalte--links {
+  border-right-color: rgba(189, 145, 67, 0.2);
+}
+
+#modal-bestellung .field-label {
+  color: var(--brass-bright);
+  opacity: 0.8;
+}
+
+#modal-bestellung .field-input,
+#modal-bestellung .custom-select__trigger {
+  background: rgba(0, 0, 0, 0.14);
+  border-color: rgba(189, 145, 67, 0.22);
+  box-shadow: none;
+}
+
+/* Reine Anzeigefelder (Bestelldatum, Bearbeiter, berechnete Zahlungssumme)
+   sind keine Eingaben - statt einer Kastenfläche nur noch eine feine
+   Grundlinie, wie eine ausgefüllte Zeile in einem alten Kontorbuch. */
+#modal-bestellung .field-static {
+  padding: 5px 2px 8px;
+  background: none;
+  border: none;
+  border-bottom: 1px solid rgba(189, 145, 67, 0.16);
+  border-radius: 0;
+  font-family: var(--font-display);
+  color: var(--wood-text);
+}
+
 /* Allgemeine Infos im Bestellungs-Modal: Unternehmen/Ansprechpartner/
    Bestelldatum/Bearbeiter/Status/Notiz. */
 .bestellung-form-zeile {
@@ -410,13 +449,14 @@ select.field-input option {
 .bestellung-position-vorschau {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 26px;
   align-items: center;
-  padding: 10px 14px;
+  padding: 9px 2px 15px;
   margin-bottom: 14px;
-  background: rgba(0, 0, 0, 0.16);
-  border: 1px solid var(--leather-edge);
-  border-radius: var(--radius-sm);
+  background: none;
+  border: none;
+  border-top: 1px solid rgba(189, 145, 67, 0.15);
+  border-radius: 0;
   font-size: 12.5px;
   color: var(--wood-text-muted);
 }
@@ -443,8 +483,9 @@ select.field-input option {
   flex-direction: column;
   max-height: 320px;
   overflow: auto;
-  border: 1px solid var(--leather-edge);
-  border-radius: var(--radius-sm);
+  border: none;
+  border-top: 1px solid rgba(189, 145, 67, 0.18);
+  border-radius: 0;
 }
 
 .bestellung-positionen-zeile {
@@ -452,10 +493,10 @@ select.field-input option {
   grid-template-columns: 2fr 0.9fr 1.15fr 1fr 1.15fr 1.2fr 40px;
   align-items: center;
   gap: 16px;
-  padding: 12px 16px;
+  padding: 7px 16px;
   font-size: 13px;
   color: var(--wood-text);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   min-width: 780px;
 }
 
@@ -469,10 +510,10 @@ select.field-input option {
   background: var(--leather-800);
   font-size: 10.5px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: var(--wood-text-muted);
-  border-bottom: 2px solid var(--leather-edge);
+  color: var(--wood-text-soft);
+  border-bottom: 1px solid rgba(189, 145, 67, 0.3);
   white-space: nowrap;
   z-index: 1;
 }
@@ -530,8 +571,8 @@ select.field-input option {
 
 .bestellung-positionen-zeile input[type="number"] {
   width: 100%;
-  min-height: 38px;
-  padding: 7px 10px;
+  min-height: 30px;
+  padding: 4px 8px;
   text-align: right;
   font-size: 13px;
   font-variant-numeric: tabular-nums;
@@ -554,19 +595,29 @@ select.field-input option {
    Waren & Preise/Lager. Anders als die übrigen Zeilen nicht im 7-Spalten-
    Grid, sondern eine einzelne durchgehende Zeile. */
 .bestellung-positionen-zeile--kategorie {
-  display: block;
-  padding: 10px 16px 4px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 16px 6px;
   font-family: var(--font-display);
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--brass-bright);
-  background: var(--leather-800);
+  background: none;
+  border-top: 1px solid rgba(189, 145, 67, 0.16);
 }
 
 .bestellung-positionen-zeile--kategorie:first-child {
-  padding-top: 8px;
+  padding-top: 2px;
+  border-top: none;
+}
+
+.bestellung-positionen-zeile__kategorie-linie {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--brass) 0%, rgba(189, 145, 67, 0.12) 85%, transparent 100%);
 }
 
 /* Lieferung-Umschalter: sitzt inline in der Zusammenfassungsleiste, direkt
@@ -578,18 +629,17 @@ select.field-input option {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 12px;
-  background: rgba(0, 0, 0, 0.16);
-  border: 1.5px solid var(--leather-edge);
-  border-radius: var(--radius-sm);
+  padding: 4px 2px;
+  background: none;
+  border: none;
+  border-radius: 0;
   color: var(--wood-text-muted);
   font-size: 12.5px;
-  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+  transition: color 0.15s ease;
 }
 
 .bestellung-lieferung-toggle:hover {
-  border-color: var(--brass);
-  color: var(--wood-text);
+  color: var(--brass-bright);
 }
 
 .bestellung-lieferung-toggle__box {
@@ -636,13 +686,13 @@ select.field-input option {
   flex-wrap: wrap;
   align-items: center;
   gap: 22px;
-  padding: 14px 20px;
-  background: rgba(189, 145, 67, 0.12);
-  border-top: 2px solid var(--brass);
-  border-radius: var(--radius-sm);
+  padding: 16px 2px 4px;
+  background: none;
+  border-top: 1.5px solid var(--brass);
+  border-radius: 0;
   font-size: 13px;
   color: var(--wood-text-muted);
-  margin: 10px 0 6px;
+  margin: 12px 0 6px;
 }
 
 .bestellung-zusammenfassung strong {
@@ -678,8 +728,9 @@ select.field-input option {
 
 .bestellung-zusammenfassung .bestellung-zusammenfassung__haupt-wert {
   font-family: var(--font-display);
-  font-size: 26px;
+  font-size: 29px;
   font-weight: 800;
+  letter-spacing: 0.01em;
   color: var(--brass-bright);
 }
 

@@ -342,7 +342,7 @@
           .sort((a, b) => (a.p.erledigt ? 1 : 0) - (b.p.erledigt ? 1 : 0));
         if (zeilenDieserKategorie.length === 0) return "";
         const zeilen = zeilenDieserKategorie.map(({ p, index }) => renderZeile(p, index)).join("");
-        return `<div class="bestellung-positionen-zeile bestellung-positionen-zeile--kategorie"><span>${escapeHtml(kat.label)}</span></div>${zeilen}`;
+        return `<div class="bestellung-positionen-zeile bestellung-positionen-zeile--kategorie"><span>${escapeHtml(kat.label)}</span><span class="bestellung-positionen-zeile__kategorie-linie"></span></div>${zeilen}`;
       })
       .join("");
 

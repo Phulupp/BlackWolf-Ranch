@@ -1,7 +1,83 @@
 /* --------------------------------------------------------------------------
    13. Waren & Preise
    -------------------------------------------------------------------------- */
-.waren-row {
-  grid-template-columns: 44fr 26fr 30fr;
+/* Bewusst eigene Klassen statt der geteilten .reg-row-Varianten (die
+   Kontakte/Lager weiter im bisherigen Tabellen-Look nutzen): Waren & Preise
+   soll wie ein altes, gebundenes Warenverzeichnis wirken - eigene, deutlich
+   hervorgehobene Kategorie-Abschnitte statt einer technischen Kopfzeile,
+   und kompakte Zeilen statt einer Datenbank-Tabelle. */
+.warenbuch-kategorie {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 20px 20px 9px;
+  border-top: 1px solid var(--leather-edge);
+}
+
+.warenbuch-kategorie:first-child {
+  border-top: none;
+  padding-top: 6px;
+}
+
+.warenbuch-kategorie__icon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  color: var(--brass);
+}
+
+.warenbuch-kategorie__label {
+  font-family: var(--font-display);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--brass-bright);
+  white-space: nowrap;
+}
+
+.warenbuch-kategorie__linie {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--brass) 0%, rgba(189, 145, 67, 0.15) 85%, transparent 100%);
+}
+
+.warenbuch-zeile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 7px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 13px;
+  transition: background 0.15s ease;
+}
+
+.warenbuch-zeile:last-child {
+  border-bottom: none;
+}
+
+.warenbuch-zeile:hover {
+  background: rgba(189, 145, 67, 0.06);
+}
+
+.warenbuch-zeile__rechts {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+/* Aktions-Icons in der Warenliste bewusst kleiner und erst bei Hover/Fokus
+   voll sichtbar, damit sie neben Produktname und Preis nicht ablenken. */
+.warenbuch-zeile .icon-btn {
+  width: 25px;
+  height: 25px;
+  opacity: 0.55;
+}
+
+.warenbuch-zeile .icon-btn:hover,
+.warenbuch-zeile .icon-btn:focus-visible {
+  opacity: 1;
 }
 

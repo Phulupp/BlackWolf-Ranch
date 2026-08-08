@@ -110,6 +110,17 @@
     return produkte.filter((p) => (p.name || "").toLowerCase().includes(begriff));
   }
 
+  // Dezente Line-Icons je Warenkategorie (gleicher Strichstil wie die
+  // Sidebar-Navigation: stroke=currentColor, viewBox 24x24) - rein
+  // dekorativ vor der jeweiligen Abschnittsüberschrift, bewusst klein
+  // gehalten statt großer Illustrationen.
+  const WAREN_KATEGORIE_ICONS = {
+    feldfruechte: '<path d="M12 21V10"/><path d="M12 10C12 6 9 4 6 4c0 4 2 7 6 7Z"/><path d="M12 13c0-3.5 2.5-6 6-6 0 3.8-2 6.5-6 6.5"/>',
+    tierprodukte: '<path d="M12 3c3.5 4.5 6 8.2 6 11.5a6 6 0 0 1-12 0C6 11.2 8.5 7.5 12 3Z"/>',
+    verarbeitet: '<path d="M8 8h8l1.5 5A5.5 5.5 0 0 1 12 19a5.5 5.5 0 0 1-5.5-6Z"/><path d="M9.5 8V6a2.5 2.5 0 0 1 5 0v2"/>',
+  };
+  const WAREN_KATEGORIE_ICON_STANDARD = '<path d="M6 4h8l4 4v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Z"/><path d="M14 4v4h4"/>';
+
   function renderWaren() {
     if (!el.warenTableBody) return;
     const liste = gefiltertProdukte();
@@ -135,15 +146,22 @@
                    <button class="icon-btn icon-btn--delete" data-ware-delete="${p.id}" title="Löschen">🗑</button>
                  </div>`
               : "";
-            return `<div class="reg-row reg-row--body waren-row">
+            return `<div class="warenbuch-zeile">
                 <span class="reg-name">${escapeHtml(p.name)}</span>
-                <span>${formatGeld(p.verkaufspreis)}</span>
-                <span class="reg-row__actions-col">${aktionen}</span>
+                <span class="warenbuch-zeile__rechts">
+                  <span class="reg-num">${formatGeld(p.verkaufspreis)}</span>
+                  ${aktionen}
+                </span>
               </div>`;
           })
           .join("");
 
-        return `<div class="reg-row reg-row--kategorie"><span>${escapeHtml(kat.label)}</span></div>${zeilen}`;
+        const icon = WAREN_KATEGORIE_ICONS[kat.id] || WAREN_KATEGORIE_ICON_STANDARD;
+        return `<div class="warenbuch-kategorie">
+            <svg class="warenbuch-kategorie__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icon}</svg>
+            <span class="warenbuch-kategorie__label">${escapeHtml(kat.label)}</span>
+            <span class="warenbuch-kategorie__linie"></span>
+          </div>${zeilen}`;
       })
       .join("");
   }
