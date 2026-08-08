@@ -25,18 +25,22 @@
   z-index: 1;
 }
 
-/* Dezente Kritzel-Grafik (Wiese + Baum) rechts im Hero, im selben
-   handgezeichneten Stil wie das Kuh-Logo im Sidebar-Kopf (siehe
-   .sidebar__brand-icon in index.html) - reine Deko, daher pointer-events:
-   none und aria-hidden nicht nötig (role="img" mit aria-label trägt die
-   Beschreibung). */
+/* Kleine Bauernhof-Szene (Haus, Baum, Scheune, Zaun mit Tieren, Wolken)
+   rechts im Hero, im selben handgezeichneten Stil wie das Kuh-Logo im
+   Sidebar-Kopf (siehe .sidebar__brand-icon in index.html) - reine Deko,
+   daher pointer-events: none und aria-hidden nicht nötig (role="img" mit
+   aria-label trägt die Beschreibung). max-width bewusst über der bei
+   height:100% natürlich resultierenden Breite (viewBox-Seitenverhältnis
+   440/170 bei ~172px Hero-Höhe ≈ 445px), damit die Grafik nie gestaucht
+   wird - überschüssige Breite wird stattdessen vom overflow:hidden des
+   .dash-hero abgeschnitten. */
 .dash-hero__doodle {
   position: absolute;
   right: 0;
   bottom: 0;
   height: 100%;
   width: auto;
-  max-width: 420px;
+  max-width: 480px;
   pointer-events: none;
   z-index: 0;
 }
