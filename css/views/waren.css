@@ -20,18 +20,32 @@
    Kontakte/Lager weiter im bisherigen Tabellen-Look nutzen): Waren & Preise
    soll wie ein altes, gebundenes Warenverzeichnis wirken - eigene, deutlich
    hervorgehobene Kategorie-Abschnitte statt einer technischen Kopfzeile,
-   und kompakte Zeilen statt einer Datenbank-Tabelle. */
+   und kompakte Zeilen statt einer Datenbank-Tabelle.
+
+   Kategorie-Überschrift zentriert (Icon + Label), flankiert von zwei
+   Goldlinien, die zu den Rändern hin ausblenden - "──── FELDFRÜCHTE ────".
+   Dieselbe horizontale Mitte wie die Produkt-/Preis-Gruppe darunter
+   (gleiches Zeilen-Padding von 22px), damit Überschrift und Produktgruppe
+   wie eine zusammengehörige, zentrierte Einheit wirken. Die Linien füllen
+   dabei den Leerraum links/rechts, statt ihn frei zu lassen. */
 .warenbuch-kategorie {
   display: flex;
   align-items: center;
-  gap: 9px;
-  padding: 20px 20px 9px;
+  gap: 16px;
+  padding: 30px 22px 15px;
   border-top: 1px solid var(--leather-edge);
 }
 
 .warenbuch-kategorie:first-child {
   border-top: none;
   padding-top: 6px;
+}
+
+.warenbuch-kategorie__mitte {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-shrink: 0;
 }
 
 .warenbuch-kategorie__icon {
@@ -54,7 +68,14 @@
 .warenbuch-kategorie__linie {
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, var(--brass) 0%, rgba(189, 145, 67, 0.15) 85%, transparent 100%);
+}
+
+.warenbuch-kategorie__linie--links {
+  background: linear-gradient(90deg, transparent 0%, var(--brass) 96%);
+}
+
+.warenbuch-kategorie__linie--rechts {
+  background: linear-gradient(90deg, var(--brass) 4%, transparent 100%);
 }
 
 /* Zeile: die Produkt-/Preis-Gruppe (.warenbuch-zeile__eintrag) hat eine
@@ -119,14 +140,14 @@
    Zeile werden sie erkennbar, beim direkten Hover/Fokus auf den Button
    selbst voll sichtbar. */
 .warenbuch-zeile .icon-btn {
-  width: 24px;
-  height: 24px;
-  opacity: 0.38;
+  width: 22px;
+  height: 22px;
+  opacity: 0.28;
   flex-shrink: 0;
 }
 
 .warenbuch-zeile:hover .icon-btn {
-  opacity: 0.7;
+  opacity: 0.6;
 }
 
 .warenbuch-zeile .icon-btn:hover,
