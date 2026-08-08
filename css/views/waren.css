@@ -109,8 +109,8 @@
    wie bei einer klassisch gesetzten Preisliste. */
 .warenbuch-zeile__eintrag {
   display: grid;
-  grid-template-columns: 180px 16px 70px;
-  column-gap: 10px;
+  grid-template-columns: 180px 54px 70px;
+  column-gap: 14px;
   align-items: baseline;
 }
 
@@ -121,14 +121,18 @@
   color: var(--wood-text);
 }
 
-/* Kurzer, dezenter Gedankenstrich statt Punkt oder durchgehender Linie -
-   eigene, feste Spalte (statt Teil des Namens/Preises), damit er über alle
-   Zeilen hinweg exakt bündig steht. */
+/* Bewusst sichtbares dekoratives Element statt eines kleinen Zeichens -
+   ein kurzer, gedämpft-goldener Balken (keine Schrift), eigene feste Spalte
+   (statt Teil von Name/Preis), damit er über alle Zeilen hinweg exakt
+   bündig und mittig zwischen Name und Preis steht. */
 .warenbuch-zeile__trenner {
-  text-align: center;
-  color: var(--brass);
-  opacity: 0.65;
-  font-size: 13px;
+  align-self: center;
+  justify-self: center;
+  width: 46px;
+  height: 2px;
+  background: var(--brass);
+  opacity: 0.75;
+  border-radius: 1px;
 }
 
 .warenbuch-zeile__preis {
