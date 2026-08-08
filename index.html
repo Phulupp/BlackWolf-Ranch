@@ -370,17 +370,44 @@
                 <h1 class="dash-hero__name" id="dashboard-name">—</h1>
                 <p class="dash-hero__sub">Hier behältst du alles im Blick.</p>
               </div>
-              <svg class="dash-hero__doodle" viewBox="0 0 220 130" preserveAspectRatio="xMaxYMax meet" role="img" aria-label="Wiese mit Baum, Kritzelei">
-                <!-- Wiese: einzelne Grasbüschel als Bögen, im selben
-                     Kritzel-Stil wie das Kuh-Logo im Sidebar-Kopf. -->
-                <path d="M0,126 Q6,116 12,126 Q18,114 24,126 Q30,118 36,126 Q42,112 48,126 Q54,120 60,126 Q66,114 72,126 Q78,118 84,126 Q90,112 96,126 Q102,120 108,126 Q114,116 120,126 Q126,120 132,126 Q138,112 144,126 Q150,118 156,126" fill="none" stroke="var(--parch-200)" stroke-width="2" stroke-linecap="round" opacity="0.5" />
-                <!-- Baumstamm -->
-                <path d="M172,127 C170,112 174,98 172,86" fill="none" stroke="var(--parch-200)" stroke-width="4" stroke-linecap="round" opacity="0.45" />
-                <!-- Baumkrone: überlappende Rundungen wie bei den Ohren/dem
-                     Kopf der Kuh-Kritzelei. -->
-                <path d="M150,80 C138,66 150,48 168,52 C170,40 190,38 196,52 C210,50 216,66 204,74 C210,86 196,94 184,88 C176,98 158,94 156,82 Z" fill="var(--parch-200)" opacity="0.16" stroke="var(--parch-200)" stroke-width="2" stroke-linejoin="round" />
-                <circle cx="178" cy="60" r="2" fill="var(--brass-bright)" opacity="0.55" />
-                <circle cx="196" cy="68" r="2" fill="var(--brass-bright)" opacity="0.55" />
+              <svg class="dash-hero__doodle" viewBox="0 0 320 170" preserveAspectRatio="xMaxYMax meet" role="img" aria-label="Kleiner Bauernhof mit Baum und Wolken, Kritzelei">
+                <defs>
+                  <!-- Wolke als wiederverwendbare Form (siehe <use> unten),
+                       im selben Kritzel-Stil wie die Kuh im Sidebar-Kopf. -->
+                  <path id="dash-doodle-wolke" d="M6,26 C0,26 -3,20 2,16 C0,9 8,5 15,8 C18,2 30,1 34,8 C41,6 46,13 41,18 C44,23 39,28 32,25 C28,30 12,30 6,26 Z" />
+                </defs>
+
+                <!-- Wolken -->
+                <use href="#dash-doodle-wolke" transform="translate(14,8)" fill="var(--parch-200)" stroke="var(--parch-200)" stroke-width="1.6" opacity="0.22" />
+                <use href="#dash-doodle-wolke" transform="translate(150,2) scale(0.8)" fill="var(--parch-200)" stroke="var(--parch-200)" stroke-width="1.6" opacity="0.18" />
+                <use href="#dash-doodle-wolke" transform="translate(238,16) scale(0.6)" fill="var(--parch-200)" stroke="var(--parch-200)" stroke-width="1.6" opacity="0.16" />
+
+                <!-- Kleines Bauernhaus, im selben Kritzel-Stil wie das
+                     Kuh-Logo (cremefarbene Fläche, dunkle Konturen, Messing
+                     als Akzent). -->
+                <rect x="94" y="90" width="10" height="20" rx="2" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="2" />
+                <path d="M24,120 L70,82 L116,120 Z" fill="#6e2a1e" stroke="var(--wood-800)" stroke-width="2.4" stroke-linejoin="round" />
+                <rect x="34" y="120" width="72" height="42" rx="3" fill="#96392a" stroke="var(--wood-800)" stroke-width="2.4" />
+                <rect x="42" y="128" width="14" height="14" rx="1.5" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="1.8" />
+                <line x1="49" y1="128" x2="49" y2="142" stroke="var(--wood-800)" stroke-width="1.2" />
+                <line x1="42" y1="135" x2="56" y2="135" stroke="var(--wood-800)" stroke-width="1.2" />
+                <rect x="60" y="140" width="18" height="22" rx="2" fill="var(--wood-800)" stroke="var(--wood-800)" stroke-width="1" />
+                <circle cx="74" cy="151" r="1.4" fill="var(--brass-bright)" />
+
+                <!-- Baumstamm: braun -->
+                <path d="M245,162 C243,144 248,128 245,112" fill="none" stroke="var(--wood-800)" stroke-width="5" stroke-linecap="round" />
+                <!-- Baumkrone: grün, überlappende Rundungen wie bei den
+                     Ohren/dem Kopf der Kuh-Kritzelei, plus rote Äpfel. -->
+                <path d="M220,102 C206,86 220,64 240,68 C242,54 264,52 271,68 C287,66 293,84 279,93 C286,107 270,116 256,109 C247,120 226,116 224,102 Z" fill="#4f7a3c" stroke="var(--wood-800)" stroke-width="2.2" stroke-linejoin="round" />
+                <circle cx="238" cy="78" r="2.4" fill="#b23a2a" />
+                <circle cx="262" cy="70" r="2.4" fill="#b23a2a" />
+                <circle cx="272" cy="90" r="2.4" fill="#b23a2a" />
+                <circle cx="250" cy="98" r="2.4" fill="#b23a2a" />
+
+                <!-- Wiese: durchgehende Grasbüschel-Linie am unteren Rand,
+                     in Grün statt im warmen Pergament-Ton, damit klar als
+                     Wiese erkennbar. -->
+                <path d="M0,162 q6,-12 12,0 q6,-8 12,0 q6,-10 12,0 q6,-12 12,0 q6,-8 12,0 q6,-10 12,0 q6,-12 12,0 q6,-8 12,0 q6,-10 12,0 q6,-12 12,0 q6,-8 12,0 q6,-10 12,0 q6,-12 12,0 q6,-8 12,0 q6,-10 12,0 q6,-12 12,0 q6,-8 12,0 q6,-10 12,0 q6,-12 12,0 q6,-8 12,0 q6,-10 12,0 q6,-12 12,0 q6,-8 12,0 q6,-10 12,0 q6,-12 12,0 q6,-8 12,0 q6,-10 12,0" fill="none" stroke="#6f8a5c" stroke-width="2.2" stroke-linecap="round" opacity="0.6" />
               </svg>
             </div>
 
