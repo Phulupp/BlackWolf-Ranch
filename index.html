@@ -370,23 +370,43 @@
                 <h1 class="dash-hero__name" id="dashboard-name">—</h1>
                 <p class="dash-hero__sub">Hier behältst du alles im Blick.</p>
               </div>
-              <svg class="dash-hero__doodle" viewBox="0 0 920 170" preserveAspectRatio="xMaxYMax meet" role="img" aria-label="Bauernhof-Szene mit Haus, zwei Bäumen, Scheune, Pferd am Zaunpfahl, Weide mit schwarz-weißer, brauner und lila Kuh und einem Schaf, Kritzelei">
+              <svg class="dash-hero__doodle" viewBox="0 0 920 170" preserveAspectRatio="xMaxYMax meet" role="img" aria-label="Ein handgezeichnetes Bauernhof-Panorama: Haus, Scheune, ein großer alter Baum, ein Trampelpfad, ein Weidezaun, der sich durchs Bild zieht, sowie Pferd, Hühner und mehrere unterschiedlich weit entfernte Kühe - darunter eine cremeweiß-violett gefleckte Kuh als kleiner Blickfang">
                 <defs>
-                  <!-- Wolke als wiederverwendbare Form (siehe <use> unten) -
-                       dient auch als flauschiger Schafskörper weiter unten. -->
-                  <path id="dash-doodle-wolke" d="M6,26 C0,26 -3,20 2,16 C0,9 8,5 15,8 C18,2 30,1 34,8 C41,6 46,13 41,18 C44,23 39,28 32,25 C28,30 12,30 6,26 Z" />
-                  <!-- Wiese als Kachel-Muster, damit sie unabhängig von der
-                       Gesamtbreite lückenlos durchläuft (siehe Rect unten) -
-                       dichter Grasboden plus einzelne Halme in zwei
-                       Grüntönen statt einer einzelnen dünnen Wellenlinie. -->
-                  <pattern id="dash-doodle-gras" width="14" height="24" patternUnits="userSpaceOnUse">
-                    <rect x="0" y="14" width="14" height="10" fill="#3c5830" opacity="0.6" />
-                    <path d="M2,15 Q1,7 3,1" fill="none" stroke="#4d7a3a" stroke-width="1.8" stroke-linecap="round" />
-                    <path d="M5,15 Q6,5 4,0" fill="none" stroke="#6fa050" stroke-width="1.6" stroke-linecap="round" />
-                    <path d="M8,15 Q9,8 7,3" fill="none" stroke="#4d7a3a" stroke-width="1.5" stroke-linecap="round" />
-                    <path d="M11,15 Q12,6 10,1" fill="none" stroke="#6fa050" stroke-width="1.7" stroke-linecap="round" />
-                    <path d="M13,15 Q14,9 12,5" fill="none" stroke="#4d7a3a" stroke-width="1.3" stroke-linecap="round" />
-                  </pattern>
+                  <!-- Grasbüschel: 3 leicht ungleiche Halme aus einem
+                       gemeinsamen Ansatzpunkt, als <use> vielfach über die
+                       Szene verstreut (siehe unten) statt einer
+                       durchgehenden Linie oder eines gleichförmigen Rasters. -->
+                  <g id="dash-doodle-buschel">
+                    <path d="M0,10 C-1,5 1,1 2,-3" fill="none" stroke="#4d7a3a" stroke-width="1.4" stroke-linecap="round" />
+                    <path d="M3,10 C4,4 3,0 5,-4" fill="none" stroke="#6fa050" stroke-width="1.3" stroke-linecap="round" />
+                    <path d="M6,10 C7,6 6,2 8,-2" fill="none" stroke="#4d7a3a" stroke-width="1.2" stroke-linecap="round" />
+                  </g>
+                  <!-- Kuh-Körper: eine einzelne unregelmäßige, "krumme"
+                       Silhouette statt Ellipse+Kreis, als Basisform für alle
+                       Kühe unten (Farbe je Instanz per fill). -->
+                  <path id="dash-doodle-kuh-koerper" d="M46,18 C50,14 49,8 44,7 C40,2 30,1 24,4 C20,1 12,2 9,6 C4,7 0,12 2,17 C-1,20 1,24 5,23 C6,27 12,29 17,26 C22,29 34,29 39,26 C44,28 49,24 46,18 Z" />
+                  <!-- Kuh-Beine/Hörner/Schwanz: bewusst leicht ungleich lang
+                       und nicht symmetrisch, als gemeinsame Strichzeichnung
+                       für alle Kühe (immer in Konturfarbe). -->
+                  <g id="dash-doodle-kuh-beine">
+                    <path d="M8,25 C7,29 8,33 7,36" fill="none" stroke="var(--wood-800)" stroke-width="2.4" stroke-linecap="round" />
+                    <path d="M17,27 C16,30 17,34 16,37" fill="none" stroke="var(--wood-800)" stroke-width="2.4" stroke-linecap="round" />
+                    <path d="M33,26 C34,30 33,34 34,37" fill="none" stroke="var(--wood-800)" stroke-width="2.4" stroke-linecap="round" />
+                    <path d="M41,23 C42,27 41,31 42,34" fill="none" stroke="var(--wood-800)" stroke-width="2.4" stroke-linecap="round" />
+                    <path d="M2,17 C-3,15 -6,17 -8,14" fill="none" stroke="var(--wood-800)" stroke-width="2" stroke-linecap="round" />
+                    <path d="M9,4 L7,-3 L13,2" fill="none" stroke="var(--wood-800)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M18,2 L19,-5 L24,1" fill="none" stroke="var(--wood-800)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M46,15 C51,17 53,22 50,26" fill="none" stroke="var(--wood-800)" stroke-width="2" stroke-linecap="round" />
+                  </g>
+                  <!-- Huhn, klein und einfach, mehrfach mit leicht
+                       unterschiedlicher Größe/Ausrichtung verwendet. -->
+                  <g id="dash-doodle-huhn">
+                    <path d="M2,9 C0,5 3,1 8,1 C13,0 16,4 15,8 C17,9 17,12 14,12 C14,14 8,15 5,13 C2,14 -1,12 1,10 Z" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="1.3" />
+                    <path d="M14,4 L18,3 L15,7 Z" fill="#c9622f" stroke="var(--wood-800)" stroke-width="0.8" />
+                    <path d="M11,0 C12,-2 14,-2 13,0" fill="none" stroke="#b23a2a" stroke-width="1.4" stroke-linecap="round" />
+                    <line x1="5" y1="13" x2="4" y2="16" stroke="var(--wood-800)" stroke-width="1.1" stroke-linecap="round" />
+                    <line x1="9" y1="13" x2="10" y2="16" stroke="var(--wood-800)" stroke-width="1.1" stroke-linecap="round" />
+                  </g>
                 </defs>
 
                 <!-- Sonne, halb hinter der ersten Wolke -->
@@ -400,17 +420,24 @@
                   <circle r="10" fill="#f0c14b" stroke="var(--wood-800)" stroke-width="1.4" />
                 </g>
 
-                <!-- Wolken: weiß/hellblau statt gedecktem Pergament-Ton -->
-                <use href="#dash-doodle-wolke" transform="translate(20,10)" fill="#eef3f8" stroke="#8fb8d6" stroke-width="1.6" opacity="0.92" />
-                <use href="#dash-doodle-wolke" transform="translate(280,4) scale(0.8)" fill="#eef3f8" stroke="#8fb8d6" stroke-width="1.6" opacity="0.88" />
-                <use href="#dash-doodle-wolke" transform="translate(480,14) scale(0.6)" fill="#eef3f8" stroke="#8fb8d6" stroke-width="1.6" opacity="0.85" />
-                <use href="#dash-doodle-wolke" transform="translate(720,8) scale(0.65)" fill="#eef3f8" stroke="#8fb8d6" stroke-width="1.6" opacity="0.86" />
-                <use href="#dash-doodle-wolke" transform="translate(825,2) scale(0.5)" fill="#eef3f8" stroke="#8fb8d6" stroke-width="1.6" opacity="0.85" />
-                <use href="#dash-doodle-wolke" transform="translate(878,15) scale(0.42)" fill="#eef3f8" stroke="#8fb8d6" stroke-width="1.6" opacity="0.82" />
+                <!-- Wolken, bewusst wenige für einen ruhigen, übersichtlichen
+                     Himmel statt eines vollgestellten Bildes. -->
+                <path d="M8,44 C2,44 -1,38 4,34 C2,27 10,23 17,26 C20,20 32,19 36,26 C43,24 48,31 43,36 C46,41 41,46 34,43 C30,48 14,48 8,44 Z" fill="#eef3f8" stroke="#8fb8d6" stroke-width="1.6" opacity="0.92" transform="translate(12,-16)" />
+                <path d="M8,44 C2,44 -1,38 4,34 C2,27 10,23 17,26 C20,20 32,19 36,26 C43,24 48,31 43,36 C46,41 41,46 34,43 C30,48 14,48 8,44 Z" fill="#eef3f8" stroke="#8fb8d6" stroke-width="1.6" opacity="0.88" transform="translate(280,-24) scale(0.75)" />
+                <path d="M8,44 C2,44 -1,38 4,34 C2,27 10,23 17,26 C20,20 32,19 36,26 C43,24 48,31 43,36 C46,41 41,46 34,43 C30,48 14,48 8,44 Z" fill="#eef3f8" stroke="#8fb8d6" stroke-width="1.6" opacity="0.85" transform="translate(560,-18) scale(0.6)" />
+                <path d="M8,44 C2,44 -1,38 4,34 C2,27 10,23 17,26 C20,20 32,19 36,26 C43,24 48,31 43,36 C46,41 41,46 34,43 C30,48 14,48 8,44 Z" fill="#eef3f8" stroke="#8fb8d6" stroke-width="1.6" opacity="0.85" transform="translate(800,-24) scale(0.5)" />
 
-                <!-- Wohnhaus, etwas mehr zur Mitte gerückt statt am äußersten
-                     Rand, im Kritzel-Stil wie das Kuh-Logo. -->
-                <g transform="translate(36,0)">
+                <!-- Untergrund: zwei unregelmäßige, wellige Flächen (kein
+                     gerader Horizont, kein Wiederhol-Raster) als Basis für
+                     das Feld - vorne ein Ton heller für Tiefe. -->
+                <path d="M0,160 C40,156 90,163 150,158 C210,153 260,162 320,157 C380,151 430,161 500,155 C560,150 620,160 690,154 C750,148 800,159 860,153 C890,151 910,157 920,155 L920,170 L0,170 Z" fill="#3c5830" opacity="0.65" />
+                <path d="M0,166 C60,163 120,168 200,164 C280,160 350,167 430,163 C510,159 580,167 660,163 C740,159 810,166 880,162 C900,161 915,164 920,163 L920,170 L0,170 Z" fill="#5c7a44" opacity="0.5" />
+
+                <!-- Trampelpfad vom Haus in Richtung Feld -->
+                <path d="M105,162 C125,158 145,159 160,155 C180,150 200,152 220,148 C235,145 245,148 255,150 L253,158 C240,156 225,154 210,157 C190,160 170,159 150,163 C133,166 115,167 105,168 Z" fill="#8a6a3f" opacity="0.55" />
+
+                <!-- Wohnhaus -->
+                <g transform="translate(26,0)">
                   <rect x="94" y="90" width="10" height="20" rx="2" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="2" />
                   <path d="M24,120 L70,82 L116,120 Z" fill="#6e2a1e" stroke="var(--wood-800)" stroke-width="2.4" stroke-linejoin="round" />
                   <rect x="34" y="120" width="72" height="42" rx="3" fill="#96392a" stroke="var(--wood-800)" stroke-width="2.4" />
@@ -421,19 +448,9 @@
                   <circle cx="74" cy="151" r="1.4" fill="var(--brass-bright)" />
                 </g>
 
-                <!-- Baum 1: brauner Stamm, grüne Krone, rote Äpfel -->
-                <g transform="translate(26,0)">
-                  <path d="M180,162 C178,144 183,128 180,112" fill="none" stroke="var(--wood-800)" stroke-width="5" stroke-linecap="round" />
-                  <path d="M155,102 C141,86 155,64 175,68 C177,54 199,52 206,68 C222,66 228,84 214,93 C221,107 205,116 191,109 C182,120 161,116 159,102 Z" fill="#4f7a3c" stroke="var(--wood-800)" stroke-width="2.2" stroke-linejoin="round" />
-                  <circle cx="173" cy="78" r="2.4" fill="#b23a2a" />
-                  <circle cx="197" cy="70" r="2.4" fill="#b23a2a" />
-                  <circle cx="207" cy="90" r="2.4" fill="#b23a2a" />
-                  <circle cx="185" cy="98" r="2.4" fill="#b23a2a" />
-                </g>
-
-                <!-- Scheune: klassisch rot mit Satteldach-Silhouette,
-                     hellem Heuboden-Fenster und Scheunentor mit Kreuzstrebe. -->
-                <g transform="translate(45,0)">
+                <!-- Scheune, dicht neben dem Haus statt weit entfernt, damit
+                     beide als ein zusammenhängender Hof wirken. -->
+                <g transform="translate(-74,0)">
                   <rect x="235" y="114" width="95" height="48" fill="#8a2f22" stroke="var(--wood-800)" stroke-width="2.4" />
                   <path d="M229,114 L245,96 L258,82 L307,82 L320,96 L336,114 Z" fill="#5e1f16" stroke="var(--wood-800)" stroke-width="2.4" stroke-linejoin="round" />
                   <circle cx="282" cy="94" r="6" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="1.8" />
@@ -442,10 +459,8 @@
                   <line x1="304" y1="126" x2="262" y2="162" stroke="var(--wood-800)" stroke-width="1.6" />
                 </g>
 
-                <!-- Heuballen neben der Scheune: rundlicher Stroh-Haufen mit
-                     gewölbtem Kopf und mehreren geschwungenen Halmlagen statt
-                     zweier gerader Striche. -->
-                <g transform="translate(45,0)">
+                <!-- Heuballen direkt neben der Scheune -->
+                <g transform="translate(-74,0)">
                   <path d="M338,162 C334,148 342,134 351,132 C360,134 368,148 364,162 Z" fill="#c9a24a" stroke="var(--wood-800)" stroke-width="1.8" stroke-linejoin="round" />
                   <ellipse cx="351" cy="133" rx="7" ry="3.2" fill="#d9b563" stroke="var(--wood-800)" stroke-width="1.4" />
                   <path d="M338,140 C344,142 358,142 364,140" fill="none" stroke="#a67f34" stroke-width="1.3" stroke-linecap="round" />
@@ -453,111 +468,127 @@
                   <path d="M337,157 C344,159 358,159 365,157" fill="none" stroke="#a67f34" stroke-width="1.3" stroke-linecap="round" />
                 </g>
 
-                <!-- Baum 2: Zitronenbaum - gleiche Form wie Baum 1, aber
-                     etwas gelbgrünere Krone und gelbe, ovale Früchte. -->
-                <g transform="translate(283,0)">
-                  <path d="M180,162 C178,144 183,128 180,112" fill="none" stroke="var(--wood-800)" stroke-width="5" stroke-linecap="round" />
-                  <path d="M155,102 C141,86 155,64 175,68 C177,54 199,52 206,68 C222,66 228,84 214,93 C221,107 205,116 191,109 C182,120 161,116 159,102 Z" fill="#6a8f3c" stroke="var(--wood-800)" stroke-width="2.2" stroke-linejoin="round" />
-                  <ellipse cx="173" cy="78" rx="2" ry="2.8" fill="#e8c542" stroke="var(--wood-800)" stroke-width="0.6" />
-                  <ellipse cx="197" cy="70" rx="2" ry="2.8" fill="#e8c542" stroke="var(--wood-800)" stroke-width="0.6" />
-                  <ellipse cx="207" cy="90" rx="2" ry="2.8" fill="#e8c542" stroke="var(--wood-800)" stroke-width="0.6" />
-                  <ellipse cx="185" cy="98" rx="2" ry="2.8" fill="#e8c542" stroke="var(--wood-800)" stroke-width="0.6" />
+                <!-- Wassertrog im Hof -->
+                <path d="M195,159 C194,154 200,151 212,151 C224,151 230,154 229,159 C230,164 224,167 212,167 C200,167 194,164 195,159 Z" fill="#6b4c30" stroke="var(--wood-800)" stroke-width="1.8" />
+                <path d="M195,152 C198,149 226,149 229,152 C226,155 198,155 195,152 Z" fill="#7ea8c9" stroke="var(--wood-800)" stroke-width="1.2" />
+
+                <!-- Großer alter Baum: knorriger Stamm als dicker,
+                     geschwungener Strich, unregelmäßige, mehrlappige Krone
+                     statt einer glatten Blase. -->
+                <g transform="translate(300,62)">
+                  <path d="M68,100 C64,88 70,76 65,64 C71,55 63,46 69,36 C64,28 70,20 72,14" fill="none" stroke="#6b4a2e" stroke-width="14" stroke-linecap="round" />
+                  <path d="M50,100 C55,94 62,96 60,100" fill="none" stroke="var(--wood-800)" stroke-width="1.6" />
+                  <path d="M85,100 C80,94 74,96 76,100" fill="none" stroke="var(--wood-800)" stroke-width="1.6" />
+                  <ellipse cx="66" cy="60" rx="4" ry="3" fill="#4a331d" stroke="var(--wood-800)" stroke-width="1" opacity="0.8" />
+                  <path d="M20,45 C5,35 8,15 28,12 C30,-2 55,-6 68,6 C82,-4 105,0 108,16 C122,14 130,28 120,38 C130,48 122,62 108,60 C110,74 92,82 78,74 C68,86 44,84 38,72 C22,76 8,64 16,52 C6,50 8,40 20,45 Z" fill="#4f7a3c" stroke="var(--wood-800)" stroke-width="2.4" stroke-linejoin="round" />
+                  <path d="M40,30 C46,26 54,28 52,34 C58,32 60,40 54,42 C50,48 40,46 40,40 C34,38 34,32 40,30 Z" fill="#3f6530" opacity="0.55" />
+                  <path d="M76,44 C81,41 87,43 85,48 C90,47 91,54 86,55 C84,60 76,58 76,53 C71,52 71,46 76,44 Z" fill="#3f6530" opacity="0.5" />
                 </g>
 
-                <!-- Pferd, angebunden an einem Zaunpfahl - kurzer, kräftiger
-                     Hals (als dicker Strich mit rundem Ende) statt einer
-                     langen schmalen Fläche, damit es nicht wie eine Giraffe
-                     wirkt. -->
-                <path d="M580,134 C570,124 562,114 556,104" fill="none" stroke="#8a5a2e" stroke-width="17" stroke-linecap="round" />
-                <ellipse cx="546" cy="98" rx="11" ry="8" fill="#8a5a2e" stroke="var(--wood-800)" stroke-width="2" />
-                <ellipse cx="534" cy="100" rx="6" ry="4" fill="#8a5a2e" stroke="var(--wood-800)" stroke-width="1.6" />
-                <path d="M541,92 L538,84 L545,90 Z" fill="#8a5a2e" stroke="var(--wood-800)" stroke-width="1.2" />
-                <path d="M551,92 L554,84 L548,90 Z" fill="#8a5a2e" stroke="var(--wood-800)" stroke-width="1.2" />
-                <line x1="561" y1="109" x2="553" y2="103" stroke="#3a2416" stroke-width="2" stroke-linecap="round" />
-                <line x1="569" y1="119" x2="561" y2="113" stroke="#3a2416" stroke-width="2" stroke-linecap="round" />
-                <circle cx="542" cy="97" r="1" fill="var(--wood-800)" />
-                <ellipse cx="590" cy="140" rx="24" ry="13" fill="#8a5a2e" stroke="var(--wood-800)" stroke-width="2.2" />
-                <line x1="574" y1="151" x2="574" y2="162" stroke="var(--wood-800)" stroke-width="3" stroke-linecap="round" />
-                <line x1="582" y1="151" x2="582" y2="162" stroke="var(--wood-800)" stroke-width="3" stroke-linecap="round" />
-                <line x1="598" y1="151" x2="598" y2="162" stroke="var(--wood-800)" stroke-width="3" stroke-linecap="round" />
-                <line x1="606" y1="151" x2="606" y2="162" stroke="var(--wood-800)" stroke-width="3" stroke-linecap="round" />
-                <path d="M614,134 C621,142 619,154 614,162" fill="none" stroke="#3a2416" stroke-width="3" stroke-linecap="round" />
-                <path d="M588,132 C600,134 612,136 624,138" fill="none" stroke="var(--wood-800)" stroke-width="1.4" />
-                <line x1="636" y1="132" x2="636" y2="162" stroke="var(--wood-700)" stroke-width="5" stroke-linecap="round" />
-                <line x1="620" y1="140" x2="648" y2="140" stroke="var(--wood-700)" stroke-width="3.5" />
+                <!-- Pferd: kurzer, kräftiger Hals als dicker Strich statt
+                     einer langen schmalen Fläche. -->
+                <path d="M500,134 C490,124 482,114 476,104" fill="none" stroke="#8a5a2e" stroke-width="17" stroke-linecap="round" />
+                <ellipse cx="466" cy="98" rx="11" ry="8" fill="#8a5a2e" stroke="var(--wood-800)" stroke-width="2" />
+                <ellipse cx="454" cy="100" rx="6" ry="4" fill="#8a5a2e" stroke="var(--wood-800)" stroke-width="1.6" />
+                <path d="M461,92 L458,84 L465,90 Z" fill="#8a5a2e" stroke="var(--wood-800)" stroke-width="1.2" />
+                <path d="M471,92 L474,84 L468,90 Z" fill="#8a5a2e" stroke="var(--wood-800)" stroke-width="1.2" />
+                <line x1="481" y1="109" x2="473" y2="103" stroke="#3a2416" stroke-width="2" stroke-linecap="round" />
+                <line x1="489" y1="119" x2="481" y2="113" stroke="#3a2416" stroke-width="2" stroke-linecap="round" />
+                <circle cx="462" cy="97" r="1" fill="var(--wood-800)" />
+                <ellipse cx="510" cy="140" rx="24" ry="13" fill="#8a5a2e" stroke="var(--wood-800)" stroke-width="2.2" />
+                <line x1="494" y1="151" x2="494" y2="162" stroke="var(--wood-800)" stroke-width="3" stroke-linecap="round" />
+                <line x1="502" y1="151" x2="502" y2="162" stroke="var(--wood-800)" stroke-width="3" stroke-linecap="round" />
+                <line x1="518" y1="151" x2="518" y2="162" stroke="var(--wood-800)" stroke-width="3" stroke-linecap="round" />
+                <line x1="526" y1="151" x2="526" y2="162" stroke="var(--wood-800)" stroke-width="3" stroke-linecap="round" />
+                <path d="M534,134 C541,142 539,154 534,162" fill="none" stroke="#3a2416" stroke-width="3" stroke-linecap="round" />
 
-                <!-- Zaun der Weide: bewusst niedrig (Pfosten erst ab y146,
-                     oberste Latte bei y150) und unterhalb der Tierköpfe,
-                     damit er wie ein echter Weidezaun hinter den Tieren
-                     wirkt statt wie eine Linie quer über die Gesichter. -->
-                <line x1="670" y1="146" x2="670" y2="162" stroke="var(--wood-700)" stroke-width="4" stroke-linecap="round" />
-                <line x1="735" y1="146" x2="735" y2="162" stroke="var(--wood-700)" stroke-width="4" stroke-linecap="round" />
-                <line x1="800" y1="146" x2="800" y2="162" stroke="var(--wood-700)" stroke-width="4" stroke-linecap="round" />
-                <line x1="865" y1="146" x2="865" y2="162" stroke="var(--wood-700)" stroke-width="4" stroke-linecap="round" />
-                <line x1="898" y1="146" x2="898" y2="162" stroke="var(--wood-700)" stroke-width="4" stroke-linecap="round" />
-                <line x1="667" y1="150" x2="898" y2="150" stroke="var(--wood-700)" stroke-width="3" />
-                <line x1="667" y1="159" x2="898" y2="159" stroke="var(--wood-700)" stroke-width="3" />
-
-                <!-- Kuh 1: schwarz-weiß gefleckt -->
-                <g transform="translate(316,0)">
-                  <ellipse cx="384" cy="148" rx="16" ry="10" fill="#f7f4ee" stroke="var(--wood-800)" stroke-width="2" />
-                  <ellipse cx="378" cy="144" rx="4.5" ry="3.5" fill="#1f1712" />
-                  <ellipse cx="391" cy="152" rx="3.5" ry="2.8" fill="#1f1712" />
-                  <ellipse cx="387" cy="143" rx="2.4" ry="2" fill="#1f1712" />
-                  <line x1="373" y1="156" x2="373" y2="161" stroke="var(--wood-800)" stroke-width="2.2" stroke-linecap="round" />
-                  <line x1="380" y1="157" x2="380" y2="162" stroke="var(--wood-800)" stroke-width="2.2" stroke-linecap="round" />
-                  <line x1="390" y1="157" x2="390" y2="162" stroke="var(--wood-800)" stroke-width="2.2" stroke-linecap="round" />
-                  <line x1="397" y1="156" x2="397" y2="161" stroke="var(--wood-800)" stroke-width="2.2" stroke-linecap="round" />
-                  <circle cx="369" cy="142" r="6.5" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="2" />
-                  <ellipse cx="364" cy="144" rx="2.6" ry="1.8" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="1" />
-                  <line x1="365" y1="136" x2="362" y2="131" stroke="var(--wood-800)" stroke-width="1.4" stroke-linecap="round" />
-                  <line x1="373" y1="136" x2="376" y2="131" stroke="var(--wood-800)" stroke-width="1.4" stroke-linecap="round" />
+                <!-- Kühe im Hintergrund/mittleren Feld - kleiner und höher
+                     platziert (perspektivisch weiter weg), teils vom Zaun
+                     unten überdeckt, der danach gezeichnet wird. -->
+                <g transform="translate(654.4,105.65) scale(0.55)">
+                  <use href="#dash-doodle-kuh-koerper" fill="#f7f0e6" stroke="var(--wood-800)" stroke-width="2" stroke-linejoin="round" />
+                  <path d="M13,9 C16,8 18,10 17,13 C19,15 16,17 13,16 C10,17 9,14 11,12 C9,10 11,8 13,9 Z" fill="#1f1712" />
+                  <path d="M28,6 C31,5 33,7 32,10 C34,11 32,14 29,13 C27,14 25,12 27,10 C25,8 26,6 28,6 Z" fill="#1f1712" />
+                  <use href="#dash-doodle-kuh-beine" />
                 </g>
 
-                <!-- Schaf: schwarzer Kopf/Beine, flauschig weiße Wolle -->
-                <g transform="translate(324,0)">
-                  <use href="#dash-doodle-wolke" transform="translate(408,136) scale(0.42)" fill="#f8f6f2" stroke="var(--wood-800)" stroke-width="2.8" />
-                  <circle cx="412" cy="147" r="4.2" fill="#1f1712" />
-                  <line x1="410" y1="154" x2="410" y2="161" stroke="#1f1712" stroke-width="2" stroke-linecap="round" />
-                  <line x1="416" y1="154" x2="416" y2="161" stroke="#1f1712" stroke-width="2" stroke-linecap="round" />
-                  <line x1="421" y1="153" x2="421" y2="160" stroke="#1f1712" stroke-width="2" stroke-linecap="round" />
+                <!-- Besondere kleine Kuh: cremeweiß mit violetten Flecken,
+                     bewusst klein und etwas zurückversetzt statt groß in der
+                     Mitte, als kleiner Überraschungs-Blickfang. -->
+                <g transform="translate(704,105.5) scale(0.5)">
+                  <use href="#dash-doodle-kuh-koerper" fill="#f7f0e6" stroke="var(--wood-800)" stroke-width="2" stroke-linejoin="round" />
+                  <path d="M13,9 C16,8 18,10 17,13 C19,15 16,17 13,16 C10,17 9,14 11,12 C9,10 11,8 13,9 Z" fill="#8a5aa8" />
+                  <path d="M28,6 C31,5 33,7 32,10 C34,11 32,14 29,13 C27,14 25,12 27,10 C25,8 26,6 28,6 Z" fill="#8a5aa8" />
+                  <path d="M36,16 C38,15 40,17 39,19 C40,21 38,22 36,21 C34,22 33,20 34,18 C33,17 34,16 36,16 Z" fill="#8a5aa8" />
+                  <use href="#dash-doodle-kuh-beine" />
                 </g>
 
-                <!-- Kuh 2: braun gefleckt -->
-                <g transform="translate(406,0)">
-                  <ellipse cx="384" cy="148" rx="16" ry="10" fill="#f7f4ee" stroke="var(--wood-800)" stroke-width="2" />
-                  <ellipse cx="378" cy="144" rx="4.5" ry="3.5" fill="#7a4a28" />
-                  <ellipse cx="391" cy="152" rx="3.5" ry="2.8" fill="#7a4a28" />
-                  <ellipse cx="387" cy="143" rx="2.4" ry="2" fill="#7a4a28" />
-                  <line x1="373" y1="156" x2="373" y2="161" stroke="var(--wood-800)" stroke-width="2.2" stroke-linecap="round" />
-                  <line x1="380" y1="157" x2="380" y2="162" stroke="var(--wood-800)" stroke-width="2.2" stroke-linecap="round" />
-                  <line x1="390" y1="157" x2="390" y2="162" stroke="var(--wood-800)" stroke-width="2.2" stroke-linecap="round" />
-                  <line x1="397" y1="156" x2="397" y2="161" stroke="var(--wood-800)" stroke-width="2.2" stroke-linecap="round" />
-                  <circle cx="369" cy="142" r="6.5" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="2" />
-                  <ellipse cx="364" cy="144" rx="2.6" ry="1.8" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="1" />
-                  <line x1="365" y1="136" x2="362" y2="131" stroke="var(--wood-800)" stroke-width="1.4" stroke-linecap="round" />
-                  <line x1="373" y1="136" x2="376" y2="131" stroke="var(--wood-800)" stroke-width="1.4" stroke-linecap="round" />
+                <!-- Kuh weiter hinten rechts, mittlere Distanz -->
+                <g transform="translate(856,112.25) scale(0.75)">
+                  <use href="#dash-doodle-kuh-koerper" fill="#f7f0e6" stroke="var(--wood-800)" stroke-width="2" stroke-linejoin="round" />
+                  <path d="M13,9 C16,8 18,10 17,13 C19,15 16,17 13,16 C10,17 9,14 11,12 C9,10 11,8 13,9 Z" fill="#1f1712" />
+                  <path d="M28,6 C31,5 33,7 32,10 C34,11 32,14 29,13 C27,14 25,12 27,10 C25,8 26,6 28,6 Z" fill="#1f1712" />
+                  <use href="#dash-doodle-kuh-beine" />
                 </g>
 
-                <!-- Kuh 3: lila, angelehnt an die Kuh aus der Milka-Werbung
-                     (ohne Schriftzug/Glocke - eigene, vereinfachte Kritzelei) -->
-                <g transform="translate(466,0)">
-                  <ellipse cx="384" cy="148" rx="16" ry="10" fill="#3d2a5c" stroke="var(--wood-800)" stroke-width="2" />
-                  <ellipse cx="378" cy="144" rx="4.5" ry="3.5" fill="#f3e8d2" />
-                  <ellipse cx="391" cy="152" rx="3.5" ry="2.8" fill="#f3e8d2" />
-                  <ellipse cx="387" cy="143" rx="2.4" ry="2" fill="#f3e8d2" />
-                  <line x1="373" y1="156" x2="373" y2="161" stroke="var(--wood-800)" stroke-width="2.2" stroke-linecap="round" />
-                  <line x1="380" y1="157" x2="380" y2="162" stroke="var(--wood-800)" stroke-width="2.2" stroke-linecap="round" />
-                  <line x1="390" y1="157" x2="390" y2="162" stroke="var(--wood-800)" stroke-width="2.2" stroke-linecap="round" />
-                  <line x1="397" y1="156" x2="397" y2="161" stroke="var(--wood-800)" stroke-width="2.2" stroke-linecap="round" />
-                  <circle cx="369" cy="142" r="6.5" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="2" />
-                  <ellipse cx="364" cy="144" rx="2.6" ry="1.8" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="1" />
-                  <line x1="365" y1="136" x2="362" y2="131" stroke="var(--wood-800)" stroke-width="1.4" stroke-linecap="round" />
-                  <line x1="373" y1="136" x2="376" y2="131" stroke="var(--wood-800)" stroke-width="1.4" stroke-linecap="round" />
+                <!-- Weidezaun: zieht sich in leichten Wellen durchs Bild,
+                     Pfostenhöhe variiert (kürzer in der "fernen" Senke um
+                     x=700, länger an den Enden) für räumliche Tiefe. Läuft
+                     absichtlich vor den drei weiter entfernten Kühen oben,
+                     aber hinter den beiden näheren Kühen unten. -->
+                <path d="M560,148 C559,156 561,161 560,166" fill="none" stroke="var(--wood-700)" stroke-width="3.2" stroke-linecap="round" />
+                <path d="M600,144 C599,150 601,155 600,159" fill="none" stroke="var(--wood-700)" stroke-width="3.2" stroke-linecap="round" />
+                <path d="M650,132 C649,137 651,140 650,144" fill="none" stroke="var(--wood-700)" stroke-width="3" stroke-linecap="round" />
+                <path d="M700,124 C699,128 701,132 700,135" fill="none" stroke="var(--wood-700)" stroke-width="3" stroke-linecap="round" />
+                <path d="M750,128 C749,133 751,137 750,140" fill="none" stroke="var(--wood-700)" stroke-width="3" stroke-linecap="round" />
+                <path d="M800,138 C799,144 801,148 800,152" fill="none" stroke="var(--wood-700)" stroke-width="3.2" stroke-linecap="round" />
+                <path d="M850,146 C849,153 851,158 850,162" fill="none" stroke="var(--wood-700)" stroke-width="3.2" stroke-linecap="round" />
+                <path d="M880,150 C879,157 881,163 880,168" fill="none" stroke="var(--wood-700)" stroke-width="3.4" stroke-linecap="round" />
+                <path d="M560,148 C580,146 590,142 600,144 C620,146 635,136 650,132 C670,128 685,126 700,124 C715,122 735,126 750,128 C770,130 790,134 800,138 C815,142 835,144 850,146 C862,148 872,149 880,150" fill="none" stroke="var(--wood-700)" stroke-width="3" stroke-linecap="round" />
+                <path d="M560,158 C580,156 590,152 600,154 C620,156 635,145 650,142 C670,137 685,135 700,133 C715,131 735,135 750,137 C770,139 790,143 800,147 C815,151 835,153 850,155 C862,157 872,158 880,159" fill="none" stroke="var(--wood-700)" stroke-width="2.6" stroke-linecap="round" />
+
+                <!-- Braun-weiß gefleckte Kuh, im Feld vorm Zaun -->
+                <g transform="translate(586.8,116.55) scale(0.85)">
+                  <use href="#dash-doodle-kuh-koerper" fill="#f7f0e6" stroke="var(--wood-800)" stroke-width="2" stroke-linejoin="round" />
+                  <path d="M13,9 C16,8 18,10 17,13 C19,15 16,17 13,16 C10,17 9,14 11,12 C9,10 11,8 13,9 Z" fill="#7a4a28" />
+                  <path d="M28,6 C31,5 33,7 32,10 C34,11 32,14 29,13 C27,14 25,12 27,10 C25,8 26,6 28,6 Z" fill="#7a4a28" />
+                  <path d="M36,16 C38,15 40,17 39,19 C40,21 38,22 36,21 C34,22 33,20 34,18 C33,17 34,16 36,16 Z" fill="#7a4a28" />
+                  <use href="#dash-doodle-kuh-beine" />
                 </g>
 
-                <!-- Wiese: durchgehendes Kachel-Muster über die volle Breite -->
-                <rect x="0" y="146" width="920" height="24" fill="url(#dash-doodle-gras)" />
+                <!-- Schwarz-weiße Kuh vorn im Bild, am größten -->
+                <g transform="translate(769.2,123.45) scale(1.15)">
+                  <use href="#dash-doodle-kuh-koerper" fill="#f7f0e6" stroke="var(--wood-800)" stroke-width="2" stroke-linejoin="round" />
+                  <path d="M13,9 C16,8 18,10 17,13 C19,15 16,17 13,16 C10,17 9,14 11,12 C9,10 11,8 13,9 Z" fill="#1f1712" />
+                  <path d="M28,6 C31,5 33,7 32,10 C34,11 32,14 29,13 C27,14 25,12 27,10 C25,8 26,6 28,6 Z" fill="#1f1712" />
+                  <path d="M36,16 C38,15 40,17 39,19 C40,21 38,22 36,21 C34,22 33,20 34,18 C33,17 34,16 36,16 Z" fill="#1f1712" />
+                  <use href="#dash-doodle-kuh-beine" />
+                </g>
+
+                <!-- Hühner im Hof/am Pfad -->
+                <use href="#dash-doodle-huhn" transform="translate(140,160) scale(0.85)" />
+                <use href="#dash-doodle-huhn" transform="translate(198,157) scale(-0.7,0.7)" />
+                <use href="#dash-doodle-huhn" transform="translate(168,164) scale(0.65)" />
+
+                <!-- Grasbüschel: unregelmäßig über die ganze Breite
+                     verstreut statt einer gleichmäßigen Reihe - vorne
+                     (unten/rechts) etwas größer und dichter. -->
+                <use href="#dash-doodle-buschel" transform="translate(30,163) rotate(-5) scale(0.9)" />
+                <use href="#dash-doodle-buschel" transform="translate(70,159) rotate(8) scale(1.1)" />
+                <use href="#dash-doodle-buschel" transform="translate(115,164) rotate(-3) scale(0.8)" />
+                <use href="#dash-doodle-buschel" transform="translate(160,161) rotate(5) scale(1.2)" />
+                <use href="#dash-doodle-buschel" transform="translate(255,163) rotate(-8) scale(0.9)" />
+                <use href="#dash-doodle-buschel" transform="translate(320,160) rotate(3) scale(1)" />
+                <use href="#dash-doodle-buschel" transform="translate(370,165) rotate(-4) scale(1.1)" />
+                <use href="#dash-doodle-buschel" transform="translate(440,159) rotate(7) scale(0.8)" />
+                <use href="#dash-doodle-buschel" transform="translate(500,163) rotate(-6) scale(1)" />
+                <use href="#dash-doodle-buschel" transform="translate(560,166) rotate(4) scale(1.2)" />
+                <use href="#dash-doodle-buschel" transform="translate(610,161) rotate(-3) scale(0.9)" />
+                <use href="#dash-doodle-buschel" transform="translate(660,164) rotate(6) scale(1.1)" />
+                <use href="#dash-doodle-buschel" transform="translate(710,159) rotate(-5) scale(0.8)" />
+                <use href="#dash-doodle-buschel" transform="translate(760,166) rotate(3) scale(1.3)" />
+                <use href="#dash-doodle-buschel" transform="translate(810,162) rotate(-7) scale(1)" />
+                <use href="#dash-doodle-buschel" transform="translate(870,165) rotate(5) scale(1.1)" />
               </svg>
             </div>
 
