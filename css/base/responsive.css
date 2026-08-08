@@ -8,9 +8,6 @@
   .dash-stats {
     grid-template-columns: repeat(2, 1fr);
   }
-  .dash-quicklinks {
-    grid-template-columns: repeat(3, 1fr);
-  }
   .rechner-layout {
     grid-template-columns: 1fr;
   }

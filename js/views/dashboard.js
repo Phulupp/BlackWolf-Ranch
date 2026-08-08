@@ -40,42 +40,28 @@
         const altBadge = istBestellungAlt(b)
           ? `<span class="bestellung-alt-badge" title="Seit ${bestellungTageOffen(b)} Tagen offen">⚠ ${bestellungTageOffen(b)}d</span>`
           : "";
-        return `<div class="dash-mini-row">
+        return `<div class="dash-mini-row" data-bestellung-oeffnen="${b.id}" style="cursor: pointer;">
           <div class="dash-mini-row__top"><span>${escapeHtml(b.unternehmen)}</span><span style="display:flex; align-items:center; gap:6px;"><span class="status-pill ${statusPillKlasse(b.status)}">${escapeHtml(b.status)}</span>${altBadge}</span></div>
           <div class="dash-mini-row__bottom"><span>${escapeHtml(bestellungProdukteText(b.produkte))}</span><span>${(b.produkte || []).length} Produkt${(b.produkte || []).length === 1 ? "" : "e"}</span></div>
         </div>`;
       })
       .join("");
 
-    const kuerzlichAbgeschlossen = abgeschlossen
-      .slice()
-      .sort((a, b) => zeitstempelWert(b.abgeschlossenAm || b.erstelltAm) - zeitstempelWert(a.abgeschlossenAm || a.erstelltAm));
-
-    el.dashKuerzlicheVerkaeufeEmpty.hidden = kuerzlichAbgeschlossen.length !== 0;
-    el.dashKuerzlicheVerkaeufe.innerHTML = kuerzlichAbgeschlossen
-      .slice(0, 6)
-      .map((b) => {
-        const { umsatz } = berechneBestellungKennzahlen(b);
-        return `<div class="dash-mini-row">
-          <div class="dash-mini-row__top"><span>${escapeHtml(b.unternehmen)}</span><span>${formatGeld(umsatz)}</span></div>
-          <div class="dash-mini-row__bottom"><span>${escapeHtml(bestellungProdukteText(b.produkte))}</span><span>${formatDatum(b.abgeschlossenAm || b.erstelltAm)}</span></div>
-        </div>`;
-      })
-      .join("");
-
-    el.dashWichtigeKontakteEmpty.hidden = kontakte.length !== 0;
-    el.dashWichtigeKontakte.innerHTML = kontakte
-      .slice(0, 6)
-      .map(
-        (k) => `<div class="dash-mini-row">
-          <div class="dash-mini-row__top"><span>${escapeHtml(k.name)}</span><span>BW-${escapeHtml(k.nummer)}</span></div>
-          <div class="dash-mini-row__bottom"><span>${escapeHtml(k.rolle || KONTAKTE_ROLLEN_FALLBACK)}</span><span></span></div>
-        </div>`
-      )
-      .join("");
-
     aktualisiereBestellungenHinweis(offen);
     aktualisiereLagerHinweis();
+  }
+
+  // Gleiches Klick-Muster wie bei der Bestellliste selbst (siehe
+  // bestellungenTableBody-Listener in bestellungen.js) - eine Zeile hier
+  // öffnet direkt das Bestellungs-Modal, statt nur über "Alle ansehen" auf
+  // die volle Liste verweisen zu müssen.
+  if (el.dashOffeneBestellungen) {
+    el.dashOffeneBestellungen.addEventListener("click", (event) => {
+      const zeile = event.target.closest("[data-bestellung-oeffnen]");
+      if (!zeile) return;
+      const b = bestellungen.find((x) => x.id === zeile.getAttribute("data-bestellung-oeffnen"));
+      if (b) oeffneBestellungModal(b);
+    });
   }
 
   // Zeigt auf der Übersicht einen kleinen, anklickbaren Hinweis, sobald
@@ -90,10 +76,14 @@
       el.dashBestellungenHinweis.hidden = true;
       return;
     }
+    // "unbearbeitet" statt "offen", weil istBestellungAlt bewusst auch
+    // "In Bearbeitung"-Bestellungen erfasst (siehe dort) - "offen" würde hier
+    // fälschlich den gleichnamigen Status suggerieren, obwohl eine
+    // gemeldete Bestellung durchaus schon "In Bearbeitung" sein kann.
     el.dashBestellungenHinweisText.textContent =
       alte.length === 1
-        ? "1 Bestellung ist schon länger offen — jetzt ansehen ›"
-        : `${alte.length} Bestellungen sind schon länger offen — jetzt ansehen ›`;
+        ? "1 Bestellung ist schon länger unbearbeitet — jetzt ansehen ›"
+        : `${alte.length} Bestellungen sind schon länger unbearbeitet — jetzt ansehen ›`;
     el.dashBestellungenHinweis.hidden = false;
   }
 
