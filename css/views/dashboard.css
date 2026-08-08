@@ -1,15 +1,18 @@
 /* --------------------------------------------------------------------------
    11. Übersicht (Dashboard)
    -------------------------------------------------------------------------- */
-/* Kopfbereich der Übersicht: echtes Hof-Foto aus dem Asset-Pack, mit
-   dunklem Verlauf links, damit die Begrüßung weiterhin gut lesbar bleibt,
-   umrahmt vom dekorativen Holzrahmen-Asset für "besondere Inhalte". */
+/* Kopfbereich der Übersicht: dunkel bei der Begrüßung (für Lesbarkeit),
+   wärmt sich nach rechts hin zu einem golden-dämmrigen Abendhimmel auf, der
+   zur Bauernhof-Kritzelei (inkl. Sonne) passt statt eines flachen
+   Braun-Verlaufs über die ganze Karte. */
 .dash-hero {
-  background: linear-gradient(135deg, var(--wood-800) 0%, var(--wood-900) 100%);
+  background:
+    radial-gradient(ellipse 480px 220px at 82% 18%, rgba(240, 193, 75, 0.24), transparent 65%),
+    linear-gradient(115deg, var(--wood-900) 0%, var(--wood-800) 38%, #5a3a1f 62%, #86541f 82%, #b8813a 100%);
   border: 1px solid var(--wood-line);
   border-left: 3px solid var(--brass);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-card), 0 0 40px -14px rgba(189, 145, 67, 0.4);
   padding: 28px 36px;
   display: flex;
   align-items: center;
@@ -25,35 +28,44 @@
   z-index: 1;
 }
 
-/* Kleine Bauernhof-Szene (Haus, Baum, Scheune, Zaun mit Tieren, Wolken)
-   rechts im Hero, im selben handgezeichneten Stil wie das Kuh-Logo im
-   Sidebar-Kopf (siehe .sidebar__brand-icon in index.html) - reine Deko,
+/* Bauernhof-Szene (Haus, 2 Bäume, Scheune, Pferd, Zaun mit 3 Kühen + Schaf,
+   Wolken) rechts im Hero, im selben handgezeichneten Stil wie das Kuh-Logo
+   im Sidebar-Kopf (siehe .sidebar__brand-icon in index.html) - reine Deko,
    daher pointer-events: none und aria-hidden nicht nötig (role="img" mit
-   aria-label trägt die Beschreibung). max-width bewusst über der bei
-   height:100% natürlich resultierenden Breite (viewBox-Seitenverhältnis
-   440/170 bei ~172px Hero-Höhe ≈ 445px), damit die Grafik nie gestaucht
-   wird - überschüssige Breite wird stattdessen vom overflow:hidden des
-   .dash-hero abgeschnitten. */
+   aria-label trägt die Beschreibung). Bewusst über die Breite (statt wie
+   vorher über height:100%) skaliert, mit height:auto: so bestimmt allein
+   das viewBox-Seitenverhältnis (920/170) die Höhe, ohne dass die Grafik
+   durch eine zu knappe max-width je gestaucht werden könnte - bei zu wenig
+   Platz schneidet stattdessen das overflow:hidden des .dash-hero oben etwas
+   vom Himmel (Wolken/Sonne) ab, nie die Szene selbst. */
 .dash-hero__doodle {
   position: absolute;
   right: 0;
   bottom: 0;
-  height: 100%;
-  width: auto;
-  max-width: 480px;
+  width: min(820px, 62%);
+  height: auto;
   pointer-events: none;
   z-index: 0;
 }
 
 .dash-hero__eyebrow {
-  font-size: 12.5px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
   color: var(--parch-200);
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.65);
 }
 
+/* Rye statt Playfair Display - dieselbe Schrift wie beim Ranch-Namen im
+   Sidebar-Kopf (.sidebar__brand-title) und auf dem Login-Schild
+   (.auth-card__heading), damit die Begrüßung wie ein handgemaltes Hofschild
+   wirkt statt wie ein generischer Seitentitel. */
 .dash-hero__name {
-  font-size: 32px;
+  font-family: var(--font-brand);
+  font-size: 30px;
+  letter-spacing: 0.03em;
   color: var(--brass-bright);
   text-shadow: 0 2px 5px rgba(0, 0, 0, 0.65);
 }
