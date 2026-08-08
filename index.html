@@ -24,8 +24,8 @@
        blieb das Tab-/Lesezeichen-Icon in genau diesen Fällen leer, selbst
        wenn das PNG unten technisch korrekt eingebunden war. -->
   <link rel="shortcut icon" href="/favicon.ico" />
-  <link rel="icon" type="image/png" href="assets/logo/favicon-mais.png?v=39" />
-  <link rel="apple-touch-icon" href="assets/logo/favicon-mais.png?v=39" />
+  <link rel="icon" type="image/png" href="assets/logo/favicon-mais.png?v=41" />
+  <link rel="apple-touch-icon" href="assets/logo/favicon-mais.png?v=41" />
 
   <!-- Google Fonts: Rye (Farmschild/Wordmark), Playfair Display (Überschriften), Vollkorn (Fließtext/Pergament) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -39,28 +39,28 @@
        style.css - nur jetzt nach Zweck aufgeteilt (base > layout >
        components > views), damit man den passenden Abschnitt schneller
        findet. Reihenfolge ist wichtig und darf nicht vertauscht werden. -->
-  <link rel="stylesheet" href="css/base/tokens.css?v=39" />
-  <link rel="stylesheet" href="css/base/reset.css?v=39" />
-  <link rel="stylesheet" href="css/base/textures.css?v=39" />
-  <link rel="stylesheet" href="css/views/auth.css?v=39" />
-  <link rel="stylesheet" href="css/components/forms.css?v=39" />
-  <link rel="stylesheet" href="css/components/buttons.css?v=39" />
-  <link rel="stylesheet" href="css/layout/shell.css?v=39" />
-  <link rel="stylesheet" href="css/components/cards.css?v=39" />
-  <link rel="stylesheet" href="css/views/dashboard.css?v=39" />
-  <link rel="stylesheet" href="css/components/tables.css?v=39" />
-  <link rel="stylesheet" href="css/views/waren.css?v=39" />
-  <link rel="stylesheet" href="css/views/lager.css?v=39" />
-  <link rel="stylesheet" href="css/views/bestellungen.css?v=39" />
-  <link rel="stylesheet" href="css/views/kontakte.css?v=39" />
-  <link rel="stylesheet" href="css/views/handelsrechner.css?v=39" />
-  <link rel="stylesheet" href="css/components/modals.css?v=39" />
-  <link rel="stylesheet" href="css/views/admin.css?v=39" />
-  <link rel="stylesheet" href="css/components/toast.css?v=39" />
-  <link rel="stylesheet" href="css/layout/footer.css?v=39" />
-  <link rel="stylesheet" href="css/components/kataloge.css?v=39" />
-  <link rel="stylesheet" href="css/views/hofbuch.css?v=39" />
-  <link rel="stylesheet" href="css/base/responsive.css?v=39" />
+  <link rel="stylesheet" href="css/base/tokens.css?v=41" />
+  <link rel="stylesheet" href="css/base/reset.css?v=41" />
+  <link rel="stylesheet" href="css/base/textures.css?v=41" />
+  <link rel="stylesheet" href="css/views/auth.css?v=41" />
+  <link rel="stylesheet" href="css/components/forms.css?v=41" />
+  <link rel="stylesheet" href="css/components/buttons.css?v=41" />
+  <link rel="stylesheet" href="css/layout/shell.css?v=41" />
+  <link rel="stylesheet" href="css/components/cards.css?v=41" />
+  <link rel="stylesheet" href="css/views/dashboard.css?v=41" />
+  <link rel="stylesheet" href="css/components/tables.css?v=41" />
+  <link rel="stylesheet" href="css/views/waren.css?v=41" />
+  <link rel="stylesheet" href="css/views/lager.css?v=41" />
+  <link rel="stylesheet" href="css/views/bestellungen.css?v=41" />
+  <link rel="stylesheet" href="css/views/kontakte.css?v=41" />
+  <link rel="stylesheet" href="css/views/handelsrechner.css?v=41" />
+  <link rel="stylesheet" href="css/components/modals.css?v=41" />
+  <link rel="stylesheet" href="css/views/admin.css?v=41" />
+  <link rel="stylesheet" href="css/components/toast.css?v=41" />
+  <link rel="stylesheet" href="css/layout/footer.css?v=41" />
+  <link rel="stylesheet" href="css/components/kataloge.css?v=41" />
+  <link rel="stylesheet" href="css/views/hofbuch.css?v=41" />
+  <link rel="stylesheet" href="css/base/responsive.css?v=41" />
 
   <!-- Firebase SDK (Authentifizierung + Datenbank). "defer" statt normaler
        blockierender <script>-Tags: der Browser kann so den Rest der Seite
@@ -245,22 +245,30 @@
     <aside class="sidebar">
       <div class="sidebar__brand">
         <svg class="sidebar__brand-icon" viewBox="0 0 100 70" role="img" aria-label="Kuh-Kritzelei">
-          <path d="M18,10 C16,4 12,2 8,4" fill="none" stroke="var(--brass-bright)" stroke-width="2.4" stroke-linecap="round" />
-          <path d="M32,8 C34,2 38,1 42,3" fill="none" stroke="var(--brass-bright)" stroke-width="2.4" stroke-linecap="round" />
-          <ellipse cx="20" cy="16" rx="7" ry="4" transform="rotate(-25 20 16)" fill="none" stroke="var(--brass-bright)" stroke-width="2.2" />
-          <ellipse cx="34" cy="14" rx="7" ry="4" transform="rotate(20 34 14)" fill="none" stroke="var(--brass-bright)" stroke-width="2.2" />
-          <path d="M86,28 C96,24 100,34 96,44 C94,50 98,54 94,58" fill="none" stroke="var(--brass-bright)" stroke-width="2.4" stroke-linecap="round" />
-          <ellipse cx="94" cy="60" rx="4" ry="6" transform="rotate(20 94 60)" fill="none" stroke="var(--brass-bright)" stroke-width="2.2" />
-          <rect x="40" y="52" width="6" height="16" rx="2.5" fill="none" stroke="var(--brass-bright)" stroke-width="2.2" />
-          <rect x="56" y="52" width="6" height="16" rx="2.5" fill="none" stroke="var(--brass-bright)" stroke-width="2.2" />
-          <rect x="68" y="52" width="6" height="16" rx="2.5" fill="none" stroke="var(--brass-bright)" stroke-width="2.2" />
-          <rect x="80" y="52" width="6" height="16" rx="2.5" fill="none" stroke="var(--brass-bright)" stroke-width="2.2" />
-          <rect x="34" y="24" width="54" height="30" rx="15" fill="none" stroke="var(--brass-bright)" stroke-width="2.6" />
-          <path d="M50,30 C56,26 64,28 62,36 C60,42 50,42 48,36 C46,32 46,32 50,30 Z" fill="rgba(189,145,67,0.22)" stroke="var(--brass-bright)" stroke-width="1.6" />
-          <path d="M74,34 C80,32 84,38 80,44 C76,48 70,44 72,38 Z" fill="rgba(189,145,67,0.22)" stroke="var(--brass-bright)" stroke-width="1.6" />
-          <circle cx="26" cy="26" r="15" fill="none" stroke="var(--brass-bright)" stroke-width="2.6" />
-          <ellipse cx="15" cy="32" rx="9" ry="7" fill="none" stroke="var(--brass-bright)" stroke-width="2.2" />
-          <circle cx="22" cy="23" r="1.8" fill="var(--brass-bright)" />
+          <!-- Körper in warmem Elfenbein, Konturen/Flecken in sehr dunklem
+               Braun (var(--wood-800)) statt Schwarz, Hörner/Hufe/Glanzpunkt
+               im bestehenden Goldton (var(--brass-bright)) als Akzent. -->
+          <rect x="40" y="52" width="6" height="16" rx="2.5" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="2.2" />
+          <rect x="56" y="52" width="6" height="16" rx="2.5" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="2.2" />
+          <rect x="68" y="52" width="6" height="16" rx="2.5" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="2.2" />
+          <rect x="80" y="52" width="6" height="16" rx="2.5" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="2.2" />
+          <rect x="40" y="63" width="6" height="4" rx="1.4" fill="var(--brass-bright)" />
+          <rect x="56" y="63" width="6" height="4" rx="1.4" fill="var(--brass-bright)" />
+          <rect x="68" y="63" width="6" height="4" rx="1.4" fill="var(--brass-bright)" />
+          <rect x="80" y="63" width="6" height="4" rx="1.4" fill="var(--brass-bright)" />
+          <path d="M86,28 C96,24 100,34 96,44 C94,50 98,54 94,58" fill="none" stroke="var(--wood-800)" stroke-width="2.4" stroke-linecap="round" />
+          <ellipse cx="94" cy="60" rx="4" ry="6" transform="rotate(20 94 60)" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="2.2" />
+          <rect x="34" y="24" width="54" height="30" rx="15" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="2.6" />
+          <ellipse cx="20" cy="16" rx="7" ry="4" transform="rotate(-25 20 16)" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="2.2" />
+          <ellipse cx="34" cy="14" rx="7" ry="4" transform="rotate(20 34 14)" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="2.2" />
+          <circle cx="26" cy="26" r="15" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="2.6" />
+          <ellipse cx="15" cy="32" rx="9" ry="7" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="2.2" />
+          <path d="M50,30 C56,26 64,28 62,36 C60,42 50,42 48,36 C46,32 46,32 50,30 Z" fill="var(--wood-800)" />
+          <path d="M74,34 C80,32 84,38 80,44 C76,48 70,44 72,38 Z" fill="var(--wood-800)" />
+          <path d="M18,10 C16,4 12,2 8,4" fill="none" stroke="var(--brass-bright)" stroke-width="2.6" stroke-linecap="round" />
+          <path d="M32,8 C34,2 38,1 42,3" fill="none" stroke="var(--brass-bright)" stroke-width="2.6" stroke-linecap="round" />
+          <circle cx="22" cy="23" r="2" fill="var(--wood-800)" />
+          <circle cx="22.6" cy="22.3" r="0.7" fill="var(--brass-bright)" />
         </svg>
         <span class="sidebar__brand-title">Hornhausen-Hof</span>
         <span class="sidebar__brand-subtitle">Est. 1899</span>
@@ -1337,29 +1345,29 @@
        teilen können. Die Reihenfolge entspricht exakt den frueheren
        nummerierten Abschnitten in app.js und darf nicht vertauscht werden:
        js/main.js muss immer zuletzt kommen, da es die App erst startet. -->
-  <script defer src="js/firebase-config.js?v=39"></script>
-  <script defer src="js/core/config.js?v=39"></script>
-  <script defer src="js/core/state.js?v=39"></script>
-  <script defer src="js/core/dom.js?v=39"></script>
-  <script defer src="js/core/firebase-init.js?v=39"></script>
-  <script defer src="js/core/utils.js?v=39"></script>
-  <script defer src="js/ui/modals.js?v=39"></script>
-  <script defer src="js/ui/nav.js?v=39"></script>
-  <script defer src="js/ui/presence.js?v=39"></script>
-  <script defer src="js/views/waren.js?v=39"></script>
-  <script defer src="js/views/lager.js?v=39"></script>
-  <script defer src="js/views/bestellungen.js?v=39"></script>
-  <script defer src="js/views/handelsrechner.js?v=39"></script>
-  <script defer src="js/views/kontakte.js?v=39"></script>
-  <script defer src="js/views/verkaeufe.js?v=39"></script>
-  <script defer src="js/views/kunden.js?v=39"></script>
-  <script defer src="js/views/hofbuch.js?v=39"></script>
-  <script defer src="js/views/statistiken.js?v=39"></script>
-  <script defer src="js/views/dashboard.js?v=39"></script>
-  <script defer src="js/views/einstellungen.js?v=39"></script>
-  <script defer src="js/views/admin.js?v=39"></script>
-  <script defer src="js/ui/version-check.js?v=39"></script>
-  <script defer src="js/main.js?v=39"></script>
-  <script type="module" src="js/auth.js?v=39"></script>
+  <script defer src="js/firebase-config.js?v=41"></script>
+  <script defer src="js/core/config.js?v=41"></script>
+  <script defer src="js/core/state.js?v=41"></script>
+  <script defer src="js/core/dom.js?v=41"></script>
+  <script defer src="js/core/firebase-init.js?v=41"></script>
+  <script defer src="js/core/utils.js?v=41"></script>
+  <script defer src="js/ui/modals.js?v=41"></script>
+  <script defer src="js/ui/nav.js?v=41"></script>
+  <script defer src="js/ui/presence.js?v=41"></script>
+  <script defer src="js/views/waren.js?v=41"></script>
+  <script defer src="js/views/lager.js?v=41"></script>
+  <script defer src="js/views/bestellungen.js?v=41"></script>
+  <script defer src="js/views/handelsrechner.js?v=41"></script>
+  <script defer src="js/views/kontakte.js?v=41"></script>
+  <script defer src="js/views/verkaeufe.js?v=41"></script>
+  <script defer src="js/views/kunden.js?v=41"></script>
+  <script defer src="js/views/hofbuch.js?v=41"></script>
+  <script defer src="js/views/statistiken.js?v=41"></script>
+  <script defer src="js/views/dashboard.js?v=41"></script>
+  <script defer src="js/views/einstellungen.js?v=41"></script>
+  <script defer src="js/views/admin.js?v=41"></script>
+  <script defer src="js/ui/version-check.js?v=41"></script>
+  <script defer src="js/main.js?v=41"></script>
+  <script type="module" src="js/auth.js?v=41"></script>
 </body>
 </html>
