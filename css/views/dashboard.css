@@ -130,7 +130,7 @@
    nicht unnötig auseinandergezogen wirken. */
 .dash-panel--solo {
   max-width: 640px;
-  margin-bottom: 30px;
+  margin: 0 auto 30px;
 }
 
 .dash-panel {
