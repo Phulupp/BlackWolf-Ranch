@@ -109,8 +109,8 @@
    wie bei einer klassisch gesetzten Preisliste. */
 .warenbuch-zeile__eintrag {
   display: grid;
-  grid-template-columns: 180px 54px 70px;
-  column-gap: 14px;
+  grid-template-columns: 170px 40px 64px;
+  column-gap: 10px;
   align-items: baseline;
 }
 
@@ -128,7 +128,7 @@
 .warenbuch-zeile__trenner {
   align-self: center;
   justify-self: center;
-  width: 46px;
+  width: 36px;
   height: 2px;
   background: var(--brass);
   opacity: 0.75;
