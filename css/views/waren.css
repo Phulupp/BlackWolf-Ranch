@@ -155,3 +155,50 @@
   opacity: 1;
 }
 
+/* Suchfeld während des Anordnen-Modus deaktiviert (siehe warenSortierAktiv
+   in waren.js), damit nicht anhand einer gefilterten, unvollständigen
+   Ansicht sortiert/gespeichert wird. */
+#view-waren .search-field input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Ziehgriff: wie die Aktionen rechts bewusst absolut positioniert (statt
+   normaler Flex-Teilnehmer) - so bleibt die zentrierte Produkt-/Preis-
+   Gruppe exakt mittig, ganz gleich ob der Griff gerade sichtbar ist oder
+   nicht. Nur im Anordnen-Modus überhaupt im Markup vorhanden (siehe
+   renderWaren). */
+.warenbuch-zeile__griff {
+  position: absolute;
+  left: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  color: var(--wood-text-muted);
+  cursor: grab;
+  touch-action: none;
+}
+
+.warenbuch-zeile__griff svg {
+  width: 15px;
+  height: 15px;
+}
+
+.warenbuch-zeile__griff:hover {
+  color: var(--brass-bright);
+}
+
+.warenbuch-zeile--wird-gezogen {
+  background: rgba(189, 145, 67, 0.14);
+  cursor: grabbing;
+}
+
+.warenbuch-zeile--wird-gezogen .warenbuch-zeile__griff {
+  color: var(--brass-bright);
+  cursor: grabbing;
+}
+

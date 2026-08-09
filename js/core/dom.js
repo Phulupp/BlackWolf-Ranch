@@ -97,6 +97,7 @@
     warenEmpty: document.getElementById("waren-empty"),
     warenNoResults: document.getElementById("waren-no-results"),
     btnAddWare: document.getElementById("btn-add-ware"),
+    btnWarenSortieren: document.getElementById("btn-waren-sortieren"),
     modalWare: document.getElementById("modal-ware"),
     modalWareTitel: document.getElementById("modal-ware-titel"),
     wareEditingId: document.getElementById("ware-editing-id"),

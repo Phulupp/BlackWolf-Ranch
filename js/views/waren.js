@@ -121,12 +121,30 @@
   };
   const WAREN_KATEGORIE_ICON_STANDARD = '<path d="M6 4h8l4 4v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Z"/><path d="M14 4v4h4"/>';
 
+  // Sechs-Punkte-Ziehgriff (klassisches Drag-Handle-Symbol) - nur sichtbar,
+  // solange der Anordnen-Modus aktiv ist (siehe warenSortierAktiv unten).
+  const WAREN_GRIFF_ICON =
+    '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>';
+
   function renderWaren() {
     if (!el.warenTableBody) return;
-    const liste = gefiltertProdukte();
+    // Im Anordnen-Modus wird bewusst IMMER die vollständige, ungefilterte
+    // Liste gezeigt: die neue Reihenfolge wird beim Loslassen aus der
+    // kompletten DOM-Reihenfolge von #waren-table-body abgeleitet (siehe
+    // warenSortierPointerUp) - mit einer aktiven Suche wären gefilterte
+    // (unsichtbare) Produkte dabei nicht enthalten und ihre Reihenfolge
+    // würde durcheinandergeraten.
+    const liste = warenSortierAktiv ? produkte : gefiltertProdukte();
     el.warenEmpty.hidden = produkte.length !== 0;
     el.warenNoResults.hidden = !(produkte.length > 0 && liste.length === 0);
     el.btnAddWare.hidden = !istAdmin();
+
+    if (el.btnWarenSortieren) {
+      el.btnWarenSortieren.hidden = !istAdmin();
+      el.btnWarenSortieren.textContent = warenSortierAktiv ? "✓ Fertig" : "✎ Anordnen";
+      el.btnWarenSortieren.classList.toggle("btn--aktiv", warenSortierAktiv);
+    }
+    if (el.warenSearch) el.warenSearch.disabled = warenSortierAktiv;
 
     const bereiche = PRODUKT_KATEGORIEN.slice();
     if (produkte.some((p) => ermittleProduktKategorie(p) === PRODUKT_KATEGORIE_SONSTIGE)) {
@@ -140,13 +158,22 @@
 
         const zeilen = sichtbareProdukte
           .map((p) => {
-            const aktionen = istAdmin()
-              ? `<div class="row-actions">
+            // Bearbeiten/Löschen sind im Anordnen-Modus bewusst ausgeblendet
+            // (statt nur deaktiviert), damit der Ziehgriff das einzige
+            // Bedienelement der Zeile ist und nichts versehentlich
+            // angeklickt wird, während gezogen wird.
+            const aktionen =
+              istAdmin() && !warenSortierAktiv
+                ? `<div class="row-actions">
                    <button class="icon-btn" data-ware-edit="${p.id}" title="Bearbeiten">✎</button>
                    <button class="icon-btn icon-btn--delete" data-ware-delete="${p.id}" title="Löschen">🗑</button>
                  </div>`
+                : "";
+            const griff = warenSortierAktiv
+              ? `<span class="warenbuch-zeile__griff" title="Ziehen zum Verschieben">${WAREN_GRIFF_ICON}</span>`
               : "";
-            return `<div class="warenbuch-zeile">
+            return `<div class="warenbuch-zeile" data-produkt-id="${p.id}" data-kategorie="${kat.id}">
+                ${griff}
                 <span class="warenbuch-zeile__eintrag">
                   <span class="warenbuch-zeile__name">${escapeHtml(p.name)}</span>
                   <span class="warenbuch-zeile__preis">${formatGeld(p.verkaufspreis)}</span>
@@ -157,7 +184,7 @@
           .join("");
 
         const icon = WAREN_KATEGORIE_ICONS[kat.id] || WAREN_KATEGORIE_ICON_STANDARD;
-        return `<div class="warenbuch-kategorie">
+        return `<div class="warenbuch-kategorie" data-kategorie="${kat.id}">
             <span class="warenbuch-kategorie__linie warenbuch-kategorie__linie--links"></span>
             <span class="warenbuch-kategorie__mitte">
               <svg class="warenbuch-kategorie__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icon}</svg>
@@ -173,6 +200,111 @@
     el.warenSearch.addEventListener("input", () => {
       warenSuche = el.warenSearch.value;
       renderWaren();
+    });
+  }
+
+  // --- Reihenfolge per Ziehen ändern (nur Admin, nur Waren & Preise) -------
+  // Der Anordnen-Modus wird über btn-waren-sortieren umgeschaltet. Solange
+  // aktiv, zeigt jede Zeile einen Ziehgriff; Ziehen verschiebt die Zeile per
+  // Drag&Drop innerhalb IHRER Kategorie (Kategorie-Grenzen werden nicht
+  // überschritten, ein Produkt bleibt also in seiner Kategorie). Beim
+  // Loslassen wird die neue Reihenfolge alle Produkte anhand der finalen
+  // DOM-Reihenfolge in einem einzigen Batch als "reihenfolge" gespeichert -
+  // derselbe Feldname, den auch Sortierung/neue Produkte schon nutzen.
+  let warenDragZustand = null;
+
+  if (el.btnWarenSortieren) {
+    el.btnWarenSortieren.addEventListener("click", () => {
+      warenSortierAktiv = !warenSortierAktiv;
+      if (warenSortierAktiv && el.warenSearch) {
+        warenSuche = "";
+        el.warenSearch.value = "";
+      }
+      renderWaren();
+    });
+  }
+
+  // Liefert das Element direkt NACH dem Ende einer Kategorie (die nächste
+  // Kategorie-Überschrift oder null am Listenende) - ausgehend von der
+  // Überschrift selbst statt von der letzten Produktzeile, damit das auch
+  // bei einer Kategorie mit nur einem (gerade gezogenen) Produkt korrekt
+  // funktioniert und die Zeile nicht ans Ende der GESAMTEN Liste springt.
+  function warenKategorieEndeErmitteln(kategorie) {
+    const kopf = el.warenTableBody.querySelector(`.warenbuch-kategorie[data-kategorie="${kategorie}"]`);
+    if (!kopf) return null;
+    let knoten = kopf.nextElementSibling;
+    while (knoten && !knoten.classList.contains("warenbuch-kategorie")) {
+      knoten = knoten.nextElementSibling;
+    }
+    return knoten;
+  }
+
+  function warenZielZeileErmitteln(kategorie, zeigerY, gezogeneZeile) {
+    const zeilenDerKategorie = Array.from(
+      el.warenTableBody.querySelectorAll(`.warenbuch-zeile[data-kategorie="${kategorie}"]`)
+    ).filter((zeile) => zeile !== gezogeneZeile);
+    for (const zeile of zeilenDerKategorie) {
+      const rect = zeile.getBoundingClientRect();
+      if (zeigerY < rect.top + rect.height / 2) return zeile;
+    }
+    return warenKategorieEndeErmitteln(kategorie);
+  }
+
+  function warenSortierPointerMove(event) {
+    if (!warenDragZustand) return;
+    event.preventDefault();
+    const { zeile, kategorie } = warenDragZustand;
+    const ziel = warenZielZeileErmitteln(kategorie, event.clientY, zeile);
+    if (ziel !== zeile.nextElementSibling && ziel !== zeile) {
+      el.warenTableBody.insertBefore(zeile, ziel);
+    }
+  }
+
+  async function warenSortierPointerUp(event) {
+    if (!warenDragZustand) return;
+    const { zeile, pointerId } = warenDragZustand;
+    zeile.classList.remove("warenbuch-zeile--wird-gezogen");
+    try {
+      zeile.releasePointerCapture(pointerId);
+    } catch (fehler) {
+      // Pointer-Capture war ggf. schon beendet - unkritisch.
+    }
+    document.removeEventListener("pointermove", warenSortierPointerMove);
+    document.removeEventListener("pointerup", warenSortierPointerUp);
+    warenDragZustand = null;
+
+    const idsInReihenfolge = Array.from(el.warenTableBody.querySelectorAll(".warenbuch-zeile[data-produkt-id]")).map(
+      (zeile) => zeile.getAttribute("data-produkt-id")
+    );
+    try {
+      const batch = db.batch();
+      idsInReihenfolge.forEach((id, index) => {
+        batch.update(db.collection(PRODUKTE_COLLECTION).doc(id), { reihenfolge: index + 1 });
+      });
+      await batch.commit();
+    } catch (fehler) {
+      console.error("Neue Reihenfolge konnte nicht gespeichert werden:", fehler);
+      zeigeToast("Reihenfolge konnte nicht gespeichert werden.");
+    }
+  }
+
+  if (el.warenTableBody) {
+    el.warenTableBody.addEventListener("pointerdown", (event) => {
+      if (!warenSortierAktiv) return;
+      const griff = event.target.closest(".warenbuch-zeile__griff");
+      if (!griff) return;
+      const zeile = griff.closest(".warenbuch-zeile");
+      if (!zeile) return;
+      event.preventDefault();
+      warenDragZustand = {
+        zeile,
+        kategorie: zeile.getAttribute("data-kategorie"),
+        pointerId: event.pointerId,
+      };
+      zeile.classList.add("warenbuch-zeile--wird-gezogen");
+      zeile.setPointerCapture(event.pointerId);
+      document.addEventListener("pointermove", warenSortierPointerMove);
+      document.addEventListener("pointerup", warenSortierPointerUp);
     });
   }
 

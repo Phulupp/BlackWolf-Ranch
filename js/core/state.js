@@ -34,6 +34,10 @@
   let bestellungenStatusFilter = "Offen";
   let bestellungenSuche = "";
   let warenSuche = "";
+  // Admin-Umschalter in Waren & Preise: solange aktiv, werden Ziehgriffe an
+  // den Zeilen gezeigt und die Reihenfolge kann per Ziehen geändert werden
+  // (siehe warenSortierPointerDown/-Move/-Up in waren.js).
+  let warenSortierAktiv = false;
   let lagerSuche = "";
   // "kategorie" (Standard, gruppiert wie Waren & Preise) | "bestand-auf" |
   // "bestand-ab" | "name" - bei allem außer "kategorie" wird die Kategorie-

@@ -56,6 +56,15 @@
   border-color: var(--brass);
 }
 
+/* Generischer "aktiv/eingeschaltet"-Zustand für Umschalt-Buttons (z. B.
+   Anordnen-Modus in Waren & Preise) - deutlich als "Modus läuft" erkennbar,
+   ohne eine neue Button-Farbvariante einzuführen. */
+.btn--ghost.btn--aktiv {
+  background: rgba(189, 145, 67, 0.16);
+  border-color: var(--brass);
+  color: var(--brass-bright);
+}
+
 .btn--danger {
   background: var(--status-danger);
   color: #f2e4d6;
