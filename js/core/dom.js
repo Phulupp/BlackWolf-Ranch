@@ -195,13 +195,14 @@
     btnKundeLoeschen: document.getElementById("btn-kunde-loeschen"),
     btnConfirmKunde: document.getElementById("btn-confirm-kunde"),
 
-    // Rezeptrechner (Herstellung, aufrufbar per Button in der Lager-Ansicht)
-    modalRezeptrechner: document.getElementById("modal-rezeptrechner"),
+    // Rezeptrechner (Herstellung - eigene View, aufrufbar per Button in der
+    // Lager-Ansicht, siehe data-quicklink="rezepte")
     rezeptrechnerRezeptSelect: document.getElementById("rezeptrechner-rezept-select"),
     rezeptrechnerMenge: document.getElementById("rezeptrechner-menge"),
     rezeptrechnerErgebnis: document.getElementById("rezeptrechner-ergebnis"),
     rezeptrechnerErgebnisLeer: document.getElementById("rezeptrechner-ergebnis-leer"),
     btnRezeptNeu: document.getElementById("btn-rezept-neu"),
+    rezepteKategorieFilterEl: document.getElementById("rezepte-kategorie-filter"),
     rezepteListe: document.getElementById("rezepte-liste"),
     rezepteEmpty: document.getElementById("rezepte-empty"),
 
@@ -211,6 +212,8 @@
     rezeptEditingId: document.getElementById("rezept-editing-id"),
     rezeptProduktSelect: document.getElementById("rezept-produkt-select"),
     rezeptErgebnisMenge: document.getElementById("rezept-ergebnis-menge"),
+    rezeptKategorieInput: document.getElementById("rezept-kategorie-input"),
+    rezeptKategorienListe: document.getElementById("rezept-kategorien-liste"),
     rezeptZutatProduktSelect: document.getElementById("rezept-zutat-produkt-select"),
     rezeptZutatMenge: document.getElementById("rezept-zutat-menge"),
     btnRezeptZutatHinzufuegen: document.getElementById("btn-rezept-zutat-hinzufuegen"),

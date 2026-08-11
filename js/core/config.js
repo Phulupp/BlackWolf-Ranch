@@ -18,7 +18,7 @@
   /* ------------------------------------------------------------------------
      1. Konstanten
      ------------------------------------------------------------------------ */
-  const VERSION_AKTUELL = 57;
+  const VERSION_AKTUELL = 58;
 
   // Ränge des Hofes (rein organisatorisch — Verwalterrechte sind unabhängig
   // davon und werden separat je Benutzer vergeben, siehe isAdmin).
@@ -45,6 +45,11 @@
   // keine festen Standardwerte, da die tatsächlichen RedM-Crafting-Mengen
   // im Code nicht bekannt sind.
   const REZEPTE_COLLECTION = "rezepte";
+  // Rezept-Kategorien sind bewusst KEINE feste Liste (anders als
+  // HOFBUCH_KATEGORIEN) - frei vom Team vergeben, siehe Kategorie-Feld mit
+  // Autocomplete in js/views/rezepte.js. Nur der Rückfallwert für leer
+  // gelassene Kategorien ist fest.
+  const REZEPT_KATEGORIE_STANDARD = "Sonstiges";
   const PRESENCE_COLLECTION = "presence";
   const KONTAKTE_ROLLEN_DOC = "kataloge/kontakte-rollen";
   const KONTAKTE_ROLLEN_FALLBACK = "Sonstiges";
@@ -186,6 +191,11 @@
     bestellungen: { title: "Bestellungen", subtitle: "Verwalte alle Bestellungen und Lieferungen." },
     waren: { title: "Waren & Preise", subtitle: "Verwalte die Verkaufspreise." },
     lager: { title: "Lager", subtitle: "Aktueller Warenbestand und Lagerwert." },
+    // Bewusst NICHT im Sidebar-Menü gelistet (kein sidebar__item mit
+    // data-view="rezepte" in index.html) - nur per "Herstellung"-Button in
+    // der Lager-Ansicht erreichbar (data-quicklink="rezepte"), analog zum
+    // früheren Handelsrechner-Zugang über Waren & Preise.
+    rezepte: { title: "Herstellung", subtitle: "Berechnet benötigte Rohstoffe anhand eurer eigenen Rezepte." },
     kontakte: { title: "Kontakte", subtitle: "Verwalte deine Kontakte und Telegrammnummern." },
     kunden: { title: "Kunden", subtitle: "Profile aller Kunden — Gesamtumsatz und Kaufverhalten auf einen Blick." },
     verkaeufe: { title: "Verkaufshistorie", subtitle: "Automatisch aus abgeschlossenen Bestellungen — keine manuelle Erfassung." },

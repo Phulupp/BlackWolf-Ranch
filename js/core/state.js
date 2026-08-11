@@ -34,6 +34,7 @@
   // offen ist (siehe rezeptEntwurfZutaten in js/views/rezepte.js) - analog
   // zu bestellungEntwurfPositionen im Bestellungs-Modal.
   let rezeptEntwurfZutaten = [];
+  let rezepteKategorieFilter = "alle";
   let unsubPresence = null;
   let unsubKontakteRollen = null;
   let kontakteRollenKatalog = [];

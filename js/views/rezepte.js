@@ -1,8 +1,9 @@
 "use strict";
 
   /* ------------------------------------------------------------------------
-     10b. Rezepte / Herstellungsrechner (Button "Herstellung" in der
-     Lager-Ansicht)
+     10b. Rezepte / Herstellungsrechner ("Herstellung"-Button in der
+     Lager-Ansicht, eigene View - siehe VIEW_META.rezepte in config.js,
+     bewusst nicht im Sidebar-Menü gelistet)
      ------------------------------------------------------------------------
      Rezepte werden bewusst vom Team selbst gepflegt statt mit festen
      Standardwerten ausgeliefert - die tatsächlichen RedM-Crafting-Mengen
@@ -11,6 +12,8 @@
          produktId, produktName,       // hergestelltes Produkt (Snapshot wie
                                         // bei Bestellungs-Positionen)
          ergebnisMenge,                // wie viele Stück EIN Durchgang ergibt
+         kategorie,                    // frei vergebener Text, siehe unten -
+                                        // KEINE feste Liste wie bei Hofbuch
          zutaten: [{ produktId, produktName, menge }, ...],
          erstelltAm, erstelltVon, bearbeiter, bearbeitetAm
        }
@@ -27,6 +30,7 @@
         snap.forEach((docSnap) => rezepte.push({ id: docSnap.id, zutaten: [], ...docSnap.data() }));
         befuelleRezeptrechnerAuswahl();
         berechneRezeptrechner();
+        befuelleRezeptKategorienDatalist();
         renderRezepteListe();
       },
       (fehler) => {
@@ -35,6 +39,22 @@
         }
       }
     );
+  }
+
+  // Kategorie eines Rezepts - leeres/fehlendes Feld fällt auf den
+  // Sammelbegriff zurück (analog zu KONTAKTE_ROLLEN_FALLBACK).
+  function kategorieVonRezept(rezept) {
+    return (rezept.kategorie || "").trim() || REZEPT_KATEGORIE_STANDARD;
+  }
+
+  // Füllt die Datalist im Anlegen/Bearbeiten-Modal mit allen bereits
+  // verwendeten Kategorien, damit man beim Tippen bestehende vorgeschlagen
+  // bekommt statt versehentlich Schreibvarianten derselben Kategorie
+  // anzulegen (z. B. "Backwaren" vs. "backwaren").
+  function befuelleRezeptKategorienDatalist() {
+    if (!el.rezeptKategorienListe) return;
+    const kategorien = Array.from(new Set(rezepte.map(kategorieVonRezept))).sort((a, b) => a.localeCompare(b, "de"));
+    el.rezeptKategorienListe.innerHTML = kategorien.map((k) => `<option value="${escapeHtml(k)}"></option>`).join("");
   }
 
   /* ------------------------- Rechner ------------------------- */
@@ -82,20 +102,63 @@
 
   /* ------------------------- Rezepte-Liste ------------------------- */
 
+  function gefiltertRezepte() {
+    if (rezepteKategorieFilter === "alle") return rezepte;
+    return rezepte.filter((r) => kategorieVonRezept(r) === rezepteKategorieFilter);
+  }
+
+  function renderRezepteKategorieFilter() {
+    if (!el.rezepteKategorieFilterEl) return;
+    const kategorien = Array.from(new Set(rezepte.map(kategorieVonRezept))).sort((a, b) => a.localeCompare(b, "de"));
+    el.rezepteKategorieFilterEl.innerHTML = [
+      `<button type="button" class="tabs__tab${rezepteKategorieFilter === "alle" ? " tabs__tab--active" : ""}" data-rezept-kategoriefilter="alle">Alle</button>`,
+    ]
+      .concat(
+        kategorien.map(
+          (k) =>
+            `<button type="button" class="tabs__tab${rezepteKategorieFilter === k ? " tabs__tab--active" : ""}" data-rezept-kategoriefilter="${escapeHtml(
+              k
+            )}">${escapeHtml(k)}</button>`
+        )
+      )
+      .join("");
+  }
+
+  if (el.rezepteKategorieFilterEl) {
+    el.rezepteKategorieFilterEl.addEventListener("click", (event) => {
+      const btn = event.target.closest("[data-rezept-kategoriefilter]");
+      if (!btn) return;
+      rezepteKategorieFilter = btn.getAttribute("data-rezept-kategoriefilter");
+      renderRezepteListe();
+    });
+  }
+
+  // Rendert die (gefilterte) Liste gruppiert nach Kategorie - bei 15-20
+  // Rezepten sonst schnell unübersichtlich, siehe Anforderung.
   function renderRezepteListe() {
     if (!el.rezepteListe) return;
+    renderRezepteKategorieFilter();
+    const liste = gefiltertRezepte();
     el.rezepteEmpty.hidden = rezepte.length !== 0;
-    el.rezepteListe.innerHTML = rezepte
-      .map((r) => {
-        const zutatenText = (r.zutaten || []).map((z) => `${z.menge}× ${z.produktName}`).join(", ") || "—";
-        return `<div class="settings-list__item" data-rezept-oeffnen="${r.id}">
-          <div>
-            <span class="settings-list__name">${escapeHtml(r.produktName)}</span>
-            <span class="settings-list__role">ergibt ${r.ergebnisMenge || 1} Stück</span>
-            <span class="settings-list__role" style="opacity:.6;">${escapeHtml(zutatenText)}</span>
-          </div>
-          <span style="opacity:.5;">›</span>
-        </div>`;
+
+    const gruppenNamen = Array.from(new Set(liste.map(kategorieVonRezept))).sort((a, b) => a.localeCompare(b, "de"));
+    el.rezepteListe.innerHTML = gruppenNamen
+      .map((kategorie) => {
+        const zeilen = liste
+          .filter((r) => kategorieVonRezept(r) === kategorie)
+          .map((r) => {
+            const zutatenText = (r.zutaten || []).map((z) => `${z.menge}× ${z.produktName}`).join(", ") || "—";
+            return `<div class="settings-list__item" data-rezept-oeffnen="${r.id}">
+              <div>
+                <span class="settings-list__name">${escapeHtml(r.produktName)}</span>
+                <span class="settings-list__role">ergibt ${r.ergebnisMenge || 1} Stück</span>
+                <span class="settings-list__role" style="opacity:.6;">${escapeHtml(zutatenText)}</span>
+              </div>
+              <span style="opacity:.5;">›</span>
+            </div>`;
+          })
+          .join("");
+        return `<div class="reg-row reg-row--kategorie"><span>${escapeHtml(kategorie)}</span></div>${zeilen}`;
       })
       .join("");
   }
@@ -113,9 +176,6 @@
 
   /* ------------------------- Rezept anlegen/bearbeiten ------------------------- */
 
-  // Öffnet das Bearbeiten-Modal OBEN AUF dem Rezeptrechner-Modal (bewusst
-  // ohne dieses vorher zu schließen) - gleiches Stapel-Verhalten wie beim
-  // Löschen-Bestätigungsdialog über z. B. dem Kunden-Modal.
   function oeffneRezeptModal(rezept) {
     versteckeFeldFehler(el.rezeptError);
     el.modalRezeptBearbeitenTitel.textContent = rezept ? "Rezept bearbeiten" : "Neues Rezept";
@@ -123,6 +183,7 @@
     el.rezeptProduktSelect.value = rezept ? rezept.produktId : "";
     aktualisiereCustomSelect(el.rezeptProduktSelect);
     el.rezeptErgebnisMenge.value = rezept ? rezept.ergebnisMenge || 1 : 1;
+    el.rezeptKategorieInput.value = rezept ? kategorieVonRezept(rezept) : "";
     rezeptEntwurfZutaten = rezept ? (rezept.zutaten || []).map((z) => ({ ...z })) : [];
     renderRezeptZutatenListe();
     el.rezeptZutatMenge.value = 1;
@@ -184,6 +245,7 @@
         produktId: produkt.id,
         produktName: produkt.name,
         ergebnisMenge,
+        kategorie: el.rezeptKategorieInput.value.trim() || REZEPT_KATEGORIE_STANDARD,
         zutaten: rezeptEntwurfZutaten.map((z) => ({ produktId: z.produktId, produktName: z.produktName, menge: z.menge })),
         bearbeiter: aktuellerNutzer ? aktuellerNutzer.name : null,
       };
