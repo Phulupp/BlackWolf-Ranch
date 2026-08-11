@@ -23,6 +23,22 @@
     return KONTAKTE_ROLLEN_FARBEN_PALETTE[kontakteRollenKatalog.length % KONTAKTE_ROLLEN_FARBEN_PALETTE.length];
   }
 
+  // Prüft/normalisiert eine von Hand eingetippte Farbcode-Eingabe (siehe
+  // Hex-Textfeld neben den Farbrädern in der Rollenverwaltung). Akzeptiert
+  // sowohl mit als auch ohne führendes "#" sowie die 3-stellige Kurzform
+  // (z. B. "abc" -> "#aabbcc") - liefert null bei ungültiger Eingabe, damit
+  // der Aufrufer dann auf den zuletzt gültigen Wert zurückfallen kann.
+  function normalisiereHexFarbe(wert) {
+    let w = (wert || "").trim();
+    if (!w) return null;
+    if (w[0] !== "#") w = `#${w}`;
+    if (/^#[0-9a-fA-F]{6}$/.test(w)) return w.toLowerCase();
+    if (/^#[0-9a-fA-F]{3}$/.test(w)) {
+      return `#${w[1]}${w[1]}${w[2]}${w[2]}${w[3]}${w[3]}`.toLowerCase();
+    }
+    return null;
+  }
+
   // Liefert die hinterlegte Badge-Farbe einer Rolle, oder null für "keine
   // eigene Farbe" (dann greift weiterhin die ursprüngliche .kontakt-badge-
   // Optik unverändert).
@@ -94,6 +110,7 @@
             const farbe = r.farbe || naechsteVorgeschlageneKontaktRolleFarbe();
             return `<span style="display:inline-flex;align-items:center;gap:5px;margin-right:4px;background:rgba(0,0,0,0.2);border:1px solid var(--leather-edge);border-radius:999px;padding:3px 6px 3px 3px;">
                 <input type="color" value="${farbe}" data-rolle-farbe="${escapeHtml(r.name)}" title="Badge-Farbe für ${escapeHtml(r.name)}" style="width:20px;height:20px;padding:0;border:none;border-radius:50%;background:none;cursor:pointer;" />
+                <input type="text" value="${farbe}" data-rolle-farbe-hex="${escapeHtml(r.name)}" placeholder="#rrggbb" maxlength="7" title="Farbcode direkt eingeben" class="field-input" style="width:66px;padding:4px 6px;font-size:11px;" />
                 <input type="text" value="${escapeHtml(r.name)}" data-rolle-umbenennen="${escapeHtml(r.name)}" class="field-input" style="width:110px;padding:4px 8px;font-size:12px;" />
                 <button type="button" data-rolle-entfernen="${escapeHtml(r.name)}" style="font-weight:700;" title="Rolle löschen">✕</button>
               </span>`;
@@ -102,6 +119,7 @@
       </div>
       <div class="katalog-zeile" style="border:none;padding:0;margin:0;">
         <input type="color" id="neue-kontakte-rolle-farbe" value="${naechsteVorgeschlageneKontaktRolleFarbe()}" title="Badge-Farbe der neuen Rolle" style="width:30px;height:30px;padding:0;border:1px solid var(--leather-edge);border-radius:50%;background:none;cursor:pointer;" />
+        <input type="text" id="neue-kontakte-rolle-farbe-hex" value="${naechsteVorgeschlageneKontaktRolleFarbe()}" placeholder="#rrggbb" maxlength="7" title="Farbcode direkt eingeben" class="field-input" style="width:80px;" />
         <input type="text" id="neue-kontakte-rolle-input" class="field-input" placeholder="Neue Rolle..." style="flex:1;" />
         <button type="button" class="btn btn--ghost btn--sm" id="btn-neue-kontakte-rolle">Hinzufügen</button>
       </div>`;
@@ -146,13 +164,58 @@
     // Bewegung ein Schreibvorgang ausgelöst wird. Eine Umbenennung
     // aktualisiert automatisch alle Kontakte, die diese Rolle tragen.
     el.kontakteRollenVerwaltung.addEventListener("change", async (event) => {
+      // Neue-Rolle-Zeile: Farbrad <-> Hex-Textfeld gegenseitig synchron
+      // halten (noch keine Firestore-Schreibaktion, die Rolle existiert ja
+      // erst nach Klick auf "Hinzufügen" - siehe Klick-Handler oben).
+      if (event.target.id === "neue-kontakte-rolle-farbe") {
+        const hexInput = document.getElementById("neue-kontakte-rolle-farbe-hex");
+        if (hexInput) hexInput.value = event.target.value;
+        return;
+      }
+      if (event.target.id === "neue-kontakte-rolle-farbe-hex") {
+        const farbeInput = document.getElementById("neue-kontakte-rolle-farbe");
+        const wert = normalisiereHexFarbe(event.target.value);
+        if (!wert) {
+          event.target.value = farbeInput ? farbeInput.value : "";
+          return;
+        }
+        event.target.value = wert;
+        if (farbeInput) farbeInput.value = wert;
+        return;
+      }
+
       const farbeInput = event.target.closest("[data-rolle-farbe]");
       if (farbeInput) {
         const name = farbeInput.getAttribute("data-rolle-farbe");
+        // Sibling-Hex-Feld (selbe Rollen-Zeile) live mitziehen, damit beide
+        // Eingaben immer denselben Wert zeigen.
+        const zeile = farbeInput.closest("span");
+        const hexSibling = zeile && zeile.querySelector("[data-rolle-farbe-hex]");
+        if (hexSibling) hexSibling.value = farbeInput.value;
         const neueListe = kontakteRollenKatalog.map((r) => (r.name === name ? { ...r, farbe: farbeInput.value } : r));
         await db.doc(KONTAKTE_ROLLEN_DOC).update({ rollen: neueListe });
         return;
       }
+
+      const farbeHexInput = event.target.closest("[data-rolle-farbe-hex]");
+      if (farbeHexInput) {
+        const name = farbeHexInput.getAttribute("data-rolle-farbe-hex");
+        const zeile = farbeHexInput.closest("span");
+        const farbeSibling = zeile && zeile.querySelector("[data-rolle-farbe]");
+        const wert = normalisiereHexFarbe(farbeHexInput.value);
+        if (!wert) {
+          // Ungültige Eingabe (z. B. "abc123z") - auf den zuletzt gültigen
+          // Wert zurücksetzen statt einen kaputten Farbcode zu speichern.
+          farbeHexInput.value = farbeSibling ? farbeSibling.value : "";
+          return;
+        }
+        farbeHexInput.value = wert;
+        if (farbeSibling) farbeSibling.value = wert;
+        const neueListe = kontakteRollenKatalog.map((r) => (r.name === name ? { ...r, farbe: wert } : r));
+        await db.doc(KONTAKTE_ROLLEN_DOC).update({ rollen: neueListe });
+        return;
+      }
+
       const nameInput = event.target.closest("[data-rolle-umbenennen]");
       if (nameInput) {
         const alterName = nameInput.getAttribute("data-rolle-umbenennen");

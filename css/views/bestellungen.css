@@ -515,8 +515,9 @@ select.field-input option {
 /* Rein interner "fertig vorbereitet"-Haken je Produktzeile (siehe
    renderZeile in bestellungen.js) - sitzt dezent vor dem Produktnamen statt
    in einer eigenen Spalte, damit sich am Layout/an der Fenstergröße nichts
-   ändert. accent-color statt eigenem Checkbox-Design, analog zu
-   .field-checkbox-row (siehe components/forms.css). */
+   ändert. Die echte <input type="checkbox"> ist visuell versteckt
+   (.visually-hidden), sichtbar ist stattdessen das gebrandete Messing-
+   Kästchen .bestellung-position-erledigt-box direkt daneben. */
 .bestellung-position-erledigt {
   display: flex;
   align-items: center;
@@ -524,28 +525,55 @@ select.field-input option {
   cursor: pointer;
 }
 
-.bestellung-position-erledigt-check {
-  width: 11px;
-  height: 11px;
+.bestellung-position-erledigt-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
   flex-shrink: 0;
-  accent-color: var(--status-done);
-  cursor: pointer;
+  border: 1px solid var(--brass);
+  border-radius: 3px;
+  background: transparent;
+  transition: background 0.15s ease, border-color 0.15s ease;
 }
 
-.bestellung-position-erledigt-check:disabled {
-  cursor: default;
+.bestellung-position-erledigt-check:checked + .bestellung-position-erledigt-box {
+  background: var(--brass-bright);
+  border-color: var(--brass-bright);
 }
 
-/* Sobald der Haken gesetzt ist, wird die gesamte Zeile dezent grün
-   getönt und der Produktname gedämpft dargestellt - so ist auf einen
-   Blick erkennbar, welche Positionen schon fertig vorbereitet sind, ohne
-   dass Menge, Preise oder der Bestellstatus davon berührt werden. */
-.bestellung-positionen-zeile--erledigt {
-  background: var(--status-done-soft);
+.bestellung-position-erledigt-check:checked + .bestellung-position-erledigt-box::after {
+  content: "";
+  width: 4px;
+  height: 7px;
+  border: solid var(--leather-900);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) translate(-1px, -1px);
 }
 
+.bestellung-position-erledigt-check:disabled + .bestellung-position-erledigt-box {
+  opacity: 0.5;
+}
+
+.bestellung-position-erledigt-check:focus-visible + .bestellung-position-erledigt-box {
+  outline: 2px solid var(--brass-bright);
+  outline-offset: 2px;
+}
+
+/* Sobald der Haken gesetzt ist, wird nur noch der Produktname gedämpft
+   dargestellt plus ein kleines "✓ Fertig"-Badge angezeigt - bewusst KEINE
+   flächige Einfärbung der ganzen Zeile mehr (wirkte zu sehr wie eine grüne
+   Ampel und passte nicht zum Leder-/Messing-Look der übrigen Seite). */
 .bestellung-positionen-zeile--erledigt .bestellung-positionen-zeile__name {
   color: var(--wood-text-muted);
+}
+
+.bestellung-erledigt-badge {
+  margin-left: 2px;
+  font-size: 9.5px;
+  color: var(--brass-bright);
+  border-color: var(--brass);
 }
 
 .bestellung-positionen-zeile > span:nth-child(2),

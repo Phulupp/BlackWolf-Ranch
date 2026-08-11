@@ -323,15 +323,24 @@
           : "";
       // Rein interner "fertig vorbereitet"-Haken pro Position (p.erledigt) -
       // hat bewusst KEINE Auswirkung auf Menge/Preise/Bestellstatus, dient nur
-      // als visuelle Markierung fürs Team und wird 1:1 mit gespeichert.
+      // als visuelle Markierung fürs Team und wird 1:1 mit gespeichert. Die
+      // eigentliche <input type="checkbox"> bleibt die technische Datenquelle
+      // (Wert, change-Events), ist aber visuell versteckt (.visually-hidden) -
+      // sichtbar ist stattdessen das gebrandete Messing-Kästchen daneben
+      // (.bestellung-position-erledigt-box), das per CSS-Sibling-Selektor
+      // (:checked +) auf den echten Checkbox-Status reagiert. Gleiches Muster
+      // wie beim versteckten <select> der Custom-Select-Widgets in dom.js.
       const erledigt = !!p.erledigt;
-      const erledigtCheckbox = `<input type="checkbox" class="bestellung-position-erledigt-check" data-position-erledigt="${index}" ${
+      const erledigtCheckbox = `<input type="checkbox" class="bestellung-position-erledigt-check visually-hidden" data-position-erledigt="${index}" ${
         erledigt ? "checked" : ""
       } ${bestellungModalArchiviert ? "disabled" : ""} title="Als fertig vorbereitet markieren (nur intern, ohne Auswirkung auf die Bestellung)" />`;
+      const erledigtBadge = erledigt ? `<span class="badge badge--outline bestellung-erledigt-badge">✓ Fertig</span>` : "";
       return `<div class="bestellung-positionen-zeile ${erledigt ? "bestellung-positionen-zeile--erledigt" : ""}">
           <label class="bestellung-positionen-zeile__name bestellung-position-erledigt">
             ${erledigtCheckbox}
+            <span class="bestellung-position-erledigt-box" aria-hidden="true"></span>
             <span>${escapeHtml(p.produktName)}</span>
+            ${erledigtBadge}
           </label>
           ${mengeFeld}
           <span>${formatGeld(p.standardpreis)}${standardpreisHinweis}</span>

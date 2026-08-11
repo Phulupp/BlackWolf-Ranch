@@ -29,9 +29,24 @@
   document.querySelectorAll("[data-close-modal]").forEach((btn) => {
     btn.addEventListener("click", () => schliesseModal(btn.getAttribute("data-close-modal")));
   });
+  // Schließen per Klick auf den dunklen Hintergrund - bewusst NICHT allein
+  // anhand des "click"-Events geprüft: bewegt sich die Maus zwischen Drücken
+  // und Loslassen auch nur minimal (z. B. weil man knapp am Rand eines
+  // Eingabefelds klickt und dabei leicht "verrutscht"), feuert der Browser
+  // das "click"-Event auf dem gemeinsamen Elternelement von Start- und
+  // Zielpunkt - hier dann fälschlich der Overlay selbst, obwohl der Klick
+  // eigentlich auf einem Feld INNERHALB des Fensters begonnen hat. Deshalb
+  // wird zusätzlich per "mousedown" gemerkt, ob der Klick auch wirklich auf
+  // dem Hintergrund selbst BEGONNEN hat - nur wenn beides zutrifft, schließt
+  // das Fenster.
   document.querySelectorAll(".modal-overlay").forEach((overlay) => {
+    let mousedownAufHintergrund = false;
+    overlay.addEventListener("mousedown", (event) => {
+      mousedownAufHintergrund = event.target === overlay;
+    });
     overlay.addEventListener("click", (event) => {
-      if (event.target === overlay) schliesseModal(overlay.id);
+      if (mousedownAufHintergrund && event.target === overlay) schliesseModal(overlay.id);
+      mousedownAufHintergrund = false;
     });
   });
 
