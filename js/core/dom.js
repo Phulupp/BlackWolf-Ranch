@@ -210,7 +210,7 @@
     modalRezeptBearbeiten: document.getElementById("modal-rezept-bearbeiten"),
     modalRezeptBearbeitenTitel: document.getElementById("modal-rezept-bearbeiten-titel"),
     rezeptEditingId: document.getElementById("rezept-editing-id"),
-    rezeptProduktSelect: document.getElementById("rezept-produkt-select"),
+    rezeptProduktInput: document.getElementById("rezept-produkt-input"),
     rezeptErgebnisMenge: document.getElementById("rezept-ergebnis-menge"),
     rezeptKategorieInput: document.getElementById("rezept-kategorie-input"),
     rezeptKategorienListe: document.getElementById("rezept-kategorien-liste"),
@@ -463,7 +463,6 @@
     el.hofbuchEditKategorie,
     el.bestellungenBulkStatus,
     el.rezeptrechnerRezeptSelect,
-    el.rezeptProduktSelect,
     el.rezeptZutatProduktSelect,
   ].forEach(erzeugeCustomSelect);
 

@@ -90,7 +90,7 @@
 
   function befuelleProduktSelects() {
     const optionsHtml = produkte.map((p) => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}</option>`).join("");
-    [el.rechnerProdukt, el.bestellungPositionProdukt, el.rezeptProduktSelect, el.rezeptZutatProduktSelect].forEach((select) => {
+    [el.rechnerProdukt, el.bestellungPositionProdukt, el.rezeptZutatProduktSelect].forEach((select) => {
       if (!select) return;
       const vorher = select.value;
       select.innerHTML = optionsHtml || '<option value="">Keine Waren vorhanden</option>';

@@ -9,12 +9,18 @@
      Standardwerten ausgeliefert - die tatsächlichen RedM-Crafting-Mengen
      sind nicht bekannt. Ein Rezept:
        {
-         produktId, produktName,       // hergestelltes Produkt (Snapshot wie
-                                        // bei Bestellungs-Positionen)
+         produktName,                  // hergestelltes Produkt - bewusst
+                                        // FREITEXT statt Dropdown aus
+                                        // "produkte" (Waren & Preise): das
+                                        // Herstellungsergebnis ist etwas
+                                        // komplett anderes als der
+                                        // Verkaufskatalog, kein produktId-Bezug
          ergebnisMenge,                // wie viele Stück EIN Durchgang ergibt
          kategorie,                    // frei vergebener Text, siehe unten -
                                         // KEINE feste Liste wie bei Hofbuch
-         zutaten: [{ produktId, produktName, menge }, ...],
+         zutaten: [{ produktId, produktName, menge }, ...],  // Zutaten
+                                        // bleiben an "produkte" gekoppelt,
+                                        // das sind ja tatsächliche Waren
          erstelltAm, erstelltVon, bearbeiter, bearbeitetAm
        }
      Der Rechner selbst prüft bewusst NICHT gegen den aktuellen Lagerbestand -
@@ -180,8 +186,7 @@
     versteckeFeldFehler(el.rezeptError);
     el.modalRezeptBearbeitenTitel.textContent = rezept ? "Rezept bearbeiten" : "Neues Rezept";
     el.rezeptEditingId.value = rezept ? rezept.id : "";
-    el.rezeptProduktSelect.value = rezept ? rezept.produktId : "";
-    aktualisiereCustomSelect(el.rezeptProduktSelect);
+    el.rezeptProduktInput.value = rezept ? rezept.produktName || "" : "";
     el.rezeptErgebnisMenge.value = rezept ? rezept.ergebnisMenge || 1 : 1;
     el.rezeptKategorieInput.value = rezept ? kategorieVonRezept(rezept) : "";
     rezeptEntwurfZutaten = rezept ? (rezept.zutaten || []).map((z) => ({ ...z })) : [];
@@ -236,14 +241,13 @@
   if (el.btnConfirmRezept) {
     el.btnConfirmRezept.addEventListener("click", async () => {
       versteckeFeldFehler(el.rezeptError);
-      const produkt = produkte.find((p) => p.id === el.rezeptProduktSelect.value);
+      const produktName = el.rezeptProduktInput.value.trim();
       const ergebnisMenge = Math.max(1, parseInt(el.rezeptErgebnisMenge.value, 10) || 1);
-      if (!produkt) return zeigeFeldFehler(el.rezeptError, "Bitte wähle das hergestellte Produkt aus.");
+      if (!produktName) return zeigeFeldFehler(el.rezeptError, "Bitte gib das hergestellte Produkt ein.");
       if (rezeptEntwurfZutaten.length === 0) return zeigeFeldFehler(el.rezeptError, "Bitte füge mindestens eine Zutat hinzu.");
 
       const daten = {
-        produktId: produkt.id,
-        produktName: produkt.name,
+        produktName,
         ergebnisMenge,
         kategorie: el.rezeptKategorieInput.value.trim() || REZEPT_KATEGORIE_STANDARD,
         zutaten: rezeptEntwurfZutaten.map((z) => ({ produktId: z.produktId, produktName: z.produktName, menge: z.menge })),
