@@ -195,6 +195,31 @@
     btnKundeLoeschen: document.getElementById("btn-kunde-loeschen"),
     btnConfirmKunde: document.getElementById("btn-confirm-kunde"),
 
+    // Rezeptrechner (Herstellung, aufrufbar per Button in der Lager-Ansicht)
+    modalRezeptrechner: document.getElementById("modal-rezeptrechner"),
+    rezeptrechnerRezeptSelect: document.getElementById("rezeptrechner-rezept-select"),
+    rezeptrechnerMenge: document.getElementById("rezeptrechner-menge"),
+    rezeptrechnerErgebnis: document.getElementById("rezeptrechner-ergebnis"),
+    rezeptrechnerErgebnisLeer: document.getElementById("rezeptrechner-ergebnis-leer"),
+    btnRezeptNeu: document.getElementById("btn-rezept-neu"),
+    rezepteListe: document.getElementById("rezepte-liste"),
+    rezepteEmpty: document.getElementById("rezepte-empty"),
+
+    // Rezept anlegen/bearbeiten
+    modalRezeptBearbeiten: document.getElementById("modal-rezept-bearbeiten"),
+    modalRezeptBearbeitenTitel: document.getElementById("modal-rezept-bearbeiten-titel"),
+    rezeptEditingId: document.getElementById("rezept-editing-id"),
+    rezeptProduktSelect: document.getElementById("rezept-produkt-select"),
+    rezeptErgebnisMenge: document.getElementById("rezept-ergebnis-menge"),
+    rezeptZutatProduktSelect: document.getElementById("rezept-zutat-produkt-select"),
+    rezeptZutatMenge: document.getElementById("rezept-zutat-menge"),
+    btnRezeptZutatHinzufuegen: document.getElementById("btn-rezept-zutat-hinzufuegen"),
+    rezeptZutatenListe: document.getElementById("rezept-zutaten-liste"),
+    rezeptZutatenLeer: document.getElementById("rezept-zutaten-leer"),
+    rezeptError: document.getElementById("rezept-error"),
+    btnRezeptLoeschen: document.getElementById("btn-rezept-loeschen"),
+    btnConfirmRezept: document.getElementById("btn-confirm-rezept"),
+
     // Verkaufshistorie (automatisch aus abgeschlossenen Bestellungen)
     verkaeufeSearch: document.getElementById("verkaeufe-search"),
     verkaeufeTableBody: document.getElementById("verkaeufe-table-body"),
@@ -434,5 +459,8 @@
     el.hofbuchKategorieInput,
     el.hofbuchEditKategorie,
     el.bestellungenBulkStatus,
+    el.rezeptrechnerRezeptSelect,
+    el.rezeptProduktSelect,
+    el.rezeptZutatProduktSelect,
   ].forEach(erzeugeCustomSelect);
 

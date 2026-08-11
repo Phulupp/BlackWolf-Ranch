@@ -46,6 +46,25 @@
           listenerRetryVersuche["Bestellungen"] = 0;
           bestellungen = [];
           snap.forEach((docSnap) => bestellungen.push({ id: docSnap.id, produkte: [], archiviert: false, ...docSnap.data() }));
+
+          // Kurzer Toast, wenn ein KOLLEGE (nicht man selbst) während der
+          // laufenden Sitzung eine neue Bestellung anlegt - übersieht man
+          // sonst leicht, wenn man gerade auf einer anderen Seite ist. Beim
+          // allerersten Laden (bekannteBestellungIds noch null) wird bewusst
+          // nichts gemeldet, sonst gäbe es beim Login eine Toast-Flut für
+          // jede bereits bestehende Bestellung.
+          const aktuelleIds = bestellungen.map((b) => b.id);
+          if (bekannteBestellungIds !== null) {
+            bestellungen
+              .filter((b) => !bekannteBestellungIds.includes(b.id))
+              .forEach((b) => {
+                if (b.erstelltVon && (!aktuellerNutzer || b.erstelltVon !== aktuellerNutzer.name)) {
+                  zeigeToast(`${b.erstelltVon} hat eine neue Bestellung angelegt (${b.unternehmen || "—"}).`);
+                }
+              });
+          }
+          bekannteBestellungIds = aktuelleIds;
+
           renderBestellungen();
           renderVerkaufshistorie();
           renderUebersicht();

@@ -18,7 +18,7 @@
   /* ------------------------------------------------------------------------
      1. Konstanten
      ------------------------------------------------------------------------ */
-  const VERSION_AKTUELL = 56;
+  const VERSION_AKTUELL = 57;
 
   // Ränge des Hofes (rein organisatorisch — Verwalterrechte sind unabhängig
   // davon und werden separat je Benutzer vergeben, siehe isAdmin).
@@ -40,6 +40,11 @@
   const KONTAKTE_COLLECTION = "kontakte";
   const HOFBUCH_COLLECTION = "hofbuch";
   const KUNDEN_COLLECTION = "kunden";
+  // Rezepte für den Herstellungs-/Rezeptrechner (Button "Herstellung" in der
+  // Lager-Ansicht, siehe js/views/rezepte.js) - vom Team selbst gepflegt,
+  // keine festen Standardwerte, da die tatsächlichen RedM-Crafting-Mengen
+  // im Code nicht bekannt sind.
+  const REZEPTE_COLLECTION = "rezepte";
   const PRESENCE_COLLECTION = "presence";
   const KONTAKTE_ROLLEN_DOC = "kataloge/kontakte-rollen";
   const KONTAKTE_ROLLEN_FALLBACK = "Sonstiges";

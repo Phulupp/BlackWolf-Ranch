@@ -19,6 +19,7 @@
     starteHofEinstellungenListener();
     starteProdukteListener();
     starteLagerStatusListener();
+    starteRezepteListener();
     starteBestellungenListener();
     starteAngeboteListener();
     starteKontakteRollenListener();
@@ -64,17 +65,20 @@
 
   function stoppeApp() {
     aktuellerNutzer = null;
-    [unsubProdukte, unsubLagerStatus, unsubBestellungen, unsubAngebote, unsubKontakte, unsubKunden, unsubHofbuch, unsubKontakteRollen, unsubHofEinstellungen].forEach(
+    [unsubProdukte, unsubLagerStatus, unsubRezepte, unsubBestellungen, unsubAngebote, unsubKontakte, unsubKunden, unsubHofbuch, unsubKontakteRollen, unsubHofEinstellungen].forEach(
       (unsub) => unsub && unsub()
     );
-    unsubProdukte = unsubLagerStatus = unsubBestellungen = unsubAngebote = unsubKontakte = unsubKunden = unsubHofbuch = unsubKontakteRollen = unsubHofEinstellungen = null;
+    unsubProdukte = unsubLagerStatus = unsubRezepte = unsubBestellungen = unsubAngebote = unsubKontakte = unsubKunden = unsubHofbuch = unsubKontakteRollen = unsubHofEinstellungen = null;
     stoppeBenutzerverwaltung();
     stoppeHeartbeat();
     clearInterval(versionCheckTimer);
     clearInterval(dashHinweisTimer);
     produkte = [];
     lagerStatus = null;
+    rezepte = [];
+    rezeptEntwurfZutaten = [];
     bestellungen = [];
+    bekannteBestellungIds = null;
     angebote = [];
     kontakte = [];
     kunden = [];

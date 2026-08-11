@@ -14,6 +14,12 @@
   let unsubLagerStatus = null;
   let bestellungen = [];
   let unsubBestellungen = null;
+  // IDs aller bekannten Bestellungen aus dem letzten Snapshot - null bedeutet
+  // "noch kein Snapshot verarbeitet". Dient dazu, beim allerersten Laden
+  // keine Flut an Toasts auszulösen und danach nur wirklich NEU angelegte
+  // Bestellungen anderer Nutzer zu melden (siehe starteBestellungenListener
+  // in bestellungen.js).
+  let bekannteBestellungIds = null;
   let angebote = [];
   let unsubAngebote = null;
   let kontakte = [];
@@ -22,6 +28,12 @@
   let unsubHofbuch = null;
   let kunden = [];
   let unsubKunden = null;
+  let rezepte = [];
+  let unsubRezepte = null;
+  // Arbeitskopie der Zutatenliste, während das Rezept-Bearbeiten-Modal
+  // offen ist (siehe rezeptEntwurfZutaten in js/views/rezepte.js) - analog
+  // zu bestellungEntwurfPositionen im Bestellungs-Modal.
+  let rezeptEntwurfZutaten = [];
   let unsubPresence = null;
   let unsubKontakteRollen = null;
   let kontakteRollenKatalog = [];

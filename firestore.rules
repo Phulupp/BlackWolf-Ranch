@@ -265,6 +265,13 @@ service cloud.firestore {
       allow read, write: if istFreigegeben();
     }
 
+    // Rezepte für den Herstellungsrechner (Lager-Ansicht): vom Team selbst
+    // gepflegt, genau wie Kontakte/Kunden - jeder freigegebene Nutzer darf
+    // Rezepte anlegen, bearbeiten und löschen.
+    match /rezepte/{dokument} {
+      allow read, write: if istFreigegeben();
+    }
+
     // Hof-Einstellungen (einstellungen/hof): Lieferpauschale, Warnschwellen,
     // Stammkunde-Kriterium - für alle freigegebenen Nutzer lesbar (fließt in
     // Preisberechnungen/Anzeigen ein, die jeder sieht), aber nur von
