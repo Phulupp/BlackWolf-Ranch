@@ -460,27 +460,37 @@
     el.bestellungPositionProduktLabel.textContent = produkt ? produkt.name : produkte.length ? "Produkt wählen" : "Keine Waren vorhanden";
   }
 
+  // Baut die Options-Liste NEU (nicht das ganze Panel - die Suchleiste
+  // selbst bleibt dabei unangetastet, sonst würde sie bei jedem Tastendruck
+  // neu erzeugt und der Cursor/Fokus ginge verloren, siehe gleiches Problem
+  // bei aktualisierePositionsBerechnung weiter oben). Berücksichtigt einen
+  // optionalen Suchbegriff aus der Suchleiste - gefiltert wird weiterhin
+  // INNERHALB derselben Kategorie-Gruppierung wie bei Waren & Preise/Lager,
+  // leere Kategorien werden bei aktiver Suche einfach übersprungen.
   function befuelleBestellungProduktDropdown() {
-    if (!el.bestellungPositionProduktPanel) return;
+    if (!el.bestellungPositionProduktOptionen) return;
     const auswahlId = el.bestellungPositionProdukt.value;
+    const suchbegriff = (el.bestellungPositionProduktSuche ? el.bestellungPositionProduktSuche.value : "").trim().toLowerCase();
 
     if (!produkte.length) {
-      el.bestellungPositionProduktPanel.innerHTML = `<div class="custom-select__leer">Keine Waren vorhanden</div>`;
+      el.bestellungPositionProduktOptionen.innerHTML = `<div class="custom-select__leer">Keine Waren vorhanden</div>`;
       aktualisiereBestellungProduktLabel();
       return;
     }
+
+    const treffer = suchbegriff ? produkte.filter((p) => (p.name || "").toLowerCase().includes(suchbegriff)) : produkte;
 
     // Gleiche Bereichs-Einteilung wie bei Waren & Preise/Lager/der
     // Produkttabelle oben, damit die Auswahlliste beim Hinzufügen ebenso
     // aufgeräumt gruppiert erscheint statt als eine lange, unsortierte Liste.
     const bereiche = PRODUKT_KATEGORIEN.slice();
-    if (produkte.some((p) => ermittleProduktKategorie(p) === PRODUKT_KATEGORIE_SONSTIGE)) {
+    if (treffer.some((p) => ermittleProduktKategorie(p) === PRODUKT_KATEGORIE_SONSTIGE)) {
       bereiche.push({ id: PRODUKT_KATEGORIE_SONSTIGE, label: PRODUKT_KATEGORIE_SONSTIGE_LABEL });
     }
 
-    el.bestellungPositionProduktPanel.innerHTML = bereiche
+    const html = bereiche
       .map((kat) => {
-        const produkteDieserKategorie = produkte.filter((p) => ermittleProduktKategorie(p) === kat.id);
+        const produkteDieserKategorie = treffer.filter((p) => ermittleProduktKategorie(p) === kat.id);
         if (produkteDieserKategorie.length === 0) return "";
         const optionen = produkteDieserKategorie
           .map(
@@ -493,7 +503,19 @@
         return `<div class="custom-select__kategorie"><span>${escapeHtml(kat.label)}</span></div>${optionen}`;
       })
       .join("");
+    el.bestellungPositionProduktOptionen.innerHTML = html || `<div class="custom-select__leer">Keine Treffer</div>`;
     aktualisiereBestellungProduktLabel();
+  }
+
+  if (el.bestellungPositionProduktSuche) {
+    el.bestellungPositionProduktSuche.addEventListener("input", befuelleBestellungProduktDropdown);
+    // Verhindert, dass ein Klick in die Suchleiste selbst (z. B. Text
+    // markieren) über den globalen "Klick außerhalb schließt"-Handler
+    // fälschlich als "außerhalb" gewertet wird - eigentlich unnötig, da die
+    // Suchleiste innerhalb von .bestellungPositionProduktPanel liegt und
+    // dort bereits geprüft wird, aber schadet nicht als zusätzliche
+    // Absicherung gegen künftige Änderungen an dieser Prüfung.
+    el.bestellungPositionProduktSuche.addEventListener("click", (event) => event.stopPropagation());
   }
 
   // Das Panel wird einmalig direkt an <body> gehängt (statt als Kind von
@@ -530,10 +552,15 @@
 
   function oeffneBestellungProduktDropdown() {
     if (!el.bestellungPositionProduktPanel || produkte.length === 0) return;
+    if (el.bestellungPositionProduktSuche) el.bestellungPositionProduktSuche.value = "";
     befuelleBestellungProduktDropdown();
     positioniereBestellungProduktPanel();
     el.bestellungPositionProduktPanel.hidden = false;
     el.bestellungPositionProduktTrigger.classList.add("custom-select__trigger--offen");
+    // Sofort tippen können, ohne erst extra in die Suchleiste klicken zu
+    // müssen - kleine Verzögerung, damit der Fokus nicht vom "hidden = false"
+    // direkt danach wieder verworfen wird.
+    if (el.bestellungPositionProduktSuche) setTimeout(() => el.bestellungPositionProduktSuche.focus(), 0);
   }
 
   function schliesseBestellungProduktDropdown() {

@@ -70,6 +70,8 @@
     bestellungPositionProduktTrigger: document.getElementById("bestellung-position-produkt-trigger"),
     bestellungPositionProduktLabel: document.getElementById("bestellung-position-produkt-label"),
     bestellungPositionProduktPanel: document.getElementById("bestellung-position-produkt-panel"),
+    bestellungPositionProduktSuche: document.getElementById("bestellung-position-produkt-suche"),
+    bestellungPositionProduktOptionen: document.getElementById("bestellung-position-produkt-optionen"),
     bestellungPositionMenge: document.getElementById("bestellung-position-menge"),
     bestellungPositionRabatt: document.getElementById("bestellung-position-rabatt"),
     bestellungPositionVorschau: document.getElementById("bestellung-position-vorschau"),

@@ -381,6 +381,61 @@ select.field-input option {
   border-top: 1px solid var(--leather-edge);
 }
 
+/* Suchleiste innerhalb der Produktauswahl im Bestellungs-Modal - bewusst nur
+   über den Modifier ".custom-select__panel--mit-suche" aktiviert, damit alle
+   ÜBRIGEN (einfachen, ohne Suche) Custom-Dropdowns der Seite unverändert
+   bleiben (die teilen sich dieselben .custom-select__panel/__option-Klassen,
+   siehe erzeugeCustomSelect in dom.js). Nur bei aktivem Modifier scrollt die
+   Options-Liste FÜR SICH (.custom-select__optionen), damit die Suchleiste
+   selbst beim Scrollen sichtbar/fixiert bleibt. */
+.custom-select__panel--mit-suche {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.custom-select__panel--mit-suche .custom-select__optionen {
+  overflow-y: auto;
+  flex: 1 1 auto;
+  scrollbar-color: var(--brass) rgba(0, 0, 0, 0.25);
+  scrollbar-width: thin;
+}
+
+.custom-select__panel--mit-suche .custom-select__optionen::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.custom-select__panel--mit-suche .custom-select__optionen::-webkit-scrollbar-thumb {
+  background: var(--brass);
+  border-radius: var(--radius-sm);
+}
+
+.custom-select__suche {
+  flex-shrink: 0;
+  margin-bottom: 6px;
+}
+
+.custom-select__suche-input {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--leather-edge);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-size: 13px;
+  color: var(--wood-text);
+  font-family: var(--font-body);
+}
+
+.custom-select__suche-input::placeholder {
+  color: var(--wood-text-soft);
+  font-style: italic;
+}
+
+.custom-select__suche-input:focus {
+  outline: none;
+  border-color: var(--brass);
+}
+
 /* Zeilen-Erfassung im Bestellungs-Modal (Produkt + Menge + Rabatt + Hinzufügen).
    Kompakt in EINER Zeile nebeneinander (Produkt wächst, Menge/Rabatt haben
    eine feste, normale Breite, Button richtet sich nach seinem Text) - so

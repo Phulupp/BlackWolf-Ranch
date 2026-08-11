@@ -24,8 +24,8 @@
        blieb das Tab-/Lesezeichen-Icon in genau diesen Fällen leer, selbst
        wenn das PNG unten technisch korrekt eingebunden war. -->
   <link rel="shortcut icon" href="/favicon.ico" />
-  <link rel="icon" type="image/png" href="assets/logo/favicon-mais.png?v=61" />
-  <link rel="apple-touch-icon" href="assets/logo/favicon-mais.png?v=61" />
+  <link rel="icon" type="image/png" href="assets/logo/favicon-mais.png?v=62" />
+  <link rel="apple-touch-icon" href="assets/logo/favicon-mais.png?v=62" />
 
   <!-- Google Fonts: Rye (Farmschild/Wordmark), Playfair Display (Überschriften), Vollkorn (Fließtext/Pergament) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -39,30 +39,30 @@
        style.css - nur jetzt nach Zweck aufgeteilt (base > layout >
        components > views), damit man den passenden Abschnitt schneller
        findet. Reihenfolge ist wichtig und darf nicht vertauscht werden. -->
-  <link rel="stylesheet" href="css/base/tokens.css?v=61" />
-  <link rel="stylesheet" href="css/base/reset.css?v=61" />
-  <link rel="stylesheet" href="css/base/textures.css?v=61" />
-  <link rel="stylesheet" href="css/views/auth.css?v=61" />
-  <link rel="stylesheet" href="css/components/forms.css?v=61" />
-  <link rel="stylesheet" href="css/components/buttons.css?v=61" />
-  <link rel="stylesheet" href="css/layout/shell.css?v=61" />
-  <link rel="stylesheet" href="css/components/cards.css?v=61" />
-  <link rel="stylesheet" href="css/components/badges.css?v=61" />
-  <link rel="stylesheet" href="css/views/dashboard.css?v=61" />
-  <link rel="stylesheet" href="css/components/tables.css?v=61" />
-  <link rel="stylesheet" href="css/views/waren.css?v=61" />
-  <link rel="stylesheet" href="css/views/lager.css?v=61" />
-  <link rel="stylesheet" href="css/views/bestellungen.css?v=61" />
-  <link rel="stylesheet" href="css/views/kontakte.css?v=61" />
-  <link rel="stylesheet" href="css/views/handelsrechner.css?v=61" />
-  <link rel="stylesheet" href="css/views/rezepte.css?v=61" />
-  <link rel="stylesheet" href="css/components/modals.css?v=61" />
-  <link rel="stylesheet" href="css/views/admin.css?v=61" />
-  <link rel="stylesheet" href="css/components/toast.css?v=61" />
-  <link rel="stylesheet" href="css/layout/footer.css?v=61" />
-  <link rel="stylesheet" href="css/components/kataloge.css?v=61" />
-  <link rel="stylesheet" href="css/views/hofbuch.css?v=61" />
-  <link rel="stylesheet" href="css/base/responsive.css?v=61" />
+  <link rel="stylesheet" href="css/base/tokens.css?v=62" />
+  <link rel="stylesheet" href="css/base/reset.css?v=62" />
+  <link rel="stylesheet" href="css/base/textures.css?v=62" />
+  <link rel="stylesheet" href="css/views/auth.css?v=62" />
+  <link rel="stylesheet" href="css/components/forms.css?v=62" />
+  <link rel="stylesheet" href="css/components/buttons.css?v=62" />
+  <link rel="stylesheet" href="css/layout/shell.css?v=62" />
+  <link rel="stylesheet" href="css/components/cards.css?v=62" />
+  <link rel="stylesheet" href="css/components/badges.css?v=62" />
+  <link rel="stylesheet" href="css/views/dashboard.css?v=62" />
+  <link rel="stylesheet" href="css/components/tables.css?v=62" />
+  <link rel="stylesheet" href="css/views/waren.css?v=62" />
+  <link rel="stylesheet" href="css/views/lager.css?v=62" />
+  <link rel="stylesheet" href="css/views/bestellungen.css?v=62" />
+  <link rel="stylesheet" href="css/views/kontakte.css?v=62" />
+  <link rel="stylesheet" href="css/views/handelsrechner.css?v=62" />
+  <link rel="stylesheet" href="css/views/rezepte.css?v=62" />
+  <link rel="stylesheet" href="css/components/modals.css?v=62" />
+  <link rel="stylesheet" href="css/views/admin.css?v=62" />
+  <link rel="stylesheet" href="css/components/toast.css?v=62" />
+  <link rel="stylesheet" href="css/layout/footer.css?v=62" />
+  <link rel="stylesheet" href="css/components/kataloge.css?v=62" />
+  <link rel="stylesheet" href="css/views/hofbuch.css?v=62" />
+  <link rel="stylesheet" href="css/base/responsive.css?v=62" />
 
   <!-- Firebase SDK (Authentifizierung + Datenbank). "defer" statt normaler
        blockierender <script>-Tags: der Browser kann so den Rest der Seite
@@ -1208,7 +1208,12 @@
                   <span id="bestellung-position-produkt-label">Kein Produkt vorhanden</span>
                   <span class="custom-select__chevron">⌄</span>
                 </button>
-                <div class="custom-select__panel" id="bestellung-position-produkt-panel" hidden></div>
+                <div class="custom-select__panel custom-select__panel--mit-suche" id="bestellung-position-produkt-panel" hidden>
+                  <div class="custom-select__suche">
+                    <input type="text" id="bestellung-position-produkt-suche" class="custom-select__suche-input" placeholder="Suchen..." autocomplete="off" />
+                  </div>
+                  <div class="custom-select__optionen" id="bestellung-position-produkt-optionen"></div>
+                </div>
                 <select id="bestellung-position-produkt" class="visually-hidden" tabindex="-1" aria-hidden="true"></select>
               </div>
             </div>
@@ -1702,30 +1707,30 @@
        teilen können. Die Reihenfolge entspricht exakt den frueheren
        nummerierten Abschnitten in app.js und darf nicht vertauscht werden:
        js/main.js muss immer zuletzt kommen, da es die App erst startet. -->
-  <script defer src="js/firebase-config.js?v=61"></script>
-  <script defer src="js/core/config.js?v=61"></script>
-  <script defer src="js/core/state.js?v=61"></script>
-  <script defer src="js/core/dom.js?v=61"></script>
-  <script defer src="js/core/firebase-init.js?v=61"></script>
-  <script defer src="js/core/utils.js?v=61"></script>
-  <script defer src="js/ui/modals.js?v=61"></script>
-  <script defer src="js/ui/nav.js?v=61"></script>
-  <script defer src="js/ui/presence.js?v=61"></script>
-  <script defer src="js/views/waren.js?v=61"></script>
-  <script defer src="js/views/lager.js?v=61"></script>
-  <script defer src="js/views/rezepte.js?v=61"></script>
-  <script defer src="js/views/bestellungen.js?v=61"></script>
-  <script defer src="js/views/handelsrechner.js?v=61"></script>
-  <script defer src="js/views/kontakte.js?v=61"></script>
-  <script defer src="js/views/verkaeufe.js?v=61"></script>
-  <script defer src="js/views/kunden.js?v=61"></script>
-  <script defer src="js/views/hofbuch.js?v=61"></script>
-  <script defer src="js/views/statistiken.js?v=61"></script>
-  <script defer src="js/views/dashboard.js?v=61"></script>
-  <script defer src="js/views/einstellungen.js?v=61"></script>
-  <script defer src="js/views/admin.js?v=61"></script>
-  <script defer src="js/ui/version-check.js?v=61"></script>
-  <script defer src="js/main.js?v=61"></script>
-  <script type="module" src="js/auth.js?v=61"></script>
+  <script defer src="js/firebase-config.js?v=62"></script>
+  <script defer src="js/core/config.js?v=62"></script>
+  <script defer src="js/core/state.js?v=62"></script>
+  <script defer src="js/core/dom.js?v=62"></script>
+  <script defer src="js/core/firebase-init.js?v=62"></script>
+  <script defer src="js/core/utils.js?v=62"></script>
+  <script defer src="js/ui/modals.js?v=62"></script>
+  <script defer src="js/ui/nav.js?v=62"></script>
+  <script defer src="js/ui/presence.js?v=62"></script>
+  <script defer src="js/views/waren.js?v=62"></script>
+  <script defer src="js/views/lager.js?v=62"></script>
+  <script defer src="js/views/rezepte.js?v=62"></script>
+  <script defer src="js/views/bestellungen.js?v=62"></script>
+  <script defer src="js/views/handelsrechner.js?v=62"></script>
+  <script defer src="js/views/kontakte.js?v=62"></script>
+  <script defer src="js/views/verkaeufe.js?v=62"></script>
+  <script defer src="js/views/kunden.js?v=62"></script>
+  <script defer src="js/views/hofbuch.js?v=62"></script>
+  <script defer src="js/views/statistiken.js?v=62"></script>
+  <script defer src="js/views/dashboard.js?v=62"></script>
+  <script defer src="js/views/einstellungen.js?v=62"></script>
+  <script defer src="js/views/admin.js?v=62"></script>
+  <script defer src="js/ui/version-check.js?v=62"></script>
+  <script defer src="js/main.js?v=62"></script>
+  <script type="module" src="js/auth.js?v=62"></script>
 </body>
 </html>
