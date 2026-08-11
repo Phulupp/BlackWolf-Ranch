@@ -18,9 +18,11 @@
          ergebnisMenge,                // wie viele Stück EIN Durchgang ergibt
          kategorie,                    // frei vergebener Text, siehe unten -
                                         // KEINE feste Liste wie bei Hofbuch
-         zutaten: [{ produktId, produktName, menge }, ...],  // Zutaten
-                                        // bleiben an "produkte" gekoppelt,
-                                        // das sind ja tatsächliche Waren
+         zutaten: [{ produktName, menge }, ...],  // Rohstoffe sind wie das
+                                        // Ergebnis-Produkt FREITEXT (mit
+                                        // Autocomplete-Vorschlag aus "produkte")
+                                        // - es gibt Rohstoffe, die es in
+                                        // Waren & Preise gar nicht gibt
          erstelltAm, erstelltVon, bearbeiter, bearbeitetAm
        }
      Der Rechner selbst prüft bewusst NICHT gegen den aktuellen Lagerbestand -
@@ -220,6 +222,7 @@
     el.rezeptKategorieInput.value = rezept ? kategorieVonRezept(rezept) : "";
     rezeptEntwurfZutaten = rezept ? (rezept.zutaten || []).map((z) => ({ ...z })) : [];
     renderRezeptZutatenListe();
+    el.rezeptZutatProduktInput.value = "";
     el.rezeptZutatMenge.value = 1;
     oeffneModal("modal-rezept-bearbeiten");
   }
@@ -237,16 +240,18 @@
   if (el.btnRezeptZutatHinzufuegen) {
     el.btnRezeptZutatHinzufuegen.addEventListener("click", () => {
       versteckeFeldFehler(el.rezeptError);
-      const produkt = produkte.find((p) => p.id === el.rezeptZutatProduktSelect.value);
+      const produktName = el.rezeptZutatProduktInput.value.trim();
       const menge = parseInt(el.rezeptZutatMenge.value, 10);
-      if (!produkt) return zeigeFeldFehler(el.rezeptError, "Bitte wähle eine Zutat aus.");
+      if (!produktName) return zeigeFeldFehler(el.rezeptError, "Bitte gib einen Rohstoff ein.");
       if (!isFinite(menge) || menge < 1) return zeigeFeldFehler(el.rezeptError, "Bitte gib eine gültige Menge ein.");
 
-      const vorhanden = rezeptEntwurfZutaten.find((z) => z.produktId === produkt.id);
+      const vorhanden = rezeptEntwurfZutaten.find((z) => z.produktName.toLowerCase() === produktName.toLowerCase());
       if (vorhanden) vorhanden.menge += menge;
-      else rezeptEntwurfZutaten.push({ produktId: produkt.id, produktName: produkt.name, menge });
+      else rezeptEntwurfZutaten.push({ produktName, menge });
       renderRezeptZutatenListe();
+      el.rezeptZutatProduktInput.value = "";
       el.rezeptZutatMenge.value = 1;
+      el.rezeptZutatProduktInput.focus();
     });
   }
 
@@ -272,7 +277,7 @@
         produktName,
         ergebnisMenge,
         kategorie: el.rezeptKategorieInput.value.trim() || REZEPT_KATEGORIE_STANDARD,
-        zutaten: rezeptEntwurfZutaten.map((z) => ({ produktId: z.produktId, produktName: z.produktName, menge: z.menge })),
+        zutaten: rezeptEntwurfZutaten.map((z) => ({ produktName: z.produktName, menge: z.menge })),
         bearbeiter: aktuellerNutzer ? aktuellerNutzer.name : null,
       };
 

@@ -214,7 +214,8 @@
     rezeptErgebnisMenge: document.getElementById("rezept-ergebnis-menge"),
     rezeptKategorieInput: document.getElementById("rezept-kategorie-input"),
     rezeptKategorienListe: document.getElementById("rezept-kategorien-liste"),
-    rezeptZutatProduktSelect: document.getElementById("rezept-zutat-produkt-select"),
+    rezeptZutatProduktInput: document.getElementById("rezept-zutat-produkt-input"),
+    rezeptZutatProdukteListe: document.getElementById("rezept-zutat-produkte-liste"),
     rezeptZutatMenge: document.getElementById("rezept-zutat-menge"),
     btnRezeptZutatHinzufuegen: document.getElementById("btn-rezept-zutat-hinzufuegen"),
     rezeptZutatenListe: document.getElementById("rezept-zutaten-liste"),
@@ -462,6 +463,5 @@
     el.hofbuchEditKategorie,
     el.bestellungenBulkStatus,
     el.rezeptrechnerRezeptSelect,
-    el.rezeptZutatProduktSelect,
   ].forEach(erzeugeCustomSelect);
 
