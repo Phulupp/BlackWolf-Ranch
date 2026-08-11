@@ -452,6 +452,7 @@ select.field-input option {
 .bestellung-position-vorschau strong {
   color: var(--brass-bright);
   font-family: var(--font-display);
+  font-weight: 800;
   margin-left: 4px;
 }
 
@@ -723,7 +724,8 @@ select.field-input option {
 
 .bestellung-zusammenfassung .bestellung-zusammenfassung__mini strong {
   font-size: 13px;
-  color: var(--wood-text-muted);
+  font-weight: 800;
+  color: var(--wood-text);
 }
 
 .bestellung-zusammenfassung__haupt {
