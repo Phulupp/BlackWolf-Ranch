@@ -8,11 +8,13 @@
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   1. Design-Tokens
+   1. Design-Tokens — Farbthema "Erdbraun & Kupfer"
    -------------------------------------------------------------------------- */
 :root {
-  /* Dunkles Holz (Sidebar, Kopfleisten, Footer) — kräftiger, sattes Rotbraun
-     statt eines flachen Graubraun, damit es natürlicher/wärmer wirkt. */
+  /* Dunkles Holz (Sidebar, Kopfleisten, Footer) — Holzstruktur/-textur bleibt
+     bewusst unverändert (siehe CLAUDE.md-Vorgabe "Sidebar nicht neu
+     gestalten"), nur die darauf liegenden UI-Farben (weiter unten) wechseln
+     auf Erdbraun/Kupfer. */
   --wood-950: #0d0704;
   --wood-900: #170e07;
   --wood-850: #1e1208;
@@ -23,48 +25,68 @@
   --wood-grain: rgba(0, 0, 0, 0.32);
   --wood-grain-light: rgba(255, 208, 140, 0.06);
 
-  /* Warmer Akzentton (nur noch als Textfarbe, z. B. auf dem Übersicht-Hero) */
-  --parch-200: #cdb277;
+  /* Warmer Akzentton (nur noch als Textfarbe, z. B. auf dem Übersicht-Hero) -
+     jetzt "Old Brass", da Gold nur noch als seltener Sekundärakzent dient. */
+  --parch-200: #b8945a;
 
-  /* Leder-Panels: die gesamte Anwendung (Karten, Tabellen, Modals, Login,
-     Hofbuch) nutzt dunkles, halbtransparent wirkendes Leder mit feiner
-     Messing-Kante statt Pergament oder Papier. */
-  --leather-900: #19110b;
-  --leather-800: #2b2013;
-  --leather-700: #382919;
-  --leather-600: #4c371f;
-  --leather-edge: rgba(189, 145, 67, 0.4);
-  --leather-edge-soft: rgba(189, 145, 67, 0.22);
+  /* Karten-/Panel-Ebenen: die gesamte Anwendung (Karten, Tabellen, Modals,
+     Login, Hofbuch) nutzt vier abgestufte, warme Erdbraun-Ebenen statt
+     Pergament/Papier - "leather-800" bleibt die meistgenutzte Haupt-Panel-
+     Ebene, "leather-900" die dunkelste (Inputs), "leather-600" die hellste
+     (Highlights/Hover). Kanten sind jetzt warmes dunkles Braun statt Gold. */
+  --leather-900: #211811; /* Input */
+  --leather-800: #2a1d14; /* Card (Hauptfläche für Panels/Tabellen) */
+  --leather-700: #302117; /* Card Secondary */
+  --leather-600: #37251a; /* Card Highlight */
+  --leather-edge: rgba(89, 64, 47, 0.45);
+  --leather-edge-soft: rgba(89, 64, 47, 0.24);
 
-  /* Text auf dunklem Holz/Leder */
-  --wood-text: #e7d5a8;
-  --wood-text-muted: #b9976a;
-  --wood-text-soft: #8a6b47;
+  /* Text auf dunklem Holz/Leder — warmes altes Pergament, kein Grau/Weiß. */
+  --wood-text: #e1d0b0;
+  --wood-text-muted: #b9a487;
+  --wood-text-soft: #917c63;
+  --wood-text-placeholder: #796650;
 
-  /* Messing/Gold-Akzent — etwas gedämpfter, antiker statt hell-golden */
-  --brass: #916d2c;
-  --brass-bright: #bd9143;
-  --brass-deep: #6b4c1a;
-  --brass-soft: rgba(189, 145, 67, 0.18);
+  /* Kupfer — die neue Hauptakzentfarbe für aktive/wichtige/interaktive
+     Elemente (ersetzt die bisherige dominante Goldfarbe). "brass*"-Namen
+     bleiben bestehen (an ihnen hängt der Großteil der Anwendung), tragen
+     jetzt aber Kupfer-Werte statt Messing/Gold. */
+  --brass: #8f573c; /* Copper Muted - Normalgewicht (Ränder, Icons in Ruhe) */
+  --brass-bright: #a9653f; /* Primary Copper - wichtige/aktive/fokussierte Elemente */
+  --brass-deep: #7d472f; /* Copper Dark */
+  --brass-soft: rgba(169, 101, 63, 0.18);
+  --copper-hover: #bd7650;
+  --copper-light: #c98a63;
 
-  /* Status-Akzente (gedämpft, erdig) */
-  --status-open: #9c4e33;      /* Offen / warm ochre-red */
-  --status-open-soft: rgba(156, 78, 51, 0.18);
-  --status-progress: #71601f;
-  --status-progress-soft: rgba(113, 96, 31, 0.2);
-  --status-done: #43593a;      /* übernommen/geschlossen, gedämpftes Grün */
-  --status-done-soft: rgba(67, 89, 58, 0.2);
-  --status-danger: #6e2317;
-  --status-danger-soft: rgba(110, 35, 23, 0.18);
-  --status-danger-bright: #e2836b; /* Rot-Text auf dunklen Leder-Flächen */
+  /* Messing/Gold — jetzt nur noch seltener Sekundärakzent (kleine
+     dekorative Highlights, siehe .badge-stammkunde/.hofbuch-pin-badge). */
+  --old-brass: #b8945a;
+  --old-brass-light: #d0b276;
+
+  /* Preise/Geldbeträge — gealtertes Kupfer statt leuchtendem Gold. */
+  --price: #c48a61;
+  --price-strong: #d39a6c;
+  --price-total: #e0aa78;
+
+  /* Status-Akzente (gedämpft, erdig, an Kupfer/Erdbraun angelehnt) */
+  --status-open: #b58a4a;      /* Offen / gedämpftes Warm-Ocker */
+  --status-open-soft: rgba(181, 138, 74, 0.18);
+  --status-progress: #8f573c;  /* In Bearbeitung / Kupfer-Muted, "aktiv" */
+  --status-progress-soft: rgba(143, 87, 60, 0.2);
+  --status-done: #7f8a5a;      /* übernommen/geschlossen, gedämpftes Erdgrün */
+  --status-done-soft: rgba(127, 138, 90, 0.2);
+  --status-danger: #a94f3f;
+  --status-danger-soft: rgba(169, 79, 63, 0.18);
+  --status-danger-bright: #c97a63; /* Rot-Text auf dunklen Leder-Flächen */
 
   --radius-sm: 3px;
   --radius-md: 6px;
   --radius-lg: 10px;
 
-  --shadow-card: 0 4px 13px rgba(25, 14, 5, 0.34), 0 1px 0 rgba(255, 240, 200, 0.18) inset;
-  --shadow-raised: 0 16px 38px rgba(10, 5, 2, 0.5);
-  --shadow-modal: 0 32px 76px rgba(6, 3, 1, 0.68);
+  --shadow-card: 0 4px 13px rgba(15, 9, 5, 0.34), 0 1px 0 rgba(240, 220, 180, 0.16) inset;
+  --shadow-raised: 0 16px 38px rgba(15, 9, 5, 0.5);
+  --shadow-modal: 0 32px 76px rgba(15, 9, 5, 0.68);
+  --shadow-copper-glow: rgba(169, 101, 63, 0.15);
 
   --sidebar-width: 232px;
   --content-width: 1360px;

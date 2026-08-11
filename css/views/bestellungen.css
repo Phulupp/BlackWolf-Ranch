@@ -51,7 +51,7 @@
   font-size: 14.5px;
   letter-spacing: 0.02em;
   color: var(--brass-bright);
-  background: rgba(189, 145, 67, 0.09);
+  background: rgba(169, 101, 63, 0.09);
   border-bottom: 1px solid var(--leather-edge);
 }
 
@@ -131,7 +131,7 @@
    mehr feine goldene Linien statt Rahmen/Flächen - Layout, Größe und
    Funktion bleiben unverändert. */
 #modal-bestellung .bestellung-spalte--links {
-  border-right-color: rgba(189, 145, 67, 0.2);
+  border-right-color: rgba(89, 64, 47, 0.5);
 }
 
 #modal-bestellung .field-label {
@@ -142,7 +142,7 @@
 #modal-bestellung .field-input,
 #modal-bestellung .custom-select__trigger {
   background: rgba(0, 0, 0, 0.14);
-  border-color: rgba(189, 145, 67, 0.22);
+  border-color: rgba(89, 64, 47, 0.5);
   box-shadow: none;
 }
 
@@ -153,7 +153,7 @@
   padding: 5px 2px 8px;
   background: none;
   border: none;
-  border-bottom: 1px solid rgba(189, 145, 67, 0.16);
+  border-bottom: 1px solid rgba(89, 64, 47, 0.5);
   border-radius: 0;
   font-family: var(--font-display);
   color: var(--wood-text);
@@ -213,7 +213,7 @@
   padding: 10px 13px;
   font-size: 13.5px;
   color: var(--wood-text-muted);
-  background: rgba(84, 61, 36, 0.22);
+  background: rgba(55, 37, 26, 0.22);
   border: 1.5px solid transparent;
   border-radius: var(--radius-sm);
 }
@@ -249,9 +249,9 @@
   font-size: 14px;
   font-family: inherit;
   color: var(--wood-text);
-  background: rgba(84, 61, 36, 0.4);
+  background: rgba(55, 37, 26, 0.4);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
-  border: 1.5px solid rgba(189, 145, 67, 0.4);
+  border: 1.5px solid #59402f;
   border-radius: var(--radius-sm);
   text-align: left;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
@@ -346,7 +346,7 @@ select.field-input option {
 
 .custom-select__option:hover,
 .custom-select__option--hervorgehoben {
-  background: rgba(189, 145, 67, 0.16);
+  background: rgba(169, 101, 63, 0.18);
   color: var(--brass-bright);
 }
 
@@ -443,7 +443,7 @@ select.field-input option {
   margin-bottom: 14px;
   background: none;
   border: none;
-  border-top: 1px solid rgba(189, 145, 67, 0.15);
+  border-top: 1px solid rgba(89, 64, 47, 0.5);
   border-radius: 0;
   font-size: 12.5px;
   color: var(--wood-text-muted);
@@ -472,7 +472,7 @@ select.field-input option {
   max-height: 320px;
   overflow: auto;
   border: none;
-  border-top: 1px solid rgba(189, 145, 67, 0.18);
+  border-top: 1px solid rgba(89, 64, 47, 0.55);
   border-radius: 0;
 }
 
@@ -501,7 +501,7 @@ select.field-input option {
   letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--wood-text-soft);
-  border-bottom: 1px solid rgba(189, 145, 67, 0.3);
+  border-bottom: 1px solid rgba(89, 64, 47, 0.65);
   white-space: nowrap;
   z-index: 1;
 }
@@ -597,7 +597,7 @@ select.field-input option {
 .bestellung-positionen-zeile__endpreis,
 .bestellung-positionen-zeile__gesamt {
   font-weight: 700;
-  color: var(--brass-bright);
+  color: var(--price-strong);
 }
 
 .bestellung-positionen-zeile__kein-preis {
@@ -622,7 +622,7 @@ select.field-input option {
   text-transform: uppercase;
   color: var(--brass-bright);
   background: none;
-  border-top: 1px solid rgba(189, 145, 67, 0.16);
+  border-top: 1px solid rgba(89, 64, 47, 0.5);
 }
 
 .bestellung-positionen-zeile--kategorie:first-child {
@@ -633,7 +633,7 @@ select.field-input option {
 .bestellung-positionen-zeile__kategorie-linie {
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, var(--brass) 0%, rgba(189, 145, 67, 0.12) 85%, transparent 100%);
+  background: linear-gradient(90deg, var(--brass) 0%, rgba(169, 101, 63, 0.12) 85%, transparent 100%);
 }
 
 /* Lieferung-Umschalter: sitzt inline in der Zusammenfassungsleiste, direkt
@@ -679,7 +679,7 @@ select.field-input option {
 
 .bestellung-lieferung-toggle--aktiv {
   border-color: var(--brass);
-  background: rgba(189, 145, 67, 0.14);
+  background: rgba(169, 101, 63, 0.16);
   color: var(--brass-bright);
 }
 
@@ -747,7 +747,7 @@ select.field-input option {
   font-size: 29px;
   font-weight: 800;
   letter-spacing: 0.01em;
-  color: var(--brass-bright);
+  color: var(--price-total);
 }
 
 .field-input:disabled,

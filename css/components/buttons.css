@@ -35,7 +35,7 @@
 
 .btn--gold {
   background: linear-gradient(180deg, var(--brass-bright), var(--brass-deep));
-  color: #2a1c0a;
+  color: #f0dec0;
   border: 1px solid var(--brass-deep);
   box-shadow: var(--shadow-card);
 }
@@ -51,7 +51,7 @@
 }
 
 .btn--ghost:hover {
-  background: rgba(189, 145, 67, 0.1);
+  background: rgba(169, 101, 63, 0.1);
   color: var(--wood-text);
   border-color: var(--brass);
 }
@@ -60,14 +60,14 @@
    Anordnen-Modus in Waren & Preise) - deutlich als "Modus läuft" erkennbar,
    ohne eine neue Button-Farbvariante einzuführen. */
 .btn--ghost.btn--aktiv {
-  background: rgba(189, 145, 67, 0.16);
+  background: rgba(169, 101, 63, 0.16);
   border-color: var(--brass);
   color: var(--brass-bright);
 }
 
 .btn--danger {
   background: var(--status-danger);
-  color: #f2e4d6;
+  color: #f0dec0;
 }
 
 .btn--danger:hover {
@@ -136,7 +136,7 @@
   align-items: center;
   justify-content: center;
   font-size: 12px;
-  background: rgba(189, 145, 67, 0.08);
+  background: rgba(89, 64, 47, 0.24);
   color: var(--wood-text-muted);
   border: 1px solid transparent;
   transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;

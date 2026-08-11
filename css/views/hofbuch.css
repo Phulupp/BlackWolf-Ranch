@@ -100,8 +100,8 @@
   align-self: flex-start;
   padding: 2px 9px;
   font-size: 10px;
-  background: var(--brass-soft);
-  color: var(--brass-bright);
+  background: rgba(184, 148, 90, 0.22);
+  color: var(--old-brass);
 }
 
 .icon-btn--active {

@@ -7,12 +7,12 @@
    Braun-Verlaufs über die ganze Karte. */
 .dash-hero {
   background:
-    radial-gradient(ellipse 480px 220px at 82% 18%, rgba(240, 193, 75, 0.24), transparent 65%),
-    linear-gradient(115deg, var(--wood-900) 0%, var(--wood-800) 38%, #5a3a1f 62%, #86541f 82%, #b8813a 100%);
+    radial-gradient(ellipse 480px 220px at 82% 18%, rgba(201, 138, 99, 0.22), transparent 65%),
+    linear-gradient(115deg, var(--wood-900) 0%, var(--wood-800) 38%, #5c3a26 62%, #7d472f 82%, #a9653f 100%);
   border: 1px solid var(--wood-line);
   border-left: 3px solid var(--brass);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card), 0 0 40px -14px rgba(189, 145, 67, 0.4);
+  box-shadow: var(--shadow-card), 0 0 40px -14px rgba(169, 101, 63, 0.4);
   padding: 28px 36px;
   display: flex;
   align-items: center;
@@ -112,7 +112,7 @@
 
 .dash-hinweis:hover {
   background: var(--status-danger);
-  color: #f2e4d6;
+  color: #f0dec0;
 }
 
 .dash-stats {
@@ -123,8 +123,8 @@
 }
 
 .dash-stat {
-  background: linear-gradient(165deg, rgba(84, 61, 36, 0.4) 0%, var(--leather-800) 100%);
-  border: 1px solid rgba(189, 145, 67, 0.28);
+  background: linear-gradient(165deg, rgba(55, 37, 26, 0.4) 0%, var(--leather-800) 100%);
+  border: 1px solid rgba(89, 64, 47, 0.6);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
   padding: 20px 22px;
@@ -172,8 +172,8 @@
 }
 
 .dash-panel {
-  background: linear-gradient(165deg, rgba(84, 61, 36, 0.32) 0%, var(--leather-800) 100%);
-  border: 1px solid rgba(189, 145, 67, 0.28);
+  background: linear-gradient(165deg, rgba(55, 37, 26, 0.32) 0%, var(--leather-800) 100%);
+  border: 1px solid rgba(89, 64, 47, 0.6);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
   overflow: hidden;
@@ -184,7 +184,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 14px 18px;
-  border-bottom: 1px solid rgba(189, 145, 67, 0.2);
+  border-bottom: 1px solid rgba(89, 64, 47, 0.45);
   background: rgba(0, 0, 0, 0.14);
 }
 
@@ -265,7 +265,7 @@
 }
 
 .status-pill--entwurf {
-  background: rgba(189, 145, 67, 0.14);
+  background: rgba(89, 64, 47, 0.35);
   color: var(--wood-text-muted);
 }
 

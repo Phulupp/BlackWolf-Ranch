@@ -23,9 +23,9 @@
 .modal {
   width: 420px;
   background: linear-gradient(165deg, var(--leather-700) 0%, var(--leather-800) 22%, var(--leather-800) 100%);
-  border: 1px solid rgba(189, 145, 67, 0.34);
+  border: 1px solid rgba(89, 64, 47, 0.7);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-modal), 0 1px 0 rgba(255, 224, 170, 0.05) inset;
+  box-shadow: var(--shadow-modal), 0 1px 0 rgba(240, 220, 180, 0.05) inset;
   padding: 30px;
   transform: translateY(8px) scale(0.98);
   transition: transform 0.18s ease;
@@ -129,7 +129,7 @@
 }
 
 .modal__close:hover {
-  background: rgba(189, 145, 67, 0.1);
+  background: rgba(169, 101, 63, 0.14);
 }
 
 .modal__body {

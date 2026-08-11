@@ -35,7 +35,7 @@
 }
 
 .reg-row--body:hover {
-  background: rgba(189, 145, 67, 0.06);
+  background: #38271c;
 }
 
 /* Dezente Bereichs-Überschrift/Summe, um lange Tabellen (z. B. Lager) in
@@ -130,7 +130,7 @@
 }
 
 .search-field input::placeholder {
-  color: var(--wood-text-soft);
+  color: var(--wood-text-placeholder);
   font-style: italic;
 }
 
