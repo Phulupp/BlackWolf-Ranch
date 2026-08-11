@@ -90,15 +90,21 @@
     }
     el.rezeptrechnerErgebnisLeer.hidden = true;
 
-    // Aufrunden, damit die berechnete Menge immer für die gewünschte Anzahl
-    // ausreicht, auch wenn das Rezept nicht glatt aufgeht.
-    const faktor = menge / (rezept.ergebnisMenge || 1);
+    // WICHTIG: zuerst die Anzahl kompletter Herstellungsdurchläufe auf-
+    // runden, DANN mit der Zutatenmenge pro Durchlauf multiplizieren - nicht
+    // umgekehrt (das war der Bug: Aufrunden PRO Zutat nach der Multiplikation
+    // ergab bei 17 gewünschten Zucker fälschlich 9 statt 10 Zuckerrohr,
+    // siehe Testfälle in der Aufgabenstellung). Ein Rezept, das 4 Zucker aus
+    // 2 Zuckerrohr ergibt, braucht für 17 gewünschte Zucker
+    // ceil(17 / 4) = 5 volle Durchläufe -> 5 × 2 = 10 Zuckerrohr.
+    const durchlaeufe = Math.ceil(menge / (rezept.ergebnisMenge || 1));
     el.rezeptrechnerErgebnis.innerHTML = rezept.zutaten
       .map(
-        (z) =>
-          `<div class="detail-row"><span class="detail-row__label">${escapeHtml(z.produktName)}</span><span>${Math.ceil(
-            (Number(z.menge) || 0) * faktor
-          )} Stück</span></div>`
+        (z) => `
+        <div class="rechner-field-box">
+          <div class="rechner-field-box__label">${escapeHtml(z.produktName)}</div>
+          <div class="rechner-field-box__value">${durchlaeufe * (Number(z.menge) || 0)}<span class="rechner-field-box__unit">Stück</span></div>
+        </div>`
       )
       .join("");
   }
@@ -139,6 +145,27 @@
     });
   }
 
+  // Eine einzelne Rezeptkarte: Rohstoffe, Pfeil, Ergebnis - auf einen Blick
+  // verständlich ("2× Zuckerrohr -> 4× Zucker"), Bearbeiten/Löschen dezent
+  // als kleine Icons oben rechts auf der Karte (gleiches Muster wie die
+  // Zeilen-Icons in Waren & Preise, kein Umweg über ein Öffnen+Löschen im
+  // Modal nötig).
+  function rezeptKarteHtml(r) {
+    const zutatenHtml = (r.zutaten || []).map((z) => `<div>${z.menge}× ${escapeHtml(z.produktName)}</div>`).join("");
+    return `<div class="rezept-karte">
+        <div class="rezept-karte__kopf">
+          <span class="rezept-karte__titel">${escapeHtml(r.produktName)}</span>
+          <span class="rezept-karte__aktionen">
+            <button type="button" class="icon-btn" data-rezept-bearbeiten="${r.id}" title="Bearbeiten">✎</button>
+            <button type="button" class="icon-btn icon-btn--delete" data-rezept-loeschen="${r.id}" title="Löschen">🗑</button>
+          </span>
+        </div>
+        <div class="rezept-karte__zutaten">${zutatenHtml}</div>
+        <div class="rezept-karte__pfeil">↓</div>
+        <div class="rezept-karte__ergebnis">${r.ergebnisMenge || 1}× ${escapeHtml(r.produktName)}</div>
+      </div>`;
+  }
+
   // Rendert die (gefilterte) Liste gruppiert nach Kategorie - bei 15-20
   // Rezepten sonst schnell unübersichtlich, siehe Anforderung.
   function renderRezepteListe() {
@@ -149,32 +176,34 @@
 
     const gruppenNamen = Array.from(new Set(liste.map(kategorieVonRezept))).sort((a, b) => a.localeCompare(b, "de"));
     el.rezepteListe.innerHTML = gruppenNamen
-      .map((kategorie) => {
-        const zeilen = liste
+      .map((kategorie, index) => {
+        const karten = liste
           .filter((r) => kategorieVonRezept(r) === kategorie)
-          .map((r) => {
-            const zutatenText = (r.zutaten || []).map((z) => `${z.menge}× ${z.produktName}`).join(", ") || "—";
-            return `<div class="settings-list__item" data-rezept-oeffnen="${r.id}">
-              <div>
-                <span class="settings-list__name">${escapeHtml(r.produktName)}</span>
-                <span class="settings-list__role">ergibt ${r.ergebnisMenge || 1} Stück</span>
-                <span class="settings-list__role" style="opacity:.6;">${escapeHtml(zutatenText)}</span>
-              </div>
-              <span style="opacity:.5;">›</span>
-            </div>`;
-          })
+          .map(rezeptKarteHtml)
           .join("");
-        return `<div class="reg-row reg-row--kategorie"><span>${escapeHtml(kategorie)}</span></div>${zeilen}`;
+        const titelKlasse = index === 0 ? "rezepte-kategorie-titel rezepte-kategorie-titel--erste" : "rezepte-kategorie-titel";
+        return `<div class="${titelKlasse}">${escapeHtml(kategorie)}</div><div class="rezepte-grid">${karten}</div>`;
       })
       .join("");
   }
 
   if (el.rezepteListe) {
     el.rezepteListe.addEventListener("click", (event) => {
-      const zeile = event.target.closest("[data-rezept-oeffnen]");
-      if (!zeile) return;
-      const r = rezepte.find((x) => x.id === zeile.getAttribute("data-rezept-oeffnen"));
-      if (r) oeffneRezeptModal(r);
+      const bearbeitenBtn = event.target.closest("[data-rezept-bearbeiten]");
+      if (bearbeitenBtn) {
+        const r = rezepte.find((x) => x.id === bearbeitenBtn.getAttribute("data-rezept-bearbeiten"));
+        if (r) oeffneRezeptModal(r);
+        return;
+      }
+      const loeschenBtn = event.target.closest("[data-rezept-loeschen]");
+      if (loeschenBtn) {
+        const id = loeschenBtn.getAttribute("data-rezept-loeschen");
+        const r = rezepte.find((x) => x.id === id);
+        fordereLoeschungAn("Rezept löschen", `Möchtest du das Rezept für „${r ? r.produktName : "dieses Produkt"}“ wirklich löschen?`, async () => {
+          await db.collection(REZEPTE_COLLECTION).doc(id).delete();
+          zeigeToast("Rezept gelöscht.");
+        });
+      }
     });
   }
 
@@ -192,7 +221,6 @@
     rezeptEntwurfZutaten = rezept ? (rezept.zutaten || []).map((z) => ({ ...z })) : [];
     renderRezeptZutatenListe();
     el.rezeptZutatMenge.value = 1;
-    el.btnRezeptLoeschen.hidden = !rezept;
     oeffneModal("modal-rezept-bearbeiten");
   }
 
@@ -201,13 +229,7 @@
     el.rezeptZutatenLeer.hidden = rezeptEntwurfZutaten.length !== 0;
     el.rezeptZutatenListe.innerHTML = rezeptEntwurfZutaten
       .map(
-        (z, index) => `<div class="detail-row">
-          <span class="detail-row__label" style="flex:1; text-transform:none; letter-spacing:normal; font-size:13px;">${escapeHtml(
-            z.produktName
-          )}</span>
-          <span>${z.menge}×</span>
-          <button type="button" class="icon-btn icon-btn--delete" data-zutat-entfernen="${index}" title="Entfernen">✕</button>
-        </div>`
+        (z, index) => `<span class="rezept-zutat-chip">${z.menge}× ${escapeHtml(z.produktName)}<button type="button" class="rezept-zutat-chip__entfernen" data-zutat-entfernen="${index}" title="Entfernen">✕</button></span>`
       )
       .join("");
   }
@@ -270,17 +292,5 @@
         console.error(fehler);
         zeigeFeldFehler(el.rezeptError, "Speichern fehlgeschlagen. Bitte erneut versuchen.");
       }
-    });
-  }
-
-  if (el.btnRezeptLoeschen) {
-    el.btnRezeptLoeschen.addEventListener("click", () => {
-      const id = el.rezeptEditingId.value;
-      if (!id) return;
-      fordereLoeschungAn("Rezept löschen", "Möchtest du dieses Rezept wirklich löschen?", async () => {
-        await db.collection(REZEPTE_COLLECTION).doc(id).delete();
-        schliesseModal("modal-rezept-bearbeiten");
-        zeigeToast("Rezept gelöscht.");
-      });
     });
   }

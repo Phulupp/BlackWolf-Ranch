@@ -24,8 +24,8 @@
        blieb das Tab-/Lesezeichen-Icon in genau diesen Fällen leer, selbst
        wenn das PNG unten technisch korrekt eingebunden war. -->
   <link rel="shortcut icon" href="/favicon.ico" />
-  <link rel="icon" type="image/png" href="assets/logo/favicon-mais.png?v=59" />
-  <link rel="apple-touch-icon" href="assets/logo/favicon-mais.png?v=59" />
+  <link rel="icon" type="image/png" href="assets/logo/favicon-mais.png?v=60" />
+  <link rel="apple-touch-icon" href="assets/logo/favicon-mais.png?v=60" />
 
   <!-- Google Fonts: Rye (Farmschild/Wordmark), Playfair Display (Überschriften), Vollkorn (Fließtext/Pergament) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -39,29 +39,30 @@
        style.css - nur jetzt nach Zweck aufgeteilt (base > layout >
        components > views), damit man den passenden Abschnitt schneller
        findet. Reihenfolge ist wichtig und darf nicht vertauscht werden. -->
-  <link rel="stylesheet" href="css/base/tokens.css?v=59" />
-  <link rel="stylesheet" href="css/base/reset.css?v=59" />
-  <link rel="stylesheet" href="css/base/textures.css?v=59" />
-  <link rel="stylesheet" href="css/views/auth.css?v=59" />
-  <link rel="stylesheet" href="css/components/forms.css?v=59" />
-  <link rel="stylesheet" href="css/components/buttons.css?v=59" />
-  <link rel="stylesheet" href="css/layout/shell.css?v=59" />
-  <link rel="stylesheet" href="css/components/cards.css?v=59" />
-  <link rel="stylesheet" href="css/components/badges.css?v=59" />
-  <link rel="stylesheet" href="css/views/dashboard.css?v=59" />
-  <link rel="stylesheet" href="css/components/tables.css?v=59" />
-  <link rel="stylesheet" href="css/views/waren.css?v=59" />
-  <link rel="stylesheet" href="css/views/lager.css?v=59" />
-  <link rel="stylesheet" href="css/views/bestellungen.css?v=59" />
-  <link rel="stylesheet" href="css/views/kontakte.css?v=59" />
-  <link rel="stylesheet" href="css/views/handelsrechner.css?v=59" />
-  <link rel="stylesheet" href="css/components/modals.css?v=59" />
-  <link rel="stylesheet" href="css/views/admin.css?v=59" />
-  <link rel="stylesheet" href="css/components/toast.css?v=59" />
-  <link rel="stylesheet" href="css/layout/footer.css?v=59" />
-  <link rel="stylesheet" href="css/components/kataloge.css?v=59" />
-  <link rel="stylesheet" href="css/views/hofbuch.css?v=59" />
-  <link rel="stylesheet" href="css/base/responsive.css?v=59" />
+  <link rel="stylesheet" href="css/base/tokens.css?v=60" />
+  <link rel="stylesheet" href="css/base/reset.css?v=60" />
+  <link rel="stylesheet" href="css/base/textures.css?v=60" />
+  <link rel="stylesheet" href="css/views/auth.css?v=60" />
+  <link rel="stylesheet" href="css/components/forms.css?v=60" />
+  <link rel="stylesheet" href="css/components/buttons.css?v=60" />
+  <link rel="stylesheet" href="css/layout/shell.css?v=60" />
+  <link rel="stylesheet" href="css/components/cards.css?v=60" />
+  <link rel="stylesheet" href="css/components/badges.css?v=60" />
+  <link rel="stylesheet" href="css/views/dashboard.css?v=60" />
+  <link rel="stylesheet" href="css/components/tables.css?v=60" />
+  <link rel="stylesheet" href="css/views/waren.css?v=60" />
+  <link rel="stylesheet" href="css/views/lager.css?v=60" />
+  <link rel="stylesheet" href="css/views/bestellungen.css?v=60" />
+  <link rel="stylesheet" href="css/views/kontakte.css?v=60" />
+  <link rel="stylesheet" href="css/views/handelsrechner.css?v=60" />
+  <link rel="stylesheet" href="css/views/rezepte.css?v=60" />
+  <link rel="stylesheet" href="css/components/modals.css?v=60" />
+  <link rel="stylesheet" href="css/views/admin.css?v=60" />
+  <link rel="stylesheet" href="css/components/toast.css?v=60" />
+  <link rel="stylesheet" href="css/layout/footer.css?v=60" />
+  <link rel="stylesheet" href="css/components/kataloge.css?v=60" />
+  <link rel="stylesheet" href="css/views/hofbuch.css?v=60" />
+  <link rel="stylesheet" href="css/base/responsive.css?v=60" />
 
   <!-- Firebase SDK (Authentifizierung + Datenbank). "defer" statt normaler
        blockierender <script>-Tags: der Browser kann so den Rest der Seite
@@ -805,20 +806,20 @@
           <!-- ============================ -->
           <section class="view" id="view-rezepte">
             <div class="parch-card">
-              <h3>Menge berechnen</h3>
-              <div class="rechner-grid-3">
+              <p class="rechner-section-title">Menge berechnen</p>
+              <div class="rechner-grid-2">
                 <div>
-                  <label class="field-label" for="rezeptrechner-rezept-select">Rezept</label>
+                  <label class="field-label" for="rezeptrechner-rezept-select">Produkt</label>
                   <select id="rezeptrechner-rezept-select" class="field-input"></select>
                 </div>
                 <div>
-                  <label class="field-label" for="rezeptrechner-menge">Gewünschte Menge</label>
+                  <label class="field-label" for="rezeptrechner-menge">Benötigte Menge</label>
                   <input type="number" id="rezeptrechner-menge" class="field-input" min="1" step="1" value="1" />
                 </div>
               </div>
-              <p class="field-label" style="margin-top: 16px;">Benötigte Rohstoffe</p>
-              <div id="rezeptrechner-ergebnis" class="detail-grid"></div>
-              <p class="empty-state" id="rezeptrechner-ergebnis-leer" style="padding: 10px 0;">Wähle ein Rezept aus, um die benötigten Rohstoffe zu berechnen.</p>
+              <p class="rechner-section-title" style="margin-top: 20px;">Benötigte Rohstoffe</p>
+              <div id="rezeptrechner-ergebnis" class="rezeptrechner-ergebnis-liste"></div>
+              <p class="empty-state" id="rezeptrechner-ergebnis-leer" style="padding: 6px 0 0;">Wähle ein Produkt aus, um die benötigten Rohstoffe zu berechnen.</p>
             </div>
 
             <div class="parch-card">
@@ -826,9 +827,9 @@
                 <h3>Rezepte</h3>
                 <button type="button" class="btn btn--primary btn--sm" id="btn-rezept-neu">＋ Neues Rezept</button>
               </div>
-              <p class="parch-card__hint">Von euch selbst gepflegt - trage ein Rezept mitsamt Kategorie ein, sobald ihr die Herstellungsmengen im Spiel herausgefunden habt. Klicke auf ein Rezept, um es zu bearbeiten oder zu löschen.</p>
+              <p class="parch-card__hint">Von euch selbst gepflegt - trage ein Rezept mitsamt Kategorie ein, sobald ihr die Herstellungsmengen im Spiel herausgefunden habt.</p>
               <div class="tabs" id="rezepte-kategorie-filter"></div>
-              <div class="settings-list" id="rezepte-liste"></div>
+              <div id="rezepte-liste"></div>
               <p class="empty-state" id="rezepte-empty" hidden>Noch keine Rezepte hinterlegt.</p>
             </div>
           </section>
@@ -1449,15 +1450,12 @@
       </div>
       <div class="modal__body">
         <input type="hidden" id="rezept-editing-id" value="" />
-        <label class="field-label" for="rezept-produkt-input">Hergestelltes Produkt</label>
-        <input type="text" id="rezept-produkt-input" class="field-input" placeholder="z. B. Lederbündel" />
-        <label class="field-label" for="rezept-ergebnis-menge">Ergibt (Stück pro Durchgang)</label>
+        <label class="field-label" for="rezept-produkt-input">Was wird hergestellt?</label>
+        <input type="text" id="rezept-produkt-input" class="field-input" placeholder="z. B. Zucker" />
+        <label class="field-label" for="rezept-ergebnis-menge">Wie viel entsteht?</label>
         <input type="number" id="rezept-ergebnis-menge" class="field-input" min="1" step="1" value="1" />
-        <label class="field-label" for="rezept-kategorie-input">Kategorie</label>
-        <input type="text" id="rezept-kategorie-input" class="field-input" list="rezept-kategorien-liste" placeholder="z. B. Backwaren" />
-        <datalist id="rezept-kategorien-liste"></datalist>
 
-        <p class="field-label" style="margin-top: 16px;">Zutat hinzufügen</p>
+        <p class="field-label" style="margin-top: 16px;">Benötigte Rohstoffe</p>
         <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end;">
           <div style="flex: 1 1 200px;">
             <select id="rezept-zutat-produkt-select" class="field-input"></select>
@@ -1467,15 +1465,16 @@
           </div>
           <button type="button" class="btn btn--ghost btn--sm" id="btn-rezept-zutat-hinzufuegen">＋ Hinzufügen</button>
         </div>
+        <div id="rezept-zutaten-liste" class="rezept-zutaten-liste"></div>
+        <p class="empty-state" id="rezept-zutaten-leer" style="padding: 8px 0;">Noch keine Rohstoffe hinzugefügt.</p>
 
-        <p class="field-label" style="margin-top: 16px;">Zutaten</p>
-        <div id="rezept-zutaten-liste" class="detail-grid"></div>
-        <p class="empty-state" id="rezept-zutaten-leer" style="padding: 10px 0;">Noch keine Zutaten hinzugefügt.</p>
+        <label class="field-label" for="rezept-kategorie-input" style="margin-top: 12px;">Kategorie</label>
+        <input type="text" id="rezept-kategorie-input" class="field-input" list="rezept-kategorien-liste" placeholder="z. B. Backwaren" />
+        <datalist id="rezept-kategorien-liste"></datalist>
 
         <p class="field-error" id="rezept-error" hidden></p>
       </div>
       <div class="modal__footer">
-        <button class="btn btn--danger" id="btn-rezept-loeschen" style="margin-right: auto;" hidden>Löschen</button>
         <button class="btn btn--ghost" data-close-modal="modal-rezept-bearbeiten">Abbrechen</button>
         <button class="btn btn--primary" id="btn-confirm-rezept">Speichern</button>
       </div>
@@ -1702,30 +1701,30 @@
        teilen können. Die Reihenfolge entspricht exakt den frueheren
        nummerierten Abschnitten in app.js und darf nicht vertauscht werden:
        js/main.js muss immer zuletzt kommen, da es die App erst startet. -->
-  <script defer src="js/firebase-config.js?v=59"></script>
-  <script defer src="js/core/config.js?v=59"></script>
-  <script defer src="js/core/state.js?v=59"></script>
-  <script defer src="js/core/dom.js?v=59"></script>
-  <script defer src="js/core/firebase-init.js?v=59"></script>
-  <script defer src="js/core/utils.js?v=59"></script>
-  <script defer src="js/ui/modals.js?v=59"></script>
-  <script defer src="js/ui/nav.js?v=59"></script>
-  <script defer src="js/ui/presence.js?v=59"></script>
-  <script defer src="js/views/waren.js?v=59"></script>
-  <script defer src="js/views/lager.js?v=59"></script>
-  <script defer src="js/views/rezepte.js?v=59"></script>
-  <script defer src="js/views/bestellungen.js?v=59"></script>
-  <script defer src="js/views/handelsrechner.js?v=59"></script>
-  <script defer src="js/views/kontakte.js?v=59"></script>
-  <script defer src="js/views/verkaeufe.js?v=59"></script>
-  <script defer src="js/views/kunden.js?v=59"></script>
-  <script defer src="js/views/hofbuch.js?v=59"></script>
-  <script defer src="js/views/statistiken.js?v=59"></script>
-  <script defer src="js/views/dashboard.js?v=59"></script>
-  <script defer src="js/views/einstellungen.js?v=59"></script>
-  <script defer src="js/views/admin.js?v=59"></script>
-  <script defer src="js/ui/version-check.js?v=59"></script>
-  <script defer src="js/main.js?v=59"></script>
-  <script type="module" src="js/auth.js?v=59"></script>
+  <script defer src="js/firebase-config.js?v=60"></script>
+  <script defer src="js/core/config.js?v=60"></script>
+  <script defer src="js/core/state.js?v=60"></script>
+  <script defer src="js/core/dom.js?v=60"></script>
+  <script defer src="js/core/firebase-init.js?v=60"></script>
+  <script defer src="js/core/utils.js?v=60"></script>
+  <script defer src="js/ui/modals.js?v=60"></script>
+  <script defer src="js/ui/nav.js?v=60"></script>
+  <script defer src="js/ui/presence.js?v=60"></script>
+  <script defer src="js/views/waren.js?v=60"></script>
+  <script defer src="js/views/lager.js?v=60"></script>
+  <script defer src="js/views/rezepte.js?v=60"></script>
+  <script defer src="js/views/bestellungen.js?v=60"></script>
+  <script defer src="js/views/handelsrechner.js?v=60"></script>
+  <script defer src="js/views/kontakte.js?v=60"></script>
+  <script defer src="js/views/verkaeufe.js?v=60"></script>
+  <script defer src="js/views/kunden.js?v=60"></script>
+  <script defer src="js/views/hofbuch.js?v=60"></script>
+  <script defer src="js/views/statistiken.js?v=60"></script>
+  <script defer src="js/views/dashboard.js?v=60"></script>
+  <script defer src="js/views/einstellungen.js?v=60"></script>
+  <script defer src="js/views/admin.js?v=60"></script>
+  <script defer src="js/ui/version-check.js?v=60"></script>
+  <script defer src="js/main.js?v=60"></script>
+  <script type="module" src="js/auth.js?v=60"></script>
 </body>
 </html>

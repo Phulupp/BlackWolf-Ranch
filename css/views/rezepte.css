@@ -1,0 +1,146 @@
+/* --------------------------------------------------------------------------
+   17b. Herstellung / Rezeptrechner
+   -------------------------------------------------------------------------- */
+
+/* Mengenrechner: Ergebnis-Kacheln nutzen dieselbe .rechner-field-box wie der
+   Handelsrechner, die Zahl selbst wird aber deutlich größer/kräftiger und in
+   Kupfer dargestellt - das Ergebnis soll der klar wichtigste Wert auf der
+   Seite sein ("visuell deutlich hervorgehoben"), nicht nur eine Zeile unter
+   vielen. */
+.rezeptrechner-ergebnis-liste {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.rezeptrechner-ergebnis-liste .rechner-field-box__value {
+  font-size: 24px;
+  color: var(--price-total);
+}
+
+/* Rezepte-Übersicht: nach Kategorie gruppierte Kacheln statt einer langen,
+   formularartigen Liste. */
+.rezepte-kategorie-titel {
+  font-family: var(--font-display);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--brass-bright);
+  padding: 16px 2px 8px;
+  border-top: 1px solid var(--leather-edge);
+}
+
+.rezepte-kategorie-titel--erste {
+  border-top: none;
+  padding-top: 0;
+}
+
+.rezepte-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.rezept-karte {
+  background: var(--leather-700);
+  border: 1px solid var(--leather-edge);
+  border-radius: var(--radius-md);
+  padding: 13px 15px;
+}
+
+.rezept-karte__kopf {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.rezept-karte__titel {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13.5px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--wood-text);
+}
+
+/* Aktions-Icons bewusst klein und dezent, damit die Karte ruhig wirkt - wie
+   die Zeilen-Icons in Waren & Preise (siehe .warenbuch-zeile .icon-btn). */
+.rezept-karte__aktionen {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+  margin: -6px -6px 0 0;
+}
+
+.rezept-karte__aktionen .icon-btn {
+  width: 24px;
+  height: 24px;
+  font-size: 11px;
+}
+
+.rezept-karte__zutaten {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 12.5px;
+  color: var(--wood-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.rezept-karte__pfeil {
+  text-align: center;
+  color: var(--wood-text-soft);
+  font-size: 13px;
+  line-height: 1;
+  margin: 7px 0;
+}
+
+.rezept-karte__ergebnis {
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--price-total);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Rohstoff-Chips im Anlegen/Bearbeiten-Modal */
+.rezept-zutaten-liste {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.rezept-zutat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--leather-800);
+  border: 1px solid var(--leather-edge);
+  border-radius: 999px;
+  padding: 5px 6px 5px 13px;
+  font-size: 12.5px;
+  color: var(--wood-text);
+}
+
+.rezept-zutat-chip__entfernen {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: var(--wood-text-soft);
+  flex-shrink: 0;
+}
+
+.rezept-zutat-chip__entfernen:hover {
+  background: var(--status-danger-soft);
+  color: var(--status-danger-bright);
+}

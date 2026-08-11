@@ -220,7 +220,6 @@
     rezeptZutatenListe: document.getElementById("rezept-zutaten-liste"),
     rezeptZutatenLeer: document.getElementById("rezept-zutaten-leer"),
     rezeptError: document.getElementById("rezept-error"),
-    btnRezeptLoeschen: document.getElementById("btn-rezept-loeschen"),
     btnConfirmRezept: document.getElementById("btn-confirm-rezept"),
 
     // Verkaufshistorie (automatisch aus abgeschlossenen Bestellungen)
