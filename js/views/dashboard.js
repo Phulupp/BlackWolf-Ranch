@@ -38,10 +38,10 @@
       .slice(0, 6)
       .map((b) => {
         const altBadge = istBestellungAlt(b)
-          ? `<span class="bestellung-alt-badge" title="Seit ${bestellungTageOffen(b)} Tagen offen">⚠ ${bestellungTageOffen(b)}d</span>`
+          ? `<span class="badge badge--alert bestellung-alt-badge" title="Seit ${bestellungTageOffen(b)} Tagen offen">⚠ ${bestellungTageOffen(b)}d</span>`
           : "";
         return `<div class="dash-mini-row" data-bestellung-oeffnen="${b.id}" style="cursor: pointer;">
-          <div class="dash-mini-row__top"><span>${escapeHtml(b.unternehmen)}</span><span style="display:flex; align-items:center; gap:6px;"><span class="status-pill ${statusPillKlasse(b.status)}">${escapeHtml(b.status)}</span>${altBadge}</span></div>
+          <div class="dash-mini-row__top"><span>${escapeHtml(b.unternehmen)}</span><span style="display:flex; align-items:center; gap:6px;"><span class="badge status-pill ${statusPillKlasse(b.status)}">${escapeHtml(b.status)}</span>${altBadge}</span></div>
           <div class="dash-mini-row__bottom"><span>${escapeHtml(bestellungProdukteText(b.produkte))}</span><span>${(b.produkte || []).length} Produkt${(b.produkte || []).length === 1 ? "" : "e"}</span></div>
         </div>`;
       })
@@ -66,7 +66,7 @@
 
   // Zeigt auf der Übersicht einen kleinen, anklickbaren Hinweis, sobald
   // mindestens eine offene Bestellung "alt" ist (siehe istBestellungAlt in
-  // bestellungen.js, Schwelle BESTELLUNG_ALT_SCHWELLE_TAGE) - ergänzt das
+  // bestellungen.js, Schwelle hofEinstellungen.bestellungAltSchwelleTage) - ergänzt das
   // ⚠-Badge in der Bestellliste um einen Blickfang direkt auf der Übersicht,
   // nach demselben Muster wie aktualisiereLagerHinweis.
   function aktualisiereBestellungenHinweis(offen) {
@@ -88,7 +88,7 @@
   }
 
   // Zeigt auf der Übersicht einen kleinen, anklickbaren Hinweis, sobald der
-  // Lagerbestand seit LAGER_HINWEIS_SCHWELLE_STUNDEN (24h) von niemandem
+  // Lagerbestand seit hofEinstellungen.lagerHinweisSchwelleStunden (24h) von niemandem
   // mehr korrigiert wurde (oder noch nie erfasst wurde) - team-weiter Stand
   // aus lagerStatus/status (siehe starteLagerStatusListener in lager.js),
   // nicht pro Browser. Läuft zusätzlich per Timer (siehe main.js), damit
@@ -104,7 +104,7 @@
     }
 
     const stundenHer = (Date.now() - zeitstempelWert(lagerStatus.letzteAktualisierung)) / (60 * 60 * 1000);
-    if (stundenHer < LAGER_HINWEIS_SCHWELLE_STUNDEN) {
+    if (stundenHer < hofEinstellungen.lagerHinweisSchwelleStunden) {
       el.dashLagerHinweis.hidden = true;
       return;
     }

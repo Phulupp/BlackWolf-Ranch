@@ -30,7 +30,7 @@
   let bestellungModalArchiviert = false;
   // Ob im offenen Bestellungs-Modal die Lieferung-Option aktiviert ist (siehe
   // Lieferung-Umschalter unter der Produkttabelle) - fließt als Pauschale
-  // (BESTELLUNG_LIEFERPAUSCHALE) zusätzlich zu den Produktpreisen in die
+  // (hofEinstellungen.lieferpauschale) zusätzlich zu den Produktpreisen in die
   // Gesamtsumme ein und wird als Feld "lieferung" auf der Bestellung
   // gespeichert.
   let bestellungEntwurfLieferung = false;
@@ -78,11 +78,11 @@
   }
 
   // Eine Bestellung gilt als "alt", wenn sie seit mindestens
-  // BESTELLUNG_ALT_SCHWELLE_TAGE Tagen weder abgeschlossen noch archiviert
+  // hofEinstellungen.bestellungAltSchwelleTage Tagen weder abgeschlossen noch archiviert
   // wurde - wird als Warnhinweis in der Bestellliste und im Dashboard
   // angezeigt, damit keine offene Bestellung untergeht.
   function istBestellungAlt(b) {
-    return b.status !== "Abgeschlossen" && b.archiviert !== true && bestellungTageOffen(b) >= BESTELLUNG_ALT_SCHWELLE_TAGE;
+    return b.status !== "Abgeschlossen" && b.archiviert !== true && bestellungTageOffen(b) >= hofEinstellungen.bestellungAltSchwelleTage;
   }
 
   // Kleine Zusammenfassung einer Produktliste, z. B. "Zucker, Mehl, Eier +1
@@ -170,6 +170,26 @@
     }));
   }
 
+  // Entfernt IDs aus der Bulk-Auswahl, die in der aktuell gefilterten/
+  // sichtbaren Liste nicht mehr vorkommen (z. B. nach Statuswechsel, Suche
+  // oder weil eine ausgewählte Bestellung gelöscht wurde) - verhindert eine
+  // "Geister-Auswahl", die auf nicht mehr sichtbare Bestellungen wirken würde.
+  function bereinigeBestellungenAuswahl(sichtbareListe) {
+    const sichtbareIds = new Set(sichtbareListe.map((b) => b.id));
+    Array.from(bestellungenAusgewaehlt).forEach((id) => {
+      if (!sichtbareIds.has(id)) bestellungenAusgewaehlt.delete(id);
+    });
+  }
+
+  function aktualisiereBestellungenBulkBar() {
+    if (!el.bestellungenBulkBar) return;
+    const anzahl = bestellungenAusgewaehlt.size;
+    el.bestellungenBulkBar.hidden = anzahl === 0;
+    if (el.bestellungenBulkAnzahl) {
+      el.bestellungenBulkAnzahl.textContent = anzahl === 1 ? "1 Bestellung ausgewählt" : `${anzahl} Bestellungen ausgewählt`;
+    }
+  }
+
   // Kompakte Übersichtstabelle, gruppiert nach Unternehmen: pro Unternehmen
   // eine Überschriftenzeile, darunter eingerückt jede einzelne Bestellung
   // mit Anzahl der Produkte, Gesamtmenge, Erstellungszeitpunkt und Status -
@@ -178,6 +198,8 @@
   function renderBestellungen() {
     if (!el.bestellungenTableBody) return;
     const liste = gefilterteBestellungen();
+    bereinigeBestellungenAuswahl(liste);
+    aktualisiereBestellungenBulkBar();
     el.bestellungenEmpty.hidden = bestellungen.length !== 0;
     el.bestellungenNoResults.hidden = !(bestellungen.length > 0 && liste.length === 0);
 
@@ -189,16 +211,18 @@
             const anzahl = (b.produkte || []).length;
             const gesamtmenge = bestellungProdukteZeilen(b.produkte);
             const lieferungBadge = b.lieferung
-              ? `<span class="bestellung-lieferung-badge" title="Lieferung gewünscht (+${formatGeld(BESTELLUNG_LIEFERPAUSCHALE)})">Lieferung</span>`
+              ? `<span class="badge badge--outline bestellung-lieferung-badge" title="Lieferung gewünscht (+${formatGeld(hofEinstellungen.lieferpauschale)})">Lieferung</span>`
               : "";
             const altBadge = istBestellungAlt(b)
-              ? `<span class="bestellung-alt-badge" title="Seit ${bestellungTageOffen(b)} Tagen offen">⚠ Seit ${bestellungTageOffen(b)} Tagen offen</span>`
+              ? `<span class="badge badge--alert bestellung-alt-badge" title="Seit ${bestellungTageOffen(b)} Tagen offen">⚠ Seit ${bestellungTageOffen(b)} Tagen offen</span>`
               : "";
+            const ausgewaehlt = bestellungenAusgewaehlt.has(b.id);
             return `<div class="reg-row reg-row--body bestellungen-row" data-bestellung-oeffnen="${b.id}">
+                <span><input type="checkbox" class="bestellung-auswahl-check" data-bestellung-auswahl="${b.id}" ${ausgewaehlt ? "checked" : ""} /></span>
                 <span>${anzahl} Produkt${anzahl === 1 ? "" : "e"}</span>
                 <span>${gesamtmenge} Stück</span>
                 <span>${formatUhrzeitDatum(b.erstelltAm)}</span>
-                <span><span class="status-pill ${statusPillKlasse(b.status)}">${escapeHtml(b.status || "—")}</span>${lieferungBadge}${altBadge}</span>
+                <span><span class="badge status-pill ${statusPillKlasse(b.status)}">${escapeHtml(b.status || "—")}</span>${lieferungBadge}${altBadge}</span>
               </div>`;
           })
           .join("");
@@ -223,7 +247,7 @@
   // Live-Neuberechnung bei jeder Tastatureingabe aufgerufen.
   function aktualisiereBestellungZusammenfassung() {
     const werte = bestellungZusammenfassungWerte(bestellungEntwurfPositionen);
-    const lieferpauschale = bestellungEntwurfLieferung ? BESTELLUNG_LIEFERPAUSCHALE : 0;
+    const lieferpauschale = bestellungEntwurfLieferung ? hofEinstellungen.lieferpauschale : 0;
     const gesamtsummeMitLieferung = werte.gesamtsumme + lieferpauschale;
     el.bestellungZusammenfassung.hidden = bestellungEntwurfPositionen.length === 0;
     el.bestellungZusammenfassungAnzahl.textContent = String(werte.anzahl);
@@ -707,10 +731,59 @@
 
   if (el.bestellungenTableBody) {
     el.bestellungenTableBody.addEventListener("click", (event) => {
+      const checkbox = event.target.closest("[data-bestellung-auswahl]");
+      if (checkbox) {
+        const id = checkbox.getAttribute("data-bestellung-auswahl");
+        if (checkbox.checked) bestellungenAusgewaehlt.add(id);
+        else bestellungenAusgewaehlt.delete(id);
+        aktualisiereBestellungenBulkBar();
+        return;
+      }
       const zeile = event.target.closest("[data-bestellung-oeffnen]");
       if (!zeile) return;
       const b = bestellungen.find((x) => x.id === zeile.getAttribute("data-bestellung-oeffnen"));
       if (b) oeffneBestellungModal(b);
+    });
+  }
+
+  // Bulk-Aktion: setzt den Status aller aktuell ausgewählten Bestellungen in
+  // einem Rutsch - spiegelt dieselbe abgeschlossenAm-Logik wie der Einzel-
+  // Speichervorgang in btnConfirmBestellung weiter unten, nur als Batch statt
+  // Einzel-Update. Bewusst nur Status-Änderungen, keine destruktiven
+  // Massenaktionen (Löschen/Archivieren bleiben Einzel-Klick mit Bestätigung).
+  if (el.btnBestellungenBulkAnwenden) {
+    el.btnBestellungenBulkAnwenden.addEventListener("click", async () => {
+      const ids = Array.from(bestellungenAusgewaehlt);
+      if (ids.length === 0) return;
+      const neuerStatus = el.bestellungenBulkStatus.value;
+      const batch = db.batch();
+      ids.forEach((id) => {
+        const alte = bestellungen.find((b) => b.id === id);
+        const daten = { status: neuerStatus };
+        daten.abgeschlossenAm =
+          neuerStatus === "Abgeschlossen"
+            ? alte && alte.status === "Abgeschlossen" && alte.abgeschlossenAm
+              ? alte.abgeschlossenAm
+              : firebase.firestore.FieldValue.serverTimestamp()
+            : null;
+        batch.update(db.collection(BESTELLUNGEN_COLLECTION).doc(id), daten);
+      });
+      try {
+        await batch.commit();
+        bestellungenAusgewaehlt.clear();
+        aktualisiereBestellungenBulkBar();
+        zeigeToast(ids.length === 1 ? "1 Bestellung aktualisiert." : `${ids.length} Bestellungen aktualisiert.`);
+      } catch (fehler) {
+        console.error(fehler);
+        zeigeToast("Bulk-Aktion fehlgeschlagen.");
+      }
+    });
+  }
+
+  if (el.btnBestellungenBulkAbbrechen) {
+    el.btnBestellungenBulkAbbrechen.addEventListener("click", () => {
+      bestellungenAusgewaehlt.clear();
+      renderBestellungen();
     });
   }
 

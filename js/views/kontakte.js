@@ -89,7 +89,7 @@
         ${kontakteRollenKatalog
           .map((r) => {
             if (r.name === KONTAKTE_ROLLEN_FALLBACK) {
-              return `<span class="kontakt-badge" style="margin-right:4px;" title="Diese Sammelrolle kann nicht umbenannt oder gelöscht werden.">${escapeHtml(r.name)}</span>`;
+              return `<span class="badge kontakt-badge" style="margin-right:4px;" title="Diese Sammelrolle kann nicht umbenannt oder gelöscht werden.">${escapeHtml(r.name)}</span>`;
             }
             const farbe = r.farbe || naechsteVorgeschlageneKontaktRolleFarbe();
             return `<span style="display:inline-flex;align-items:center;gap:5px;margin-right:4px;background:rgba(0,0,0,0.2);border:1px solid var(--leather-edge);border-radius:999px;padding:3px 6px 3px 3px;">
@@ -306,7 +306,7 @@
     return `<div class="reg-row reg-row--body kontakt-row">
           <span class="kontakt-tel" data-kontakt-copy="BW-${escapeHtml(k.nummer)}" title="Kopieren">BW-${escapeHtml(k.nummer)}</span>
           <span class="reg-name">${escapeHtml(k.name)}</span>
-          <span><span class="kontakt-badge"${badgeStyle}>${escapeHtml(k.rolle || KONTAKTE_ROLLEN_FALLBACK)}</span></span>
+          <span><span class="badge kontakt-badge"${badgeStyle}>${escapeHtml(k.rolle || KONTAKTE_ROLLEN_FALLBACK)}</span></span>
           <span class="notiz-text">${k.notiz ? escapeHtml(k.notiz) : "—"}</span>
           <span class="reg-row__actions-col">
             <div class="row-actions">

@@ -128,6 +128,21 @@
     return { anzahl: alle.length, umsatz, topWaren, letzteBestellungAm, bestellungen: alle };
   }
 
+  // Ein Kunde gilt als "Stammkunde", sobald EINE der beiden in den
+  // Hof-Einstellungen hinterlegten Schwellen erreicht ist (Bestellanzahl
+  // ODER Umsatz) - siehe hofEinstellungen.stammkundeMin* in config.js/
+  // einstellungen.js, dort auch für Verwalter direkt einstellbar.
+  function istStammkunde(kennzahlen) {
+    return kennzahlen.anzahl >= hofEinstellungen.stammkundeMinBestellungen || kennzahlen.umsatz >= hofEinstellungen.stammkundeMinUmsatz;
+  }
+
+  function stammkundeBadgeHtml(kennzahlen) {
+    if (!istStammkunde(kennzahlen)) return "";
+    return `<span class="badge badge--icon badge-stammkunde" title="Stammkunde: ${kennzahlen.anzahl} Bestellungen, ${formatGeld(
+      kennzahlen.umsatz
+    )} Umsatz">★</span>`;
+  }
+
   // Liefert die gefilterte, sortierte Kundenliste - jeweils zusammen mit den
   // (einmalig berechneten) Kennzahlen, damit renderKunden() diese nicht ein
   // zweites Mal berechnen muss. Standard-Sortierung ist "umsatz" (höchster
@@ -167,7 +182,7 @@
       .map(({ kunde: k, kennzahlen }) => {
         const { anzahl, umsatz, letzteBestellungAm } = kennzahlen;
         return `<div class="reg-row reg-row--body" style="grid-template-columns: 34fr 18fr 20fr 20fr; cursor: pointer;" data-kunde-oeffnen="${k.id}">
-            <span class="reg-name">${escapeHtml(k.name)}</span>
+            <span class="reg-name">${escapeHtml(k.name)} ${stammkundeBadgeHtml(kennzahlen)}</span>
             <span>${anzahl}</span>
             <span>${formatGeld(umsatz)}</span>
             <span>${formatDatum(letzteBestellungAm)}</span>
@@ -199,12 +214,13 @@
   // bestellungen.js).
   function oeffneKundeModal(kunde) {
     versteckeFeldFehler(el.kundeError);
-    el.modalKundeTitel.textContent = kunde.name || "Kunde";
     el.kundeEditingId.value = kunde.id;
     el.kundeNameInput.value = kunde.name || "";
     el.kundeNotizInput.value = kunde.notiz || "";
 
-    const { anzahl, umsatz, topWaren, letzteBestellungAm, bestellungen: alleBestellungen } = kundeKennzahlen(kunde.name);
+    const kennzahlen = kundeKennzahlen(kunde.name);
+    const { anzahl, umsatz, topWaren, letzteBestellungAm, bestellungen: alleBestellungen } = kennzahlen;
+    el.modalKundeTitel.innerHTML = `${escapeHtml(kunde.name || "Kunde")} ${stammkundeBadgeHtml(kennzahlen)}`;
     el.kundeStatAnzahl.textContent = String(anzahl);
     el.kundeStatUmsatz.textContent = formatGeld(umsatz);
     el.kundeStatLetzte.textContent = formatDatum(letzteBestellungAm);
@@ -223,7 +239,7 @@
       .map((b) => {
         const anzahlProdukte = (b.produkte || []).length;
         return `<div class="dash-mini-row" data-kunde-bestellung-oeffnen="${b.id}" style="cursor: pointer;">
-            <div class="dash-mini-row__top"><span>${formatDatum(b.erstelltAm)}</span><span class="status-pill ${statusPillKlasse(b.status)}">${escapeHtml(b.status || "—")}</span></div>
+            <div class="dash-mini-row__top"><span>${formatDatum(b.erstelltAm)}</span><span class="badge status-pill ${statusPillKlasse(b.status)}">${escapeHtml(b.status || "—")}</span></div>
             <div class="dash-mini-row__bottom"><span>${escapeHtml(bestellungProdukteText(b.produkte))}</span><span>${anzahlProdukte} Produkt${anzahlProdukte === 1 ? "" : "e"}</span></div>
           </div>`;
       })

@@ -16,6 +16,7 @@
     if (!istAdmin()) el.navAdminBadge.hidden = true;
 
     starteHeartbeat();
+    starteHofEinstellungenListener();
     starteProdukteListener();
     starteLagerStatusListener();
     starteBestellungenListener();
@@ -58,14 +59,15 @@
     renderWaren();
     renderKontakteRollenVerwaltung();
     renderVerkaufshistorie();
+    renderHofEinstellungen();
   }
 
   function stoppeApp() {
     aktuellerNutzer = null;
-    [unsubProdukte, unsubLagerStatus, unsubBestellungen, unsubAngebote, unsubKontakte, unsubKunden, unsubHofbuch, unsubKontakteRollen].forEach(
+    [unsubProdukte, unsubLagerStatus, unsubBestellungen, unsubAngebote, unsubKontakte, unsubKunden, unsubHofbuch, unsubKontakteRollen, unsubHofEinstellungen].forEach(
       (unsub) => unsub && unsub()
     );
-    unsubProdukte = unsubLagerStatus = unsubBestellungen = unsubAngebote = unsubKontakte = unsubKunden = unsubHofbuch = unsubKontakteRollen = null;
+    unsubProdukte = unsubLagerStatus = unsubBestellungen = unsubAngebote = unsubKontakte = unsubKunden = unsubHofbuch = unsubKontakteRollen = unsubHofEinstellungen = null;
     stoppeBenutzerverwaltung();
     stoppeHeartbeat();
     clearInterval(versionCheckTimer);
@@ -78,6 +80,7 @@
     kunden = [];
     kundenGeladen = false;
     hofbuchEintraege = [];
+    hofEinstellungen = { ...HOF_EINSTELLUNGEN_STANDARD };
   }
 
   window.addEventListener("hof:auth-approved", (event) => starteApp(event.detail));

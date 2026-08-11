@@ -47,7 +47,7 @@
     });
     // Lieferpauschale (siehe Lieferung-Umschalter im Bestellungs-Modal) zählt
     // voll als Umsatz/Gewinn mit - reine Dienstleistung.
-    if (b.lieferung) berechneterUmsatz += BESTELLUNG_LIEFERPAUSCHALE;
+    if (b.lieferung) berechneterUmsatz += hofEinstellungen.lieferpauschale;
     const hatErhaltenenBetrag = b.erhaltenerBetrag !== null && b.erhaltenerBetrag !== undefined && b.erhaltenerBetrag !== "";
     const umsatz = hatErhaltenenBetrag ? Number(b.erhaltenerBetrag) || 0 : berechneterUmsatz;
     const gewinn = umsatz;

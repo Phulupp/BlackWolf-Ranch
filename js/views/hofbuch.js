@@ -44,9 +44,16 @@
   // Filtert nach Suchbegriff (Titel/Inhalt/Autor) und sortiert danach:
   // angeheftete Einträge zuerst, innerhalb beider Gruppen je nach
   // gewählter Reihenfolge neueste oder älteste zuerst.
+  function hofbuchEintragKategorie(eintrag) {
+    return HOFBUCH_KATEGORIEN.find((k) => k.id === (eintrag.kategorie || HOFBUCH_KATEGORIE_STANDARD)) || HOFBUCH_KATEGORIEN[HOFBUCH_KATEGORIEN.length - 1];
+  }
+
   function gefiltertUndSortiertHofbuch() {
     const begriff = hofbuchSuche.trim().toLowerCase();
     let liste = hofbuchEintraege;
+    if (hofbuchKategorieFilter !== "alle") {
+      liste = liste.filter((e) => (e.kategorie || HOFBUCH_KATEGORIE_STANDARD) === hofbuchKategorieFilter);
+    }
     if (begriff) {
       liste = liste.filter(
         (e) =>
@@ -62,8 +69,34 @@
     return [...angeheftet, ...normal];
   }
 
+  function renderHofbuchKategorieFilter() {
+    if (!el.hofbuchKategorieFilterEl) return;
+    el.hofbuchKategorieFilterEl.innerHTML = [
+      `<button type="button" class="tabs__tab${hofbuchKategorieFilter === "alle" ? " tabs__tab--active" : ""}" data-hofbuch-kategoriefilter="alle">Alle</button>`,
+    ]
+      .concat(
+        HOFBUCH_KATEGORIEN.map(
+          (k) =>
+            `<button type="button" class="tabs__tab${hofbuchKategorieFilter === k.id ? " tabs__tab--active" : ""}" data-hofbuch-kategoriefilter="${k.id}">${escapeHtml(
+              k.label
+            )}</button>`
+        )
+      )
+      .join("");
+  }
+
+  if (el.hofbuchKategorieFilterEl) {
+    el.hofbuchKategorieFilterEl.addEventListener("click", (event) => {
+      const btn = event.target.closest("[data-hofbuch-kategoriefilter]");
+      if (!btn) return;
+      hofbuchKategorieFilter = btn.getAttribute("data-hofbuch-kategoriefilter");
+      renderHofbuch();
+    });
+  }
+
   function renderHofbuch() {
     if (!el.hofbuchEintraegeEl) return;
+    renderHofbuchKategorieFilter();
     const liste = gefiltertUndSortiertHofbuch();
     el.hofbuchEmpty.hidden = hofbuchEintraege.length !== 0;
     if (el.hofbuchNoResults) el.hofbuchNoResults.hidden = !(hofbuchEintraege.length > 0 && liste.length === 0);
@@ -71,10 +104,15 @@
     el.hofbuchEintraegeEl.innerHTML = liste
       .map((e) => {
         const darf = darfHofbuchEintragBearbeiten(e);
+        const kat = hofbuchEintragKategorie(e);
+        const katBadge = kat.farbe
+          ? `<span class="badge badge--outline" style="background:${kat.farbe}26;color:${kat.farbe};border-color:${kat.farbe};">${escapeHtml(kat.label)}</span>`
+          : "";
         return `<article class="hofbuch-eintrag${e.angeheftet ? " hofbuch-eintrag--angeheftet" : ""}">
           <div class="hofbuch-eintrag__kopf">
             <div class="hofbuch-eintrag__kopf-text">
-              ${e.angeheftet ? `<span class="hofbuch-pin-badge">📌 Angeheftet</span>` : ""}
+              ${e.angeheftet ? `<span class="badge hofbuch-pin-badge">📌 Angeheftet</span>` : ""}
+              ${katBadge}
               <span class="hofbuch-eintrag__titel">${escapeHtml(e.titel)}</span>
               <span class="hofbuch-eintrag__meta">${escapeHtml(e.autor || "Unbekannt")} · ${formatDatumUhrzeit(e.erstelltAm)}</span>
               ${
@@ -118,18 +156,24 @@
       event.preventDefault();
       const titel = el.hofbuchTitelInput.value.trim();
       const text = el.hofbuchTextInput.value.trim();
+      const kategorie = el.hofbuchKategorieInput && el.hofbuchKategorieInput.value ? el.hofbuchKategorieInput.value : HOFBUCH_KATEGORIE_STANDARD;
       if (!titel || !text) return zeigeToast("Bitte Überschrift und Text eintragen.");
 
       try {
         await db.collection(HOFBUCH_COLLECTION).add({
           titel,
           text,
+          kategorie,
           autor: aktuellerNutzer ? aktuellerNutzer.name : null,
           autorUid: aktuellerNutzer ? aktuellerNutzer.uid : null,
           angeheftet: false,
           erstelltAm: firebase.firestore.FieldValue.serverTimestamp(),
         });
         el.formHofbuch.reset();
+        if (el.hofbuchKategorieInput) {
+          el.hofbuchKategorieInput.value = HOFBUCH_KATEGORIE_STANDARD;
+          aktualisiereCustomSelect(el.hofbuchKategorieInput);
+        }
         zeigeToast("Notiz ans Schwarze Brett geheftet.");
       } catch (fehler) {
         console.error(fehler);
@@ -178,6 +222,10 @@
         if (!eintrag) return;
         el.hofbuchEditId.value = eintrag.id;
         el.hofbuchEditTitel.value = eintrag.titel || "";
+        if (el.hofbuchEditKategorie) {
+          el.hofbuchEditKategorie.value = eintrag.kategorie || HOFBUCH_KATEGORIE_STANDARD;
+          aktualisiereCustomSelect(el.hofbuchEditKategorie);
+        }
         el.hofbuchEditText.value = eintrag.text || "";
         versteckeFeldFehler(el.hofbuchEditError);
         oeffneModal("modal-hofbuch-edit");
@@ -197,6 +245,7 @@
       const id = el.hofbuchEditId.value;
       const titel = el.hofbuchEditTitel.value.trim();
       const text = el.hofbuchEditText.value.trim();
+      const kategorie = el.hofbuchEditKategorie && el.hofbuchEditKategorie.value ? el.hofbuchEditKategorie.value : HOFBUCH_KATEGORIE_STANDARD;
       if (!titel || !text) return zeigeFeldFehler(el.hofbuchEditError, "Bitte Überschrift und Text eintragen.");
       try {
         await db
@@ -205,6 +254,7 @@
           .update({
             titel,
             text,
+            kategorie,
             bearbeiter: aktuellerNutzer ? aktuellerNutzer.name : null,
             bearbeitetAm: firebase.firestore.FieldValue.serverTimestamp(),
           });

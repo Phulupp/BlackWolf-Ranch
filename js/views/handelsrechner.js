@@ -207,7 +207,7 @@
           <span>${formatProzent(a.rabattProzent, 1)}</span>
           <span>${formatGeld(a.stueckpreis)}</span>
           <span>${formatGeld(a.gesamtpreis)}</span>
-          <span><span class="status-pill ${statusPillKlasse(a.status)}">${escapeHtml(a.status)}</span></span>
+          <span><span class="badge status-pill ${statusPillKlasse(a.status)}">${escapeHtml(a.status)}</span></span>
           <span class="reg-row__actions-col">
             <div class="row-actions">
               <button class="icon-btn icon-btn--delete" data-angebot-delete="${a.id}" title="Löschen">🗑</button>

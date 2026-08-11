@@ -18,7 +18,7 @@
   /* ------------------------------------------------------------------------
      1. Konstanten
      ------------------------------------------------------------------------ */
-  const VERSION_AKTUELL = 54;
+  const VERSION_AKTUELL = 55;
 
   // Ränge des Hofes (rein organisatorisch — Verwalterrechte sind unabhängig
   // davon und werden separat je Benutzer vergeben, siehe isAdmin).
@@ -30,8 +30,11 @@
   const LAGER_STATUS_DOC_ID = "status";
   // Ab wie vielen Stunden ohne Bestandskorrektur der Hinweis "Lagerbestand
   // überprüfen" auf der Übersicht erscheint (siehe aktualisiereLagerHinweis
-  // in js/views/dashboard.js).
-  const LAGER_HINWEIS_SCHWELLE_STUNDEN = 24;
+  // in js/views/dashboard.js). Nur noch der Startwert - der tatsächlich
+  // geltende Wert steht in hofEinstellungen (siehe HOF_EINSTELLUNGEN_STANDARD
+  // unten), ist in den Einstellungen von Verwaltern editierbar und wird beim
+  // allerersten Laden mit diesem Wert in Firestore angelegt.
+  const LAGER_HINWEIS_SCHWELLE_STUNDEN_STANDARD = 24;
   const BESTELLUNGEN_COLLECTION = "bestellungen";
   const ANGEBOTE_COLLECTION = "angebote";
   const KONTAKTE_COLLECTION = "kontakte";
@@ -76,14 +79,32 @@
 
   // Pauschale, die automatisch zur Gesamtsumme addiert wird, sobald der
   // Lieferung-Umschalter im Bestellungs-Modal aktiviert ist (siehe
-  // aktualisiereBestellungZusammenfassung in bestellungen.js).
-  const BESTELLUNG_LIEFERPAUSCHALE = 5;
+  // aktualisiereBestellungZusammenfassung in bestellungen.js). Nur noch der
+  // Startwert, siehe Hinweis bei LAGER_HINWEIS_SCHWELLE_STUNDEN_STANDARD oben.
+  const BESTELLUNG_LIEFERPAUSCHALE_STANDARD = 5;
 
   // Ab wie vielen Tagen eine noch nicht abgeschlossene Bestellung als "alt"
   // markiert wird (Warnhinweis in der Bestellliste und im Dashboard, siehe
   // istBestellungAlt in bestellungen.js) - so geht keine offene Bestellung
-  // vergessen.
-  const BESTELLUNG_ALT_SCHWELLE_TAGE = 3;
+  // vergessen. Nur noch der Startwert, siehe Hinweis oben.
+  const BESTELLUNG_ALT_SCHWELLE_TAGE_STANDARD = 3;
+
+  // Firestore-Collection/-Dokument für die admin-editierbaren Hof-weiten
+  // Einstellungen (Lieferpauschale, Warnschwellen, Stammkunde-Kriterium) -
+  // siehe starteHofEinstellungenListener in js/views/einstellungen.js. Wird
+  // beim allerersten Laden (Dokument existiert noch nicht) mit diesen
+  // Startwerten angelegt, genau wie DEFAULT_KONTAKTE_ROLLEN oben.
+  const EINSTELLUNGEN_COLLECTION = "einstellungen";
+  const HOF_EINSTELLUNGEN_DOC_ID = "hof";
+  const HOF_EINSTELLUNGEN_STANDARD = {
+    lieferpauschale: BESTELLUNG_LIEFERPAUSCHALE_STANDARD,
+    lagerHinweisSchwelleStunden: LAGER_HINWEIS_SCHWELLE_STUNDEN_STANDARD,
+    bestellungAltSchwelleTage: BESTELLUNG_ALT_SCHWELLE_TAGE_STANDARD,
+    // Ein Kunde gilt als "Stammkunde" (siehe istStammkunde in
+    // js/views/kunden.js), sobald EINE der beiden Schwellen erreicht ist.
+    stammkundeMinBestellungen: 8,
+    stammkundeMinUmsatz: 50,
+  };
 
   // Startbestand an Waren, falls die Collection "produkte" noch leer ist —
   // orientiert sich an den Mockups (Weizen, Mais, Zucker, ...).
@@ -140,6 +161,20 @@
     const treffer = PRODUKT_KATEGORIEN.find((k) => k.namen.includes(p.name));
     return treffer ? treffer.id : PRODUKT_KATEGORIE_SONSTIGE;
   }
+
+  // Kategorien fürs Hofbuch (Schwarzes Brett) - bewusst eine feste, im Code
+  // definierte Liste statt einer admin-verwaltbaren Firestore-Collection
+  // (anders als DEFAULT_KONTAKTE_ROLLEN oben): der Bedarf für eine so kleine
+  // Nutzerzahl ist gering, das Muster lässt sich bei Bedarf später leicht
+  // nachrüsten. "farbe: null" bei "Sonstiges" sorgt wie beim Kontakte-
+  // Sammelbecken dafür, dass dafür kein farbiger Badge angezeigt wird.
+  const HOFBUCH_KATEGORIEN = [
+    { id: "ankuendigung", label: "Ankündigung", farbe: "#bd9143" },
+    { id: "wichtig", label: "Wichtig", farbe: "#8a3a3a" },
+    { id: "frage", label: "Frage", farbe: "#5b7a99" },
+    { id: "sonstiges", label: "Sonstiges", farbe: null },
+  ];
+  const HOFBUCH_KATEGORIE_STANDARD = "sonstiges";
 
   const VIEW_META = {
     uebersicht: { title: "Übersicht", subtitle: "Hier behältst du alles im Blick." },

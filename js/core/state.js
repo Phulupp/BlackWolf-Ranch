@@ -25,6 +25,12 @@
   let unsubPresence = null;
   let unsubKontakteRollen = null;
   let kontakteRollenKatalog = [];
+  // Admin-editierbare Hof-weite Einstellungen (Lieferpauschale, Warnschwellen,
+  // Stammkunde-Kriterium) - siehe HOF_EINSTELLUNGEN_STANDARD in config.js und
+  // starteHofEinstellungenListener in js/views/einstellungen.js. Startet mit
+  // den Standardwerten, bis der Firestore-Listener den echten Stand liefert.
+  let hofEinstellungen = { ...HOF_EINSTELLUNGEN_STANDARD };
+  let unsubHofEinstellungen = null;
   let unsubBenutzerliste = null;
   let benutzerListe = [];
   let bekanntePendingUids = null;
@@ -33,6 +39,11 @@
 
   let bestellungenStatusFilter = "Offen";
   let bestellungenSuche = "";
+  // IDs der aktuell für eine Bulk-Aktion angehakten Bestellungen (siehe
+  // Bulk-Aktionsleiste in bestellungen.js) - wird bei jedem renderBestellungen()
+  // um IDs bereinigt, die in der aktuell gefilterten/sichtbaren Liste nicht
+  // mehr vorkommen (verhindert "Geister-Auswahl" nach Statuswechsel/Suche).
+  let bestellungenAusgewaehlt = new Set();
   let warenSuche = "";
   // Admin-Umschalter in Waren & Preise: solange aktiv, werden Ziehgriffe an
   // den Zeilen gezeigt und die Reihenfolge kann per Ziehen geändert werden
@@ -59,7 +70,12 @@
   let kundenSortierung = localStorage.getItem("kundenSortierung") || "umsatz"; // "umsatz" | "anzahl" | "letzte" | "name"
   let hofbuchSuche = "";
   let hofbuchAeltesteZuerst = false;
+  let hofbuchKategorieFilter = "alle";
   let benutzerSuche = "";
+  // "alle" | "pending" | "locked" | "admin" - Filter-Tabs über der
+  // Benutzerliste in der Verwaltung (siehe renderBenutzerverwaltungStatusFilter
+  // in admin.js).
+  let benutzerStatusFilter = "alle";
   let aktiverDetailUid = null;
   let kontakteRollenVerwaltungOffen = false;
 

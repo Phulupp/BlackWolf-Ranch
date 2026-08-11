@@ -51,6 +51,11 @@
     bestellungenEmpty: document.getElementById("bestellungen-empty"),
     bestellungenNoResults: document.getElementById("bestellungen-no-results"),
     btnAddBestellung: document.getElementById("btn-add-bestellung"),
+    bestellungenBulkBar: document.getElementById("bestellungen-bulk-bar"),
+    bestellungenBulkAnzahl: document.getElementById("bestellungen-bulk-anzahl"),
+    bestellungenBulkStatus: document.getElementById("bestellungen-bulk-status"),
+    btnBestellungenBulkAnwenden: document.getElementById("btn-bestellungen-bulk-anwenden"),
+    btnBestellungenBulkAbbrechen: document.getElementById("btn-bestellungen-bulk-abbrechen"),
     modalBestellung: document.getElementById("modal-bestellung"),
     modalBestellungTitel: document.getElementById("modal-bestellung-titel"),
     bestellungArchivHinweis: document.getElementById("bestellung-archiv-hinweis"),
@@ -199,7 +204,9 @@
     // Hofbuch
     formHofbuch: document.getElementById("form-hofbuch"),
     hofbuchTitelInput: document.getElementById("hofbuch-titel-input"),
+    hofbuchKategorieInput: document.getElementById("hofbuch-kategorie-input"),
     hofbuchTextInput: document.getElementById("hofbuch-text-input"),
+    hofbuchKategorieFilterEl: document.getElementById("hofbuch-kategorie-filter"),
     hofbuchEintraegeEl: document.getElementById("hofbuch-eintraege"),
     hofbuchEmpty: document.getElementById("hofbuch-empty"),
     hofbuchNoResults: document.getElementById("hofbuch-no-results"),
@@ -207,6 +214,7 @@
     btnHofbuchSortToggle: document.getElementById("btn-hofbuch-sort-toggle"),
     hofbuchEditId: document.getElementById("hofbuch-edit-id"),
     hofbuchEditTitel: document.getElementById("hofbuch-edit-titel"),
+    hofbuchEditKategorie: document.getElementById("hofbuch-edit-kategorie"),
     hofbuchEditText: document.getElementById("hofbuch-edit-text"),
     hofbuchEditError: document.getElementById("hofbuch-edit-error"),
     btnConfirmHofbuchEdit: document.getElementById("btn-confirm-hofbuch-edit"),
@@ -223,6 +231,12 @@
 
     // Einstellungen
     startseiteSelect: document.getElementById("startseite-select"),
+    hofEinstellungenHinweis: document.getElementById("hof-einstellungen-hinweis"),
+    einstLieferpauschale: document.getElementById("einst-lieferpauschale"),
+    einstLagerSchwelle: document.getElementById("einst-lager-schwelle"),
+    einstBestellungAltSchwelle: document.getElementById("einst-bestellung-alt-schwelle"),
+    einstStammkundeBestellungen: document.getElementById("einst-stammkunde-bestellungen"),
+    einstStammkundeUmsatz: document.getElementById("einst-stammkunde-umsatz"),
 
     // Verwaltung
     formAddBenutzer: document.getElementById("form-add-benutzer"),
@@ -230,6 +244,7 @@
     neuerBenutzerEmailInput: document.getElementById("neuer-benutzer-email-input"),
     neuerBenutzerRolleInput: document.getElementById("neuer-benutzer-rolle-input"),
     benutzerverwaltungSearchInput: document.getElementById("benutzerverwaltung-search-input"),
+    benutzerverwaltungStatusFilter: document.getElementById("benutzerverwaltung-status-filter"),
     benutzerverwaltungListe: document.getElementById("benutzerverwaltung-liste"),
     modalBenutzerDetails: document.getElementById("modal-benutzer-details"),
     benutzerDetailsName: document.getElementById("benutzer-details-name"),
@@ -407,7 +422,17 @@
   // neuen Benutzern). Die Produktauswahl im Bestellungs-Fenster hat bereits
   // ihr eigenes, älteres Custom-Dropdown (siehe Abschnitt "Bestellungen")
   // und wird hier bewusst nicht noch einmal angefasst.
-  [el.bestellungStatusInput, el.rechnerProdukt, el.kontaktBerufInput, el.kontaktEditRolle, el.kontakteSortierung, el.startseiteSelect, el.neuerBenutzerRolleInput, el.lagerSortierung].forEach(
-    erzeugeCustomSelect
-  );
+  [
+    el.bestellungStatusInput,
+    el.rechnerProdukt,
+    el.kontaktBerufInput,
+    el.kontaktEditRolle,
+    el.kontakteSortierung,
+    el.startseiteSelect,
+    el.neuerBenutzerRolleInput,
+    el.lagerSortierung,
+    el.hofbuchKategorieInput,
+    el.hofbuchEditKategorie,
+    el.bestellungenBulkStatus,
+  ].forEach(erzeugeCustomSelect);
 

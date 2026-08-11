@@ -43,14 +43,52 @@
   }
 
   function gefiltertBenutzer() {
+    let liste = benutzerListe;
+    if (benutzerStatusFilter === "pending") liste = liste.filter((b) => b.status === "pending");
+    else if (benutzerStatusFilter === "locked") liste = liste.filter((b) => b.status === "locked");
+    else if (benutzerStatusFilter === "admin") liste = liste.filter((b) => b.isAdmin);
+
     const begriff = benutzerSuche.trim().toLowerCase();
-    if (!begriff) return benutzerListe;
-    return benutzerListe.filter((b) => (b.username || "").toLowerCase().includes(begriff) || (b.email || "").toLowerCase().includes(begriff));
+    if (begriff) {
+      liste = liste.filter((b) => (b.username || "").toLowerCase().includes(begriff) || (b.email || "").toLowerCase().includes(begriff));
+    }
+    return liste;
+  }
+
+  function renderBenutzerverwaltungStatusFilter() {
+    if (!el.benutzerverwaltungStatusFilter) return;
+    const optionen = [
+      ["alle", "Alle"],
+      ["pending", "Wartend"],
+      ["locked", "Gesperrt"],
+      ["admin", "Verwalter"],
+    ];
+    el.benutzerverwaltungStatusFilter.innerHTML = optionen
+      .map(
+        ([wert, label]) =>
+          `<button type="button" class="tabs__tab${benutzerStatusFilter === wert ? " tabs__tab--active" : ""}" data-benutzer-statusfilter="${wert}">${label}</button>`
+      )
+      .join("");
+  }
+
+  if (el.benutzerverwaltungStatusFilter) {
+    el.benutzerverwaltungStatusFilter.addEventListener("click", (event) => {
+      const btn = event.target.closest("[data-benutzer-statusfilter]");
+      if (!btn) return;
+      benutzerStatusFilter = btn.getAttribute("data-benutzer-statusfilter");
+      renderBenutzerverwaltung();
+    });
   }
 
   function renderBenutzerverwaltung() {
     if (!el.benutzerverwaltungListe) return;
-    const liste = gefiltertBenutzer();
+    renderBenutzerverwaltungStatusFilter();
+    // Wartende Registrierungen immer zuerst, damit eine neue Anfrage nie in
+    // einer langen Liste untergeht - bisher gab es dafür nur einen Toast beim
+    // Erscheinen, aber keine dauerhafte Priorisierung in der Liste selbst.
+    const liste = gefiltertBenutzer()
+      .slice()
+      .sort((a, b) => (a.status === "pending" ? 0 : 1) - (b.status === "pending" ? 0 : 1));
     el.benutzerverwaltungListe.innerHTML = liste
       .map((b) => {
         const statusLabel = b.status === "pending" ? "Wartet auf Freigabe" : b.status === "rejected" ? "Abgelehnt" : b.status === "locked" ? "Gesperrt" : "";
@@ -60,6 +98,7 @@
             <span class="settings-list__role">${escapeHtml(b.rolle || "—")}</span>
             ${b.isAdmin ? '<span class="settings-list__protected">Verwalter</span>' : ""}
             ${statusLabel ? `<span class="settings-list__wartet">${statusLabel}</span>` : ""}
+            <span class="settings-list__role" style="opacity:.6;">Letzter Login: ${formatDatumUhrzeit(b.lastLogin)}</span>
           </div>
           <span style="opacity:.5;">›</span>
         </div>`;

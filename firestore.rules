@@ -265,6 +265,15 @@ service cloud.firestore {
       allow read, write: if istFreigegeben();
     }
 
+    // Hof-Einstellungen (einstellungen/hof): Lieferpauschale, Warnschwellen,
+    // Stammkunde-Kriterium - für alle freigegebenen Nutzer lesbar (fließt in
+    // Preisberechnungen/Anzeigen ein, die jeder sieht), aber nur von
+    // Verwaltern änderbar.
+    match /einstellungen/{dokument} {
+      allow read: if istFreigegeben();
+      allow write: if istAdmin();
+    }
+
     // Hofbuch: die Chronik des Hofes. Jeder freigegebene Nutzer darf Einträge
     // schreiben und lesen. Löschen dürfen Verwalter (jeden Eintrag) sowie der
     // Verfasser selbst (nur den eigenen Eintrag, anhand der beim Anlegen

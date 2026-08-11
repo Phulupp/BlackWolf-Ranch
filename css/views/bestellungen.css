@@ -2,7 +2,11 @@
    14. Bestellungen
    -------------------------------------------------------------------------- */
 .bestellungen-row {
-  grid-template-columns: 24fr 20fr 32fr 20fr;
+  grid-template-columns: 3fr 24fr 20fr 32fr 20fr;
+}
+
+.bestellung-auswahl-check {
+  cursor: pointer;
 }
 
 /* Kleines Textlabel neben dem Status-Pill in der Bestellungsliste, sobald der
@@ -10,18 +14,12 @@
    erkennbar, welche Bestellungen geliefert werden sollen, ohne das
    Detail-Modal öffnen zu müssen. */
 .bestellung-lieferung-badge {
-  display: inline-flex;
-  align-items: center;
   margin-left: 8px;
-  padding: 3px 10px;
-  border: 1px solid var(--brass);
-  border-radius: 999px;
   font-size: 10px;
-  font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--brass-bright);
-  white-space: nowrap;
+  border-color: var(--brass);
 }
 
 /* Warnhinweis für Bestellungen, die schon länger als
@@ -29,19 +27,9 @@
    istBestellungAlt in bestellungen.js) - fällt bewusst in der Warnfarbe auf,
    damit keine wartende Bestellung übersehen wird. */
 .bestellung-alt-badge {
-  display: inline-flex;
-  align-items: center;
   margin-left: 8px;
-  padding: 4px 11px;
-  border: 1px solid var(--status-danger-bright);
-  border-radius: 999px;
-  font-size: 10.5px;
   font-weight: 800;
-  letter-spacing: 0.02em;
-  color: #f2e4d6;
-  background: var(--status-danger);
-  box-shadow: 0 0 0 3px var(--status-danger-soft), 0 2px 6px rgba(110, 35, 23, 0.45);
-  white-space: nowrap;
+  border: 1px solid var(--status-danger-bright);
 }
 
 .reg-row--body.bestellungen-row {

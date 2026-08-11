@@ -1,0 +1,43 @@
+/* --------------------------------------------------------------------------
+   Badges — gemeinsame Basis für alle kleinen "Pillen"-Hinweise der Seite
+   (Kontakt-Rolle, Bestellungs-Hinweise, Status, Hofbuch-Anheften/Kategorie,
+   Stammkunde, ...). Vorher hatte jeder dieser Badges seine eigene, leicht
+   abweichende CSS-Regel (Größe/Rahmen/Füllung einzeln definiert) - .badge
+   bündelt die gemeinsame Form, die einzelnen Klassen (siehe kontakte.css,
+   bestellungen.css, hofbuch.css, dashboard.css) setzen nur noch Farben.
+   -------------------------------------------------------------------------- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.badge--outline {
+  background: transparent;
+  border: 1px solid currentColor;
+}
+
+.badge--alert {
+  color: #f2e4d6;
+  background: var(--status-danger);
+  box-shadow: 0 0 0 3px var(--status-danger-soft), 0 2px 6px rgba(110, 35, 23, 0.45);
+}
+
+/* Kompakte, runde Variante für einzelne Symbol-Badges (z. B. ★ Stammkunde) -
+   fällt durch die Form auf, ohne wie ein textlastiges Label zu wirken. */
+.badge--icon {
+  padding: 3px;
+  min-width: 19px;
+  min-height: 19px;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 10px;
+  background: var(--brass-soft);
+  color: var(--brass-bright);
+}
