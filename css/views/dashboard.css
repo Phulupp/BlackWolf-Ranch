@@ -8,6 +8,12 @@
    der Begrüßung) nach rechts (transparent, Bild kommt voll durch) liegt
    darüber - gleiche Technik wie beim Login-Hintergrund (siehe auth.css). */
 .dash-hero {
+  /* Seitenverhältnis des Bildes selbst (1738 × 454 px) - die Box wird so
+     IMMER passend zum Bild hoch, statt eine feste (zu niedrige) Höhe zu
+     erzwingen, die "background-size: cover" oben/unten stark hätte
+     abschneiden lassen (Windmühle/Sonne fielen sonst raus). min-height
+     bleibt nur als Untergrenze auf sehr schmalen Bildschirmen. */
+  aspect-ratio: 1738 / 454;
   background:
     linear-gradient(90deg, rgba(27, 21, 16, 0.88) 0%, rgba(27, 21, 16, 0.6) 35%, rgba(27, 21, 16, 0.15) 65%, transparent 100%),
     url("../../assets/background/dashboard-farm-crop.png") center / cover no-repeat;
