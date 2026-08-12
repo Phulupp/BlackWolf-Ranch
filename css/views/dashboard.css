@@ -23,7 +23,11 @@
   box-shadow: var(--shadow-card), 0 0 40px -14px rgba(169, 101, 63, 0.4);
   padding: 28px 36px;
   display: flex;
-  align-items: center;
+  /* Oben statt vertikal mittig ausgerichtet - die Begrüßung saß vorher genau
+     auf Höhe des gemalten Holzschilds im Bild ("HORNHAUSEN HOF") und
+     überlagerte dessen Schrift. Oben ist im Bild nur Himmel, da stört sie
+     nichts. */
+  align-items: flex-start;
   min-height: 172px;
   gap: 24px;
   margin-bottom: 22px;
@@ -37,7 +41,7 @@
 }
 
 .dash-hero__eyebrow {
-  font-size: 11.5px;
+  font-size: 12.5px;
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -52,7 +56,7 @@
    wirkt statt wie ein generischer Seitentitel. */
 .dash-hero__name {
   font-family: var(--font-brand);
-  font-size: 30px;
+  font-size: 34px;
   letter-spacing: 0.03em;
   color: var(--brass-bright);
   text-shadow: 0 2px 5px rgba(0, 0, 0, 0.65);
@@ -60,7 +64,7 @@
 
 .dash-hero__sub {
   margin-top: 8px;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--parch-200);
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.65);
 }
