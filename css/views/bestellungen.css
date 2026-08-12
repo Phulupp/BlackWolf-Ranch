@@ -750,6 +750,50 @@ select.field-input option {
   cursor: not-allowed;
 }
 
+/* Rabatt auf die komplette Bestellung (siehe aktuellerGesamtRabattProzent in
+   bestellungen.js) - sitzt zwischen den Mini-Kennzahlen und dem Lieferung-
+   Umschalter, ganz bewusst kompakt statt als eigenes großes Formularfeld. */
+.bestellung-gesamtrabatt {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--wood-text-muted);
+}
+
+.bestellung-gesamtrabatt input {
+  width: 52px;
+  padding: 5px 6px;
+  font-size: 12.5px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--leather-edge);
+  border-radius: var(--radius-sm);
+  color: var(--wood-text);
+  font-family: var(--font-body);
+}
+
+.bestellung-gesamtrabatt input:focus {
+  outline: none;
+  border-color: var(--brass);
+}
+
+.bestellung-gesamtrabatt input:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.bestellung-gesamtrabatt__prozent {
+  flex-shrink: 0;
+}
+
+.bestellung-gesamtrabatt__betrag {
+  flex-shrink: 0;
+  color: var(--status-danger-bright);
+  font-weight: 700;
+}
+
 /* Zusammenfassungsleiste: Gesamtsumme ist die wichtigste Kennzahl der
    Bestellung und wird deutlich größer/kräftiger dargestellt als die drei
    übrigen, eher unterstützenden Werte (Anzahl/Menge/Rabatt). */

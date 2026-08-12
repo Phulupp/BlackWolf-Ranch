@@ -48,6 +48,13 @@
     // Lieferpauschale (siehe Lieferung-Umschalter im Bestellungs-Modal) zählt
     // voll als Umsatz/Gewinn mit - reine Dienstleistung.
     if (b.lieferung) berechneterUmsatz += hofEinstellungen.lieferpauschale;
+    // Rabatt auf die GESAMTE Bestellung (zusätzlich zu evtl. Rabatten je
+    // Produkt, siehe Feld "Rabatt auf Gesamtsumme" im Bestellungs-Modal) -
+    // wird NACH der Zeilensumme + Lieferpauschale abgezogen, exakt dieselbe
+    // Rechnung wie die Live-Vorschau in aktualisiereBestellungZusammenfassung
+    // (bestellungen.js), damit Umsatz/Statistiken denselben Wert zeigen.
+    const gesamtRabattProzent = Math.max(0, Math.min(100, Number(b.gesamtRabattProzent) || 0));
+    berechneterUmsatz *= 1 - gesamtRabattProzent / 100;
     const hatErhaltenenBetrag = b.erhaltenerBetrag !== null && b.erhaltenerBetrag !== undefined && b.erhaltenerBetrag !== "";
     const umsatz = hatErhaltenenBetrag ? Number(b.erhaltenerBetrag) || 0 : berechneterUmsatz;
     const gewinn = umsatz;

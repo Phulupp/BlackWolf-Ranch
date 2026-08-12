@@ -264,15 +264,33 @@
   // Gesamtmenge, Gesamtrabatt, Gesamtsumme), ohne die Tabelle selbst neu
   // aufzubauen - wird sowohl vom vollständigen Render als auch von der
   // Live-Neuberechnung bei jeder Tastatureingabe aufgerufen.
+  // Rabatt auf die GESAMTE Bestellung (zusätzlich zu evtl. Rabatten je
+  // einzelnem Produkt) - z. B. für einen Pauschalnachlass an Stammkunden,
+  // ohne dafür jede einzelne Position anfassen zu müssen. Wird NACH der
+  // Zeilensumme + Lieferpauschale abgezogen, siehe berechneBestellungKennzahlen
+  // in verkaeufe.js für dieselbe Rechnung bei bereits abgeschlossenen
+  // Bestellungen (Umsatz/Statistiken müssen exakt denselben Wert ergeben).
+  function aktuellerGesamtRabattProzent() {
+    if (!el.bestellungGesamtRabattInput) return 0;
+    return Math.max(0, Math.min(100, parseFloat(el.bestellungGesamtRabattInput.value) || 0));
+  }
+
   function aktualisiereBestellungZusammenfassung() {
     const werte = bestellungZusammenfassungWerte(bestellungEntwurfPositionen);
     const lieferpauschale = bestellungEntwurfLieferung ? hofEinstellungen.lieferpauschale : 0;
-    const gesamtsummeMitLieferung = werte.gesamtsumme + lieferpauschale;
+    const zwischensumme = werte.gesamtsumme + lieferpauschale;
+    const gesamtRabattProzent = aktuellerGesamtRabattProzent();
+    const gesamtsummeMitLieferung = zwischensumme * (1 - gesamtRabattProzent / 100);
     el.bestellungZusammenfassung.hidden = bestellungEntwurfPositionen.length === 0;
     el.bestellungZusammenfassungAnzahl.textContent = String(werte.anzahl);
     el.bestellungZusammenfassungMenge.textContent = String(werte.gesamtmenge);
     el.bestellungZusammenfassungRabatt.textContent = formatGeld(werte.gesamtrabatt);
     el.bestellungZusammenfassungSumme.textContent = formatGeld(gesamtsummeMitLieferung);
+    if (el.bestellungGesamtRabattBetrag) {
+      const gespart = zwischensumme - gesamtsummeMitLieferung;
+      el.bestellungGesamtRabattBetrag.hidden = gespart <= 0;
+      el.bestellungGesamtRabattBetrag.textContent = `(−${formatGeld(gespart)})`;
+    }
     // Die berechnete Gesamtsumme im "Zahlung"-Bereich (siehe
     // aktualisiereZahlungBereich) muss bei jeder Produktänderung mit
     // aktuell bleiben, auch wenn die Bestellung schon abgeschlossen ist und
@@ -676,6 +694,10 @@
     });
   }
 
+  if (el.bestellungGesamtRabattInput) {
+    el.bestellungGesamtRabattInput.addEventListener("input", aktualisiereBestellungZusammenfassung);
+  }
+
   if (el.bestellungPositionenListe) {
     el.bestellungPositionenListe.addEventListener("click", (event) => {
       const entfernenBtn = event.target.closest("[data-position-entfernen]");
@@ -749,6 +771,10 @@
     el.bestellungPositionMenge.value = 1;
     el.bestellungPositionRabatt.value = 0;
     el.bestellungPositionRabatt.disabled = !istAdmin();
+    if (el.bestellungGesamtRabattInput) {
+      el.bestellungGesamtRabattInput.value = bestellung ? bestellung.gesamtRabattProzent || 0 : 0;
+      el.bestellungGesamtRabattInput.disabled = !istAdmin() || bestellungModalArchiviert;
+    }
     renderBestellungPositionen();
 
     [el.bestellungUnternehmenInput, el.bestellungAnsprechpartnerInput, el.bestellungStatusInput, el.bestellungNotizInput].forEach(
@@ -925,6 +951,7 @@
         bearbeiter: aktuellerNutzer ? aktuellerNutzer.name : null,
         erhaltenerBetrag,
         lieferung: bestellungEntwurfLieferung,
+        gesamtRabattProzent: aktuellerGesamtRabattProzent(),
       };
 
       const id = el.bestellungEditingId.value;

@@ -86,6 +86,8 @@
     bestellungZusammenfassungAnzahl: document.getElementById("bestellung-zusammenfassung-anzahl"),
     bestellungZusammenfassungMenge: document.getElementById("bestellung-zusammenfassung-menge"),
     bestellungZusammenfassungRabatt: document.getElementById("bestellung-zusammenfassung-rabatt"),
+    bestellungGesamtRabattInput: document.getElementById("bestellung-gesamtrabatt-input"),
+    bestellungGesamtRabattBetrag: document.getElementById("bestellung-gesamtrabatt-betrag"),
     bestellungZusammenfassungSumme: document.getElementById("bestellung-zusammenfassung-summe"),
     btnBestellungLieferung: document.getElementById("btn-bestellung-lieferung"),
     bestellungZahlung: document.getElementById("bestellung-zahlung"),
