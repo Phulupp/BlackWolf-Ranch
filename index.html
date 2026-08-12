@@ -24,8 +24,8 @@
        blieb das Tab-/Lesezeichen-Icon in genau diesen Fällen leer, selbst
        wenn das PNG unten technisch korrekt eingebunden war. -->
   <link rel="shortcut icon" href="/favicon.ico" />
-  <link rel="icon" type="image/png" href="assets/logo/favicon-mais.png?v=63" />
-  <link rel="apple-touch-icon" href="assets/logo/favicon-mais.png?v=63" />
+  <link rel="icon" type="image/png" href="assets/logo/favicon-mais.png?v=64" />
+  <link rel="apple-touch-icon" href="assets/logo/favicon-mais.png?v=64" />
 
   <!-- Google Fonts: Rye (Farmschild/Wordmark), Playfair Display (Überschriften), Vollkorn (Fließtext/Pergament) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -39,30 +39,30 @@
        style.css - nur jetzt nach Zweck aufgeteilt (base > layout >
        components > views), damit man den passenden Abschnitt schneller
        findet. Reihenfolge ist wichtig und darf nicht vertauscht werden. -->
-  <link rel="stylesheet" href="css/base/tokens.css?v=63" />
-  <link rel="stylesheet" href="css/base/reset.css?v=63" />
-  <link rel="stylesheet" href="css/base/textures.css?v=63" />
-  <link rel="stylesheet" href="css/views/auth.css?v=63" />
-  <link rel="stylesheet" href="css/components/forms.css?v=63" />
-  <link rel="stylesheet" href="css/components/buttons.css?v=63" />
-  <link rel="stylesheet" href="css/layout/shell.css?v=63" />
-  <link rel="stylesheet" href="css/components/cards.css?v=63" />
-  <link rel="stylesheet" href="css/components/badges.css?v=63" />
-  <link rel="stylesheet" href="css/views/dashboard.css?v=63" />
-  <link rel="stylesheet" href="css/components/tables.css?v=63" />
-  <link rel="stylesheet" href="css/views/waren.css?v=63" />
-  <link rel="stylesheet" href="css/views/lager.css?v=63" />
-  <link rel="stylesheet" href="css/views/bestellungen.css?v=63" />
-  <link rel="stylesheet" href="css/views/kontakte.css?v=63" />
-  <link rel="stylesheet" href="css/views/handelsrechner.css?v=63" />
-  <link rel="stylesheet" href="css/views/rezepte.css?v=63" />
-  <link rel="stylesheet" href="css/components/modals.css?v=63" />
-  <link rel="stylesheet" href="css/views/admin.css?v=63" />
-  <link rel="stylesheet" href="css/components/toast.css?v=63" />
-  <link rel="stylesheet" href="css/layout/footer.css?v=63" />
-  <link rel="stylesheet" href="css/components/kataloge.css?v=63" />
-  <link rel="stylesheet" href="css/views/hofbuch.css?v=63" />
-  <link rel="stylesheet" href="css/base/responsive.css?v=63" />
+  <link rel="stylesheet" href="css/base/tokens.css?v=64" />
+  <link rel="stylesheet" href="css/base/reset.css?v=64" />
+  <link rel="stylesheet" href="css/base/textures.css?v=64" />
+  <link rel="stylesheet" href="css/views/auth.css?v=64" />
+  <link rel="stylesheet" href="css/components/forms.css?v=64" />
+  <link rel="stylesheet" href="css/components/buttons.css?v=64" />
+  <link rel="stylesheet" href="css/layout/shell.css?v=64" />
+  <link rel="stylesheet" href="css/components/cards.css?v=64" />
+  <link rel="stylesheet" href="css/components/badges.css?v=64" />
+  <link rel="stylesheet" href="css/views/dashboard.css?v=64" />
+  <link rel="stylesheet" href="css/components/tables.css?v=64" />
+  <link rel="stylesheet" href="css/views/waren.css?v=64" />
+  <link rel="stylesheet" href="css/views/lager.css?v=64" />
+  <link rel="stylesheet" href="css/views/bestellungen.css?v=64" />
+  <link rel="stylesheet" href="css/views/kontakte.css?v=64" />
+  <link rel="stylesheet" href="css/views/handelsrechner.css?v=64" />
+  <link rel="stylesheet" href="css/views/rezepte.css?v=64" />
+  <link rel="stylesheet" href="css/components/modals.css?v=64" />
+  <link rel="stylesheet" href="css/views/admin.css?v=64" />
+  <link rel="stylesheet" href="css/components/toast.css?v=64" />
+  <link rel="stylesheet" href="css/layout/footer.css?v=64" />
+  <link rel="stylesheet" href="css/components/kataloge.css?v=64" />
+  <link rel="stylesheet" href="css/views/hofbuch.css?v=64" />
+  <link rel="stylesheet" href="css/base/responsive.css?v=64" />
 
   <!-- Firebase SDK (Authentifizierung + Datenbank). "defer" statt normaler
        blockierender <script>-Tags: der Browser kann so den Rest der Seite
@@ -372,284 +372,6 @@
                 <h1 class="dash-hero__name" id="dashboard-name">—</h1>
                 <p class="dash-hero__sub">Hier behältst du alles im Blick.</p>
               </div>
-              <svg class="dash-hero__doodle" viewBox="0 0 920 170" preserveAspectRatio="xMaxYMax meet" role="img" aria-label="Ein handgezeichnetes Bauernhof-Panorama: Haus, Scheune, ein großer alter Baum, ein kleiner Tümpel mit Schilf und einer winzigen Ente, ein Trampelpfad, ein Weidezaun, der sich durchs Bild zieht, sowie Pferd, Hühner und mehrere unterschiedlich weit entfernte Kühe - darunter eine cremeweiß-violett gefleckte Kuh als kleiner Blickfang">
-                <defs>
-                  <!-- Grasbüschel: 3 leicht ungleiche Halme aus einem
-                       gemeinsamen Ansatzpunkt, als <use> vielfach über die
-                       Szene verstreut (siehe unten) statt einer
-                       durchgehenden Linie oder eines gleichförmigen Rasters. -->
-                  <g id="dash-doodle-buschel">
-                    <path d="M0,10 C-1,5 1,1 2,-3" fill="none" stroke="#4d7a3a" stroke-width="1.4" stroke-linecap="round" />
-                    <path d="M3,10 C4,4 3,0 5,-4" fill="none" stroke="#6fa050" stroke-width="1.3" stroke-linecap="round" />
-                    <path d="M6,10 C7,6 6,2 8,-2" fill="none" stroke="#4d7a3a" stroke-width="1.2" stroke-linecap="round" />
-                  </g>
-                  <!-- Kuh-Körper: eine einzelne unregelmäßige, "krumme"
-                       Silhouette statt Ellipse+Kreis, als Basisform für alle
-                       Kühe unten (Farbe je Instanz per fill). -->
-                  <path id="dash-doodle-kuh-koerper" d="M46,18 C50,14 49,8 44,7 C40,2 30,1 24,4 C20,1 12,2 9,6 C4,7 0,12 2,17 C-1,20 1,24 5,23 C6,27 12,29 17,26 C22,29 34,29 39,26 C44,28 49,24 46,18 Z" />
-                  <!-- Kuh-Beine/Hörner/Schwanz: bewusst leicht ungleich lang
-                       und nicht symmetrisch, als gemeinsame Strichzeichnung
-                       für alle Kühe (immer in Konturfarbe). -->
-                  <g id="dash-doodle-kuh-beine">
-                    <path d="M8,25 C7,29 8,33 7,36" fill="none" stroke="var(--wood-800)" stroke-width="2.4" stroke-linecap="round" />
-                    <path d="M17,27 C16,30 17,34 16,37" fill="none" stroke="var(--wood-800)" stroke-width="2.4" stroke-linecap="round" />
-                    <path d="M33,26 C34,30 33,34 34,37" fill="none" stroke="var(--wood-800)" stroke-width="2.4" stroke-linecap="round" />
-                    <path d="M41,23 C42,27 41,31 42,34" fill="none" stroke="var(--wood-800)" stroke-width="2.4" stroke-linecap="round" />
-                    <path d="M2,17 C-3,15 -6,17 -8,14" fill="none" stroke="var(--wood-800)" stroke-width="2" stroke-linecap="round" />
-                    <path d="M9,4 L7,-3 L13,2" fill="none" stroke="var(--wood-800)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M18,2 L19,-5 L24,1" fill="none" stroke="var(--wood-800)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M46,15 C51,17 53,22 50,26" fill="none" stroke="var(--wood-800)" stroke-width="2" stroke-linecap="round" />
-                  </g>
-                  <!-- Huhn, klein und einfach, mehrfach mit leicht
-                       unterschiedlicher Größe/Ausrichtung verwendet. -->
-                  <g id="dash-doodle-huhn">
-                    <path d="M2,9 C0,5 3,1 8,1 C13,0 16,4 15,8 C17,9 17,12 14,12 C14,14 8,15 5,13 C2,14 -1,12 1,10 Z" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="1.3" />
-                    <path d="M14,4 L18,3 L15,7 Z" fill="#c9622f" stroke="var(--wood-800)" stroke-width="0.8" />
-                    <path d="M11,0 C12,-2 14,-2 13,0" fill="none" stroke="#b23a2a" stroke-width="1.4" stroke-linecap="round" />
-                    <line x1="5" y1="13" x2="4" y2="16" stroke="var(--wood-800)" stroke-width="1.1" stroke-linecap="round" />
-                    <line x1="9" y1="13" x2="10" y2="16" stroke="var(--wood-800)" stroke-width="1.1" stroke-linecap="round" />
-                  </g>
-                  <!-- Kleiner Pflanzen-Spross - 3 fächerartige Blätter,
-                       optisch anders als das Grasbüschel oben, für etwas
-                       Abwechslung zwischen den Grasbüscheln. -->
-                  <g id="dash-doodle-pflanze">
-                    <path d="M0,8 C-1,4 -4,3 -6,0" fill="none" stroke="#4d7a3a" stroke-width="1.3" stroke-linecap="round" />
-                    <path d="M0,8 C1,4 4,3 6,0" fill="none" stroke="#6fa050" stroke-width="1.3" stroke-linecap="round" />
-                    <path d="M0,8 C0,3 0,1 0,-3" fill="none" stroke="#4d7a3a" stroke-width="1.3" stroke-linecap="round" />
-                  </g>
-                </defs>
-
-                <!-- Sonne, halb hinter der ersten Wolke -->
-                <g transform="translate(80,26)">
-                  <line x1="0" y1="-14" x2="0" y2="-20" stroke="var(--wood-800)" stroke-width="1.6" stroke-linecap="round" />
-                  <line x1="0" y1="-14" x2="0" y2="-20" stroke="var(--wood-800)" stroke-width="1.6" stroke-linecap="round" transform="rotate(60)" />
-                  <line x1="0" y1="-14" x2="0" y2="-20" stroke="var(--wood-800)" stroke-width="1.6" stroke-linecap="round" transform="rotate(120)" />
-                  <line x1="0" y1="-14" x2="0" y2="-20" stroke="var(--wood-800)" stroke-width="1.6" stroke-linecap="round" transform="rotate(180)" />
-                  <line x1="0" y1="-14" x2="0" y2="-20" stroke="var(--wood-800)" stroke-width="1.6" stroke-linecap="round" transform="rotate(240)" />
-                  <line x1="0" y1="-14" x2="0" y2="-20" stroke="var(--wood-800)" stroke-width="1.6" stroke-linecap="round" transform="rotate(300)" />
-                  <circle r="10" fill="#f0c14b" stroke="var(--wood-800)" stroke-width="1.4" />
-                </g>
-
-                <!-- Wolken, bewusst wenige für einen ruhigen, übersichtlichen
-                     Himmel statt eines vollgestellten Bildes. -->
-                <path d="M8,44 C2,44 -1,38 4,34 C2,27 10,23 17,26 C20,20 32,19 36,26 C43,24 48,31 43,36 C46,41 41,46 34,43 C30,48 14,48 8,44 Z" fill="#eef3f8" stroke="#8fb8d6" stroke-width="1.6" opacity="0.92" transform="translate(12,-16)" />
-                <path d="M8,44 C2,44 -1,38 4,34 C2,27 10,23 17,26 C20,20 32,19 36,26 C43,24 48,31 43,36 C46,41 41,46 34,43 C30,48 14,48 8,44 Z" fill="#eef3f8" stroke="#8fb8d6" stroke-width="1.6" opacity="0.88" transform="translate(280,-24) scale(0.75)" />
-                <path d="M8,44 C2,44 -1,38 4,34 C2,27 10,23 17,26 C20,20 32,19 36,26 C43,24 48,31 43,36 C46,41 41,46 34,43 C30,48 14,48 8,44 Z" fill="#eef3f8" stroke="#8fb8d6" stroke-width="1.6" opacity="0.85" transform="translate(560,-18) scale(0.6)" />
-                <path d="M8,44 C2,44 -1,38 4,34 C2,27 10,23 17,26 C20,20 32,19 36,26 C43,24 48,31 43,36 C46,41 41,46 34,43 C30,48 14,48 8,44 Z" fill="#eef3f8" stroke="#8fb8d6" stroke-width="1.6" opacity="0.85" transform="translate(800,-24) scale(0.5)" />
-
-                <!-- Untergrund: dezenter Erdton als Basis, darauf einzelne,
-                     unregelmäßig geformte Grasflecken mit Lücken dazwischen
-                     - bewusst NICHT ein durchgehendes Band, damit an den
-                     Lücken sichtbarer Boden durchscheint. -->
-                <rect x="0" y="158" width="920" height="12" fill="#5a4326" opacity="0.35" />
-                <path d="M18,170 L20,157 C45,153 70,159 96,156 C118,154 132,160 138,170 Z" fill="#3c5830" opacity="0.62" />
-                <path d="M178,170 L182,159 C205,155 228,161 252,157 C268,155 278,161 282,170 Z" fill="#5c7a44" opacity="0.5" />
-                <path d="M340,170 L344,156 C368,152 392,159 415,155 C432,153 444,160 450,170 Z" fill="#3c5830" opacity="0.6" />
-                <path d="M520,170 L524,160 C542,156 560,162 580,158 C594,156 604,161 610,170 Z" fill="#5c7a44" opacity="0.5" />
-                <path d="M655,170 L659,157 C682,153 706,160 730,156 C748,154 760,161 766,170 Z" fill="#3c5830" opacity="0.62" />
-                <path d="M795,170 L799,159 C818,155 838,161 858,157 C874,155 886,161 892,170 Z" fill="#5c7a44" opacity="0.55" />
-
-                <!-- Trampelpfad vom Haus in Richtung Feld -->
-                <path d="M105,162 C125,158 145,159 160,155 C180,150 200,152 220,148 C235,145 245,148 255,150 L253,158 C240,156 225,154 210,157 C190,160 170,159 150,163 C133,166 115,167 105,168 Z" fill="#8a6a3f" opacity="0.55" />
-
-                <!-- Wohnhaus -->
-                <g transform="translate(26,0)">
-                  <rect x="94" y="90" width="10" height="20" rx="2" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="2" />
-                  <path d="M24,120 L70,82 L116,120 Z" fill="#6e2a1e" stroke="var(--wood-800)" stroke-width="2.4" stroke-linejoin="round" />
-                  <rect x="34" y="120" width="72" height="42" rx="3" fill="#96392a" stroke="var(--wood-800)" stroke-width="2.4" />
-                  <rect x="42" y="128" width="14" height="14" rx="1.5" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="1.8" />
-                  <line x1="49" y1="128" x2="49" y2="142" stroke="var(--wood-800)" stroke-width="1.2" />
-                  <line x1="42" y1="135" x2="56" y2="135" stroke="var(--wood-800)" stroke-width="1.2" />
-                  <rect x="60" y="140" width="18" height="22" rx="2" fill="var(--wood-800)" />
-                  <circle cx="74" cy="151" r="1.4" fill="var(--brass-bright)" />
-                </g>
-
-                <!-- Scheune, dicht neben dem Haus statt weit entfernt, damit
-                     beide als ein zusammenhängender Hof wirken. -->
-                <g transform="translate(-74,0)">
-                  <rect x="235" y="114" width="95" height="48" fill="#8a2f22" stroke="var(--wood-800)" stroke-width="2.4" />
-                  <path d="M229,114 L245,96 L258,82 L307,82 L320,96 L336,114 Z" fill="#5e1f16" stroke="var(--wood-800)" stroke-width="2.4" stroke-linejoin="round" />
-                  <circle cx="282" cy="94" r="6" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="1.8" />
-                  <rect x="262" y="126" width="42" height="36" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="2" />
-                  <line x1="262" y1="126" x2="304" y2="162" stroke="var(--wood-800)" stroke-width="1.6" />
-                  <line x1="304" y1="126" x2="262" y2="162" stroke="var(--wood-800)" stroke-width="1.6" />
-                </g>
-
-                <!-- Heuballen direkt neben der Scheune -->
-                <g transform="translate(-74,0)">
-                  <path d="M338,162 C334,148 342,134 351,132 C360,134 368,148 364,162 Z" fill="#c9a24a" stroke="var(--wood-800)" stroke-width="1.8" stroke-linejoin="round" />
-                  <ellipse cx="351" cy="133" rx="7" ry="3.2" fill="#d9b563" stroke="var(--wood-800)" stroke-width="1.4" />
-                  <path d="M338,140 C344,142 358,142 364,140" fill="none" stroke="#a67f34" stroke-width="1.3" stroke-linecap="round" />
-                  <path d="M336,149 C343,151 359,151 366,149" fill="none" stroke="#a67f34" stroke-width="1.3" stroke-linecap="round" />
-                  <path d="M337,157 C344,159 358,159 365,157" fill="none" stroke="#a67f34" stroke-width="1.3" stroke-linecap="round" />
-                </g>
-
-                <!-- Wassertrog im Hof -->
-                <path d="M195,159 C194,154 200,151 212,151 C224,151 230,154 229,159 C230,164 224,167 212,167 C200,167 194,164 195,159 Z" fill="#6b4c30" stroke="var(--wood-800)" stroke-width="1.8" />
-                <path d="M195,152 C198,149 226,149 229,152 C226,155 198,155 195,152 Z" fill="#7ea8c9" stroke="var(--wood-800)" stroke-width="1.2" />
-
-                <!-- Kleiner Eimer neben dem Trog -->
-                <path d="M243,158 C242,163 244,167 247,167 C250,167 252,163 251,158 Z" fill="#8a6a45" stroke="var(--wood-800)" stroke-width="1.3" stroke-linejoin="round" />
-                <path d="M244,158 C246,156 248,156 250,158" fill="none" stroke="var(--wood-800)" stroke-width="1.1" />
-
-                <!-- Großer alter Baum: knorriger Stamm als dicker,
-                     geschwungener Strich, unregelmäßige, mehrlappige Krone
-                     statt einer glatten Blase. -->
-                <g transform="translate(300,62)">
-                  <path d="M68,100 C64,88 70,76 65,64 C71,55 63,46 69,36 C64,28 70,20 72,14" fill="none" stroke="#6b4a2e" stroke-width="14" stroke-linecap="round" />
-                  <path d="M50,100 C55,94 62,96 60,100" fill="none" stroke="var(--wood-800)" stroke-width="1.6" />
-                  <path d="M85,100 C80,94 74,96 76,100" fill="none" stroke="var(--wood-800)" stroke-width="1.6" />
-                  <ellipse cx="66" cy="60" rx="4" ry="3" fill="#4a331d" stroke="var(--wood-800)" stroke-width="1" opacity="0.8" />
-                  <path d="M20,45 C5,35 8,15 28,12 C30,-2 55,-6 68,6 C82,-4 105,0 108,16 C122,14 130,28 120,38 C130,48 122,62 108,60 C110,74 92,82 78,74 C68,86 44,84 38,72 C22,76 8,64 16,52 C6,50 8,40 20,45 Z" fill="#4f7a3c" stroke="var(--wood-800)" stroke-width="2.4" stroke-linejoin="round" />
-                  <path d="M40,30 C46,26 54,28 52,34 C58,32 60,40 54,42 C50,48 40,46 40,40 C34,38 34,32 40,30 Z" fill="#3f6530" opacity="0.55" />
-                  <path d="M76,44 C81,41 87,43 85,48 C90,47 91,54 86,55 C84,60 76,58 76,53 C71,52 71,46 76,44 Z" fill="#3f6530" opacity="0.5" />
-                </g>
-
-                <!-- Kleiner Tümpel unterhalb/rechts des großen Baumes, vor
-                     dem Pferd - unregelmäßige Wasserfläche, ein paar
-                     Wasserlinien, Schilf am Rand und eine winzige Ente,
-                     bewusst im selben schlichten Kritzel-Stil wie Trog und
-                     Eimer (Konturfarbe var(--wood-800), keine Details). -->
-                <path d="M392,158 C390,152 398,148 408,150 C416,146 428,148 434,153 C440,155 440,161 434,164 C428,168 414,168 406,165 C396,167 390,163 392,158 Z" fill="#5f8593" stroke="var(--wood-800)" stroke-width="1.6" stroke-linejoin="round" />
-                <path d="M396,157 Q402,155 408,157 Q414,155 420,157" fill="none" stroke="#8fb4bd" stroke-width="1.2" />
-                <path d="M400,161 Q408,159 416,161 Q422,159 428,161" fill="none" stroke="#8fb4bd" stroke-width="1.1" />
-                <path d="M393,159 C392,153 395,149 394,146" fill="none" stroke="#6f7a3a" stroke-width="1.4" stroke-linecap="round" />
-                <path d="M396,159 C397,152 396,148 398,145" fill="none" stroke="#8a9c4a" stroke-width="1.3" stroke-linecap="round" />
-                <path d="M406,150 C405,144 407,140 406,136" fill="none" stroke="#6f7a3a" stroke-width="1.3" stroke-linecap="round" />
-                <path d="M409,150 C410,143 409,139 411,135" fill="none" stroke="#8a9c4a" stroke-width="1.2" stroke-linecap="round" />
-                <path d="M434,154 C435,148 433,144 435,141" fill="none" stroke="#6f7a3a" stroke-width="1.3" stroke-linecap="round" />
-                <path d="M431,154 C430,147 432,143 431,139" fill="none" stroke="#8a9c4a" stroke-width="1.2" stroke-linecap="round" />
-                <ellipse cx="415" cy="156" rx="5" ry="3" fill="#d9b563" stroke="var(--wood-800)" stroke-width="1" />
-                <circle cx="409" cy="153" r="2.4" fill="#d9b563" stroke="var(--wood-800)" stroke-width="1" />
-                <path d="M406,153 L403,153.5 L406,155 Z" fill="#c9622f" stroke="var(--wood-800)" stroke-width="0.6" />
-                <circle cx="409" cy="152.5" r="0.5" fill="var(--wood-800)" />
-
-                <!-- Pferd: kurzer, kräftiger Hals als dicker Strich statt
-                     einer langen schmalen Fläche. -->
-                <path d="M500,134 C490,124 482,114 476,104" fill="none" stroke="#8a5a2e" stroke-width="17" stroke-linecap="round" />
-                <ellipse cx="466" cy="98" rx="11" ry="8" fill="#8a5a2e" stroke="var(--wood-800)" stroke-width="2" />
-                <ellipse cx="454" cy="100" rx="6" ry="4" fill="#8a5a2e" stroke="var(--wood-800)" stroke-width="1.6" />
-                <path d="M461,92 L458,84 L465,90 Z" fill="#8a5a2e" stroke="var(--wood-800)" stroke-width="1.2" />
-                <path d="M471,92 L474,84 L468,90 Z" fill="#8a5a2e" stroke="var(--wood-800)" stroke-width="1.2" />
-                <line x1="481" y1="109" x2="473" y2="103" stroke="#3a2416" stroke-width="2" stroke-linecap="round" />
-                <line x1="489" y1="119" x2="481" y2="113" stroke="#3a2416" stroke-width="2" stroke-linecap="round" />
-                <circle cx="462" cy="97" r="1" fill="var(--wood-800)" />
-                <ellipse cx="510" cy="140" rx="24" ry="13" fill="#8a5a2e" stroke="var(--wood-800)" stroke-width="2.2" />
-                <line x1="494" y1="151" x2="494" y2="162" stroke="var(--wood-800)" stroke-width="3" stroke-linecap="round" />
-                <line x1="502" y1="151" x2="502" y2="162" stroke="var(--wood-800)" stroke-width="3" stroke-linecap="round" />
-                <line x1="518" y1="151" x2="518" y2="162" stroke="var(--wood-800)" stroke-width="3" stroke-linecap="round" />
-                <line x1="526" y1="151" x2="526" y2="162" stroke="var(--wood-800)" stroke-width="3" stroke-linecap="round" />
-                <path d="M534,134 C541,142 539,154 534,162" fill="none" stroke="#3a2416" stroke-width="3" stroke-linecap="round" />
-
-                <!-- Kühe im Hintergrund/mittleren Feld - kleiner und höher
-                     platziert (perspektivisch weiter weg), teils vom Zaun
-                     unten überdeckt, der danach gezeichnet wird. -->
-                <g transform="translate(633,104.5) scale(0.42)">
-                  <use href="#dash-doodle-kuh-koerper" fill="#f7f0e6" stroke="var(--wood-800)" stroke-width="2" stroke-linejoin="round" />
-                  <path d="M13,9 C16,8 18,10 17,13 C19,15 16,17 13,16 C10,17 9,14 11,12 C9,10 11,8 13,9 Z" fill="#1f1712" />
-                  <path d="M28,6 C31,5 33,7 32,10 C34,11 32,14 29,13 C27,14 25,12 27,10 C25,8 26,6 28,6 Z" fill="#1f1712" />
-                  <use href="#dash-doodle-kuh-beine" />
-                </g>
-
-                <!-- Besondere kleine Kuh: cremeweiß mit violetten Flecken,
-                     bewusst klein und etwas zurückversetzt statt groß in der
-                     Mitte, als kleiner Überraschungs-Blickfang. -->
-                <g transform="translate(695,117.8) scale(0.6)">
-                  <use href="#dash-doodle-kuh-koerper" fill="#f7f0e6" stroke="var(--wood-800)" stroke-width="2" stroke-linejoin="round" />
-                  <path d="M13,9 C16,8 18,10 17,13 C19,15 16,17 13,16 C10,17 9,14 11,12 C9,10 11,8 13,9 Z" fill="#8a5aa8" />
-                  <path d="M28,6 C31,5 33,7 32,10 C34,11 32,14 29,13 C27,14 25,12 27,10 C25,8 26,6 28,6 Z" fill="#8a5aa8" />
-                  <path d="M36,16 C38,15 40,17 39,19 C40,21 38,22 36,21 C34,22 33,20 34,18 C33,17 34,16 36,16 Z" fill="#8a5aa8" />
-                  <use href="#dash-doodle-kuh-beine" />
-                </g>
-
-                <!-- Kuh weiter hinten rechts, mittlere Distanz -->
-                <g transform="translate(848,116) scale(0.68)">
-                  <use href="#dash-doodle-kuh-koerper" fill="#f7f0e6" stroke="var(--wood-800)" stroke-width="2" stroke-linejoin="round" />
-                  <path d="M13,9 C16,8 18,10 17,13 C19,15 16,17 13,16 C10,17 9,14 11,12 C9,10 11,8 13,9 Z" fill="#1f1712" />
-                  <path d="M28,6 C31,5 33,7 32,10 C34,11 32,14 29,13 C27,14 25,12 27,10 C25,8 26,6 28,6 Z" fill="#1f1712" />
-                  <use href="#dash-doodle-kuh-beine" />
-                </g>
-
-                <!-- Weidezaun: zieht sich in leichten Wellen durchs Bild,
-                     Pfostenhöhe variiert (kürzer in der "fernen" Senke um
-                     x=700, länger an den Enden) für räumliche Tiefe. Läuft
-                     absichtlich vor den drei weiter entfernten Kühen oben,
-                     aber hinter den beiden näheren Kühen unten. -->
-                <path d="M560,148 C559,156 561,161 560,166" fill="none" stroke="var(--wood-700)" stroke-width="3.2" stroke-linecap="round" />
-                <path d="M600,144 C599,150 601,155 600,159" fill="none" stroke="var(--wood-700)" stroke-width="3.2" stroke-linecap="round" />
-                <path d="M650,132 C649,137 651,140 650,144" fill="none" stroke="var(--wood-700)" stroke-width="3" stroke-linecap="round" />
-                <path d="M700,124 C699,128 701,132 700,135" fill="none" stroke="var(--wood-700)" stroke-width="3" stroke-linecap="round" />
-                <path d="M750,128 C749,133 751,137 750,140" fill="none" stroke="var(--wood-700)" stroke-width="3" stroke-linecap="round" />
-                <path d="M800,138 C799,144 801,148 800,152" fill="none" stroke="var(--wood-700)" stroke-width="3.2" stroke-linecap="round" />
-                <path d="M850,146 C849,153 851,158 850,162" fill="none" stroke="var(--wood-700)" stroke-width="3.2" stroke-linecap="round" />
-                <path d="M880,150 C879,157 881,163 880,168" fill="none" stroke="var(--wood-700)" stroke-width="3.4" stroke-linecap="round" />
-                <path d="M560,148 C580,146 590,142 600,144 C620,146 635,136 650,132 C670,128 685,126 700,124 C715,122 735,126 750,128 C770,130 790,134 800,138 C815,142 835,144 850,146 C862,148 872,149 880,150" fill="none" stroke="var(--wood-700)" stroke-width="3" stroke-linecap="round" />
-                <path d="M560,158 C580,156 590,152 600,154 C620,156 635,145 650,142 C670,137 685,135 700,133 C715,131 735,135 750,137 C770,139 790,143 800,147 C815,151 835,153 850,155 C862,157 872,158 880,159" fill="none" stroke="var(--wood-700)" stroke-width="2.6" stroke-linecap="round" />
-
-                <!-- Braun-weiß gefleckte Kuh, im Feld vorm Zaun -->
-                <g transform="translate(580,120) scale(0.8)">
-                  <use href="#dash-doodle-kuh-koerper" fill="#f7f0e6" stroke="var(--wood-800)" stroke-width="2" stroke-linejoin="round" />
-                  <path d="M13,9 C16,8 18,10 17,13 C19,15 16,17 13,16 C10,17 9,14 11,12 C9,10 11,8 13,9 Z" fill="#7a4a28" />
-                  <path d="M28,6 C31,5 33,7 32,10 C34,11 32,14 29,13 C27,14 25,12 27,10 C25,8 26,6 28,6 Z" fill="#7a4a28" />
-                  <path d="M36,16 C38,15 40,17 39,19 C40,21 38,22 36,21 C34,22 33,20 34,18 C33,17 34,16 36,16 Z" fill="#7a4a28" />
-                  <use href="#dash-doodle-kuh-beine" />
-                </g>
-
-                <!-- Schwarz-weiße Kuh vorn im Bild, am größten -->
-                <g transform="translate(780,121.75) scale(1.25)">
-                  <use href="#dash-doodle-kuh-koerper" fill="#f7f0e6" stroke="var(--wood-800)" stroke-width="2" stroke-linejoin="round" />
-                  <path d="M13,9 C16,8 18,10 17,13 C19,15 16,17 13,16 C10,17 9,14 11,12 C9,10 11,8 13,9 Z" fill="#1f1712" />
-                  <path d="M28,6 C31,5 33,7 32,10 C34,11 32,14 29,13 C27,14 25,12 27,10 C25,8 26,6 28,6 Z" fill="#1f1712" />
-                  <path d="M36,16 C38,15 40,17 39,19 C40,21 38,22 36,21 C34,22 33,20 34,18 C33,17 34,16 36,16 Z" fill="#1f1712" />
-                  <use href="#dash-doodle-kuh-beine" />
-                </g>
-
-                <!-- Zwei Hühner im Hof/am Pfad -->
-                <use href="#dash-doodle-huhn" transform="translate(140,160) scale(0.85)" />
-                <use href="#dash-doodle-huhn" transform="translate(168,166) scale(-0.65,0.65)" />
-
-                <!-- Grasbüschel: bewusst wenige und unregelmäßig verteilt
-                     (unterschiedliche Höhe, nicht auf einer Linie) statt
-                     einer durchgehenden Reihe - dazwischen ein paar kleine
-                     Pflanzen-Sprossen und Blumen für Abwechslung. -->
-                <use href="#dash-doodle-buschel" transform="translate(28,162) rotate(-6) scale(0.9)" />
-                <use href="#dash-doodle-buschel" transform="translate(118,166) rotate(4) scale(1.1)" />
-                <use href="#dash-doodle-pflanze" transform="translate(160,163) rotate(3) scale(0.9)" />
-                <use href="#dash-doodle-buschel" transform="translate(268,160) rotate(-8) scale(0.8)" />
-                <use href="#dash-doodle-buschel" transform="translate(365,167) rotate(5) scale(1.2)" />
-                <use href="#dash-doodle-pflanze" transform="translate(430,161) rotate(-4) scale(0.8)" />
-                <use href="#dash-doodle-buschel" transform="translate(540,165) rotate(-3) scale(1)" />
-                <use href="#dash-doodle-buschel" transform="translate(625,160) rotate(7) scale(0.85)" />
-                <use href="#dash-doodle-pflanze" transform="translate(700,166) rotate(6) scale(1)" />
-                <use href="#dash-doodle-buschel" transform="translate(775,163) rotate(-5) scale(1.15)" />
-                <use href="#dash-doodle-buschel" transform="translate(880,167) rotate(4) scale(0.9)" />
-
-                <!-- Ein paar kleine Blumen, sehr einfach (Stiel + wenige
-                     Punkte), als dezenter Farbtupfer im Gras. -->
-                <g transform="translate(95,166)">
-                  <line x1="0" y1="7" x2="0" y2="0" stroke="#4d7a3a" stroke-width="1.1" stroke-linecap="round" />
-                  <circle cx="0" cy="-2" r="1.5" fill="#c97a8a" />
-                  <circle cx="-2" cy="-0.5" r="1.3" fill="#c97a8a" />
-                  <circle cx="2" cy="-0.5" r="1.3" fill="#c97a8a" />
-                  <circle cx="0" cy="1" r="1.3" fill="#c97a8a" />
-                  <circle cx="0" cy="-0.5" r="1" fill="#e8c542" />
-                </g>
-                <g transform="translate(600,168)">
-                  <line x1="0" y1="6" x2="0" y2="0" stroke="#4d7a3a" stroke-width="1.1" stroke-linecap="round" />
-                  <circle cx="0" cy="-2" r="1.4" fill="#e8c542" />
-                  <circle cx="-1.8" cy="-0.5" r="1.2" fill="#e8c542" />
-                  <circle cx="1.8" cy="-0.5" r="1.2" fill="#e8c542" />
-                  <circle cx="0" cy="-0.5" r="0.9" fill="#a67f34" />
-                </g>
-                <g transform="translate(840,164)">
-                  <line x1="0" y1="7" x2="0" y2="0" stroke="#4d7a3a" stroke-width="1.1" stroke-linecap="round" />
-                  <circle cx="0" cy="-2" r="1.5" fill="#b895d9" />
-                  <circle cx="-2" cy="-0.5" r="1.3" fill="#b895d9" />
-                  <circle cx="2" cy="-0.5" r="1.3" fill="#b895d9" />
-                  <circle cx="0" cy="1" r="1.3" fill="#b895d9" />
-                  <circle cx="0" cy="-0.5" r="1" fill="#e8c542" />
-                </g>
-              </svg>
             </div>
 
             <button type="button" class="dash-hinweis" id="dash-bestellungen-hinweis" data-quicklink="bestellungen" hidden>
@@ -1713,30 +1435,30 @@
        teilen können. Die Reihenfolge entspricht exakt den frueheren
        nummerierten Abschnitten in app.js und darf nicht vertauscht werden:
        js/main.js muss immer zuletzt kommen, da es die App erst startet. -->
-  <script defer src="js/firebase-config.js?v=63"></script>
-  <script defer src="js/core/config.js?v=63"></script>
-  <script defer src="js/core/state.js?v=63"></script>
-  <script defer src="js/core/dom.js?v=63"></script>
-  <script defer src="js/core/firebase-init.js?v=63"></script>
-  <script defer src="js/core/utils.js?v=63"></script>
-  <script defer src="js/ui/modals.js?v=63"></script>
-  <script defer src="js/ui/nav.js?v=63"></script>
-  <script defer src="js/ui/presence.js?v=63"></script>
-  <script defer src="js/views/waren.js?v=63"></script>
-  <script defer src="js/views/lager.js?v=63"></script>
-  <script defer src="js/views/rezepte.js?v=63"></script>
-  <script defer src="js/views/bestellungen.js?v=63"></script>
-  <script defer src="js/views/handelsrechner.js?v=63"></script>
-  <script defer src="js/views/kontakte.js?v=63"></script>
-  <script defer src="js/views/verkaeufe.js?v=63"></script>
-  <script defer src="js/views/kunden.js?v=63"></script>
-  <script defer src="js/views/hofbuch.js?v=63"></script>
-  <script defer src="js/views/statistiken.js?v=63"></script>
-  <script defer src="js/views/dashboard.js?v=63"></script>
-  <script defer src="js/views/einstellungen.js?v=63"></script>
-  <script defer src="js/views/admin.js?v=63"></script>
-  <script defer src="js/ui/version-check.js?v=63"></script>
-  <script defer src="js/main.js?v=63"></script>
-  <script type="module" src="js/auth.js?v=63"></script>
+  <script defer src="js/firebase-config.js?v=64"></script>
+  <script defer src="js/core/config.js?v=64"></script>
+  <script defer src="js/core/state.js?v=64"></script>
+  <script defer src="js/core/dom.js?v=64"></script>
+  <script defer src="js/core/firebase-init.js?v=64"></script>
+  <script defer src="js/core/utils.js?v=64"></script>
+  <script defer src="js/ui/modals.js?v=64"></script>
+  <script defer src="js/ui/nav.js?v=64"></script>
+  <script defer src="js/ui/presence.js?v=64"></script>
+  <script defer src="js/views/waren.js?v=64"></script>
+  <script defer src="js/views/lager.js?v=64"></script>
+  <script defer src="js/views/rezepte.js?v=64"></script>
+  <script defer src="js/views/bestellungen.js?v=64"></script>
+  <script defer src="js/views/handelsrechner.js?v=64"></script>
+  <script defer src="js/views/kontakte.js?v=64"></script>
+  <script defer src="js/views/verkaeufe.js?v=64"></script>
+  <script defer src="js/views/kunden.js?v=64"></script>
+  <script defer src="js/views/hofbuch.js?v=64"></script>
+  <script defer src="js/views/statistiken.js?v=64"></script>
+  <script defer src="js/views/dashboard.js?v=64"></script>
+  <script defer src="js/views/einstellungen.js?v=64"></script>
+  <script defer src="js/views/admin.js?v=64"></script>
+  <script defer src="js/ui/version-check.js?v=64"></script>
+  <script defer src="js/main.js?v=64"></script>
+  <script type="module" src="js/auth.js?v=64"></script>
 </body>
 </html>

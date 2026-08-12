@@ -1,14 +1,16 @@
 /* --------------------------------------------------------------------------
    11. Übersicht (Dashboard)
    -------------------------------------------------------------------------- */
-/* Kopfbereich der Übersicht: dunkel bei der Begrüßung (für Lesbarkeit),
-   wärmt sich nach rechts hin zu einem golden-dämmrigen Abendhimmel auf, der
-   zur Bauernhof-Kritzelei (inkl. Sonne) passt statt eines flachen
-   Braun-Verlaufs über die ganze Karte. */
+/* Kopfbereich der Übersicht: echtes Farm-Illustrations-Foto als Hintergrund
+   über die ganze Karte (assets/background/dashboard-farm-crop.png - vom
+   Team bereitgestellt, auf den reinen Bildinhalt zugeschnitten, keine
+   schwarzen Ränder mehr). Ein Verlauf von links (dunkel, für die Lesbarkeit
+   der Begrüßung) nach rechts (transparent, Bild kommt voll durch) liegt
+   darüber - gleiche Technik wie beim Login-Hintergrund (siehe auth.css). */
 .dash-hero {
   background:
-    radial-gradient(ellipse 480px 220px at 82% 18%, rgba(201, 138, 99, 0.22), transparent 65%),
-    linear-gradient(115deg, var(--wood-900) 0%, var(--wood-800) 38%, #5c3a26 62%, #7d472f 82%, #a9653f 100%);
+    linear-gradient(90deg, rgba(27, 21, 16, 0.88) 0%, rgba(27, 21, 16, 0.6) 35%, rgba(27, 21, 16, 0.15) 65%, transparent 100%),
+    url("../../assets/background/dashboard-farm-crop.png") center / cover no-repeat;
   border: 1px solid var(--wood-line);
   border-left: 3px solid var(--brass);
   border-radius: var(--radius-lg);
@@ -26,26 +28,6 @@
 .dash-hero__greeting {
   position: relative;
   z-index: 1;
-}
-
-/* Bauernhof-Szene (Haus, 2 Bäume, Scheune, Pferd, Zaun mit 3 Kühen + Schaf,
-   Wolken) rechts im Hero, im selben handgezeichneten Stil wie das Kuh-Logo
-   im Sidebar-Kopf (siehe .sidebar__brand-icon in index.html) - reine Deko,
-   daher pointer-events: none und aria-hidden nicht nötig (role="img" mit
-   aria-label trägt die Beschreibung). Bewusst über die Breite (statt wie
-   vorher über height:100%) skaliert, mit height:auto: so bestimmt allein
-   das viewBox-Seitenverhältnis (920/170) die Höhe, ohne dass die Grafik
-   durch eine zu knappe max-width je gestaucht werden könnte - bei zu wenig
-   Platz schneidet stattdessen das overflow:hidden des .dash-hero oben etwas
-   vom Himmel (Wolken/Sonne) ab, nie die Szene selbst. */
-.dash-hero__doodle {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: min(820px, 62%);
-  height: auto;
-  pointer-events: none;
-  z-index: 0;
 }
 
 .dash-hero__eyebrow {
