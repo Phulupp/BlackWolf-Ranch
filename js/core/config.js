@@ -18,7 +18,7 @@
   /* ------------------------------------------------------------------------
      1. Konstanten
      ------------------------------------------------------------------------ */
-  const VERSION_AKTUELL = 72;
+  const VERSION_AKTUELL = 73;
 
   // Ränge des Hofes (rein organisatorisch — Verwalterrechte sind unabhängig
   // davon und werden separat je Benutzer vergeben, siehe isAdmin).
@@ -227,7 +227,7 @@
   // Ton von --status-danger-bright) - siehe HOFBUCH_FARBEN_ALIASE direkt
   // darunter für bereits gespeicherte Notizen mit dem alten Rot-Ton.
   const HOFBUCH_FARBEN = [
-    { id: "rot", label: "Rot", hex: "#e2402e" },
+    { id: "rot", label: "Rot", hex: "#bf1300" },
     { id: "orange", label: "Orange", hex: "#d9a552" },
     { id: "gruen", label: "Grün", hex: "#8fae6a" },
     { id: "blau", label: "Blau", hex: "#6f9dc9" },
@@ -239,7 +239,7 @@
   // (siehe saniereFormatierterText in js/core/utils.js), damit z. B. alte
   // rot markierte Notizen nicht plötzlich unfarbig werden, nur weil sich der
   // Rot-Ton geändert hat.
-  const HOFBUCH_FARBEN_ALIASE = { "#c97a63": "#e2402e" };
+  const HOFBUCH_FARBEN_ALIASE = { "#c97a63": "#bf1300", "#e2402e": "#bf1300" };
 
   const VIEW_META = {
     uebersicht: { title: "Übersicht", subtitle: "Hier behältst du alles im Blick." },
