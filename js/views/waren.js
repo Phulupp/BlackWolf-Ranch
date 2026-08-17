@@ -183,7 +183,9 @@
                 ${griff}
                 <span class="warenbuch-zeile__eintrag">
                   <span class="warenbuch-zeile__name">${escapeHtml(p.name)}</span>
-                  <span class="warenbuch-zeile__preis">${formatGeld(p.verkaufspreis)}</span>
+                  <span class="warenbuch-zeile__preis">${formatGeld(p.verkaufspreis)}${
+              p.privatpreis != null ? ` · Privat ${formatGeld(p.privatpreis)}` : ""
+            }</span>
                 </span>
                 ${aktionen}
               </div>`;
@@ -323,6 +325,7 @@
       el.wareKategorieInput.value = PRODUKT_KATEGORIE_SONSTIGE;
       aktualisiereCustomSelect(el.wareKategorieInput);
       el.wareVerkaufspreisInput.value = "";
+      if (el.warePrivatpreisInput) el.warePrivatpreisInput.value = "";
       versteckeFeldFehler(el.wareError);
       oeffneModal("modal-ware");
     });
@@ -341,6 +344,7 @@
         el.wareKategorieInput.value = ermittleProduktKategorie(p);
         aktualisiereCustomSelect(el.wareKategorieInput);
         el.wareVerkaufspreisInput.value = p.verkaufspreis;
+        if (el.warePrivatpreisInput) el.warePrivatpreisInput.value = p.privatpreis != null ? p.privatpreis : "";
         versteckeFeldFehler(el.wareError);
         oeffneModal("modal-ware");
       } else if (delBtn) {
@@ -360,22 +364,45 @@
       const name = el.wareNameInput.value.trim();
       const kategorie = el.wareKategorieInput.value || PRODUKT_KATEGORIE_SONSTIGE;
       const vk = parseFloat(el.wareVerkaufspreisInput.value);
+      const privatpreisRoh = el.warePrivatpreisInput ? el.warePrivatpreisInput.value.trim() : "";
 
       if (!name) return zeigeFeldFehler(el.wareError, "Bitte gib einen Produktnamen ein.");
       if (!isFinite(vk) || vk < 0) return zeigeFeldFehler(el.wareError, "Bitte gib einen gültigen Verkaufspreis ein.");
 
+      // Privatverkaufspreis ist bewusst optional (siehe Feld-Beschriftung
+      // "optional" im modal-ware) - nur bei Waren wie Milch gepflegt, die
+      // persönlich zu einem abweichenden Preis direkt verkauft werden. Leeres
+      // Feld => kein Sonderpreis, kein Fehler.
+      let privatpreis = null;
+      if (privatpreisRoh !== "") {
+        privatpreis = parseFloat(privatpreisRoh);
+        if (!isFinite(privatpreis) || privatpreis < 0) {
+          return zeigeFeldFehler(el.wareError, "Bitte gib einen gültigen Privatverkaufspreis ein oder lasse das Feld leer.");
+        }
+      }
+
       const id = el.wareEditingId.value;
       try {
         if (id) {
-          await db.collection(PRODUKTE_COLLECTION).doc(id).update({ name, kategorie, verkaufspreis: vk });
+          await db
+            .collection(PRODUKTE_COLLECTION)
+            .doc(id)
+            .update({
+              name,
+              kategorie,
+              verkaufspreis: vk,
+              privatpreis: privatpreis !== null ? privatpreis : firebase.firestore.FieldValue.delete(),
+            });
         } else {
-          await db.collection(PRODUKTE_COLLECTION).add({
+          const neuesProdukt = {
             name,
             kategorie,
             verkaufspreis: vk,
             lagerMenge: 0,
             reihenfolge: produkte.length + 1,
-          });
+          };
+          if (privatpreis !== null) neuesProdukt.privatpreis = privatpreis;
+          await db.collection(PRODUKTE_COLLECTION).add(neuesProdukt);
         }
         schliesseModal("modal-ware");
         zeigeToast("Produkt gespeichert.");

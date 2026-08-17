@@ -27,6 +27,60 @@
       );
   }
 
+  // --- Formatierungs-Symbolleiste (Fett/Kursiv/Unterstrichen + Farben) -----
+  // Ein bewusst kleines, dezentes Werkzeugleisten-Feld direkt über dem
+  // jeweiligen contenteditable-Textfeld (siehe .richtext im HTML), wirkt per
+  // document.execCommand auf das danebenliegende Editor-Element. Wird für
+  // "Neue Notiz ans Schwarze Brett" UND das Bearbeiten-Modal mit denselben
+  // Buttons aufgerufen. Beim Speichern (Formular-Submit bzw.
+  // btn-confirm-hofbuch-edit) wird der Inhalt IMMER durch
+  // saniereFormatierterText geschickt (siehe js/core/utils.js), bevor er in
+  // Firestore landet oder wieder als HTML gerendert wird.
+  function initialisiereHofbuchEditor(editorEl) {
+    if (!editorEl) return;
+    const wrapper = editorEl.closest(".richtext");
+    const toolbar = wrapper ? wrapper.querySelector(".richtext__toolbar") : null;
+    if (!toolbar) return;
+
+    toolbar.innerHTML =
+      `<button type="button" class="richtext__btn" data-cmd="bold" title="Fett"><strong>F</strong></button>` +
+      `<button type="button" class="richtext__btn" data-cmd="italic" title="Kursiv"><em>K</em></button>` +
+      `<button type="button" class="richtext__btn" data-cmd="underline" title="Unterstrichen"><u>U</u></button>` +
+      `<span class="richtext__sep" aria-hidden="true"></span>` +
+      HOFBUCH_FARBEN.map(
+        (f) =>
+          `<button type="button" class="richtext__farbe" data-farbe="${f.hex}" title="${escapeHtml(f.label)} markieren" aria-label="${escapeHtml(
+            f.label
+          )} markieren" style="--farbe:${f.hex};"></button>`
+      ).join("") +
+      `<span class="richtext__sep" aria-hidden="true"></span>` +
+      `<button type="button" class="richtext__btn" data-cmd="removeFormat" title="Formatierung entfernen">⨯</button>`;
+
+    toolbar.addEventListener("click", (event) => {
+      const btn = event.target.closest("button");
+      if (!btn) return;
+      event.preventDefault();
+      editorEl.focus();
+      if (btn.dataset.farbe) {
+        document.execCommand("foreColor", false, btn.dataset.farbe);
+      } else if (btn.dataset.cmd) {
+        document.execCommand(btn.dataset.cmd, false, null);
+      }
+    });
+  }
+
+  try {
+    document.execCommand("defaultParagraphSeparator", false, "br");
+    document.execCommand("styleWithCSS", false, true);
+  } catch (fehler) {
+    // Beides nur Komfort/Konsistenz beim Erzeugen der Formatierung - der
+    // Sanitizer in js/core/utils.js kommt auch ohne diese Einstellungen mit
+    // dem Ergebnis zurecht (z. B. <div>-Zeilenumbrüche, <font>-Farben).
+  }
+
+  initialisiereHofbuchEditor(el.hofbuchTextInput);
+  initialisiereHofbuchEditor(el.hofbuchEditText);
+
   // Darf der aktuelle Nutzer diesen Hofbuch-Eintrag bearbeiten/anheften/
   // löschen? Verwalter dürfen immer, der Verfasser darf seinen eigenen
   // Eintrag verwalten (siehe firestore.rules: gleiche Bedingung serverseitig
@@ -36,23 +90,42 @@
     return !!(aktuellerNutzer && eintrag.autorUid && eintrag.autorUid === aktuellerNutzer.uid);
   }
 
+  // Wandelt eine alte, rein textbasierte Notiz (vor Einführung der
+  // Formatierung, echte "\n"-Zeilenumbrüche) in befüllbares HTML fürs
+  // contenteditable-Feld um - ohne das würden mehrzeilige alte Notizen beim
+  // Öffnen zum Bearbeiten optisch zu einer einzigen Zeile zusammenfallen.
+  function hofbuchPlainTextZuBearbeitbaremHtml(text) {
+    return escapeHtml(text || "").replace(/\n/g, "<br>");
+  }
+
   function hofbuchZeitstempelInMillis(ts) {
     if (!ts) return 0;
     return typeof ts.toMillis === "function" ? ts.toMillis() : new Date(ts).getTime();
   }
 
+  // Liefert die tatsächlich anzuzeigende Kategorie-ID eines Eintrags -
+  // löst dabei alte, nicht mehr existierende Kategorie-IDs (siehe
+  // HOFBUCH_KATEGORIE_ALIASE) auf die jeweils passende neue ID auf, damit
+  // Badge-Farbe/-Label UND der Kategorie-Filter für alte Einträge konsistent
+  // bleiben (nicht nur die Anzeige, siehe gefiltertUndSortiertHofbuch unten).
+  function hofbuchEintragKategorieId(eintrag) {
+    const roh = eintrag.kategorie || HOFBUCH_KATEGORIE_STANDARD;
+    return HOFBUCH_KATEGORIE_ALIASE[roh] || roh;
+  }
+
+  function hofbuchEintragKategorie(eintrag) {
+    const id = hofbuchEintragKategorieId(eintrag);
+    return HOFBUCH_KATEGORIEN.find((k) => k.id === id) || HOFBUCH_KATEGORIEN[HOFBUCH_KATEGORIEN.length - 1];
+  }
+
   // Filtert nach Suchbegriff (Titel/Inhalt/Autor) und sortiert danach:
   // angeheftete Einträge zuerst, innerhalb beider Gruppen je nach
   // gewählter Reihenfolge neueste oder älteste zuerst.
-  function hofbuchEintragKategorie(eintrag) {
-    return HOFBUCH_KATEGORIEN.find((k) => k.id === (eintrag.kategorie || HOFBUCH_KATEGORIE_STANDARD)) || HOFBUCH_KATEGORIEN[HOFBUCH_KATEGORIEN.length - 1];
-  }
-
   function gefiltertUndSortiertHofbuch() {
     const begriff = hofbuchSuche.trim().toLowerCase();
     let liste = hofbuchEintraege;
     if (hofbuchKategorieFilter !== "alle") {
-      liste = liste.filter((e) => (e.kategorie || HOFBUCH_KATEGORIE_STANDARD) === hofbuchKategorieFilter);
+      liste = liste.filter((e) => hofbuchEintragKategorieId(e) === hofbuchKategorieFilter);
     }
     if (begriff) {
       liste = liste.filter(
@@ -145,7 +218,7 @@
               }
             </div>
           </div>
-          <p class="hofbuch-eintrag__text">${escapeHtml(e.text)}</p>
+          <p class="hofbuch-eintrag__text">${e.textHtml ? saniereFormatierterText(e.textHtml) : escapeHtml(e.text)}</p>
         </article>`;
       })
       .join("");
@@ -155,7 +228,8 @@
     el.formHofbuch.addEventListener("submit", async (event) => {
       event.preventDefault();
       const titel = el.hofbuchTitelInput.value.trim();
-      const text = el.hofbuchTextInput.value.trim();
+      const text = el.hofbuchTextInput.textContent.trim();
+      const textHtml = saniereFormatierterText(el.hofbuchTextInput.innerHTML);
       const kategorie = el.hofbuchKategorieInput && el.hofbuchKategorieInput.value ? el.hofbuchKategorieInput.value : HOFBUCH_KATEGORIE_STANDARD;
       if (!titel || !text) return zeigeToast("Bitte Überschrift und Text eintragen.");
 
@@ -163,6 +237,7 @@
         await db.collection(HOFBUCH_COLLECTION).add({
           titel,
           text,
+          textHtml,
           kategorie,
           autor: aktuellerNutzer ? aktuellerNutzer.name : null,
           autorUid: aktuellerNutzer ? aktuellerNutzer.uid : null,
@@ -170,6 +245,7 @@
           erstelltAm: firebase.firestore.FieldValue.serverTimestamp(),
         });
         el.formHofbuch.reset();
+        el.hofbuchTextInput.innerHTML = "";
         if (el.hofbuchKategorieInput) {
           el.hofbuchKategorieInput.value = HOFBUCH_KATEGORIE_STANDARD;
           aktualisiereCustomSelect(el.hofbuchKategorieInput);
@@ -223,10 +299,12 @@
         el.hofbuchEditId.value = eintrag.id;
         el.hofbuchEditTitel.value = eintrag.titel || "";
         if (el.hofbuchEditKategorie) {
-          el.hofbuchEditKategorie.value = eintrag.kategorie || HOFBUCH_KATEGORIE_STANDARD;
+          el.hofbuchEditKategorie.value = hofbuchEintragKategorieId(eintrag);
           aktualisiereCustomSelect(el.hofbuchEditKategorie);
         }
-        el.hofbuchEditText.value = eintrag.text || "";
+        el.hofbuchEditText.innerHTML = eintrag.textHtml
+          ? saniereFormatierterText(eintrag.textHtml)
+          : hofbuchPlainTextZuBearbeitbaremHtml(eintrag.text);
         versteckeFeldFehler(el.hofbuchEditError);
         oeffneModal("modal-hofbuch-edit");
       } else if (delBtn) {
@@ -244,7 +322,8 @@
       versteckeFeldFehler(el.hofbuchEditError);
       const id = el.hofbuchEditId.value;
       const titel = el.hofbuchEditTitel.value.trim();
-      const text = el.hofbuchEditText.value.trim();
+      const text = el.hofbuchEditText.textContent.trim();
+      const textHtml = saniereFormatierterText(el.hofbuchEditText.innerHTML);
       const kategorie = el.hofbuchEditKategorie && el.hofbuchEditKategorie.value ? el.hofbuchEditKategorie.value : HOFBUCH_KATEGORIE_STANDARD;
       if (!titel || !text) return zeigeFeldFehler(el.hofbuchEditError, "Bitte Überschrift und Text eintragen.");
       try {
@@ -254,6 +333,7 @@
           .update({
             titel,
             text,
+            textHtml,
             kategorie,
             bearbeiter: aktuellerNutzer ? aktuellerNutzer.name : null,
             bearbeitetAm: firebase.firestore.FieldValue.serverTimestamp(),

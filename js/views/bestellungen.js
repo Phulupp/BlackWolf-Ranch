@@ -14,16 +14,19 @@
   //                  rabattProzent, endpreis, gesamtpreis, erledigt }, ...],
   //     status, notiz, archiviert,
   //     erstelltAm, erstelltVon, bearbeiter,
-  //     abgeschlossenAm
+  //     abgeschlossenAm, archiviertAm
   //   }
   // Eine Bestellung mit status === "Abgeschlossen" IST der Verkauf - es gibt
   // keine separate Verkaufs-Collection mehr. "abgeschlossenAm" ist der
   // Zeitpunkt des (ersten) Abschlusses und Grundlage für die
   // Verkaufshistorie sowie "Heutiger Umsatz"/"Gesamtgewinn" im Dashboard.
   // "Archiv" ist bewusst KEIN vierter Status, sondern ein eigenes Flag
-  // ("archiviert"), das nur bei Status "Abgeschlossen" gesetzt werden kann -
-  // archivierte Bestellungen dürfen laut Firestore-Regel nie gelöscht
-  // werden und bleiben so dauerhaft als Beleg einsehbar.
+  // ("archiviert"), das nur bei Status "Abgeschlossen" gesetzt werden kann.
+  // Abgeschlossene Bestellungen wandern automatisch nach
+  // BESTELLUNG_AUTO_ARCHIV_TAGE Tagen (ab "abgeschlossenAm") ins Archiv;
+  // archivierte Bestellungen werden automatisch nach
+  // BESTELLUNG_AUTO_LOESCH_TAGE Tagen (ab "archiviertAm") endgültig
+  // gelöscht - siehe pruefeAutomatischeArchivierungUndLoeschung unten.
   // "bestellungEntwurfPositionen" ist die Arbeitskopie der Produktliste,
   // während das Bestellungs-Modal offen ist (siehe oeffneBestellungModal).
   let bestellungEntwurfPositionen = [];
@@ -75,6 +78,7 @@
           // mit den aktuellen Bestellungen synchron.
           sorgeFuerKundenBackfill();
           renderKunden();
+          pruefeAutomatischeArchivierungUndLoeschung();
         },
         (fehler) => {
           if (!planeListenerNeustart("Bestellungen", starteBestellungenListener, fehler)) {
@@ -82,6 +86,57 @@
           }
         }
       );
+  }
+
+  // --- Automatische Archivierung & Löschung ---------------------------------
+  // Diese Static-Site hat keinen Server/Cronjob - "automatisch" heißt hier:
+  // sobald irgendein freigegebener Nutzer die App öffnet, prüft der ohnehin
+  // schon laufende Bestellungen-Listener (der ALLE Bestellungen an jeden
+  // Client liefert) einmal, ob Bestellungen fällig sind, und holt das dann
+  // für ALLE fälligen Bestellungen nach - nicht nur für die gerade
+  // angezeigten. Ist niemand eingeloggt, passiert in der Zwischenzeit
+  // nichts; das nächste App-Öffnen holt es nach.
+  // - Abgeschlossen -> Archiv nach BESTELLUNG_AUTO_ARCHIV_TAGE Tagen (ab
+  //   "abgeschlossenAm").
+  // - Archiv -> endgültig gelöscht nach BESTELLUNG_AUTO_LOESCH_TAGE Tagen
+  //   (ab "archiviertAm"). Das hebt bewusst die frühere "Archiv = für immer"
+  //   Regel auf (siehe angepasste Löschregel in firestore.rules).
+  let autoArchivLaeuft = false;
+  async function pruefeAutomatischeArchivierungUndLoeschung() {
+    if (autoArchivLaeuft || !db) return;
+    const jetzt = Date.now();
+    const TAG_MS = 24 * 60 * 60 * 1000;
+
+    const zuArchivieren = bestellungen.filter((b) => {
+      if (b.status !== "Abgeschlossen" || b.archiviert === true) return false;
+      const ms = zeitstempelWert(b.abgeschlossenAm);
+      return !!ms && jetzt - ms >= BESTELLUNG_AUTO_ARCHIV_TAGE * TAG_MS;
+    });
+    const zuLoeschen = bestellungen.filter((b) => {
+      if (b.archiviert !== true) return false;
+      const ms = zeitstempelWert(b.archiviertAm);
+      return !!ms && jetzt - ms >= BESTELLUNG_AUTO_LOESCH_TAGE * TAG_MS;
+    });
+    if (zuArchivieren.length === 0 && zuLoeschen.length === 0) return;
+
+    autoArchivLaeuft = true;
+    try {
+      const batch = db.batch();
+      zuArchivieren.forEach((b) => {
+        batch.update(db.collection(BESTELLUNGEN_COLLECTION).doc(b.id), {
+          archiviert: true,
+          archiviertAm: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+      });
+      zuLoeschen.forEach((b) => {
+        batch.delete(db.collection(BESTELLUNGEN_COLLECTION).doc(b.id));
+      });
+      await batch.commit();
+    } catch (fehler) {
+      console.error("Automatische Archivierung/Löschung von Bestellungen fehlgeschlagen:", fehler);
+    } finally {
+      autoArchivLaeuft = false;
+    }
   }
 
   function bestellungProdukteZeilen(produkteListe) {
@@ -891,12 +946,16 @@
       if (!id) return;
       fordereLoeschungAn(
         "Bestellung archivieren",
-        "Möchtest du diese Bestellung wirklich archivieren? Sie bleibt danach dauerhaft im Archiv einsehbar, kann aber nicht mehr bearbeitet oder gelöscht werden.",
+        `Möchtest du diese Bestellung wirklich archivieren? Sie kann danach nicht mehr bearbeitet werden und wird nach ${BESTELLUNG_AUTO_LOESCH_TAGE} Tagen im Archiv automatisch endgültig gelöscht.`,
         async () => {
           await db
             .collection(BESTELLUNGEN_COLLECTION)
             .doc(id)
-            .update({ archiviert: true, bearbeiter: aktuellerNutzer ? aktuellerNutzer.name : null });
+            .update({
+              archiviert: true,
+              archiviertAm: firebase.firestore.FieldValue.serverTimestamp(),
+              bearbeiter: aktuellerNutzer ? aktuellerNutzer.name : null,
+            });
           schliesseModal("modal-bestellung");
           zeigeToast("Bestellung archiviert.");
         }

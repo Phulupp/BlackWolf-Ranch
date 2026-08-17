@@ -235,14 +235,21 @@ service cloud.firestore {
 
     // Bestellungen: jeder freigegebene Nutzer darf Bestellungen anlegen und
     // bearbeiten (z. B. Status ändern, Produkte/Preise/Rabatte anpassen).
-    // Löschen ist NUR erlaubt, solange die Bestellung noch nicht archiviert
-    // ist ("archiviert" != true) - archivierte Bestellungen dienen als
-    // dauerhafter Beleg abgeschlossener Geschäfte und dürfen niemals
-    // gelöscht werden, auch nicht von Verwaltern.
+    // Löschen ist erlaubt, solange die Bestellung noch nicht archiviert ist
+    // ("archiviert" != true), ODER wenn sie archiviert ist UND seit
+    // mindestens 30 Tagen archiviert ist (request.time >= archiviertAm + 30
+    // Tage) - das ist die serverseitige Absicherung derselben Regel, die der
+    // Client automatisch anwendet (siehe
+    // pruefeAutomatischeArchivierungUndLoeschung in js/views/bestellungen.js):
+    // frisch archivierte Bestellungen bleiben vor den 30 Tagen weiterhin vor
+    // jeder Löschung geschützt, auch vor Verwaltern.
     match /bestellungen/{dokument} {
       allow read: if istFreigegeben();
       allow create, update: if istFreigegeben();
-      allow delete: if istFreigegeben() && resource.data.get('archiviert', false) != true;
+      allow delete: if istFreigegeben() &&
+                    (resource.data.get('archiviert', false) != true ||
+                     (resource.data.get('archiviertAm', null) != null &&
+                      request.time >= resource.data.archiviertAm + duration.value(30, 'd')));
     }
 
     // Handelsrechner-Angebote (Ledger "Letzte Angebote").

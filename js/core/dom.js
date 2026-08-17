@@ -113,6 +113,7 @@
     wareNameInput: document.getElementById("ware-name-input"),
     wareKategorieInput: document.getElementById("ware-kategorie-input"),
     wareVerkaufspreisInput: document.getElementById("ware-verkaufspreis-input"),
+    warePrivatpreisInput: document.getElementById("ware-privatpreis-input"),
     wareError: document.getElementById("ware-error"),
     btnConfirmWare: document.getElementById("btn-confirm-ware"),
 
@@ -129,6 +130,9 @@
     rechnerUnternehmen: document.getElementById("rechner-unternehmen"),
     rechnerProdukt: document.getElementById("rechner-produkt"),
     rechnerMenge: document.getElementById("rechner-menge"),
+    rechnerPreisbasisWrap: document.getElementById("rechner-preisbasis-wrap"),
+    rechnerPreisbasisHandelRadio: document.querySelector('input[name="rechner-preisbasis"][value="handel"]'),
+    rechnerPreisbasisPrivatRadio: document.querySelector('input[name="rechner-preisbasis"][value="privat"]'),
     rechnerModusRabattRadio: document.querySelector('input[name="rechner-modus"][value="rabatt"]'),
     rechnerModusPreisRadio: document.querySelector('input[name="rechner-modus"][value="preis"]'),
     rechnerModusRabattWrap: document.getElementById("rechner-modus-rabatt"),

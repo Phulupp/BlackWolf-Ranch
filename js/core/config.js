@@ -18,7 +18,7 @@
   /* ------------------------------------------------------------------------
      1. Konstanten
      ------------------------------------------------------------------------ */
-  const VERSION_AKTUELL = 66;
+  const VERSION_AKTUELL = 70;
 
   // Ränge des Hofes (rein organisatorisch — Verwalterrechte sind unabhängig
   // davon und werden separat je Benutzer vergeben, siehe isAdmin).
@@ -99,6 +99,14 @@
   // vergessen. Nur noch der Startwert, siehe Hinweis oben.
   const BESTELLUNG_ALT_SCHWELLE_TAGE_STANDARD = 3;
 
+  // Nach wie vielen Tagen eine abgeschlossene Bestellung automatisch ins
+  // Archiv wandert (gerechnet ab "abgeschlossenAm") bzw. eine bereits
+  // archivierte Bestellung automatisch endgültig gelöscht wird (gerechnet ab
+  // "archiviertAm") - siehe pruefeAutomatischeArchivierungUndLoeschung in
+  // js/views/bestellungen.js.
+  const BESTELLUNG_AUTO_ARCHIV_TAGE = 14;
+  const BESTELLUNG_AUTO_LOESCH_TAGE = 30;
+
   // Firestore-Collection/-Dokument für die admin-editierbaren Hof-weiten
   // Einstellungen (Lieferpauschale, Warnschwellen, Stammkunde-Kriterium) -
   // siehe starteHofEinstellungenListener in js/views/einstellungen.js. Wird
@@ -176,15 +184,41 @@
   // definierte Liste statt einer admin-verwaltbaren Firestore-Collection
   // (anders als DEFAULT_KONTAKTE_ROLLEN oben): der Bedarf für eine so kleine
   // Nutzerzahl ist gering, das Muster lässt sich bei Bedarf später leicht
-  // nachrüsten. "farbe: null" bei "Sonstiges" sorgt wie beim Kontakte-
-  // Sammelbecken dafür, dass dafür kein farbiger Badge angezeigt wird.
+  // nachrüsten. "farbe: null" bei "Allgemein" sorgt wie vorher bei
+  // "Sonstiges" dafür, dass dafür kein farbiger Badge angezeigt wird - es ist
+  // die neue Auffangkategorie (siehe HOFBUCH_KATEGORIE_STANDARD). "Vorlagen"
+  // (früher "Sonstiges", ID bewusst unverändert gelassen) ist für
+  // wiederverwendbare Unterlagen zum Kopieren gedacht (z. B. Verkaufstexte).
   const HOFBUCH_KATEGORIEN = [
-    { id: "ankuendigung", label: "Ankündigung", farbe: "#bd9143" },
     { id: "wichtig", label: "Wichtig", farbe: "#8a3a3a" },
-    { id: "frage", label: "Frage", farbe: "#5b7a99" },
-    { id: "sonstiges", label: "Sonstiges", farbe: null },
+    { id: "allgemein", label: "Allgemein", farbe: null },
+    { id: "sonstiges", label: "Vorlagen", farbe: "#bd9143" },
   ];
-  const HOFBUCH_KATEGORIE_STANDARD = "sonstiges";
+  const HOFBUCH_KATEGORIE_STANDARD = "allgemein";
+
+  // "Ankündigung" und "Frage" gibt es als eigene Kategorien nicht mehr
+  // (siehe HOFBUCH_KATEGORIEN oben) - bereits gespeicherte Hofbuch-Einträge
+  // mit diesen alten Kategorie-IDs sollen dadurch aber weder verschwinden
+  // noch falsch beschriftet werden. Diese Zuordnung wird nur beim ANZEIGEN
+  // angewendet (siehe hofbuchEintragKategorieId in js/views/hofbuch.js) -
+  // die gespeicherten Firestore-Dokumente selbst werden nicht verändert.
+  const HOFBUCH_KATEGORIE_ALIASE = { ankuendigung: "wichtig", frage: "allgemein" };
+
+  // Feste, kleine Markierungsfarben-Palette für den Formatierungs-Editor am
+  // Schwarzen Brett (fett/kursiv/unterstrichen + Textfarbe, siehe
+  // initialisiereHofbuchEditor in js/views/hofbuch.js) - bewusst als feste
+  // Liste statt freier Farbwahl, weil dieselbe Liste 1:1 als Positivliste im
+  // HTML-Sanitizer (saniereFormatierterText in js/core/utils.js) dient: nur
+  // diese Farben dürfen beim Rendern als echtes HTML landen, alles andere
+  // wird verworfen. Farbtöne bewusst hell genug für Lesbarkeit auf den
+  // dunklen Leder-Flächen gewählt (Rot = derselbe Ton wie
+  // --status-danger-bright).
+  const HOFBUCH_FARBEN = [
+    { id: "rot", label: "Rot", hex: "#c97a63" },
+    { id: "orange", label: "Orange", hex: "#d9a552" },
+    { id: "gruen", label: "Grün", hex: "#8fae6a" },
+    { id: "blau", label: "Blau", hex: "#6f9dc9" },
+  ];
 
   const VIEW_META = {
     uebersicht: { title: "Übersicht", subtitle: "Hier behältst du alles im Blick." },

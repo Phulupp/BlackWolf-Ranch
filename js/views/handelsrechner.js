@@ -11,10 +11,29 @@
     return el.rechnerModusPreisRadio && el.rechnerModusPreisRadio.checked ? "preis" : "rabatt";
   }
 
+  // Manche Waren (z. B. Milch) haben neben dem normalen Handelspreis einen
+  // zweiten, festen Preis für den persönlichen Direktverkauf an einzelne
+  // Spieler (siehe "Privatverkaufspreis" im Produkt-Bearbeiten-Modal). Der
+  // Umschalter im Rechner ist nur sichtbar, wenn das gewählte Produkt so
+  // einen Preis überhaupt gepflegt hat.
+  function produktHatPrivatpreis(produkt) {
+    return !!produkt && produkt.privatpreis != null && isFinite(Number(produkt.privatpreis));
+  }
+
+  function rechnerPreisbasis(produkt) {
+    if (!produktHatPrivatpreis(produkt)) return "handel";
+    return el.rechnerPreisbasisPrivatRadio && el.rechnerPreisbasisPrivatRadio.checked ? "privat" : "handel";
+  }
+
   function berechneHandelsrechner() {
     const produkt = aktuellesRechnerProdukt();
     const menge = Math.max(0, parseInt(el.rechnerMenge.value, 10) || 0);
-    const standardpreis = produkt ? Number(produkt.verkaufspreis) : null;
+    const hatPrivatpreis = produktHatPrivatpreis(produkt);
+    if (el.rechnerPreisbasisWrap) el.rechnerPreisbasisWrap.hidden = !hatPrivatpreis;
+    if (!hatPrivatpreis && el.rechnerPreisbasisHandelRadio) el.rechnerPreisbasisHandelRadio.checked = true;
+
+    const preisbasis = rechnerPreisbasis(produkt);
+    const standardpreis = produkt ? Number(preisbasis === "privat" ? produkt.privatpreis : produkt.verkaufspreis) : null;
 
     let rabattProzent = 0;
     let neuerStueckpreis = standardpreis || 0;
@@ -44,7 +63,7 @@
     el.vorschauNeuerPreis.textContent = formatGeld(neuerStueckpreis);
     el.vorschauGesamtpreis.textContent = formatGeld(gesamtpreis);
 
-    return { produkt, menge, standardpreis, rabattProzent, neuerStueckpreis, gesamtpreis };
+    return { produkt, menge, standardpreis, rabattProzent, neuerStueckpreis, gesamtpreis, preisbasis };
   }
 
   function renderHandelsrechner() {
@@ -60,6 +79,10 @@
     if (input) input.addEventListener("input", berechneHandelsrechner);
   });
   if (el.rechnerProdukt) el.rechnerProdukt.addEventListener("change", berechneHandelsrechner);
+
+  [el.rechnerPreisbasisHandelRadio, el.rechnerPreisbasisPrivatRadio].forEach((radio) => {
+    if (radio) radio.addEventListener("change", berechneHandelsrechner);
+  });
 
   [el.rechnerModusRabattRadio, el.rechnerModusPreisRadio].forEach((radio) => {
     if (!radio) return;
@@ -103,6 +126,7 @@
     el.btnRechnerReset.addEventListener("click", () => {
       el.rechnerUnternehmen.value = "";
       el.rechnerMenge.value = 1;
+      if (el.rechnerPreisbasisHandelRadio) el.rechnerPreisbasisHandelRadio.checked = true;
       el.rechnerModusRabattRadio.checked = true;
       el.rechnerModusRabattWrap.hidden = false;
       el.rechnerModusPreisWrap.hidden = true;
@@ -127,6 +151,7 @@
           produktId: ergebnis.produkt.id,
           produktName: ergebnis.produkt.name,
           menge: ergebnis.menge,
+          preisbasis: ergebnis.preisbasis,
           rabattProzent: Math.round(ergebnis.rabattProzent * 10) / 10,
           stueckpreis: ergebnis.neuerStueckpreis,
           gesamtpreis: ergebnis.gesamtpreis,
@@ -151,6 +176,7 @@
               produktName: ergebnis.produkt.name,
               menge: ergebnis.menge,
               standardpreis: ergebnis.standardpreis || 0,
+              preisbasis: ergebnis.preisbasis,
               rabattProzent: Math.round(ergebnis.rabattProzent * 10) / 10,
               endpreis: ergebnis.neuerStueckpreis,
               gesamtpreis: ergebnis.gesamtpreis,

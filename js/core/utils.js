@@ -9,6 +9,94 @@
     return div.innerHTML;
   }
 
+  // --- Formatierter Text (Schwarzes Brett) ----------------------------------
+  // Erlaubt genau eine feste, kleine Auswahl an Formatierungen (fett, kursiv,
+  // unterstrichen, Zeilenumbruch, Textfarbe aus HOFBUCH_FARBEN) und verwirft
+  // alles andere, inklusive aller sonstigen Tags und Attribute. Das ist nicht
+  // nur Kosmetik: laut firestore.rules kann jeder freigegebene Nutzer
+  // Hofbuch-Einträge direkt in Firestore schreiben (nicht nur über den
+  // Editor in js/views/hofbuch.js), und der gespeicherte Text wird beim
+  // Anzeigen als echtes HTML gerendert statt nur als Text - ohne dieses
+  // Sanitizing könnte darüber beliebiges HTML/JS eingeschleust werden.
+  // DOMParser erzeugt bewusst ein inertes Dokument (kein Bild-Laden, kein
+  // Skript-Ausführen) - das Parsen selbst ist also unkritisch. Sicher wird
+  // das Ergebnis erst dadurch, dass hier ausschließlich einzelne, geprüfte
+  // Werte in NEUE, im echten Dokument erzeugte Elemente übernommen werden,
+  // nie roher Attribut-/Style-Text.
+  const FORMATIERTER_TEXT_SONDE = document.createElement("span");
+  function normalisiereFarbe(wert) {
+    if (!wert) return "";
+    FORMATIERTER_TEXT_SONDE.style.color = "";
+    FORMATIERTER_TEXT_SONDE.style.color = wert;
+    return FORMATIERTER_TEXT_SONDE.style.color;
+  }
+  const FORMATIERTER_TEXT_FARBEN_ERLAUBT = new Set(
+    (typeof HOFBUCH_FARBEN !== "undefined" ? HOFBUCH_FARBEN : []).map((f) => normalisiereFarbe(f.hex)).filter(Boolean)
+  );
+  const FORMATIERTER_TEXT_VERWERFEN = new Set(["SCRIPT", "STYLE", "IFRAME", "OBJECT", "EMBED", "LINK", "META", "NOSCRIPT", "SVG", "MATH"]);
+
+  function saniereFormatierterText(html) {
+    const quelle = new DOMParser().parseFromString(String(html == null ? "" : html), "text/html");
+
+    function saeubern(knoten) {
+      if (knoten.nodeType === Node.TEXT_NODE) return document.createTextNode(knoten.textContent);
+      if (knoten.nodeType !== Node.ELEMENT_NODE) return null;
+      const tag = knoten.tagName;
+      if (FORMATIERTER_TEXT_VERWERFEN.has(tag)) return null;
+      if (tag === "BR") return document.createElement("br");
+
+      const kinder = document.createDocumentFragment();
+      Array.from(knoten.childNodes).forEach((kind) => {
+        const bereinigt = saeubern(kind);
+        if (bereinigt) kinder.appendChild(bereinigt);
+      });
+
+      if (tag === "B" || tag === "STRONG") {
+        const ziel = document.createElement("strong");
+        ziel.appendChild(kinder);
+        return ziel;
+      }
+      if (tag === "I" || tag === "EM") {
+        const ziel = document.createElement("em");
+        ziel.appendChild(kinder);
+        return ziel;
+      }
+      if (tag === "U") {
+        const ziel = document.createElement("u");
+        ziel.appendChild(kinder);
+        return ziel;
+      }
+      if (tag === "SPAN" || tag === "FONT") {
+        const ziel = document.createElement("span");
+        const roheFarbe = tag === "FONT" ? knoten.getAttribute("color") : knoten.style && knoten.style.color;
+        const normalisiert = normalisiereFarbe(roheFarbe);
+        if (normalisiert && FORMATIERTER_TEXT_FARBEN_ERLAUBT.has(normalisiert)) ziel.style.color = normalisiert;
+        ziel.appendChild(kinder);
+        return ziel;
+      }
+      if (tag === "DIV" || tag === "P") {
+        // contenteditable erzeugt beim Zeilenumbruch teils <div>/<p> statt
+        // <br> (browserabhängig) - als Zeilenumbruch behandeln statt als
+        // Blockelement, sonst geht die Zeilentrennung beim Sanitizen verloren.
+        kinder.appendChild(document.createElement("br"));
+        return kinder;
+      }
+      // Unbekanntes/nicht erlaubtes Tag: verwerfen, Inhalt aber behalten
+      // (z. B. <a>, <table> aus eingefügtem Text von einer Webseite).
+      return kinder;
+    }
+
+    const ergebnis = document.createDocumentFragment();
+    Array.from(quelle.body.childNodes).forEach((kind) => {
+      const bereinigt = saeubern(kind);
+      if (bereinigt) ergebnis.appendChild(bereinigt);
+    });
+
+    const behaelter = document.createElement("div");
+    behaelter.appendChild(ergebnis);
+    return behaelter.innerHTML;
+  }
+
   function formatGeld(betrag) {
     const zahl = Number(betrag);
     if (!isFinite(zahl)) return "–";
