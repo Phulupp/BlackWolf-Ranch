@@ -30,9 +30,21 @@
     FORMATIERTER_TEXT_SONDE.style.color = wert;
     return FORMATIERTER_TEXT_SONDE.style.color;
   }
-  const FORMATIERTER_TEXT_FARBEN_ERLAUBT = new Set(
-    (typeof HOFBUCH_FARBEN !== "undefined" ? HOFBUCH_FARBEN : []).map((f) => normalisiereFarbe(f.hex)).filter(Boolean)
-  );
+  // Auf den jeweils aktuellen, normalisierten Farbwert abgebildet: sowohl
+  // die aktuelle Palette (Identität) als auch alte, nicht mehr in der
+  // Palette enthaltene Farbwerte (siehe HOFBUCH_FARBEN_ALIASE in
+  // js/core/config.js) - so werden alte Notizen beim Anzeigen automatisch
+  // auf die aktuelle Farbe umgezogen, statt die Farbe zu verlieren.
+  const FORMATIERTER_TEXT_FARBEN_AUFLOESUNG = new Map();
+  (typeof HOFBUCH_FARBEN !== "undefined" ? HOFBUCH_FARBEN : []).forEach((f) => {
+    const normalisiert = normalisiereFarbe(f.hex);
+    if (normalisiert) FORMATIERTER_TEXT_FARBEN_AUFLOESUNG.set(normalisiert, normalisiert);
+  });
+  Object.entries(typeof HOFBUCH_FARBEN_ALIASE !== "undefined" ? HOFBUCH_FARBEN_ALIASE : {}).forEach(([alt, neu]) => {
+    const altNormalisiert = normalisiereFarbe(alt);
+    const neuNormalisiert = normalisiereFarbe(neu);
+    if (altNormalisiert && neuNormalisiert) FORMATIERTER_TEXT_FARBEN_AUFLOESUNG.set(altNormalisiert, neuNormalisiert);
+  });
   const FORMATIERTER_TEXT_VERWERFEN = new Set(["SCRIPT", "STYLE", "IFRAME", "OBJECT", "EMBED", "LINK", "META", "NOSCRIPT", "SVG", "MATH"]);
 
   function saniereFormatierterText(html) {
@@ -70,7 +82,8 @@
         const ziel = document.createElement("span");
         const roheFarbe = tag === "FONT" ? knoten.getAttribute("color") : knoten.style && knoten.style.color;
         const normalisiert = normalisiereFarbe(roheFarbe);
-        if (normalisiert && FORMATIERTER_TEXT_FARBEN_ERLAUBT.has(normalisiert)) ziel.style.color = normalisiert;
+        const aufgeloest = normalisiert && FORMATIERTER_TEXT_FARBEN_AUFLOESUNG.get(normalisiert);
+        if (aufgeloest) ziel.style.color = aufgeloest;
         ziel.appendChild(kinder);
         return ziel;
       }

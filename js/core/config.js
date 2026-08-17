@@ -18,7 +18,7 @@
   /* ------------------------------------------------------------------------
      1. Konstanten
      ------------------------------------------------------------------------ */
-  const VERSION_AKTUELL = 71;
+  const VERSION_AKTUELL = 72;
 
   // Ränge des Hofes (rein organisatorisch — Verwalterrechte sind unabhängig
   // davon und werden separat je Benutzer vergeben, siehe isAdmin).
@@ -222,15 +222,24 @@
   // Liste statt freier Farbwahl, weil dieselbe Liste 1:1 als Positivliste im
   // HTML-Sanitizer (saniereFormatierterText in js/core/utils.js) dient: nur
   // diese Farben dürfen beim Rendern als echtes HTML landen, alles andere
-  // wird verworfen. Farbtöne bewusst hell genug für Lesbarkeit auf den
-  // dunklen Leder-Flächen gewählt (Rot = derselbe Ton wie
-  // --status-danger-bright).
+  // wird verworfen. "Rot" bewusst kräftig/gesättigt statt gedämpft gewählt,
+  // damit es wirklich auffällt (auf Wunsch angepasst, vorher der gedämpfte
+  // Ton von --status-danger-bright) - siehe HOFBUCH_FARBEN_ALIASE direkt
+  // darunter für bereits gespeicherte Notizen mit dem alten Rot-Ton.
   const HOFBUCH_FARBEN = [
-    { id: "rot", label: "Rot", hex: "#c97a63" },
+    { id: "rot", label: "Rot", hex: "#e2402e" },
     { id: "orange", label: "Orange", hex: "#d9a552" },
     { id: "gruen", label: "Grün", hex: "#8fae6a" },
     { id: "blau", label: "Blau", hex: "#6f9dc9" },
   ];
+
+  // Frühere Farbwerte aus HOFBUCH_FARBEN, die es in der Palette nicht mehr
+  // gibt, aber bereits in gespeicherten Hofbuch-Notizen verwendet wurden -
+  // werden beim Anzeigen automatisch auf den aktuellen Farbwert umgezogen
+  // (siehe saniereFormatierterText in js/core/utils.js), damit z. B. alte
+  // rot markierte Notizen nicht plötzlich unfarbig werden, nur weil sich der
+  // Rot-Ton geändert hat.
+  const HOFBUCH_FARBEN_ALIASE = { "#c97a63": "#e2402e" };
 
   const VIEW_META = {
     uebersicht: { title: "Übersicht", subtitle: "Hier behältst du alles im Blick." },
