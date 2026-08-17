@@ -69,13 +69,20 @@
     });
   }
 
+  // "styleWithCSS" bewusst NICHT aktiviert: dann würde der Browser "Fett"
+  // als <span style="font-weight:..."> statt als <strong> umsetzen - der
+  // Sanitizer (saniereFormatierterText in js/core/utils.js) erkennt an
+  // einem <span> aber nur die Textfarbe, keine Fett-/Kursiv-/Unterstrichen-
+  // Styles, und würde die Formatierung beim Speichern/Anzeigen wieder
+  // verwerfen. Ohne "styleWithCSS" erzeugt der Browser für bold/italic/
+  // underline zuverlässig <b>/<i>/<u> und für die Farbe <font color="...">
+  // - beides erkennt der Sanitizer bereits explizit.
   try {
     document.execCommand("defaultParagraphSeparator", false, "br");
-    document.execCommand("styleWithCSS", false, true);
   } catch (fehler) {
-    // Beides nur Komfort/Konsistenz beim Erzeugen der Formatierung - der
-    // Sanitizer in js/core/utils.js kommt auch ohne diese Einstellungen mit
-    // dem Ergebnis zurecht (z. B. <div>-Zeilenumbrüche, <font>-Farben).
+    // Nur Komfort/Konsistenz beim Erzeugen der Formatierung - der Sanitizer
+    // kommt auch ohne diese Einstellung mit dem Ergebnis zurecht (z. B.
+    // <div>-Zeilenumbrüche statt <br>).
   }
 
   initialisiereHofbuchEditor(el.hofbuchTextInput);
