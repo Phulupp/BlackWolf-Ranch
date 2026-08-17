@@ -226,6 +226,14 @@
   color: var(--brass-bright);
 }
 
+/* Farbiger Akzentring um den Avatar für die beiden Spitzenränge (Hofherr/
+   Hofmeister, siehe RANG_AKZENTE in js/core/config.js) - ergänzt den
+   normalen Schatten um einen zusätzlichen, farbigen Ring statt ihn zu
+   ersetzen. */
+.sidebar__user-avatar--akzent {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35), 0 0 0 2px var(--rang-farbe);
+}
+
 .sidebar__user-chevron {
   color: var(--wood-text-soft);
   font-size: 15px;

@@ -18,12 +18,24 @@
   /* ------------------------------------------------------------------------
      1. Konstanten
      ------------------------------------------------------------------------ */
-  const VERSION_AKTUELL = 70;
+  const VERSION_AKTUELL = 71;
 
   // Ränge des Hofes (rein organisatorisch — Verwalterrechte sind unabhängig
   // davon und werden separat je Benutzer vergeben, siehe isAdmin).
   const BENUTZER_RAENGE = ["Tagelöhner", "Knecht", "Hofarbeiter", "Stallmeister", "Hofmeister", "Hofherr"];
   const NEUER_BENUTZER_STANDARD_RANG = "Tagelöhner";
+
+  // Optischer Akzent für die Sidebar-Profilkarte (siehe
+  // aktualisiereSidebarRang in js/main.js): nur die beiden aktuell wirklich
+  // genutzten Spitzenränge (Hof-Chef + Stellvertretung) bekommen eine
+  // farbige Rang-Badge samt Akzentring um den Avatar, alle anderen Ränge
+  // bleiben bewusst schlichter Text wie bisher. Nutzt bereits vorhandene
+  // Farbtöne (Gold = --old-brass-light, Kupfer = --brass-bright) statt neuer
+  // Farben, damit es zum restlichen Design passt.
+  const RANG_AKZENTE = {
+    Hofherr: "#d0b276",
+    Hofmeister: "#a9653f",
+  };
 
   const PRODUKTE_COLLECTION = "produkte";
   const LAGER_STATUS_COLLECTION = "lagerStatus";
