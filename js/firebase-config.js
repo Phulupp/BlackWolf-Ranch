@@ -35,7 +35,11 @@ let db = null;
 
 if (typeof firebase !== "undefined") {
   firebase.initializeApp(firebaseConfig);
-  auth = firebase.auth();
+  // Die öffentliche, login-freie Preisliste (preise/index.html) lädt bewusst
+  // NUR das Firestore-SDK, nicht das Auth-SDK - "firebase.auth" existiert
+  // dort also gar nicht. Ohne diese Prüfung würde der Aufruf dort mit einem
+  // Fehler abbrechen, noch bevor "db" überhaupt gesetzt wird.
+  if (typeof firebase.auth === "function") auth = firebase.auth();
   db = firebase.firestore();
   // Sicherheitsnetz: Firestore lehnt "undefined" als Feldwert normalerweise
   // komplett ab (auch verschachtelt in Arrays/Objekten) und verwirft dann

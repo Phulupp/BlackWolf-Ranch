@@ -326,6 +326,7 @@
       aktualisiereCustomSelect(el.wareKategorieInput);
       el.wareVerkaufspreisInput.value = "";
       if (el.warePrivatpreisInput) el.warePrivatpreisInput.value = "";
+      if (el.wareOeffentlichInput) el.wareOeffentlichInput.checked = false;
       versteckeFeldFehler(el.wareError);
       oeffneModal("modal-ware");
     });
@@ -345,6 +346,7 @@
         aktualisiereCustomSelect(el.wareKategorieInput);
         el.wareVerkaufspreisInput.value = p.verkaufspreis;
         if (el.warePrivatpreisInput) el.warePrivatpreisInput.value = p.privatpreis != null ? p.privatpreis : "";
+        if (el.wareOeffentlichInput) el.wareOeffentlichInput.checked = !!p.oeffentlich;
         versteckeFeldFehler(el.wareError);
         oeffneModal("modal-ware");
       } else if (delBtn) {
@@ -365,6 +367,12 @@
       const kategorie = el.wareKategorieInput.value || PRODUKT_KATEGORIE_SONSTIGE;
       const vk = parseFloat(el.wareVerkaufspreisInput.value);
       const privatpreisRoh = el.warePrivatpreisInput ? el.warePrivatpreisInput.value.trim() : "";
+      // "oeffentlich" steuert, ob dieses Produkt auf der öffentlichen,
+      // login-freien Preisliste (siehe preise/index.html) auftaucht - per
+      // Firestore-Regel dürfen unangemeldete Besucher NUR Produkt-Dokumente
+      // mit oeffentlich === true überhaupt lesen. Absichtlich nur in diesem
+      // Bearbeiten-Modal sichtbar, nicht direkt in der Warenbuch-Liste.
+      const oeffentlich = !!(el.wareOeffentlichInput && el.wareOeffentlichInput.checked);
 
       if (!name) return zeigeFeldFehler(el.wareError, "Bitte gib einen Produktnamen ein.");
       if (!isFinite(vk) || vk < 0) return zeigeFeldFehler(el.wareError, "Bitte gib einen gültigen Verkaufspreis ein.");
@@ -392,6 +400,7 @@
               kategorie,
               verkaufspreis: vk,
               privatpreis: privatpreis !== null ? privatpreis : firebase.firestore.FieldValue.delete(),
+              oeffentlich,
             });
         } else {
           const neuesProdukt = {
@@ -400,6 +409,7 @@
             verkaufspreis: vk,
             lagerMenge: 0,
             reihenfolge: produkte.length + 1,
+            oeffentlich,
           };
           if (privatpreis !== null) neuesProdukt.privatpreis = privatpreis;
           await db.collection(PRODUKTE_COLLECTION).add(neuesProdukt);

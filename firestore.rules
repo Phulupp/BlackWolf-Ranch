@@ -216,8 +216,15 @@ service cloud.firestore {
     // request.resource.data.diff(...) stellt sicher, dass dabei wirklich NUR
     // "lagerMenge" geändert wird - alle anderen Felder bleiben weiterhin
     // Verwaltern vorbehalten.
+    // ZUSÄTZLICH: Produkte mit "oeffentlich" == true dürfen auch OHNE Login
+    // gelesen werden - Grundlage für die öffentliche, login-freie Preisliste
+    // unter preise/index.html (blackwolfranch.de/preise). Nur Verwalter
+    // können dieses Feld über das "Produkt bearbeiten"-Modal in Waren &
+    // Preise setzen (siehe js/views/waren.js) - alle Felder eines nicht als
+    // "oeffentlich" markierten Produkts bleiben für unangemeldete Besucher
+    // weiterhin komplett unsichtbar.
     match /produkte/{dokument} {
-      allow read: if istFreigegeben();
+      allow read: if istFreigegeben() || resource.data.get('oeffentlich', false) == true;
       allow create, delete: if istAdmin();
       allow update: if istAdmin()
                     || (istFreigegeben() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['lagerMenge']));

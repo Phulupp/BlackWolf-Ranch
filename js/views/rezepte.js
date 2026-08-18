@@ -37,6 +37,8 @@
         rezepte = [];
         snap.forEach((docSnap) => rezepte.push({ id: docSnap.id, zutaten: [], ...docSnap.data() }));
         befuelleRezeptrechnerAuswahl();
+        aktualisiereRezeptrechnerMengeSchritt();
+        snappeRezeptrechnerMenge();
         berechneRezeptrechner();
         befuelleRezeptKategorienDatalist();
         renderRezepteListe();
@@ -88,6 +90,9 @@
     if (!rezept || !(rezept.zutaten || []).length) {
       el.rezeptrechnerErgebnis.innerHTML = "";
       el.rezeptrechnerErgebnisLeer.hidden = false;
+      if (el.rezeptrechnerTatsaechlicheMenge) el.rezeptrechnerTatsaechlicheMenge.textContent = "–";
+      if (el.rezeptrechnerDurchgaenge) el.rezeptrechnerDurchgaenge.textContent = "–";
+      if (el.rezeptrechnerUeberschussHinweis) el.rezeptrechnerUeberschussHinweis.hidden = true;
       return;
     }
     el.rezeptrechnerErgebnisLeer.hidden = true;
@@ -99,7 +104,28 @@
     // siehe Testfälle in der Aufgabenstellung). Ein Rezept, das 4 Zucker aus
     // 2 Zuckerrohr ergibt, braucht für 17 gewünschte Zucker
     // ceil(17 / 4) = 5 volle Durchläufe -> 5 × 2 = 10 Zuckerrohr.
-    const durchlaeufe = Math.ceil(menge / (rezept.ergebnisMenge || 1));
+    const ergebnisMenge = rezept.ergebnisMenge || 1;
+    const durchlaeufe = Math.ceil(menge / ergebnisMenge);
+    const tatsaechlicheMenge = durchlaeufe * ergebnisMenge;
+
+    // Im Spiel lässt sich immer nur in vollen ergebnisMenge-Schritten
+    // herstellen (z. B. 4er-Schritte bei Zucker) - eine Wunschmenge, die
+    // dazwischen liegt (z. B. 6 bei 4er-Schritten), ist nicht direkt
+    // herstellbar. Statt das zu verschweigen, zeigt der Rechner deutlich,
+    // wie viel Stück dabei tatsächlich anfallen und wie viel davon über die
+    // Wunschmenge hinausgeht. Bewusst KEINE Aussage über die (komplett
+    // separate, nur manuell von Hand gepflegte) Lager-Seite - der Rechner
+    // selbst greift nirgends auf "lagerMenge" zu und ändert dort nichts.
+    if (el.rezeptrechnerTatsaechlicheMenge) el.rezeptrechnerTatsaechlicheMenge.textContent = tatsaechlicheMenge;
+    if (el.rezeptrechnerDurchgaenge) el.rezeptrechnerDurchgaenge.textContent = durchlaeufe;
+    if (el.rezeptrechnerUeberschussHinweis) {
+      const ueberschuss = tatsaechlicheMenge - menge;
+      el.rezeptrechnerUeberschussHinweis.hidden = ueberschuss <= 0;
+      if (ueberschuss > 0) {
+        el.rezeptrechnerUeberschussHinweis.textContent = `Wird in ${ergebnisMenge}er-Schritten hergestellt: bei ${menge} gewünschten ${rezept.produktName} fallen tatsächlich ${tatsaechlicheMenge} an - das sind ${ueberschuss} Stück mehr als gewünscht.`;
+      }
+    }
+
     el.rezeptrechnerErgebnis.innerHTML = rezept.zutaten
       .map(
         (z) => `
@@ -111,8 +137,50 @@
       .join("");
   }
 
-  if (el.rezeptrechnerRezeptSelect) el.rezeptrechnerRezeptSelect.addEventListener("change", berechneRezeptrechner);
-  if (el.rezeptrechnerMenge) el.rezeptrechnerMenge.addEventListener("input", berechneRezeptrechner);
+  // Der Schritt des Zahlenfelds richtet sich nach dem gewählten Rezept (z. B.
+  // 4er-Schritte bei Zucker), damit die nativen Pfeiltasten/Spinner-Buttons
+  // direkt in herstellbaren Schritten statt in 1er-Schritten hoch-/
+  // runterzählen. Funktioniert automatisch für JEDES Rezept, auch für jedes
+  // künftig neu angelegte - hängt einzig an "ergebnisMenge" des jeweiligen
+  // Rezepts, nirgends an einem konkreten Produktnamen.
+  function aktualisiereRezeptrechnerMengeSchritt() {
+    if (!el.rezeptrechnerMenge) return;
+    const rezept = aktuellesRezeptrechnerRezept();
+    el.rezeptrechnerMenge.step = rezept ? rezept.ergebnisMenge || 1 : 1;
+  }
+
+  // Rundet den Wert im Mengenfeld fest auf die nächste tatsächlich
+  // herstellbare Menge auf (z. B. 6 -> 8 bei 4er-Schritten) - wird sowohl
+  // beim Wechsel des Produkts als auch beim Verlassen des Mengenfeldes
+  // aufgerufen, damit das Feld IMMER eine direkt herstellbare Menge zeigt,
+  // nicht erst nach einer zusätzlichen Aktion.
+  function snappeRezeptrechnerMenge() {
+    if (!el.rezeptrechnerMenge) return;
+    const rezept = aktuellesRezeptrechnerRezept();
+    if (!rezept) return;
+    const ergebnisMenge = rezept.ergebnisMenge || 1;
+    const menge = Math.max(1, parseInt(el.rezeptrechnerMenge.value, 10) || 1);
+    el.rezeptrechnerMenge.value = Math.ceil(menge / ergebnisMenge) * ergebnisMenge;
+  }
+
+  if (el.rezeptrechnerRezeptSelect) {
+    el.rezeptrechnerRezeptSelect.addEventListener("change", () => {
+      aktualisiereRezeptrechnerMengeSchritt();
+      snappeRezeptrechnerMenge();
+      berechneRezeptrechner();
+    });
+  }
+  if (el.rezeptrechnerMenge) {
+    // Während des Tippens nur die Live-Vorschau (tatsächliche Menge/Hinweis)
+    // aktualisieren - das Feld selbst erst beim Verlassen (Blur/Enter/
+    // Spinner-Klick, siehe "change") anpassen, sonst könnte man z. B. "16"
+    // nicht mehr eintippen, weil schon nach der "1" auf "4" aufgerundet würde.
+    el.rezeptrechnerMenge.addEventListener("input", berechneRezeptrechner);
+    el.rezeptrechnerMenge.addEventListener("change", () => {
+      snappeRezeptrechnerMenge();
+      berechneRezeptrechner();
+    });
+  }
 
   /* ------------------------- Rezepte-Liste ------------------------- */
 

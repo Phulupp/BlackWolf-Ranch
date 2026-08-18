@@ -114,6 +114,7 @@
     wareKategorieInput: document.getElementById("ware-kategorie-input"),
     wareVerkaufspreisInput: document.getElementById("ware-verkaufspreis-input"),
     warePrivatpreisInput: document.getElementById("ware-privatpreis-input"),
+    wareOeffentlichInput: document.getElementById("ware-oeffentlich-input"),
     wareError: document.getElementById("ware-error"),
     btnConfirmWare: document.getElementById("btn-confirm-ware"),
 
@@ -207,6 +208,9 @@
     // Lager-Ansicht, siehe data-quicklink="rezepte")
     rezeptrechnerRezeptSelect: document.getElementById("rezeptrechner-rezept-select"),
     rezeptrechnerMenge: document.getElementById("rezeptrechner-menge"),
+    rezeptrechnerTatsaechlicheMenge: document.getElementById("rezeptrechner-tatsaechliche-menge"),
+    rezeptrechnerDurchgaenge: document.getElementById("rezeptrechner-durchgaenge"),
+    rezeptrechnerUeberschussHinweis: document.getElementById("rezeptrechner-ueberschuss-hinweis"),
     rezeptrechnerErgebnis: document.getElementById("rezeptrechner-ergebnis"),
     rezeptrechnerErgebnisLeer: document.getElementById("rezeptrechner-ergebnis-leer"),
     btnRezeptNeu: document.getElementById("btn-rezept-neu"),

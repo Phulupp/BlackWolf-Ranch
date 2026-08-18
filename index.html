@@ -24,8 +24,8 @@
        blieb das Tab-/Lesezeichen-Icon in genau diesen Fällen leer, selbst
        wenn das PNG unten technisch korrekt eingebunden war. -->
   <link rel="shortcut icon" href="/favicon.ico" />
-  <link rel="icon" type="image/png" href="assets/logo/favicon-mais.png?v=74" />
-  <link rel="apple-touch-icon" href="assets/logo/favicon-mais.png?v=74" />
+  <link rel="icon" type="image/png" href="assets/logo/favicon-mais.png?v=78" />
+  <link rel="apple-touch-icon" href="assets/logo/favicon-mais.png?v=78" />
 
   <!-- Google Fonts: Rye (Farmschild/Wordmark), Playfair Display (Überschriften), Vollkorn (Fließtext/Pergament) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -39,30 +39,30 @@
        style.css - nur jetzt nach Zweck aufgeteilt (base > layout >
        components > views), damit man den passenden Abschnitt schneller
        findet. Reihenfolge ist wichtig und darf nicht vertauscht werden. -->
-  <link rel="stylesheet" href="css/base/tokens.css?v=74" />
-  <link rel="stylesheet" href="css/base/reset.css?v=74" />
-  <link rel="stylesheet" href="css/base/textures.css?v=74" />
-  <link rel="stylesheet" href="css/views/auth.css?v=74" />
-  <link rel="stylesheet" href="css/components/forms.css?v=74" />
-  <link rel="stylesheet" href="css/components/buttons.css?v=74" />
-  <link rel="stylesheet" href="css/layout/shell.css?v=74" />
-  <link rel="stylesheet" href="css/components/cards.css?v=74" />
-  <link rel="stylesheet" href="css/components/badges.css?v=74" />
-  <link rel="stylesheet" href="css/views/dashboard.css?v=74" />
-  <link rel="stylesheet" href="css/components/tables.css?v=74" />
-  <link rel="stylesheet" href="css/views/waren.css?v=74" />
-  <link rel="stylesheet" href="css/views/lager.css?v=74" />
-  <link rel="stylesheet" href="css/views/bestellungen.css?v=74" />
-  <link rel="stylesheet" href="css/views/kontakte.css?v=74" />
-  <link rel="stylesheet" href="css/views/handelsrechner.css?v=74" />
-  <link rel="stylesheet" href="css/views/rezepte.css?v=74" />
-  <link rel="stylesheet" href="css/components/modals.css?v=74" />
-  <link rel="stylesheet" href="css/views/admin.css?v=74" />
-  <link rel="stylesheet" href="css/components/toast.css?v=74" />
-  <link rel="stylesheet" href="css/layout/footer.css?v=74" />
-  <link rel="stylesheet" href="css/components/kataloge.css?v=74" />
-  <link rel="stylesheet" href="css/views/hofbuch.css?v=74" />
-  <link rel="stylesheet" href="css/base/responsive.css?v=74" />
+  <link rel="stylesheet" href="css/base/tokens.css?v=78" />
+  <link rel="stylesheet" href="css/base/reset.css?v=78" />
+  <link rel="stylesheet" href="css/base/textures.css?v=78" />
+  <link rel="stylesheet" href="css/views/auth.css?v=78" />
+  <link rel="stylesheet" href="css/components/forms.css?v=78" />
+  <link rel="stylesheet" href="css/components/buttons.css?v=78" />
+  <link rel="stylesheet" href="css/layout/shell.css?v=78" />
+  <link rel="stylesheet" href="css/components/cards.css?v=78" />
+  <link rel="stylesheet" href="css/components/badges.css?v=78" />
+  <link rel="stylesheet" href="css/views/dashboard.css?v=78" />
+  <link rel="stylesheet" href="css/components/tables.css?v=78" />
+  <link rel="stylesheet" href="css/views/waren.css?v=78" />
+  <link rel="stylesheet" href="css/views/lager.css?v=78" />
+  <link rel="stylesheet" href="css/views/bestellungen.css?v=78" />
+  <link rel="stylesheet" href="css/views/kontakte.css?v=78" />
+  <link rel="stylesheet" href="css/views/handelsrechner.css?v=78" />
+  <link rel="stylesheet" href="css/views/rezepte.css?v=78" />
+  <link rel="stylesheet" href="css/components/modals.css?v=78" />
+  <link rel="stylesheet" href="css/views/admin.css?v=78" />
+  <link rel="stylesheet" href="css/components/toast.css?v=78" />
+  <link rel="stylesheet" href="css/layout/footer.css?v=78" />
+  <link rel="stylesheet" href="css/components/kataloge.css?v=78" />
+  <link rel="stylesheet" href="css/views/hofbuch.css?v=78" />
+  <link rel="stylesheet" href="css/base/responsive.css?v=78" />
 
   <!-- Firebase SDK (Authentifizierung + Datenbank). "defer" statt normaler
        blockierender <script>-Tags: der Browser kann so den Rest der Seite
@@ -539,6 +539,28 @@
                   <input type="number" id="rezeptrechner-menge" class="field-input" min="1" step="1" value="1" />
                 </div>
               </div>
+
+              <!-- Herstellung läuft immer in vollen Durchgängen (z. B. 4er-
+                   Schritte bei Zucker) - dieser Block zeigt, wie viel dabei
+                   TATSÄCHLICH herauskommt, statt nur die eingegebene Wunsch-
+                   menge unkommentiert zu übernehmen (siehe berechneRezeptrechner
+                   in js/views/rezepte.js). -->
+              <div class="rechner-grid-2" style="margin-top: 14px;">
+                <div class="rechner-field-box">
+                  <div class="rechner-field-box__label">Tatsächliche Menge</div>
+                  <div class="rechner-field-box__value">
+                    <span id="rezeptrechner-tatsaechliche-menge">–</span><span class="rechner-field-box__unit">Stück</span>
+                  </div>
+                </div>
+                <div class="rechner-field-box">
+                  <div class="rechner-field-box__label">Herstellungsdurchgänge</div>
+                  <div class="rechner-field-box__value">
+                    <span id="rezeptrechner-durchgaenge">–</span><span class="rechner-field-box__unit">×</span>
+                  </div>
+                </div>
+              </div>
+              <p class="rechner-hinweis" id="rezeptrechner-ueberschuss-hinweis" hidden></p>
+
               <p class="rechner-section-title" style="margin-top: 20px;">Benötigte Rohstoffe</p>
               <div id="rezeptrechner-ergebnis" class="rezeptrechner-ergebnis-liste"></div>
               <p class="empty-state" id="rezeptrechner-ergebnis-leer" style="padding: 6px 0 0;">Wähle ein Produkt aus, um die benötigten Rohstoffe zu berechnen.</p>
@@ -1059,6 +1081,11 @@
         <label class="field-label" for="ware-privatpreis-input">Privatverkaufspreis ($, optional)</label>
         <input type="number" id="ware-privatpreis-input" class="field-input" min="0" step="0.01" placeholder="leer lassen, falls nicht benötigt" />
 
+        <label class="field-checkbox-row" for="ware-oeffentlich-input" style="margin-top: 14px;">
+          <input type="checkbox" id="ware-oeffentlich-input" />
+          <span>Auf der öffentlichen Preisliste (blackwolfranch.de/preise) zeigen</span>
+        </label>
+
         <p class="field-error" id="ware-error" hidden></p>
       </div>
       <div class="modal__footer">
@@ -1466,30 +1493,30 @@
        teilen können. Die Reihenfolge entspricht exakt den frueheren
        nummerierten Abschnitten in app.js und darf nicht vertauscht werden:
        js/main.js muss immer zuletzt kommen, da es die App erst startet. -->
-  <script defer src="js/firebase-config.js?v=74"></script>
-  <script defer src="js/core/config.js?v=74"></script>
-  <script defer src="js/core/state.js?v=74"></script>
-  <script defer src="js/core/dom.js?v=74"></script>
-  <script defer src="js/core/firebase-init.js?v=74"></script>
-  <script defer src="js/core/utils.js?v=74"></script>
-  <script defer src="js/ui/modals.js?v=74"></script>
-  <script defer src="js/ui/nav.js?v=74"></script>
-  <script defer src="js/ui/presence.js?v=74"></script>
-  <script defer src="js/views/waren.js?v=74"></script>
-  <script defer src="js/views/lager.js?v=74"></script>
-  <script defer src="js/views/rezepte.js?v=74"></script>
-  <script defer src="js/views/bestellungen.js?v=74"></script>
-  <script defer src="js/views/handelsrechner.js?v=74"></script>
-  <script defer src="js/views/kontakte.js?v=74"></script>
-  <script defer src="js/views/verkaeufe.js?v=74"></script>
-  <script defer src="js/views/kunden.js?v=74"></script>
-  <script defer src="js/views/hofbuch.js?v=74"></script>
-  <script defer src="js/views/statistiken.js?v=74"></script>
-  <script defer src="js/views/dashboard.js?v=74"></script>
-  <script defer src="js/views/einstellungen.js?v=74"></script>
-  <script defer src="js/views/admin.js?v=74"></script>
-  <script defer src="js/ui/version-check.js?v=74"></script>
-  <script defer src="js/main.js?v=74"></script>
-  <script type="module" src="js/auth.js?v=74"></script>
+  <script defer src="js/firebase-config.js?v=78"></script>
+  <script defer src="js/core/config.js?v=78"></script>
+  <script defer src="js/core/state.js?v=78"></script>
+  <script defer src="js/core/dom.js?v=78"></script>
+  <script defer src="js/core/firebase-init.js?v=78"></script>
+  <script defer src="js/core/utils.js?v=78"></script>
+  <script defer src="js/ui/modals.js?v=78"></script>
+  <script defer src="js/ui/nav.js?v=78"></script>
+  <script defer src="js/ui/presence.js?v=78"></script>
+  <script defer src="js/views/waren.js?v=78"></script>
+  <script defer src="js/views/lager.js?v=78"></script>
+  <script defer src="js/views/rezepte.js?v=78"></script>
+  <script defer src="js/views/bestellungen.js?v=78"></script>
+  <script defer src="js/views/handelsrechner.js?v=78"></script>
+  <script defer src="js/views/kontakte.js?v=78"></script>
+  <script defer src="js/views/verkaeufe.js?v=78"></script>
+  <script defer src="js/views/kunden.js?v=78"></script>
+  <script defer src="js/views/hofbuch.js?v=78"></script>
+  <script defer src="js/views/statistiken.js?v=78"></script>
+  <script defer src="js/views/dashboard.js?v=78"></script>
+  <script defer src="js/views/einstellungen.js?v=78"></script>
+  <script defer src="js/views/admin.js?v=78"></script>
+  <script defer src="js/ui/version-check.js?v=78"></script>
+  <script defer src="js/main.js?v=78"></script>
+  <script type="module" src="js/auth.js?v=78"></script>
 </body>
 </html>
