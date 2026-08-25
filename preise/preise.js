@@ -73,22 +73,22 @@ function preiseRendern() {
 
       const zeilen = produkteDerKategorie
         .map(
-          (p) => `<div class="preisbuch__zeile" data-kategorie="${kat.id}">
-              <span class="preisbuch__zeile-name">${preiseEscapeHtml(p.name)}</span>
-              <span class="preisbuch__zeile-punkte" aria-hidden="true"></span>
-              <span class="preisbuch__zeile-preis">${preiseFormatGeld(p.verkaufspreis)}</span>
+          (p) => `<div class="preistafel__zeile" data-kategorie="${kat.id}">
+              <span class="preistafel__zeile-name">${preiseEscapeHtml(p.name)}</span>
+              <span class="preistafel__zeile-punkte" aria-hidden="true"></span>
+              <span class="preistafel__zeile-preis">${preiseFormatGeld(p.verkaufspreis)}</span>
             </div>`
         )
         .join("");
 
       const icon = PREISE_KATEGORIE_ICONS[kat.id] || PREISE_KATEGORIE_ICON_STANDARD;
-      return `<div class="preisbuch__kategorie" data-kategorie="${kat.id}">
-          <span class="preisbuch__kategorie-linie preisbuch__kategorie-linie--links"></span>
-          <span class="preisbuch__kategorie-mitte">
-            <svg class="preisbuch__kategorie-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icon}</svg>
-            <span class="preisbuch__kategorie-label">${preiseEscapeHtml(kat.label)}</span>
+      return `<div class="preistafel__kategorie" data-kategorie="${kat.id}">
+          <span class="preistafel__kategorie-linie preistafel__kategorie-linie--links"></span>
+          <span class="preistafel__kategorie-mitte">
+            <svg class="preistafel__kategorie-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icon}</svg>
+            <span class="preistafel__kategorie-label">${preiseEscapeHtml(kat.label)}</span>
           </span>
-          <span class="preisbuch__kategorie-linie preisbuch__kategorie-linie--rechts"></span>
+          <span class="preistafel__kategorie-linie preistafel__kategorie-linie--rechts"></span>
         </div>${zeilen}`;
     })
     .join("");
