@@ -22,11 +22,40 @@ body {
 
 .preise-seite__kopf {
   padding-top: 6px;
-  border-bottom: none;
+  text-align: center;
 }
 
-.preise-seite__kopf .sidebar__brand-title {
+/* Kuh-Icon bewusst KLEIN und bündig NEBEN dem Schriftzug statt (wie im
+   Sidebar-Original) groß und über zentriertem Text gestapelt - passt besser
+   zu einer schlanken, login-freien Einzelseite. */
+.preise-seite__marke {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.preise-seite__kuh {
+  width: 34px;
+  height: auto;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5));
+}
+
+.preise-seite__markentitel {
+  font-family: var(--font-brand);
   font-size: 26px;
+  letter-spacing: 0.03em;
+  color: var(--wood-text);
+}
+
+.preise-seite__markenzusatz {
+  display: block;
+  margin-top: 5px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--wood-text-soft);
 }
 
 .preise-seite__titel {
