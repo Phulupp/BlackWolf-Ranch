@@ -394,8 +394,9 @@ body {
 
 .preistafel__zeile-name {
   font-family: var(--font-display);
-  font-size: 14px;
-  color: var(--tinte);
+  font-size: 16px;
+  font-weight: 600;
+  color: #150d06;
   white-space: nowrap;
 }
 
