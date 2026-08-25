@@ -47,7 +47,7 @@
 }
 
 .btn--ghost {
-  background: transparent;
+  background: rgba(0, 0, 0, 0.18);
   color: var(--wood-text-muted);
   border: 1.5px solid var(--leather-edge);
 }

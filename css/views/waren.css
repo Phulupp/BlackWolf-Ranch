@@ -105,6 +105,14 @@
   border-left-color: var(--brass-bright);
 }
 
+/* Leichtes Zebra-Muster wie bei den Tabellen (.reg-row--body) - dieselbe
+   ":nth-child(2n of ...)"-Syntax, damit die dazwischenliegenden
+   Kategorie-Überschriften (.warenbuch-kategorie) den Rhythmus nicht
+   verschieben. */
+.warenbuch-zeile:nth-child(2n of .warenbuch-zeile) {
+  background: rgba(0, 0, 0, 0.14);
+}
+
 /* Feste, gemeinsame Breite für Produkt- und Preisspalte statt einer pro
    Zeile unterschiedlich breiten Gruppe - dadurch stehen Name- und
    Preisspalte über die ganze Liste hinweg exakt untereinander bündig,

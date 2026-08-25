@@ -40,6 +40,16 @@
   border-left-color: var(--brass-bright);
 }
 
+/* Leichtes Zebra-Muster gegen die "eine große braune Fläche"-Wirkung -
+   ":nth-child(2n of ...)" statt schlichtem ":nth-child(2n)", damit
+   zwischen den Zeilen liegende Kategorie-Überschriften (.reg-row--kategorie)
+   den Rhythmus nicht durcheinanderbringen. Browser ohne Unterstützung dieser
+   Selector-Level-4-Syntax bekommen einfach kein Streifenmuster (keine
+   Fehlfunktion). */
+.reg-row--body:nth-child(2n of .reg-row--body) {
+  background: rgba(0, 0, 0, 0.14);
+}
+
 /* Dezente Bereichs-Überschrift/Summe, um lange Tabellen (z. B. Lager) in
    logische Abschnitte zu gliedern, ohne die Tabellenoptik zu verändern. */
 .reg-row--kategorie {

@@ -19,7 +19,7 @@
 .app {
   position: relative;
   background:
-    linear-gradient(180deg, rgba(27, 21, 16, 0.84) 0%, rgba(27, 21, 16, 0.74) 45%, rgba(27, 21, 16, 0.88) 100%),
+    linear-gradient(180deg, rgba(13, 9, 6, 0.88) 0%, rgba(13, 9, 6, 0.8) 45%, rgba(13, 9, 6, 0.92) 100%),
     url("../../assets/background/dashboard-background.webp.png") center 38% / cover fixed no-repeat;
 }
 
