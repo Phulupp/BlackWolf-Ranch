@@ -145,6 +145,7 @@
     el.warenEmpty.hidden = produkte.length !== 0;
     el.warenNoResults.hidden = !(produkte.length > 0 && liste.length === 0);
     el.btnAddWare.hidden = !istAdmin();
+    if (el.btnOeffentlichePreise) el.btnOeffentlichePreise.hidden = !istAdmin();
 
     if (el.btnWarenSortieren) {
       el.btnWarenSortieren.hidden = !istAdmin();
@@ -209,6 +210,74 @@
     el.warenSearch.addEventListener("input", () => {
       warenSuche = el.warenSearch.value;
       renderWaren();
+    });
+  }
+
+  // --- Öffentliche Preisliste: ganze Kategorie auf einen Schlag ------------
+  // Statt jedes Produkt einzeln im "Produkt bearbeiten"-Modal anzuhaken,
+  // kann man hier eine komplette Kategorie mit einem Klick zur öffentlichen
+  // Preisliste (siehe preise/index.html) hinzufügen. Produkte, die schon
+  // einmal EXPLIZIT herausgenommen wurden (oeffentlich === false, z. B. über
+  // das normale Bearbeiten-Modal), bleiben dabei bewusst draußen - nur
+  // Produkte ohne eigene Entscheidung (oeffentlich unset) oder bereits
+  // öffentliche werden erfasst. So kann man später erneut "Kategorie
+  // hinzufügen" klicken (z. B. nachdem ein neues Produkt dazugekommen ist),
+  // ohne bereits bewusst ausgenommene Produkte wieder hineinzuholen.
+  function renderOeffentlichePreiseModal() {
+    if (!el.oeffentlichePreiseKategorienEl) return;
+    const bereiche = PRODUKT_KATEGORIEN.slice();
+    if (produkte.some((p) => ermittleProduktKategorie(p) === PRODUKT_KATEGORIE_SONSTIGE)) {
+      bereiche.push({ id: PRODUKT_KATEGORIE_SONSTIGE, label: PRODUKT_KATEGORIE_SONSTIGE_LABEL });
+    }
+    el.oeffentlichePreiseKategorienEl.innerHTML = bereiche
+      .map((kat) => {
+        const produkteDerKategorie = produkte.filter((p) => ermittleProduktKategorie(p) === kat.id);
+        const oeffentlichAnzahl = produkteDerKategorie.filter((p) => p.oeffentlich === true).length;
+        return `<div class="oeffentliche-preise-zeile">
+            <div>
+              <span class="oeffentliche-preise-zeile__label">${escapeHtml(kat.label)}</span>
+              <span class="oeffentliche-preise-zeile__status">${oeffentlichAnzahl} von ${produkteDerKategorie.length} Produkten öffentlich</span>
+            </div>
+            <button type="button" class="btn btn--ghost btn--sm" data-oeffentlich-kategorie="${kat.id}" ${
+          produkteDerKategorie.length === 0 ? "disabled" : ""
+        }>Kategorie hinzufügen</button>
+          </div>`;
+      })
+      .join("");
+  }
+
+  if (el.btnOeffentlichePreise) {
+    el.btnOeffentlichePreise.addEventListener("click", () => {
+      renderOeffentlichePreiseModal();
+      oeffneModal("modal-oeffentliche-preise");
+    });
+  }
+
+  if (el.oeffentlichePreiseKategorienEl) {
+    el.oeffentlichePreiseKategorienEl.addEventListener("click", async (event) => {
+      const btn = event.target.closest("[data-oeffentlich-kategorie]");
+      if (!btn) return;
+      const kategorieId = btn.getAttribute("data-oeffentlich-kategorie");
+      const kat =
+        PRODUKT_KATEGORIEN.find((k) => k.id === kategorieId) ||
+        (kategorieId === PRODUKT_KATEGORIE_SONSTIGE ? { id: PRODUKT_KATEGORIE_SONSTIGE, label: PRODUKT_KATEGORIE_SONSTIGE_LABEL } : null);
+      const zuAendern = produkte.filter((p) => ermittleProduktKategorie(p) === kategorieId && p.oeffentlich !== false);
+      if (zuAendern.length === 0) {
+        zeigeToast("In dieser Kategorie gibt es nichts mehr hinzuzufügen.");
+        return;
+      }
+      btn.disabled = true;
+      try {
+        const batch = db.batch();
+        zuAendern.forEach((p) => batch.update(db.collection(PRODUKTE_COLLECTION).doc(p.id), { oeffentlich: true }));
+        await batch.commit();
+        zeigeToast(`${zuAendern.length} Produkt(e) aus „${kat ? kat.label : kategorieId}“ sind jetzt öffentlich sichtbar.`);
+        renderOeffentlichePreiseModal();
+      } catch (fehler) {
+        console.error(fehler);
+        zeigeToast("Kategorie konnte nicht hinzugefügt werden.");
+        btn.disabled = false;
+      }
     });
   }
 

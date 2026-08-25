@@ -107,6 +107,8 @@
     warenNoResults: document.getElementById("waren-no-results"),
     btnAddWare: document.getElementById("btn-add-ware"),
     btnWarenSortieren: document.getElementById("btn-waren-sortieren"),
+    btnOeffentlichePreise: document.getElementById("btn-oeffentliche-preise"),
+    oeffentlichePreiseKategorienEl: document.getElementById("oeffentliche-preise-kategorien"),
     modalWare: document.getElementById("modal-ware"),
     modalWareTitel: document.getElementById("modal-ware-titel"),
     wareEditingId: document.getElementById("ware-editing-id"),

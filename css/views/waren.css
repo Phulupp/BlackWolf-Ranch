@@ -202,3 +202,33 @@
   cursor: grabbing;
 }
 
+/* Modal "Öffentliche Preisliste" - eine Zeile je Kategorie mit Status +
+   Bulk-Button, siehe renderOeffentlichePreiseModal in js/views/waren.js. */
+.oeffentliche-preise-zeile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--leather-edge);
+}
+
+.oeffentliche-preise-zeile:last-child {
+  border-bottom: none;
+}
+
+.oeffentliche-preise-zeile__label {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--wood-text);
+}
+
+.oeffentliche-preise-zeile__status {
+  display: block;
+  font-size: 11.5px;
+  color: var(--wood-text-muted);
+  margin-top: 2px;
+}
+
