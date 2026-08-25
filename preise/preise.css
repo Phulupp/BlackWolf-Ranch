@@ -1,10 +1,14 @@
 /* ============================================================================
    Öffentliche Preisliste (preise/index.html, kein Login nötig)
    ----------------------------------------------------------------------------
-   Eigenständiges visuelles Environment, komplett ohne Bild-Assets: eine
-   dunkle, stilisierte Farmhaus-Holzwand (reine CSS-Gradients) mit einer
-   daran hängenden Preistafel (mehrschichtiger Holzrahmen + Messingdetails).
-   Eigener Namensraum ("hofwand-*"/"preistafel-*") statt der Klassen aus
+   Eigenständiges visuelles Environment: eine dunkle Holzwand mit einer
+   daran hängenden Preistafel (mehrschichtiger, per CSS gebauter Holzrahmen +
+   Messingdetails). Der Wand-Hintergrund nutzt bewusst assets/textures/
+   wood-panel.webp.png (horizontale Bretter/Maserung) statt der Preistafel
+   selbst ein Bild zu geben - und bewusst NICHT dasselbe Foto wie die
+   normale Sidebar (sidebar-background.webp.png mit Eisen-Rahmen), damit die
+   Preisliste einen eigenen, aber verwandten Holz-Charakter bekommt. Eigener
+   Namensraum ("hofwand-*"/"preistafel-*") statt der Klassen aus
    css/views/waren.css - diese Seite lädt jene Datei gar nicht, damit nichts
    mit dem restlichen App-Design kollidieren kann.
    ============================================================================ */
@@ -34,23 +38,22 @@ body {
 }
 
 /* --------------------------------------------------------------------------
-   Die Holzwand: stilisierte, dunkle Bretterwand aus reinen CSS-Verläufen -
-   vertikale Fugen zwischen den Brettern, feine Maserungs-Streifen, ein
-   warmer Laternenschein hinter der Tafel und eine dunkle Vignette an den
-   Rändern. Kein Bild, keine Foto-Textur.
+   Die Holzwand: echtes Holz-Foto (assets/textures/wood-panel.webp.png -
+   horizontale Bretter mit Maserung/Astlöchern, bewusst NICHT dasselbe Bild
+   wie der Sidebar-Hintergrund sidebar-background.webp.png mit seinem
+   Eisen-Rahmen) unter einem eigenen dunklen Verlauf, damit Ton und
+   Lesbarkeit zur Preistafel passen. "background-attachment: fixed" hält
+   das Foto unabhängig von der (variablen) Seitenhöhe unverzerrt.
    -------------------------------------------------------------------------- */
 .hofwand {
   position: relative;
   min-height: 100vh;
   background-color: var(--holz-1);
-  background-image:
-    /* Fugen zwischen den Brettern */
-    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.4) 0, rgba(0, 0, 0, 0.4) 2px, transparent 2px, transparent 172px),
-    /* leicht wechselnder Brettton */
-    repeating-linear-gradient(90deg, rgba(58, 37, 24, 0.5) 0, rgba(58, 37, 24, 0.5) 86px, rgba(26, 16, 11, 0.5) 86px, rgba(26, 16, 11, 0.5) 172px),
-    /* feine, unregelmäßige Maserungsstreifen */
-    repeating-linear-gradient(90deg, rgba(231, 215, 188, 0.02) 0, transparent 1px, transparent 7px),
-    linear-gradient(180deg, var(--holz-2) 0%, var(--holz-1) 65%);
+  background-image: linear-gradient(180deg, rgba(20, 12, 8, 0.55) 0%, rgba(12, 7, 4, 0.86) 100%), url("../assets/textures/wood-panel.webp.png");
+  background-repeat: no-repeat, no-repeat;
+  background-size: cover, cover;
+  background-position: center, center;
+  background-attachment: fixed, fixed;
 }
 
 /* Warmer, sehr dezenter Laternenschein hinter der Tafel. */
