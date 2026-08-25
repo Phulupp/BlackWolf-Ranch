@@ -93,17 +93,6 @@
   margin-bottom: 20px;
 }
 
-/* Dieselbe feine Maserung wie bei .parch-card (siehe dort) - beide sind die
-   beiden meistgenutzten "Flächen"-Bausteine der App. */
-.table-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background-image: repeating-linear-gradient(97deg, var(--wood-grain-light) 0, var(--wood-grain-light) 1px, transparent 1px, transparent 7px);
-  pointer-events: none;
-}
-
 /* Toolbar oberhalb von Tabellen */
 .toolbar {
   display: flex;

@@ -56,16 +56,6 @@
   box-shadow: inset 0 -10px 16px rgba(0, 0, 0, 0.14);
 }
 
-/* Dieselbe feine Maserung wie bei .parch-card/.table-card/.rezept-karte. */
-.hofbuch-eintrag::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background-image: repeating-linear-gradient(97deg, var(--wood-grain-light) 0, var(--wood-grain-light) 1px, transparent 1px, transparent 7px);
-  pointer-events: none;
-}
-
 .hofbuch-eintrag__kopf {
   display: flex;
   align-items: flex-start;
