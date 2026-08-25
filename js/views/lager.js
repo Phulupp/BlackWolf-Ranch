@@ -56,7 +56,7 @@
       return;
     }
 
-    const bereiche = PRODUKT_KATEGORIEN.slice();
+    const bereiche = sortierteProduktKategorien("reihenfolgeIntern");
     if (produkte.some((p) => ermittleProduktKategorie(p) === PRODUKT_KATEGORIE_SONSTIGE)) {
       bereiche.push({ id: PRODUKT_KATEGORIE_SONSTIGE, label: PRODUKT_KATEGORIE_SONSTIGE_LABEL });
     }

@@ -154,7 +154,7 @@
     }
     if (el.warenSearch) el.warenSearch.disabled = warenSortierAktiv;
 
-    const bereiche = PRODUKT_KATEGORIEN.slice();
+    const bereiche = sortierteProduktKategorien("reihenfolgeIntern");
     if (produkte.some((p) => ermittleProduktKategorie(p) === PRODUKT_KATEGORIE_SONSTIGE)) {
       bereiche.push({ id: PRODUKT_KATEGORIE_SONSTIGE, label: PRODUKT_KATEGORIE_SONSTIGE_LABEL });
     }
@@ -213,71 +213,290 @@
     });
   }
 
-  // --- Öffentliche Preisliste: ganze Kategorie auf einen Schlag ------------
-  // Statt jedes Produkt einzeln im "Produkt bearbeiten"-Modal anzuhaken,
-  // kann man hier eine komplette Kategorie mit einem Klick zur öffentlichen
-  // Preisliste (siehe preise/index.html) hinzufügen. Produkte, die schon
-  // einmal EXPLIZIT herausgenommen wurden (oeffentlich === false, z. B. über
-  // das normale Bearbeiten-Modal), bleiben dabei bewusst draußen - nur
-  // Produkte ohne eigene Entscheidung (oeffentlich unset) oder bereits
-  // öffentliche werden erfasst. So kann man später erneut "Kategorie
-  // hinzufügen" klicken (z. B. nachdem ein neues Produkt dazugekommen ist),
-  // ohne bereits bewusst ausgenommene Produkte wieder hineinzuholen.
-  function renderOeffentlichePreiseModal() {
-    if (!el.oeffentlichePreiseKategorienEl) return;
-    const bereiche = PRODUKT_KATEGORIEN.slice();
-    if (produkte.some((p) => ermittleProduktKategorie(p) === PRODUKT_KATEGORIE_SONSTIGE)) {
-      bereiche.push({ id: PRODUKT_KATEGORIE_SONSTIGE, label: PRODUKT_KATEGORIE_SONSTIGE_LABEL });
-    }
-    el.oeffentlichePreiseKategorienEl.innerHTML = bereiche
-      .map((kat) => {
-        const produkteDerKategorie = produkte.filter((p) => ermittleProduktKategorie(p) === kat.id);
-        const oeffentlichAnzahl = produkteDerKategorie.filter((p) => p.oeffentlich === true).length;
-        return `<div class="oeffentliche-preise-zeile">
-            <div>
-              <span class="oeffentliche-preise-zeile__label">${escapeHtml(kat.label)}</span>
-              <span class="oeffentliche-preise-zeile__status">${oeffentlichAnzahl} von ${produkteDerKategorie.length} Produkten öffentlich</span>
-            </div>
-            <button type="button" class="btn btn--ghost btn--sm" data-oeffentlich-kategorie="${kat.id}" ${
-          produkteDerKategorie.length === 0 ? "disabled" : ""
-        }>Kategorie hinzufügen</button>
-          </div>`;
-      })
+  // --- Kategorien verwalten --------------------------------------------
+  // Admin-Verwaltung der Produkt-Kategorien: anlegen, umbenennen, löschen,
+  // sowie ZWEI unabhängige Reihenfolgen (intern für Waren & Preise/Lager/
+  // Bestellungen, öffentlich für blackwolfranch.de/preise) - siehe
+  // PRODUKT_KATEGORIEN_DOC/sortierteProduktKategorien in js/core/config.js.
+  // "Sonstige Waren" ist überall der fixe, nicht verschiebbare/löschbare
+  // Auffangbereich (analog zur Sammelrolle bei Kontakte-Rollen).
+  function starteProduktKategorienListener() {
+    if (!db) return;
+    if (unsubProduktKategorien) unsubProduktKategorien();
+    unsubProduktKategorien = db.doc(PRODUKT_KATEGORIEN_DOC).onSnapshot(
+      async (snap) => {
+        listenerRetryVersuche["Produkt-Kategorien"] = 0;
+        if (!snap.exists) {
+          await db.doc(PRODUKT_KATEGORIEN_DOC).set({ kategorien: DEFAULT_PRODUKT_KATEGORIEN }).catch(() => {});
+          return;
+        }
+        produktKategorien = (snap.data().kategorien || DEFAULT_PRODUKT_KATEGORIEN).map((k) => ({ ...k }));
+        befuelleProduktKategorieSelect();
+        renderKategorienVerwaltung();
+        renderWaren();
+        renderLager();
+        renderUebersicht();
+      },
+      (fehler) => {
+        if (!planeListenerNeustart("Produkt-Kategorien", starteProduktKategorienListener, fehler)) {
+          console.error("Produkt-Kategorien konnten nicht geladen werden:", fehler);
+        }
+      }
+    );
+  }
+
+  // Befüllt das Kategorie-Auswahlfeld im "Produkt bearbeiten"-Modal - analog
+  // zu befuelleProduktSelects, nur für Kategorien statt Produkte.
+  function befuelleProduktKategorieSelect() {
+    if (!el.wareKategorieInput) return;
+    const vorher = el.wareKategorieInput.value;
+    const optionsHtml = sortierteProduktKategorien("reihenfolgeIntern")
+      .map((k) => `<option value="${escapeHtml(k.id)}">${escapeHtml(k.label)}</option>`)
+      .concat([`<option value="${PRODUKT_KATEGORIE_SONSTIGE}">${escapeHtml(PRODUKT_KATEGORIE_SONSTIGE_LABEL)}</option>`])
       .join("");
+    el.wareKategorieInput.innerHTML = optionsHtml;
+    if (vorher && (produktKategorien.some((k) => k.id === vorher) || vorher === PRODUKT_KATEGORIE_SONSTIGE)) {
+      el.wareKategorieInput.value = vorher;
+    }
+  }
+
+  // Vergibt eine neue, eindeutige, URL-taugliche Kategorie-ID aus dem
+  // eingegebenen Label (nur intern als Firestore-Feldwert genutzt, wird dem
+  // Team nie angezeigt) - hängt bei Kollisionen einfach eine Zahl an.
+  function erzeugeKategorieId(label) {
+    const umlautErsetzungen = { ä: "ae", ö: "oe", ü: "ue", ß: "ss" };
+    const basis =
+      label
+        .toLowerCase()
+        .replace(/[äöüß]/g, (zeichen) => umlautErsetzungen[zeichen])
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "") || "kategorie";
+    let id = basis;
+    let zaehler = 2;
+    while (produktKategorien.some((k) => k.id === id) || id === PRODUKT_KATEGORIE_SONSTIGE) {
+      id = `${basis}-${zaehler}`;
+      zaehler++;
+    }
+    return id;
+  }
+
+  // Vertauscht die Reihenfolge-Zahl (feld = "reihenfolgeIntern" oder
+  // "reihenfolgeOeffentlich") einer Kategorie mit ihrem direkten Nachbarn in
+  // der jeweils sortierten Ansicht - wirkt sich NICHT auf das jeweils andere
+  // Reihenfolge-Feld aus, die beiden Ansichten bleiben also unabhängig.
+  async function verschiebeKategorie(kategorieId, feld, richtung) {
+    const sortiert = sortierteProduktKategorien(feld);
+    const index = sortiert.findIndex((k) => k.id === kategorieId);
+    const zielIndex = index + richtung;
+    if (index === -1 || zielIndex < 0 || zielIndex >= sortiert.length) return;
+    const a = sortiert[index];
+    const b = sortiert[zielIndex];
+    const neueListe = produktKategorien.map((k) => {
+      if (k.id === a.id) return { ...k, [feld]: b[feld] };
+      if (k.id === b.id) return { ...k, [feld]: a[feld] };
+      return k;
+    });
+    await db.doc(PRODUKT_KATEGORIEN_DOC).update({ kategorien: neueListe }).catch(() => {
+      zeigeToast("Reihenfolge konnte nicht gespeichert werden.");
+    });
+  }
+
+  // Eine Zeile im Verwaltungs-Modal (für beide Listen, intern & öffentlich).
+  // "zusatz" ist optional zusätzlicher Inhalt rechts (z. B. der "Kategorie
+  // hinzufügen"-Button in der öffentlichen Liste).
+  function kategorieZeileHtml(kat, feld, istErsteImFeld, istLetzteImFeld, zusatzHtml) {
+    return `<div class="oeffentliche-preise-zeile" data-kategorie-zeile="${kat.id}">
+        <div class="kategorie-zeile__pfeile">
+          <button type="button" class="icon-btn" data-kategorie-hoch="${kat.id}" data-feld="${feld}" title="Nach oben" ${
+      istErsteImFeld ? "disabled" : ""
+    }>▲</button>
+          <button type="button" class="icon-btn" data-kategorie-runter="${kat.id}" data-feld="${feld}" title="Nach unten" ${
+      istLetzteImFeld ? "disabled" : ""
+    }>▼</button>
+        </div>
+        <div style="flex:1; min-width:0;">
+          ${
+            feld === "reihenfolgeIntern"
+              ? `<input type="text" value="${escapeHtml(kat.label)}" data-kategorie-umbenennen="${kat.id}" class="field-input" style="max-width:220px;" />`
+              : `<span class="oeffentliche-preise-zeile__label">${escapeHtml(kat.label)}</span>`
+          }
+        </div>
+        ${zusatzHtml || ""}
+        ${
+          feld === "reihenfolgeIntern"
+            ? `<button type="button" class="icon-btn icon-btn--delete" data-kategorie-loeschen="${kat.id}" title="Kategorie löschen">🗑</button>`
+            : ""
+        }
+      </div>`;
+  }
+
+  // "Sonstige Waren" wird in beiden Listen als fixe, nicht bearbeitbare
+  // Zeile ganz unten angehängt - kein Löschen/Umbenennen/Verschieben, da sie
+  // der immer vorhandene Auffangbereich für nicht zugeordnete Produkte ist.
+  function sonstigeKategorieZeileHtml(zusatzHtml) {
+    return `<div class="oeffentliche-preise-zeile" style="opacity:0.7;">
+        <div class="kategorie-zeile__pfeile">
+          <button type="button" class="icon-btn" disabled title="Fester Auffangbereich">▲</button>
+          <button type="button" class="icon-btn" disabled title="Fester Auffangbereich">▼</button>
+        </div>
+        <div style="flex:1; min-width:0;">
+          <span class="oeffentliche-preise-zeile__label" title="Auffangbereich für Produkte ohne eigene Kategorie - kann nicht umbenannt oder gelöscht werden">${escapeHtml(
+            PRODUKT_KATEGORIE_SONSTIGE_LABEL
+          )}</span>
+        </div>
+        ${zusatzHtml || ""}
+      </div>`;
+  }
+
+  function renderKategorienVerwaltung() {
+    if (!el.kategorienInternListeEl || !el.kategorienOeffentlichListeEl) return;
+
+    const intern = sortierteProduktKategorien("reihenfolgeIntern");
+    el.kategorienInternListeEl.innerHTML =
+      intern.map((kat, i) => kategorieZeileHtml(kat, "reihenfolgeIntern", i === 0, i === intern.length - 1, "")).join("") +
+      sonstigeKategorieZeileHtml("");
+
+    const oeffentlich = sortierteProduktKategorien("reihenfolgeOeffentlich");
+    el.kategorienOeffentlichListeEl.innerHTML =
+      oeffentlich
+        .map((kat, i) => {
+          const produkteDerKategorie = produkte.filter((p) => ermittleProduktKategorie(p) === kat.id);
+          const oeffentlichAnzahl = produkteDerKategorie.filter((p) => p.oeffentlich === true).length;
+          const zusatz = `<div style="text-align:right; flex-shrink:0;">
+              <span class="oeffentliche-preise-zeile__status" style="display:block;">${oeffentlichAnzahl} von ${produkteDerKategorie.length} öffentlich</span>
+              <button type="button" class="btn btn--ghost btn--sm" data-oeffentlich-kategorie="${kat.id}" ${
+            produkteDerKategorie.length === 0 ? "disabled" : ""
+          }>Kategorie hinzufügen</button>
+            </div>`;
+          return kategorieZeileHtml(kat, "reihenfolgeOeffentlich", i === 0, i === oeffentlich.length - 1, zusatz);
+        })
+        .join("") +
+      (() => {
+        const produkteSonstige = produkte.filter((p) => ermittleProduktKategorie(p) === PRODUKT_KATEGORIE_SONSTIGE);
+        const oeffentlichAnzahl = produkteSonstige.filter((p) => p.oeffentlich === true).length;
+        return sonstigeKategorieZeileHtml(
+          `<div style="text-align:right; flex-shrink:0;">
+              <span class="oeffentliche-preise-zeile__status" style="display:block;">${oeffentlichAnzahl} von ${produkteSonstige.length} öffentlich</span>
+              <button type="button" class="btn btn--ghost btn--sm" data-oeffentlich-kategorie="${PRODUKT_KATEGORIE_SONSTIGE}" ${
+            produkteSonstige.length === 0 ? "disabled" : ""
+          }>Kategorie hinzufügen</button>
+            </div>`
+        );
+      })();
   }
 
   if (el.btnOeffentlichePreise) {
     el.btnOeffentlichePreise.addEventListener("click", () => {
-      renderOeffentlichePreiseModal();
+      if (el.kategorieNeuInput) el.kategorieNeuInput.value = "";
+      renderKategorienVerwaltung();
       oeffneModal("modal-oeffentliche-preise");
     });
   }
 
-  if (el.oeffentlichePreiseKategorienEl) {
-    el.oeffentlichePreiseKategorienEl.addEventListener("click", async (event) => {
-      const btn = event.target.closest("[data-oeffentlich-kategorie]");
-      if (!btn) return;
-      const kategorieId = btn.getAttribute("data-oeffentlich-kategorie");
+  if (el.btnKategorieErstellen) {
+    el.btnKategorieErstellen.addEventListener("click", async () => {
+      const label = el.kategorieNeuInput ? el.kategorieNeuInput.value.trim() : "";
+      if (!label) return zeigeToast("Bitte gib einen Namen für die Kategorie ein.");
+      if (produktKategorien.some((k) => k.label.toLowerCase() === label.toLowerCase())) {
+        return zeigeToast("Diese Kategorie gibt es bereits.");
+      }
+      const maxIntern = Math.max(0, ...produktKategorien.map((k) => k.reihenfolgeIntern || 0));
+      const maxOeffentlich = Math.max(0, ...produktKategorien.map((k) => k.reihenfolgeOeffentlich || 0));
+      const neueKategorie = {
+        id: erzeugeKategorieId(label),
+        label,
+        reihenfolgeIntern: maxIntern + 1,
+        reihenfolgeOeffentlich: maxOeffentlich + 1,
+      };
+      try {
+        await db.doc(PRODUKT_KATEGORIEN_DOC).update({ kategorien: [...produktKategorien, neueKategorie] });
+        if (el.kategorieNeuInput) el.kategorieNeuInput.value = "";
+        zeigeToast("Kategorie erstellt.");
+      } catch (fehler) {
+        console.error(fehler);
+        zeigeToast("Kategorie konnte nicht erstellt werden.");
+      }
+    });
+  }
+
+  // Ein gemeinsamer Klick-Handler für beide Listen (Pfeile, Löschen,
+  // "Kategorie hinzufügen") - beide Container teilen sich dieselbe Logik,
+  // daher an beide gehängt.
+  async function kategorienListeKlick(event) {
+    const hochBtn = event.target.closest("[data-kategorie-hoch]");
+    const runterBtn = event.target.closest("[data-kategorie-runter]");
+    const loeschenBtn = event.target.closest("[data-kategorie-loeschen]");
+    const oeffentlichBtn = event.target.closest("[data-oeffentlich-kategorie]");
+
+    if (hochBtn) return verschiebeKategorie(hochBtn.getAttribute("data-kategorie-hoch"), hochBtn.getAttribute("data-feld"), -1);
+    if (runterBtn) return verschiebeKategorie(runterBtn.getAttribute("data-kategorie-runter"), runterBtn.getAttribute("data-feld"), 1);
+
+    if (loeschenBtn) {
+      const id = loeschenBtn.getAttribute("data-kategorie-loeschen");
+      if (produkte.some((p) => ermittleProduktKategorie(p) === id)) {
+        return zeigeToast("Diese Kategorie wird noch von Produkten verwendet und kann nicht gelöscht werden.");
+      }
+      const neueListe = produktKategorien.filter((k) => k.id !== id);
+      try {
+        await db.doc(PRODUKT_KATEGORIEN_DOC).update({ kategorien: neueListe });
+        zeigeToast("Kategorie gelöscht.");
+      } catch (fehler) {
+        console.error(fehler);
+        zeigeToast("Kategorie konnte nicht gelöscht werden.");
+      }
+      return;
+    }
+
+    if (oeffentlichBtn) {
+      const kategorieId = oeffentlichBtn.getAttribute("data-oeffentlich-kategorie");
       const kat =
-        PRODUKT_KATEGORIEN.find((k) => k.id === kategorieId) ||
-        (kategorieId === PRODUKT_KATEGORIE_SONSTIGE ? { id: PRODUKT_KATEGORIE_SONSTIGE, label: PRODUKT_KATEGORIE_SONSTIGE_LABEL } : null);
+        produktKategorien.find((k) => k.id === kategorieId) ||
+        (kategorieId === PRODUKT_KATEGORIE_SONSTIGE ? { label: PRODUKT_KATEGORIE_SONSTIGE_LABEL } : null);
       const zuAendern = produkte.filter((p) => ermittleProduktKategorie(p) === kategorieId && p.oeffentlich !== false);
       if (zuAendern.length === 0) {
         zeigeToast("In dieser Kategorie gibt es nichts mehr hinzuzufügen.");
         return;
       }
-      btn.disabled = true;
+      oeffentlichBtn.disabled = true;
       try {
         const batch = db.batch();
         zuAendern.forEach((p) => batch.update(db.collection(PRODUKTE_COLLECTION).doc(p.id), { oeffentlich: true }));
         await batch.commit();
         zeigeToast(`${zuAendern.length} Produkt(e) aus „${kat ? kat.label : kategorieId}“ sind jetzt öffentlich sichtbar.`);
-        renderOeffentlichePreiseModal();
+        renderKategorienVerwaltung();
       } catch (fehler) {
         console.error(fehler);
         zeigeToast("Kategorie konnte nicht hinzugefügt werden.");
-        btn.disabled = false;
+        oeffentlichBtn.disabled = false;
       }
+    }
+  }
+
+  if (el.kategorienInternListeEl) el.kategorienInternListeEl.addEventListener("click", kategorienListeKlick);
+  if (el.kategorienOeffentlichListeEl) el.kategorienOeffentlichListeEl.addEventListener("click", kategorienListeKlick);
+
+  // Umbenennen (nur in der internen Liste, siehe kategorieZeileHtml) - erst
+  // beim Verlassen des Feldes (change), nicht bei jedem Tastendruck.
+  if (el.kategorienInternListeEl) {
+    el.kategorienInternListeEl.addEventListener("change", async (event) => {
+      const input = event.target.closest("[data-kategorie-umbenennen]");
+      if (!input) return;
+      const id = input.getAttribute("data-kategorie-umbenennen");
+      const alt = produktKategorien.find((k) => k.id === id);
+      const neuerLabel = input.value.trim();
+      if (!neuerLabel || (alt && neuerLabel === alt.label)) {
+        input.value = alt ? alt.label : "";
+        return;
+      }
+      if (produktKategorien.some((k) => k.id !== id && k.label.toLowerCase() === neuerLabel.toLowerCase())) {
+        zeigeToast("Diese Kategorie gibt es bereits.");
+        input.value = alt ? alt.label : "";
+        return;
+      }
+      const neueListe = produktKategorien.map((k) => (k.id === id ? { ...k, label: neuerLabel } : k));
+      await db.doc(PRODUKT_KATEGORIEN_DOC).update({ kategorien: neueListe }).catch(() => {
+        zeigeToast("Umbenennen fehlgeschlagen.");
+      });
     });
   }
 

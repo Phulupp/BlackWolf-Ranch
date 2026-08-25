@@ -271,6 +271,18 @@ service cloud.firestore {
       allow write: if istAdmin();
     }
 
+    // AUSNAHME innerhalb von "kataloge": Die Produkt-Kategorien
+    // (kataloge/produktKategorien) müssen auch OHNE Login lesbar sein - sie
+    // bestimmen Gruppierung/Reihenfolge auf der öffentlichen Preisliste
+    // (preise/index.html, siehe "reihenfolgeOeffentlich" je Kategorie).
+    // Dieser spezifischere match-Block gilt zusätzlich zum allgemeinen
+    // "kataloge"-Block oben (Firestore verknüpft mehrere passende Regeln mit
+    // ODER) - Schreiben bleibt weiterhin ausschließlich Verwaltern
+    // vorbehalten (über die "write"-Regel im allgemeinen Block oben).
+    match /kataloge/produktKategorien {
+      allow read: if true;
+    }
+
     // Kunden: ein Profil pro "unternehmen"-Namen aus den Bestellungen, wird
     // automatisch angelegt (siehe sorgeFuerKundenBackfill in js/views/kunden.js) -
     // jeder freigegebene Nutzer darf Profile lesen, automatisch anlegen,

@@ -31,6 +31,7 @@
 
     starteHeartbeat();
     starteHofEinstellungenListener();
+    starteProduktKategorienListener();
     starteProdukteListener();
     starteLagerStatusListener();
     starteRezepteListener();

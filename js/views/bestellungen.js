@@ -448,7 +448,7 @@
     // Bestellungen übersichtlich gruppiert erscheinen statt als eine lange,
     // unsortierte Liste. Die ursprünglichen Array-Indizes bleiben dabei
     // erhalten (data-position-menge etc. referenzieren bestellungEntwurfPositionen).
-    const bereiche = PRODUKT_KATEGORIEN.slice();
+    const bereiche = sortierteProduktKategorien("reihenfolgeIntern");
     if (positionen.some((p) => ermittlePositionKategorie(p) === PRODUKT_KATEGORIE_SONSTIGE)) {
       bereiche.push({ id: PRODUKT_KATEGORIE_SONSTIGE, label: PRODUKT_KATEGORIE_SONSTIGE_LABEL });
     }
@@ -556,7 +556,7 @@
     // Gleiche Bereichs-Einteilung wie bei Waren & Preise/Lager/der
     // Produkttabelle oben, damit die Auswahlliste beim Hinzufügen ebenso
     // aufgeräumt gruppiert erscheint statt als eine lange, unsortierte Liste.
-    const bereiche = PRODUKT_KATEGORIEN.slice();
+    const bereiche = sortierteProduktKategorien("reihenfolgeIntern");
     if (treffer.some((p) => ermittleProduktKategorie(p) === PRODUKT_KATEGORIE_SONSTIGE)) {
       bereiche.push({ id: PRODUKT_KATEGORIE_SONSTIGE, label: PRODUKT_KATEGORIE_SONSTIGE_LABEL });
     }

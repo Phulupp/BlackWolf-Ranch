@@ -18,7 +18,7 @@
   /* ------------------------------------------------------------------------
      1. Konstanten
      ------------------------------------------------------------------------ */
-  const VERSION_AKTUELL = 80;
+  const VERSION_AKTUELL = 81;
 
   // Ränge des Hofes (rein organisatorisch — Verwalterrechte sind unabhängig
   // davon und werden separat je Benutzer vergeben, siehe isAdmin).
@@ -166,29 +166,68 @@
   ];
 
   // Einteilung der Waren in Bereiche für die Darstellung (Waren & Preise,
-  // Bestellungen) - alle Seiten nutzen dieselbe Liste, damit sie immer
-  // identisch gruppiert bleiben. Jedes Produkt trägt seine Kategorie inzwischen selbst
-  // als Feld "kategorie" (id aus dieser Liste), einstellbar im
-  // Bearbeitungsmodal bei Waren & Preise. Die "namen"-Listen bleiben nur als
-  // Fallback für ältere Produkt-Dokumente ohne "kategorie"-Feld erhalten
-  // (siehe ermittleProduktKategorie). Waren ohne Zuordnung landen automatisch
-  // im Sammelbereich "Sonstige Waren".
-  const PRODUKT_KATEGORIEN = [
-    { id: "feldfruechte", label: "Feldfrüchte", namen: ["Weizen", "Mais", "Zuckerrohr", "Hopfen", "Zwiebel", "Kartoffel", "Salatkopf", "Tomaten", "Karotten", "Thymian", "Oregano", "Blaubeere"] },
-    { id: "tierprodukte", label: "Tierprodukte", namen: ["Milch", "Eier", "Rindfleisch", "Schweinefleisch", "Lammfleisch", "Speck"] },
-    { id: "verarbeitet", label: "Verarbeitete Waren", namen: ["Mehl", "Zucker", "Mehlsack", "Zuckersack", "Stoff", "Maisbrot"] },
+  // Lager, Bestellungen, die öffentliche Preisliste) - admin-verwaltbar
+  // (anlegen/umbenennen/löschen/anordnen, siehe "Kategorien verwalten" in
+  // Waren & Preise bzw. js/views/waren.js), daher in Firestore statt fest im
+  // Code (siehe PRODUKT_KATEGORIEN_DOC unten und das globale "produktKategorien"
+  // in js/core/state.js). DEFAULT_PRODUKT_KATEGORIEN ist nur der Startwert
+  // (einmaliges Seeding beim allerersten Laden UND lokaler Anzeigewert, bevor
+  // der Listener zum ersten Mal antwortet). Jede Kategorie hat ZWEI
+  // unabhängige Reihenfolgen: "reihenfolgeIntern" (Waren & Preise/Lager/
+  // Bestellungen) und "reihenfolgeOeffentlich" (blackwolfranch.de/preise) -
+  // eine Kategorie kann also in der öffentlichen Liste ganz oben stehen,
+  // intern aber woanders. Die "namen"-Listen bleiben nur als Fallback für
+  // ältere Produkt-Dokumente ohne "kategorie"-Feld erhalten (siehe
+  // ermittleProduktKategorie), neue/admin-angelegte Kategorien brauchen das
+  // nicht.
+  const DEFAULT_PRODUKT_KATEGORIEN = [
+    {
+      id: "feldfruechte",
+      label: "Feldfrüchte",
+      reihenfolgeIntern: 1,
+      reihenfolgeOeffentlich: 1,
+      namen: ["Weizen", "Mais", "Zuckerrohr", "Hopfen", "Zwiebel", "Kartoffel", "Salatkopf", "Tomaten", "Karotten", "Thymian", "Oregano", "Blaubeere"],
+    },
+    {
+      id: "tierprodukte",
+      label: "Tierprodukte",
+      reihenfolgeIntern: 2,
+      reihenfolgeOeffentlich: 2,
+      namen: ["Milch", "Eier", "Rindfleisch", "Schweinefleisch", "Lammfleisch", "Speck"],
+    },
+    {
+      id: "verarbeitet",
+      label: "Verarbeitete Waren",
+      reihenfolgeIntern: 3,
+      reihenfolgeOeffentlich: 3,
+      namen: ["Mehl", "Zucker", "Mehlsack", "Zuckersack", "Stoff", "Maisbrot"],
+    },
   ];
+  const PRODUKT_KATEGORIEN_DOC = "kataloge/produktKategorien";
   const PRODUKT_KATEGORIE_SONSTIGE = "sonstige";
   const PRODUKT_KATEGORIE_SONSTIGE_LABEL = "Sonstige Waren";
 
+  // Liefert die admin-verwalteten Kategorien (siehe "produktKategorien" in
+  // js/core/state.js) sortiert nach der gewünschten Reihenfolge-Variante -
+  // "reihenfolgeIntern" für Waren & Preise/Lager/Bestellungen,
+  // "reihenfolgeOeffentlich" für die öffentliche Preisliste. "Sonstige Waren"
+  // ist bewusst NICHT Teil dieser Liste (siehe PRODUKT_KATEGORIE_SONSTIGE) -
+  // sie wird an jeder Verwendungsstelle unabhängig davon ans Ende gehängt,
+  // sobald mindestens ein Produkt sie tatsächlich braucht.
+  function sortierteProduktKategorien(feld) {
+    return produktKategorien.slice().sort((a, b) => (a[feld] || 0) - (b[feld] || 0));
+  }
+
   // Liefert die Kategorie-id eines Produkts: bevorzugt das explizite Feld
   // "kategorie", fällt für ältere Produkte ohne dieses Feld auf die
-  // namensbasierte Zuordnung von PRODUKT_KATEGORIEN zurück, sonst "sonstige".
+  // namensbasierte Zuordnung zurück, sonst "sonstige". Funktioniert auch für
+  // Produkte, deren Kategorie zwischenzeitlich gelöscht wurde - die landen
+  // dann automatisch (wieder) bei "Sonstige Waren", statt zu verschwinden.
   function ermittleProduktKategorie(p) {
-    if (p.kategorie && (p.kategorie === PRODUKT_KATEGORIE_SONSTIGE || PRODUKT_KATEGORIEN.some((k) => k.id === p.kategorie))) {
+    if (p.kategorie && (p.kategorie === PRODUKT_KATEGORIE_SONSTIGE || produktKategorien.some((k) => k.id === p.kategorie))) {
       return p.kategorie;
     }
-    const treffer = PRODUKT_KATEGORIEN.find((k) => k.namen.includes(p.name));
+    const treffer = produktKategorien.find((k) => (k.namen || []).includes(p.name));
     return treffer ? treffer.id : PRODUKT_KATEGORIE_SONSTIGE;
   }
 

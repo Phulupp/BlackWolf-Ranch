@@ -8,6 +8,13 @@
 
   let produkte = [];
   let unsubProdukte = null;
+  // Admin-verwaltete Produkt-Kategorien (anlegen/umbenennen/löschen/anordnen,
+  // siehe PRODUKT_KATEGORIEN_DOC in config.js und starteProduktKategorienListener
+  // in js/views/waren.js). Startet mit den Standardwerten, bis der Firestore-
+  // Listener den echten Stand liefert - "Sonstige Waren" ist bewusst NICHT
+  // Teil dieser Liste (siehe PRODUKT_KATEGORIE_SONSTIGE in config.js).
+  let produktKategorien = DEFAULT_PRODUKT_KATEGORIEN.map((k) => ({ ...k }));
+  let unsubProduktKategorien = null;
   // { letzteAktualisierung, aktualisiertVon } aus lagerStatus/status - team-
   // weiter Stand für den 24h-Hinweis auf der Übersicht (siehe lager.js).
   let lagerStatus = null;
