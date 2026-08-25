@@ -206,13 +206,14 @@ body {
 
 /* Das Brett: bewusst HELL statt dunkel - wie ein gebleichtes, altes
    Kiefernholz-Preisschild von 1899, das im dunklen Rahmen an der Wand
-   hängt. Die Maserung kommt jetzt vom echten Holz-Foto (aufgehellt +
-   mit "multiply" auf den hellen Grundton gemischt, siehe ::before) statt
-   aus zwei sich überlappenden CSS-Linienmustern - die hatten je nach
-   Bildschirm/Browser ein Moiré-Karo-Muster erzeugt statt echter Maserung.
-   "background-size: 480px auto" + "repeat" (statt "cover"/"fixed") hält
-   die Maserung in konstanter Größe, ganz ohne den früheren
-   "background-attachment: fixed"-Rendering-Fehler.
+   hängt. Die Maserung kommt vom echten Holz-Foto (aufgehellt + mit
+   "multiply" auf den hellen Grundton gemischt, siehe ::before), aber
+   bewusst NUR bei 7% Deckkraft - ein erster Versuch bei 60% war zu
+   kräftig und ging zulasten der Lesbarkeit (siehe Feedback), jetzt nur
+   noch ein ganz leichter Hauch. "background-size: 480px auto" + "repeat"
+   (statt "cover"/"fixed") hält die Maserung in konstanter Größe, ganz
+   ohne den früheren "background-attachment: fixed"-Rendering-Fehler; kein
+   Moiré-Risiko mehr wie bei der vorherigen zwei-Muster-Version.
    -------------------------------------------------------------------------- */
 .preistafel__flaeche {
   position: relative;
@@ -233,8 +234,8 @@ body {
   background-repeat: repeat;
   background-size: 480px auto;
   background-position: center top;
-  filter: brightness(2) saturate(0.5) sepia(0.1);
-  opacity: 0.6;
+  filter: brightness(2.1) saturate(0.45) sepia(0.08);
+  opacity: 0.07;
   mix-blend-mode: multiply;
   pointer-events: none;
 }
