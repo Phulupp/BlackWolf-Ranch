@@ -44,10 +44,23 @@
 }
 
 .rezept-karte {
-  background: var(--leather-700);
+  position: relative;
+  background: linear-gradient(165deg, var(--leather-600) 0%, var(--leather-700) 60%, var(--leather-700) 100%);
   border: 1px solid var(--leather-edge);
   border-radius: var(--radius-md);
   padding: 13px 15px;
+  box-shadow: inset 0 -10px 16px rgba(0, 0, 0, 0.14);
+}
+
+/* Dieselbe feine Maserung wie bei .parch-card/.table-card, hier etwas
+   dezenter, da .rezept-karte eine kleinere, sekundäre Kartenfläche ist. */
+.rezept-karte::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: repeating-linear-gradient(97deg, var(--wood-grain-light) 0, var(--wood-grain-light) 1px, transparent 1px, transparent 7px);
+  pointer-events: none;
 }
 
 .rezept-karte__kopf {

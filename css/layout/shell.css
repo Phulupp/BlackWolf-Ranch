@@ -397,6 +397,20 @@
   line-height: 1.1;
 }
 
+/* Kleiner Messing-Akzentstrich unter jedem Seitentitel - da .page-header__text
+   nur einmal im Markup existiert und Titel/Untertitel pro View per JS
+   ausgetauscht werden (siehe VIEW_META in config.js), wirkt diese eine Regel
+   automatisch auf jede einzelne Seite. */
+.page-header__text h1::after {
+  content: "";
+  display: block;
+  width: 46px;
+  height: 3px;
+  margin-top: 12px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--brass-bright) 0%, transparent 100%);
+}
+
 .page-header__text p {
   margin-top: 8px;
   font-size: 13.5px;

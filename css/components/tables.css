@@ -24,10 +24,11 @@
 }
 
 .reg-row--body {
-  padding: 13px 22px;
+  padding: 13px 22px 13px 20px;
   font-size: 13px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  transition: background 0.15s ease;
+  border-left: 2px solid transparent;
+  transition: background 0.15s ease, border-left-color 0.15s ease;
 }
 
 .reg-row--body:last-child {
@@ -36,6 +37,7 @@
 
 .reg-row--body:hover {
   background: #38271c;
+  border-left-color: var(--brass-bright);
 }
 
 /* Dezente Bereichs-Überschrift/Summe, um lange Tabellen (z. B. Lager) in
@@ -82,12 +84,24 @@
 }
 
 .table-card {
-  background: var(--leather-800);
+  position: relative;
+  background: linear-gradient(165deg, var(--leather-700) 0%, var(--leather-800) 55%, var(--leather-800) 100%);
   border: 1px solid var(--leather-edge);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-card), inset 0 -16px 26px rgba(0, 0, 0, 0.16);
   padding: 4px;
   margin-bottom: 20px;
+}
+
+/* Dieselbe feine Maserung wie bei .parch-card (siehe dort) - beide sind die
+   beiden meistgenutzten "Flächen"-Bausteine der App. */
+.table-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: repeating-linear-gradient(97deg, var(--wood-grain-light) 0, var(--wood-grain-light) 1px, transparent 1px, transparent 7px);
+  pointer-events: none;
 }
 
 /* Toolbar oberhalb von Tabellen */

@@ -89,10 +89,11 @@
   display: flex;
   justify-content: center;
   align-items: baseline;
-  padding: 9px 22px;
+  padding: 9px 22px 9px 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-left: 2px solid transparent;
   font-size: 13px;
-  transition: background 0.15s ease;
+  transition: background 0.15s ease, border-left-color 0.15s ease;
 }
 
 .warenbuch-zeile:last-child {
@@ -101,6 +102,7 @@
 
 .warenbuch-zeile:hover {
   background: #38271c;
+  border-left-color: var(--brass-bright);
 }
 
 /* Feste, gemeinsame Breite für Produkt- und Preisspalte statt einer pro

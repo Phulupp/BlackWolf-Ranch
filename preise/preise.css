@@ -107,40 +107,25 @@ body {
 }
 
 /* --------------------------------------------------------------------------
-   Marke (Kuh-Kritzelei + Hofname) - kleiner Absender oberhalb der Tafel.
+   Marke (Logo) - kleiner Absender oberhalb der Tafel. Das Logo enthält den
+   Hofnamen/"Est. 1899" bereits selbst als Bildschriftzug, daher bewusst
+   KEIN zusätzlicher Text-Titel mehr darunter (wäre doppelt) - das Logo
+   steht allein für sich.
    -------------------------------------------------------------------------- */
 .hofwand__marke {
   text-align: center;
-  margin-bottom: 22px;
+  margin-bottom: 26px;
 }
 
 .hofwand__kuh {
-  width: 170px;
-  height: 170px;
+  width: 200px;
+  height: 200px;
   object-fit: cover;
   border-radius: 50%;
   border: 4px solid var(--messing-hell);
   display: block;
-  margin: 0 auto 14px;
+  margin: 0 auto;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
-}
-
-.hofwand__markentitel {
-  display: block;
-  font-family: var(--font-brand);
-  font-size: 17px;
-  letter-spacing: 0.04em;
-  color: var(--messing-hell);
-}
-
-.hofwand__markenzusatz {
-  display: block;
-  margin-top: 3px;
-  font-size: 8.5px;
-  font-weight: 700;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: rgba(191, 169, 138, 0.55);
 }
 
 .hofwand__fuss {

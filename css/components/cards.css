@@ -5,13 +5,29 @@
    vorbehalten.
    -------------------------------------------------------------------------- */
 .parch-card {
-  background: var(--leather-800);
+  background: linear-gradient(165deg, var(--leather-700) 0%, var(--leather-800) 55%, var(--leather-800) 100%);
   border: 1px solid var(--leather-edge);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-card), inset 0 -16px 26px rgba(0, 0, 0, 0.16);
   padding: 26px 28px;
   margin-bottom: 20px;
   position: relative;
+}
+
+/* Sehr feine, kaum sichtbare Holzmaserung, die jede Karte in der ganzen App
+   bekommt (statt einer komplett flachen Fläche) - dieselbe Machart wie bei
+   der öffentlichen Preisliste, hier deutlich dezenter dosiert. Bewusst OHNE
+   "overflow: hidden" auf der Karte selbst, damit Dropdowns/Popover, die aus
+   manchen Karten herausragen (z. B. das Custom-Select), weiterhin sichtbar
+   bleiben - "border-radius: inherit" reicht, damit die Maserung trotzdem
+   nicht über die runden Ecken hinaus übersteht. */
+.parch-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: repeating-linear-gradient(97deg, var(--wood-grain-light) 0, var(--wood-grain-light) 1px, transparent 1px, transparent 7px);
+  pointer-events: none;
 }
 
 .parch-card h3 {
