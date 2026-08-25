@@ -1,19 +1,18 @@
 /* ============================================================================
    Öffentliche Preisliste (preise/index.html, kein Login nötig)
    ----------------------------------------------------------------------------
-   Eigenständiges visuelles Environment: eine dunkle Holzwand mit einer
-   daran hängenden Preistafel. Sowohl die Wand ALS AUCH die Innenfläche der
-   Tafel (das eigentliche "Brett" mit den Preisen) nutzen dasselbe Foto
-   assets/textures/wood-panel.webp.png (horizontale Bretter/Maserung),
-   jeweils unterschiedlich stark abgedunkelt/positioniert, damit die Tafel
-   wie ein eigenes, dunkler gebeiztes Brett wirkt statt wie eine einfarbige
-   Box - und bewusst NICHT dasselbe Foto wie die normale Sidebar
-   (sidebar-background.webp.png mit Eisen-Rahmen), damit die Preisliste
-   einen eigenen, aber verwandten Holz-Charakter bekommt. Rahmen/Nägel/
-   Messingdetails bleiben reines CSS. Eigener Namensraum
-   ("hofwand-*"/"preistafel-*") statt der Klassen aus css/views/waren.css -
-   diese Seite lädt jene Datei gar nicht, damit nichts mit dem restlichen
-   App-Design kollidieren kann.
+   Eigenständiges visuelles Environment: eine dunkle Holzwand (echtes Foto,
+   assets/textures/wood-panel.webp.png - bewusst NICHT dasselbe Bild wie
+   der Sidebar-Hintergrund sidebar-background.webp.png mit seinem
+   Eisen-Rahmen) mit einer daran hängenden Preistafel im dunklen Holzrahmen
+   (reines CSS, inkl. Messingnägel). Das Brett selbst - die eigentliche
+   Preisliste - ist bewusst HELL statt dunkel gehalten (gebleichtes
+   Kiefernholz, reines CSS, kein Foto): wie ein altes, verwittertes
+   Preisschild aus 1899, das im dunklen Rahmen an der Wand hängt. Die
+   Schrift darauf ist entsprechend dunkle "Tinte" (--tinte/--tinte-preis)
+   statt heller Schrift. Eigener Namensraum ("hofwand-*"/"preistafel-*")
+   statt der Klassen aus css/views/waren.css - diese Seite lädt jene Datei
+   gar nicht, damit nichts mit dem restlichen App-Design kollidieren kann.
    ============================================================================ */
 
 :root {
@@ -26,6 +25,17 @@
   --text: #e7d7bc;
   --text-sekundaer: #bfa98a;
   --trennlinie: rgba(231, 215, 188, 0.08);
+
+  /* Das Brett selbst (preistafel__flaeche): bewusst HELLES, gebleichtes
+     Kiefernholz statt dunkel gebeizt - wie ein altes, in der Sonne
+     verblasstes Preisschild von 1899, gerahmt vom dunklen Rahmen/der
+     dunklen Wand drumherum. Text darauf ist entsprechend dunkle "Tinte"
+     statt heller Schrift. */
+  --brett-hell-1: #ddc596;
+  --brett-hell-2: #c9a86f;
+  --tinte: #2c1d10;
+  --tinte-preis: #7c3a1a;
+  --tinte-sekundaer: #5c4a32;
 }
 
 * {
@@ -191,39 +201,50 @@ body {
   right: 8px;
 }
 
-/* Die Innenfläche ist jetzt selbst ein echtes Holzbrett: dasselbe Foto wie
-   die Wand (wood-panel.webp.png), aber deutlich dunkler abgedunkelt - wie
-   ein separates, dunkler gebeiztes Brett aus derselben Holzsorte statt
-   einer einfarbigen Box. "background-attachment: fixed" für die
-   Foto-Ebene verhindert Verzerrung, egal wie lang die Preisliste wird
-   (die Größe richtet sich am Sichtfenster aus, nicht an der wachsenden
-   Kartenhöhe). Der dunkle Verlauf obendrüber sorgt dafür, dass Preise/
-   Kategorien weiterhin gut lesbar bleiben. */
+/* Das Brett: bewusst HELL statt dunkel - wie ein gebleichtes, altes
+   Kiefernholz-Preisschild von 1899, das im dunklen Rahmen an der Wand
+   hängt. Reines CSS (Verlauf + feine Maserungslinien + sanfte Vignette an
+   den Kanten) statt eines Fotos - das vermeidet zugleich den vorherigen
+   Rendering-Fehler von "background-attachment: fixed" in Kombination mit
+   abgerundeten Ecken/Schatten. Die Schrift darauf wird weiter unten auf
+   dunkle "Tinte" umgestellt (siehe --tinte/--tinte-preis).
+   -------------------------------------------------------------------------- */
 .preistafel__flaeche {
   position: relative;
-  background-color: var(--holz-1);
-  background-image: linear-gradient(175deg, rgba(20, 12, 8, 0.82) 0%, rgba(10, 6, 4, 0.92) 100%), url("../assets/textures/wood-panel.webp.png");
-  background-repeat: no-repeat, no-repeat;
-  background-size: cover, cover;
-  background-position: center, center 65%;
-  background-attachment: scroll, fixed;
+  background: radial-gradient(ellipse 640px 320px at 50% 0%, rgba(255, 240, 210, 0.18) 0%, rgba(255, 240, 210, 0) 65%),
+    linear-gradient(175deg, var(--brett-hell-1) 0%, var(--brett-hell-2) 100%);
   border-radius: 5px;
-  border: 1px solid rgba(169, 104, 53, 0.35);
-  box-shadow: inset 0 2px 0 rgba(231, 215, 188, 0.07), inset 0 -1px 0 rgba(0, 0, 0, 0.5), inset 0 0 56px rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(92, 74, 50, 0.4);
+  box-shadow: inset 0 2px 0 rgba(255, 245, 220, 0.35), inset 0 -14px 30px rgba(60, 40, 20, 0.22), inset 0 0 50px rgba(60, 40, 20, 0.12);
   padding: 38px 46px 22px;
+  overflow: hidden;
+}
+
+/* Sehr feine, unregelmäßige Maserungslinien - hell auf hell, fällt nur bei
+   genauem Hinsehen auf, sorgt aber dafür, dass die Fläche nicht komplett
+   flach wirkt. */
+.preistafel__flaeche::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(89deg, rgba(92, 74, 50, 0.05) 0, rgba(92, 74, 50, 0.05) 1px, transparent 1px, transparent 9px),
+    repeating-linear-gradient(91deg, rgba(255, 245, 220, 0.06) 0, rgba(255, 245, 220, 0.06) 1px, transparent 1px, transparent 23px);
+  pointer-events: none;
 }
 
 /* --------------------------------------------------------------------------
    Überschrift: steht für sich allein, kein Untertitel.
    -------------------------------------------------------------------------- */
 .preistafel__titel {
+  position: relative;
   margin: 0;
   text-align: center;
   font-family: var(--font-brand);
   font-size: 30px;
   font-weight: 400;
   letter-spacing: 0.03em;
-  color: var(--messing-hell);
+  color: var(--tinte);
+  text-shadow: 0 1px 0 rgba(255, 245, 220, 0.4);
 }
 
 .preistafel__titel::after {
@@ -232,7 +253,7 @@ body {
   width: 90px;
   height: 1px;
   margin: 14px auto 0;
-  background: linear-gradient(90deg, transparent, rgba(169, 104, 53, 0.55) 50%, transparent);
+  background: linear-gradient(90deg, transparent, rgba(92, 74, 50, 0.5) 50%, transparent);
 }
 
 .preistafel__inhalt {
@@ -261,11 +282,11 @@ body {
 }
 
 .preistafel__kategorie-linie--links {
-  background: linear-gradient(90deg, transparent 0%, rgba(169, 104, 53, 0.45) 96%);
+  background: linear-gradient(90deg, transparent 0%, rgba(92, 74, 50, 0.5) 96%);
 }
 
 .preistafel__kategorie-linie--rechts {
-  background: linear-gradient(90deg, rgba(169, 104, 53, 0.45) 4%, transparent 100%);
+  background: linear-gradient(90deg, rgba(92, 74, 50, 0.5) 4%, transparent 100%);
 }
 
 .preistafel__kategorie-mitte {
@@ -279,8 +300,8 @@ body {
   width: 13px;
   height: 13px;
   flex-shrink: 0;
-  color: var(--messing);
-  opacity: 0.9;
+  color: var(--tinte-preis);
+  opacity: 0.85;
 }
 
 .preistafel__kategorie-label {
@@ -289,7 +310,7 @@ body {
   font-weight: 700;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--messing-hell);
+  color: var(--tinte-preis);
   white-space: nowrap;
 }
 
@@ -299,8 +320,8 @@ body {
   display: inline-block;
   margin: 0 7px;
   font-size: 8px;
-  color: var(--messing);
-  opacity: 0.75;
+  color: var(--tinte-preis);
+  opacity: 0.7;
   vertical-align: middle;
 }
 
@@ -316,7 +337,7 @@ body {
   margin: 0 -8px;
   border-radius: 4px;
   border-left: 2px solid transparent;
-  border-bottom: 1px solid var(--trennlinie);
+  border-bottom: 1px solid rgba(92, 74, 50, 0.18);
   transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
@@ -325,20 +346,20 @@ body {
 }
 
 .preistafel__zeile:hover {
-  background: rgba(169, 104, 53, 0.08);
-  border-left-color: var(--messing);
+  background: rgba(92, 74, 50, 0.1);
+  border-left-color: var(--tinte-preis);
 }
 
 .preistafel__zeile-name {
   font-family: var(--font-display);
   font-size: 14px;
-  color: var(--text);
+  color: var(--tinte);
   white-space: nowrap;
 }
 
 .preistafel__zeile-punkte {
   flex: 1;
-  border-bottom: 1px dotted rgba(191, 169, 138, 0.25);
+  border-bottom: 1px dotted rgba(92, 74, 50, 0.4);
   margin-bottom: 4px;
   min-width: 20px;
 }
@@ -347,7 +368,7 @@ body {
   font-family: var(--font-display);
   font-size: 15px;
   font-weight: 700;
-  color: var(--messing-hell);
+  color: var(--tinte-preis);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
@@ -360,7 +381,7 @@ body {
   padding: 26px 10px;
   font-size: 12.5px;
   font-style: italic;
-  color: rgba(191, 169, 138, 0.6);
+  color: var(--tinte-sekundaer);
 }
 
 @media (max-width: 560px) {
