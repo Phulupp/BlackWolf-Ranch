@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Login-, Registrierungs- und Benutzersystem — Hornhausen-Hof
+   Login-, Registrierungs- und Benutzersystem — Zur Dicken Kuh
    ==========================================================================
    Diese Datei ist bewusst KOMPLETT GETRENNT vom Rest der App (js/app.js).
    Der ganze Rest der Website (Bestellungen, Waren & Preise, Handelsrechner,

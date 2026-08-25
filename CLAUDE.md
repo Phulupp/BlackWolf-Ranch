@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project overview
 
-Hornhausen-Hof is an internal ranch-management web app for a private RedM
+"Zur Dicken Kuh" is an internal ranch-management web app for a private RedM
 (Red Dead Redemption 2 roleplay) server, set in the fictional year 1899. It
 is a **static site, no build step, no package manager, no bundler** —
 `index.html` is opened directly or served as-is. All data is real-time via

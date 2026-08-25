@@ -1,6 +1,6 @@
-# Hornhausen-Hof
+# Zur Dicken Kuh
 
-Internes Verwaltungsprogramm für den privaten **Hornhausen-Hof** (RedM Roleplay, Jahr 1899).
+Internes Verwaltungsprogramm für den privaten Hof **Zur Dicken Kuh** (RedM Roleplay, Jahr 1899).
 Waren, Preise, Bestellungen, ein Handelsrechner, das Telegramm-Verzeichnis, Verkäufe, das
 Hofbuch und die Benutzerverwaltung des Hofes laufen alle in Echtzeit über **Firebase**
 (Authentication + Firestore) – Änderungen sind sofort bei allen angemeldeten Mitarbeitern sichtbar.
@@ -60,7 +60,7 @@ statt moderner Dashboard-Optik – im Stil einer hochwertigen internen Hofverwal
 ## 📁 Projektstruktur
 
 ```
-Hornhausen-Hof/
+Zur-Dicken-Kuh/
 │
 ├── index.html              # Struktur: Login/Registrierung, Sidebar, alle Ansichten, Modale
 ├── css/
@@ -73,7 +73,7 @@ Hornhausen-Hof/
 │                             # Papier-Texturen, Buttons, Zierelemente (Rahmen, Trenner, Siegel,
 │                             # Hof-Illustration)
 │   ├── background/          # login-background, dashboard-background
-│   ├── logo/                # hornhausen-sign (groß), hornhausen-sign-small (Sidebar/Favicon)
+│   ├── logo/                # hornhausen-sign (Login-Schild, auch im Update-Banner), logo-dicke-kuh (Sidebar-/Preislisten-Logo)
 │   ├── parchment/            # parchment-login, parchment-page, parchment-modal, parchment-book
 │   ├── textures/             # sidebar-background, wood-panel, paper-texture
 │   ├── buttons/               # button-dark, button-hover

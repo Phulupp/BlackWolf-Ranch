@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Firebase-Konfiguration — Hornhausen-Hof
+   Firebase-Konfiguration — Zur Dicken Kuh
    ==========================================================================
    Deine Projektdaten sind hier bereits eingetragen (unverändert aus dem
    bisherigen Projekt übernommen — alle bestehenden Benutzerkonten und

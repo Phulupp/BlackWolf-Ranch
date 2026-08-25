@@ -15,7 +15,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <title>Hornhausen-Hof — Hofverwaltung</title>
+  <title>Zur Dicken Kuh — Hofverwaltung</title>
   <!-- "favicon.ico" im Wurzelverzeichnis ist bewusst ZUSÄTZLICH zum PNG unten
        vorhanden: viele Browser (v. a. beim Setzen eines Lesezeichens, bei
        Desktop-Verknüpfungen oder in älteren/nicht-Chromium-Browsern) fragen
@@ -24,8 +24,8 @@
        blieb das Tab-/Lesezeichen-Icon in genau diesen Fällen leer, selbst
        wenn das PNG unten technisch korrekt eingebunden war. -->
   <link rel="shortcut icon" href="/favicon.ico" />
-  <link rel="icon" type="image/png" href="assets/logo/favicon-mais.png?v=81" />
-  <link rel="apple-touch-icon" href="assets/logo/favicon-mais.png?v=81" />
+  <link rel="icon" type="image/png" href="assets/logo/favicon-neu.png?v=84" />
+  <link rel="apple-touch-icon" href="assets/logo/favicon-neu.png?v=84" />
 
   <!-- Google Fonts: Rye (Farmschild/Wordmark), Playfair Display (Überschriften), Vollkorn (Fließtext/Pergament) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -39,30 +39,30 @@
        style.css - nur jetzt nach Zweck aufgeteilt (base > layout >
        components > views), damit man den passenden Abschnitt schneller
        findet. Reihenfolge ist wichtig und darf nicht vertauscht werden. -->
-  <link rel="stylesheet" href="css/base/tokens.css?v=81" />
-  <link rel="stylesheet" href="css/base/reset.css?v=81" />
-  <link rel="stylesheet" href="css/base/textures.css?v=81" />
-  <link rel="stylesheet" href="css/views/auth.css?v=81" />
-  <link rel="stylesheet" href="css/components/forms.css?v=81" />
-  <link rel="stylesheet" href="css/components/buttons.css?v=81" />
-  <link rel="stylesheet" href="css/layout/shell.css?v=81" />
-  <link rel="stylesheet" href="css/components/cards.css?v=81" />
-  <link rel="stylesheet" href="css/components/badges.css?v=81" />
-  <link rel="stylesheet" href="css/views/dashboard.css?v=81" />
-  <link rel="stylesheet" href="css/components/tables.css?v=81" />
-  <link rel="stylesheet" href="css/views/waren.css?v=81" />
-  <link rel="stylesheet" href="css/views/lager.css?v=81" />
-  <link rel="stylesheet" href="css/views/bestellungen.css?v=81" />
-  <link rel="stylesheet" href="css/views/kontakte.css?v=81" />
-  <link rel="stylesheet" href="css/views/handelsrechner.css?v=81" />
-  <link rel="stylesheet" href="css/views/rezepte.css?v=81" />
-  <link rel="stylesheet" href="css/components/modals.css?v=81" />
-  <link rel="stylesheet" href="css/views/admin.css?v=81" />
-  <link rel="stylesheet" href="css/components/toast.css?v=81" />
-  <link rel="stylesheet" href="css/layout/footer.css?v=81" />
-  <link rel="stylesheet" href="css/components/kataloge.css?v=81" />
-  <link rel="stylesheet" href="css/views/hofbuch.css?v=81" />
-  <link rel="stylesheet" href="css/base/responsive.css?v=81" />
+  <link rel="stylesheet" href="css/base/tokens.css?v=84" />
+  <link rel="stylesheet" href="css/base/reset.css?v=84" />
+  <link rel="stylesheet" href="css/base/textures.css?v=84" />
+  <link rel="stylesheet" href="css/views/auth.css?v=84" />
+  <link rel="stylesheet" href="css/components/forms.css?v=84" />
+  <link rel="stylesheet" href="css/components/buttons.css?v=84" />
+  <link rel="stylesheet" href="css/layout/shell.css?v=84" />
+  <link rel="stylesheet" href="css/components/cards.css?v=84" />
+  <link rel="stylesheet" href="css/components/badges.css?v=84" />
+  <link rel="stylesheet" href="css/views/dashboard.css?v=84" />
+  <link rel="stylesheet" href="css/components/tables.css?v=84" />
+  <link rel="stylesheet" href="css/views/waren.css?v=84" />
+  <link rel="stylesheet" href="css/views/lager.css?v=84" />
+  <link rel="stylesheet" href="css/views/bestellungen.css?v=84" />
+  <link rel="stylesheet" href="css/views/kontakte.css?v=84" />
+  <link rel="stylesheet" href="css/views/handelsrechner.css?v=84" />
+  <link rel="stylesheet" href="css/views/rezepte.css?v=84" />
+  <link rel="stylesheet" href="css/components/modals.css?v=84" />
+  <link rel="stylesheet" href="css/views/admin.css?v=84" />
+  <link rel="stylesheet" href="css/components/toast.css?v=84" />
+  <link rel="stylesheet" href="css/layout/footer.css?v=84" />
+  <link rel="stylesheet" href="css/components/kataloge.css?v=84" />
+  <link rel="stylesheet" href="css/views/hofbuch.css?v=84" />
+  <link rel="stylesheet" href="css/base/responsive.css?v=84" />
 
   <!-- Firebase SDK (Authentifizierung + Datenbank). "defer" statt normaler
        blockierender <script>-Tags: der Browser kann so den Rest der Seite
@@ -103,7 +103,7 @@
 
     <div class="auth-gate">
       <div class="auth-gate__sign-wrap">
-        <img class="auth-gate__sign-img" src="assets/logo/hornhausen-sign.png.png" alt="Hornhausen-Hof – Est. 1899" />
+        <img class="auth-gate__sign-img" src="assets/logo/hornhausen-sign.png?v=84" alt="Zur Dicken Kuh – Est. 1899" />
       </div>
 
       <div class="auth-card">
@@ -235,7 +235,7 @@
   <!-- APP (erst sichtbar nach Login) -->
   <!-- ============================ -->
   <div class="update-banner" id="update-banner" hidden>
-    <img class="update-banner__logo" src="assets/logo/hornhausen-sign-small.png.png" alt="" aria-hidden="true" />
+    <img class="update-banner__logo" src="assets/logo/hornhausen-sign.png?v=84" alt="" aria-hidden="true" />
     <span>Eine neue Version ist verfügbar. Danach ist eine erneute Anmeldung nötig.</span>
     <button type="button" class="btn btn--primary" id="update-banner-btn">Jetzt aktualisieren</button>
   </div>
@@ -246,33 +246,8 @@
     <!-- ============================ -->
     <aside class="sidebar">
       <div class="sidebar__brand">
-        <svg class="sidebar__brand-icon" viewBox="0 0 100 70" role="img" aria-label="Kuh-Kritzelei">
-          <!-- Körper in warmem Elfenbein, Konturen/Flecken in sehr dunklem
-               Braun (var(--wood-800)) statt Schwarz, Hörner/Hufe/Glanzpunkt
-               im bestehenden Goldton (var(--brass-bright)) als Akzent. -->
-          <rect x="40" y="52" width="6" height="16" rx="2.5" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="2.2" />
-          <rect x="56" y="52" width="6" height="16" rx="2.5" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="2.2" />
-          <rect x="68" y="52" width="6" height="16" rx="2.5" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="2.2" />
-          <rect x="80" y="52" width="6" height="16" rx="2.5" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="2.2" />
-          <rect x="40" y="63" width="6" height="4" rx="1.4" fill="var(--brass-bright)" />
-          <rect x="56" y="63" width="6" height="4" rx="1.4" fill="var(--brass-bright)" />
-          <rect x="68" y="63" width="6" height="4" rx="1.4" fill="var(--brass-bright)" />
-          <rect x="80" y="63" width="6" height="4" rx="1.4" fill="var(--brass-bright)" />
-          <path d="M86,28 C96,24 100,34 96,44 C94,50 98,54 94,58" fill="none" stroke="var(--wood-800)" stroke-width="2.4" stroke-linecap="round" />
-          <ellipse cx="94" cy="60" rx="4" ry="6" transform="rotate(20 94 60)" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="2.2" />
-          <rect x="34" y="24" width="54" height="30" rx="15" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="2.6" />
-          <ellipse cx="20" cy="16" rx="7" ry="4" transform="rotate(-25 20 16)" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="2.2" />
-          <ellipse cx="34" cy="14" rx="7" ry="4" transform="rotate(20 34 14)" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="2.2" />
-          <circle cx="26" cy="26" r="15" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="2.6" />
-          <ellipse cx="15" cy="32" rx="9" ry="7" fill="#f3e8d2" stroke="var(--wood-800)" stroke-width="2.2" />
-          <path d="M50,30 C56,26 64,28 62,36 C60,42 50,42 48,36 C46,32 46,32 50,30 Z" fill="var(--wood-800)" />
-          <path d="M74,34 C80,32 84,38 80,44 C76,48 70,44 72,38 Z" fill="var(--wood-800)" />
-          <path d="M18,10 C16,4 12,2 8,4" fill="none" stroke="var(--brass-bright)" stroke-width="2.6" stroke-linecap="round" />
-          <path d="M32,8 C34,2 38,1 42,3" fill="none" stroke="var(--brass-bright)" stroke-width="2.6" stroke-linecap="round" />
-          <circle cx="22" cy="23" r="2" fill="var(--wood-800)" />
-          <circle cx="22.6" cy="22.3" r="0.7" fill="var(--brass-bright)" />
-        </svg>
-        <span class="sidebar__brand-title">Hornhausen-Hof</span>
+        <img class="sidebar__brand-icon" src="assets/logo/logo-dicke-kuh.png?v=84" alt="Zur Dicken Kuh" />
+        <span class="sidebar__brand-title">Zur Dicken Kuh</span>
         <span class="sidebar__brand-subtitle">Est. 1899</span>
       </div>
 
@@ -883,7 +858,7 @@
         </div>
 
         <footer class="page-footer">
-          <p>Hornhausen-Hof</p>
+          <p>Zur Dicken Kuh</p>
           <p>Hofverwaltung — Est. 1899</p>
           <p class="page-footer__links">
             <button type="button" class="auth-link" data-open-modal="modal-datenschutz">Datenschutz</button>
@@ -1481,7 +1456,7 @@
         <p style="margin-top: 8px;">Zur Anmeldung und Benutzerverwaltung werden folgende Daten gespeichert: Benutzername (RP-/Ingame-Name), E-Mail-Adresse, Registrierungsdatum, letzter Login, Rang sowie interne Systemberechtigungen.</p>
         <p style="margin-top: 8px;">Die E-Mail-Adresse wird ausschließlich für Anmeldung, Passwort-Zurücksetzung und Authentifizierung verwendet und niemals öffentlich angezeigt.</p>
         <h3 style="margin-top: 18px; font-size: 16px;">Zweck der Website</h3>
-        <p style="margin-top: 8px;">Die Website dient ausschließlich der internen Verwaltung des Hornhausen-Hofs innerhalb eines privaten RedM-Roleplay-Projekts. Es werden keine Waren oder Dienstleistungen real angeboten, und es erfolgt keine kommerzielle Nutzung.</p>
+        <p style="margin-top: 8px;">Die Website dient ausschließlich der internen Verwaltung des Hofes „Zur Dicken Kuh" innerhalb eines privaten RedM-Roleplay-Projekts. Es werden keine Waren oder Dienstleistungen real angeboten, und es erfolgt keine kommerzielle Nutzung.</p>
         <h3 style="margin-top: 18px; font-size: 16px;">Weitergabe an Dritte</h3>
         <p style="margin-top: 8px;">Es werden ausschließlich die für den Betrieb der Website notwendigen personenbezogenen Daten verarbeitet. Eine Weitergabe an Dritte erfolgt nicht — ausgenommen technisch erforderliche Dienste im Rahmen der Firebase Authentication von Google.</p>
       </div>
@@ -1501,7 +1476,7 @@
         <button class="modal__close" data-close-modal="modal-informationen">✕</button>
       </div>
       <div class="modal__body">
-        <p>Diese Website dient ausschließlich der internen Dokumentation und Verwaltung des Hornhausen-Hofs innerhalb eines privaten RedM-Roleplay-Projekts (1899).</p>
+        <p>Diese Website dient ausschließlich der internen Dokumentation und Verwaltung des Hofes „Zur Dicken Kuh" innerhalb eines privaten RedM-Roleplay-Projekts (1899).</p>
         <p style="margin-top: 12px;">Sämtliche Namen, Unternehmen, Bestellungen und Ereignisse beziehen sich ausschließlich auf fiktive Rollenspielcharaktere und fiktive Ereignisse innerhalb des Spiels.</p>
         <p style="margin-top: 12px;">Es besteht keinerlei Bezug zu realen Personen, realen Unternehmen oder tatsächlichen Ereignissen.</p>
         <p style="margin-top: 12px;">Die Website verfolgt keinerlei kommerzielle Zwecke und dient ausschließlich der internen Organisation und Dokumentation des Projekts.</p>
@@ -1528,30 +1503,30 @@
        teilen können. Die Reihenfolge entspricht exakt den frueheren
        nummerierten Abschnitten in app.js und darf nicht vertauscht werden:
        js/main.js muss immer zuletzt kommen, da es die App erst startet. -->
-  <script defer src="js/firebase-config.js?v=81"></script>
-  <script defer src="js/core/config.js?v=81"></script>
-  <script defer src="js/core/state.js?v=81"></script>
-  <script defer src="js/core/dom.js?v=81"></script>
-  <script defer src="js/core/firebase-init.js?v=81"></script>
-  <script defer src="js/core/utils.js?v=81"></script>
-  <script defer src="js/ui/modals.js?v=81"></script>
-  <script defer src="js/ui/nav.js?v=81"></script>
-  <script defer src="js/ui/presence.js?v=81"></script>
-  <script defer src="js/views/waren.js?v=81"></script>
-  <script defer src="js/views/lager.js?v=81"></script>
-  <script defer src="js/views/rezepte.js?v=81"></script>
-  <script defer src="js/views/bestellungen.js?v=81"></script>
-  <script defer src="js/views/handelsrechner.js?v=81"></script>
-  <script defer src="js/views/kontakte.js?v=81"></script>
-  <script defer src="js/views/verkaeufe.js?v=81"></script>
-  <script defer src="js/views/kunden.js?v=81"></script>
-  <script defer src="js/views/hofbuch.js?v=81"></script>
-  <script defer src="js/views/statistiken.js?v=81"></script>
-  <script defer src="js/views/dashboard.js?v=81"></script>
-  <script defer src="js/views/einstellungen.js?v=81"></script>
-  <script defer src="js/views/admin.js?v=81"></script>
-  <script defer src="js/ui/version-check.js?v=81"></script>
-  <script defer src="js/main.js?v=81"></script>
-  <script type="module" src="js/auth.js?v=81"></script>
+  <script defer src="js/firebase-config.js?v=84"></script>
+  <script defer src="js/core/config.js?v=84"></script>
+  <script defer src="js/core/state.js?v=84"></script>
+  <script defer src="js/core/dom.js?v=84"></script>
+  <script defer src="js/core/firebase-init.js?v=84"></script>
+  <script defer src="js/core/utils.js?v=84"></script>
+  <script defer src="js/ui/modals.js?v=84"></script>
+  <script defer src="js/ui/nav.js?v=84"></script>
+  <script defer src="js/ui/presence.js?v=84"></script>
+  <script defer src="js/views/waren.js?v=84"></script>
+  <script defer src="js/views/lager.js?v=84"></script>
+  <script defer src="js/views/rezepte.js?v=84"></script>
+  <script defer src="js/views/bestellungen.js?v=84"></script>
+  <script defer src="js/views/handelsrechner.js?v=84"></script>
+  <script defer src="js/views/kontakte.js?v=84"></script>
+  <script defer src="js/views/verkaeufe.js?v=84"></script>
+  <script defer src="js/views/kunden.js?v=84"></script>
+  <script defer src="js/views/hofbuch.js?v=84"></script>
+  <script defer src="js/views/statistiken.js?v=84"></script>
+  <script defer src="js/views/dashboard.js?v=84"></script>
+  <script defer src="js/views/einstellungen.js?v=84"></script>
+  <script defer src="js/views/admin.js?v=84"></script>
+  <script defer src="js/ui/version-check.js?v=84"></script>
+  <script defer src="js/main.js?v=84"></script>
+  <script type="module" src="js/auth.js?v=84"></script>
 </body>
 </html>

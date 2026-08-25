@@ -55,8 +55,11 @@
 
 .sidebar__brand-icon {
   display: block;
-  width: 52px;
-  aspect-ratio: 100 / 70;
+  width: 74px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid var(--brass-bright);
   margin: 0 auto 8px;
   filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5));
 }
