@@ -115,14 +115,14 @@ body {
 }
 
 .hofwand__kuh {
-  width: 48px;
-  height: 48px;
+  width: 92px;
+  height: 92px;
   object-fit: cover;
   border-radius: 50%;
-  border: 2px solid var(--messing-hell);
+  border: 3px solid var(--messing-hell);
   display: block;
-  margin: 0 auto 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  margin: 0 auto 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.55);
 }
 
 .hofwand__markentitel {
