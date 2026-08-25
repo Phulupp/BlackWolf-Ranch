@@ -4,8 +4,10 @@
    Eigenständiges visuelles Environment: eine dunkle Holzwand (echtes Foto,
    assets/textures/wood-panel.webp.png - bewusst NICHT dasselbe Bild wie
    der Sidebar-Hintergrund sidebar-background.webp.png mit seinem
-   Eisen-Rahmen) mit einer daran hängenden Preistafel im dunklen Holzrahmen
-   (reines CSS, inkl. Messingnägel). Das Brett selbst - die eigentliche
+   Eisen-Rahmen) mit einer daran hängenden Preistafel im dunklen Holzrahmen.
+   Rahmen und Wand nutzen jetzt beide dasselbe Holz-Foto (der Rahmen mit
+   mehr Deckkraft, da dort kein Text drüberliegt), nur Messingnägel/-details
+   bleiben reines CSS. Das Brett selbst - die eigentliche
    Preisliste - ist bewusst HELL statt dunkel gehalten (wie ein altes,
    verwittertes Kiefernholz-Preisschild aus 1899): heller CSS-Grundton, die
    Maserung stammt vom selben Holz-Foto wie die Wand, aber stark aufgehellt
@@ -164,13 +166,22 @@ body {
     0 -3px 8px rgba(0, 0, 0, 0.45) inset;
 }
 
-/* Feine Maserung auch auf dem Rahmen selbst, statt einer flachen Fläche. */
+/* Echte Holzmaserung auch auf dem Rahmen selbst, statt der vorherigen
+   flachen CSS-Schraffur - dasselbe Foto wie Wand/Brett (aufgehellt +
+   "multiply" auf den Rahmen-Verlauf gemischt), hier mit mehr Deckkraft als
+   beim Brett, weil hier kein Text direkt drüberliegt. */
 .preistafel__rahmen::before {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background-image: repeating-linear-gradient(100deg, rgba(0, 0, 0, 0.08) 0, rgba(0, 0, 0, 0.08) 1px, transparent 1px, transparent 5px);
+  background-image: url("../assets/textures/wood-panel.webp.png");
+  background-repeat: repeat;
+  background-size: 420px auto;
+  background-position: center;
+  filter: brightness(1.4) saturate(0.65) sepia(0.08);
+  opacity: 0.45;
+  mix-blend-mode: multiply;
   pointer-events: none;
 }
 
@@ -250,29 +261,6 @@ body {
 
 /* Kleine Messing-Namensplakette am unteren Rahmenrand, unterhalb des
    Bretts - wie ein eingelassenes Namensschild, ergänzt die Messingnägel. */
-.preistafel__plakette {
-  width: fit-content;
-  margin: 12px auto 0;
-  padding: 6px 20px;
-  border-radius: 3px;
-  background: linear-gradient(180deg, var(--messing-hell) 0%, var(--messing) 100%);
-  border: 1px solid rgba(0, 0, 0, 0.35);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  font-family: var(--font-display);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #2b1a10;
-  text-align: center;
-  white-space: nowrap;
-}
-
-.preistafel__plakette span {
-  opacity: 0.6;
-  margin: 0 2px;
-}
-
 /* --------------------------------------------------------------------------
    Überschrift: steht für sich allein, kein Untertitel.
    -------------------------------------------------------------------------- */
@@ -417,9 +405,9 @@ body {
 
 .preistafel__zeile-preis {
   font-family: var(--font-display);
-  font-size: 15px;
+  font-size: 16.5px;
   font-weight: 700;
-  color: var(--tinte-preis);
+  color: var(--tinte);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
@@ -446,11 +434,5 @@ body {
 
   .preistafel__zeile-name {
     white-space: normal;
-  }
-
-  .preistafel__plakette {
-    white-space: normal;
-    font-size: 9px;
-    padding: 6px 14px;
   }
 }
