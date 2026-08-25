@@ -335,8 +335,8 @@ body {
 
 .preistafel__kategorie-label {
   font-family: var(--font-display);
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 15px;
+  font-weight: 800;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--tinte-preis);
