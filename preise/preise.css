@@ -2,15 +2,18 @@
    Öffentliche Preisliste (preise/index.html, kein Login nötig)
    ----------------------------------------------------------------------------
    Eigenständiges visuelles Environment: eine dunkle Holzwand mit einer
-   daran hängenden Preistafel (mehrschichtiger, per CSS gebauter Holzrahmen +
-   Messingdetails). Der Wand-Hintergrund nutzt bewusst assets/textures/
-   wood-panel.webp.png (horizontale Bretter/Maserung) statt der Preistafel
-   selbst ein Bild zu geben - und bewusst NICHT dasselbe Foto wie die
-   normale Sidebar (sidebar-background.webp.png mit Eisen-Rahmen), damit die
-   Preisliste einen eigenen, aber verwandten Holz-Charakter bekommt. Eigener
-   Namensraum ("hofwand-*"/"preistafel-*") statt der Klassen aus
-   css/views/waren.css - diese Seite lädt jene Datei gar nicht, damit nichts
-   mit dem restlichen App-Design kollidieren kann.
+   daran hängenden Preistafel. Sowohl die Wand ALS AUCH die Innenfläche der
+   Tafel (das eigentliche "Brett" mit den Preisen) nutzen dasselbe Foto
+   assets/textures/wood-panel.webp.png (horizontale Bretter/Maserung),
+   jeweils unterschiedlich stark abgedunkelt/positioniert, damit die Tafel
+   wie ein eigenes, dunkler gebeiztes Brett wirkt statt wie eine einfarbige
+   Box - und bewusst NICHT dasselbe Foto wie die normale Sidebar
+   (sidebar-background.webp.png mit Eisen-Rahmen), damit die Preisliste
+   einen eigenen, aber verwandten Holz-Charakter bekommt. Rahmen/Nägel/
+   Messingdetails bleiben reines CSS. Eigener Namensraum
+   ("hofwand-*"/"preistafel-*") statt der Klassen aus css/views/waren.css -
+   diese Seite lädt jene Datei gar nicht, damit nichts mit dem restlichen
+   App-Design kollidieren kann.
    ============================================================================ */
 
 :root {
@@ -188,30 +191,26 @@ body {
   right: 8px;
 }
 
-/* Die Innenfläche war bisher ein flacher Zweifarb-Verlauf - jetzt mit
-   warmem Lichtschein von oben (dort, wo die Überschrift sitzt), sehr
-   feiner vertikaler Maserung und einer sauberen, hellen/dunklen Fase am
-   Rand, damit sie wie ein eigenes, in den Rahmen eingelassenes Brett
-   wirkt statt wie eine einfarbige Box. Text/Preise bleiben davon
-   unberührt (alle Zusätze < 10% Deckkraft, nur ganz oben konzentriert).
-   -------------------------------------------------------------------------- */
+/* Die Innenfläche ist jetzt selbst ein echtes Holzbrett: dasselbe Foto wie
+   die Wand (wood-panel.webp.png), aber deutlich dunkler abgedunkelt - wie
+   ein separates, dunkler gebeiztes Brett aus derselben Holzsorte statt
+   einer einfarbigen Box. "background-attachment: fixed" für die
+   Foto-Ebene verhindert Verzerrung, egal wie lang die Preisliste wird
+   (die Größe richtet sich am Sichtfenster aus, nicht an der wachsenden
+   Kartenhöhe). Der dunkle Verlauf obendrüber sorgt dafür, dass Preise/
+   Kategorien weiterhin gut lesbar bleiben. */
 .preistafel__flaeche {
   position: relative;
-  background: radial-gradient(ellipse 520px 240px at 50% 0%, rgba(195, 138, 80, 0.09) 0%, rgba(195, 138, 80, 0) 72%),
-    linear-gradient(175deg, var(--holz-2) 0%, var(--holz-1) 100%);
+  background-color: var(--holz-1);
+  background-image: linear-gradient(175deg, rgba(20, 12, 8, 0.82) 0%, rgba(10, 6, 4, 0.92) 100%), url("../assets/textures/wood-panel.webp.png");
+  background-repeat: no-repeat, no-repeat;
+  background-size: cover, cover;
+  background-position: center, center 65%;
+  background-attachment: scroll, fixed;
   border-radius: 5px;
   border: 1px solid rgba(169, 104, 53, 0.35);
-  box-shadow: inset 0 2px 0 rgba(231, 215, 188, 0.07), inset 0 -1px 0 rgba(0, 0, 0, 0.5), inset 0 0 56px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 2px 0 rgba(231, 215, 188, 0.07), inset 0 -1px 0 rgba(0, 0, 0, 0.5), inset 0 0 56px rgba(0, 0, 0, 0.45);
   padding: 38px 46px 22px;
-  overflow: hidden;
-}
-
-.preistafel__flaeche::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: repeating-linear-gradient(90deg, rgba(231, 215, 188, 0.014) 0, rgba(231, 215, 188, 0.014) 1px, transparent 1px, transparent 6px);
-  pointer-events: none;
 }
 
 /* --------------------------------------------------------------------------
