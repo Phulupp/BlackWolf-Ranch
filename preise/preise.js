@@ -27,9 +27,21 @@ const PREISE_KATEGORIE_ICON_STANDARD = '<path d="M6 4h8l4 4v9a1 1 0 0 1-1 1H6a1 
 let preiseKategorienListe = null; // null = noch nicht geladen
 let preiseProdukteListe = null;
 
+// Muss dieselbe Logik wie ermittleProduktKategorie() in js/core/config.js
+// verwenden (dort für die interne Warenliste): erst das explizite
+// "kategorie"-Feld, sonst Fallback auf die namensbasierte Zuordnung der
+// jeweiligen Kategorie (Feld "namen", nur bei den 3 Standardkategorien
+// gesetzt). Ohne diesen Fallback landeten Produkte ohne eigenes
+// "kategorie"-Feld (z. B. ältere Produkte) hier fälschlich immer bei
+// "Sonstige Waren", obwohl sie in Waren & Preise korrekt einsortiert sind.
 function preiseKategorie(produkt) {
-  const treffer = (preiseKategorienListe || []).find((k) => k.id === produkt.kategorie);
-  return treffer ? treffer.id : PREISE_KATEGORIE_SONSTIGE;
+  const liste = preiseKategorienListe || [];
+  if (produkt.kategorie) {
+    const treffer = liste.find((k) => k.id === produkt.kategorie);
+    if (treffer) return treffer.id;
+  }
+  const namenTreffer = liste.find((k) => (k.namen || []).includes(produkt.name));
+  return namenTreffer ? namenTreffer.id : PREISE_KATEGORIE_SONSTIGE;
 }
 
 function preiseEscapeHtml(text) {
