@@ -6,11 +6,14 @@
    der Sidebar-Hintergrund sidebar-background.webp.png mit seinem
    Eisen-Rahmen) mit einer daran hängenden Preistafel im dunklen Holzrahmen
    (reines CSS, inkl. Messingnägel). Das Brett selbst - die eigentliche
-   Preisliste - ist bewusst HELL statt dunkel gehalten (gebleichtes
-   Kiefernholz, reines CSS, kein Foto): wie ein altes, verwittertes
-   Preisschild aus 1899, das im dunklen Rahmen an der Wand hängt. Die
-   Schrift darauf ist entsprechend dunkle "Tinte" (--tinte/--tinte-preis)
-   statt heller Schrift. Eigener Namensraum ("hofwand-*"/"preistafel-*")
+   Preisliste - ist bewusst HELL statt dunkel gehalten (wie ein altes,
+   verwittertes Kiefernholz-Preisschild aus 1899): heller CSS-Grundton, die
+   Maserung stammt vom selben Holz-Foto wie die Wand, aber stark aufgehellt
+   (CSS-Filter) und per "multiply" nur als feine Zeichnung auf den hellen
+   Grundton gemischt (siehe ::before) - kein Karo-/Moiré-Muster mehr wie bei
+   der vorherigen rein-CSS-Version. Die Schrift darauf ist entsprechend
+   dunkle "Tinte" (--tinte/--tinte-preis) statt heller Schrift. Eigener
+   Namensraum ("hofwand-*"/"preistafel-*")
    statt der Klassen aus css/views/waren.css - diese Seite lädt jene Datei
    gar nicht, damit nichts mit dem restlichen App-Design kollidieren kann.
    ============================================================================ */
@@ -203,11 +206,13 @@ body {
 
 /* Das Brett: bewusst HELL statt dunkel - wie ein gebleichtes, altes
    Kiefernholz-Preisschild von 1899, das im dunklen Rahmen an der Wand
-   hängt. Reines CSS (Verlauf + feine Maserungslinien + sanfte Vignette an
-   den Kanten) statt eines Fotos - das vermeidet zugleich den vorherigen
-   Rendering-Fehler von "background-attachment: fixed" in Kombination mit
-   abgerundeten Ecken/Schatten. Die Schrift darauf wird weiter unten auf
-   dunkle "Tinte" umgestellt (siehe --tinte/--tinte-preis).
+   hängt. Die Maserung kommt jetzt vom echten Holz-Foto (aufgehellt +
+   mit "multiply" auf den hellen Grundton gemischt, siehe ::before) statt
+   aus zwei sich überlappenden CSS-Linienmustern - die hatten je nach
+   Bildschirm/Browser ein Moiré-Karo-Muster erzeugt statt echter Maserung.
+   "background-size: 480px auto" + "repeat" (statt "cover"/"fixed") hält
+   die Maserung in konstanter Größe, ganz ohne den früheren
+   "background-attachment: fixed"-Rendering-Fehler.
    -------------------------------------------------------------------------- */
 .preistafel__flaeche {
   position: relative;
@@ -220,15 +225,17 @@ body {
   overflow: hidden;
 }
 
-/* Sehr feine, unregelmäßige Maserungslinien - hell auf hell, fällt nur bei
-   genauem Hinsehen auf, sorgt aber dafür, dass die Fläche nicht komplett
-   flach wirkt. */
 .preistafel__flaeche::before {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: repeating-linear-gradient(89deg, rgba(92, 74, 50, 0.05) 0, rgba(92, 74, 50, 0.05) 1px, transparent 1px, transparent 9px),
-    repeating-linear-gradient(91deg, rgba(255, 245, 220, 0.06) 0, rgba(255, 245, 220, 0.06) 1px, transparent 1px, transparent 23px);
+  background-image: url("../assets/textures/wood-panel.webp.png");
+  background-repeat: repeat;
+  background-size: 480px auto;
+  background-position: center top;
+  filter: brightness(2) saturate(0.5) sepia(0.1);
+  opacity: 0.6;
+  mix-blend-mode: multiply;
   pointer-events: none;
 }
 
