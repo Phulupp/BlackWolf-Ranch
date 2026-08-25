@@ -44,9 +44,9 @@
   content: "";
   position: absolute;
   left: 50%;
-  top: 12px;
-  width: 132px;
-  height: 132px;
+  top: 6px;
+  width: 184px;
+  height: 184px;
   transform: translateX(-50%);
   background: radial-gradient(circle, rgba(169, 101, 63, 0.16) 0%, rgba(169, 101, 63, 0) 72%);
   pointer-events: none;
@@ -55,7 +55,7 @@
 
 .sidebar__brand-icon {
   display: block;
-  width: 108px;
+  width: 152px;
   aspect-ratio: 1 / 1;
   object-fit: cover;
   border-radius: 50%;
