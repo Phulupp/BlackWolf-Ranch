@@ -194,8 +194,8 @@ service cloud.firestore {
     }
 
     /* ------------------------------------------------------------------
-       kontakte/{dokument} — Telegramm-Verzeichnis (BW-...), unverändert
-       aus dem bisherigen Projekt übernommen.
+       kontakte/{dokument} — Telegramm-Verzeichnis mit frei wählbaren
+       Nummern, unverändert aus dem bisherigen Projekt übernommen.
        ------------------------------------------------------------------ */
     match /kontakte/{dokument} {
       allow read, write: if istFreigegeben();

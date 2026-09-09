@@ -238,12 +238,12 @@
     });
   }
 
-  // Liefert die nächste freie BW-ID: die kleinste positive, noch nicht
+  // Liefert die nächste freie Nummer: die kleinste positive, noch nicht
   // vergebene Zahl (schließt auch Lücken durch gelöschte Kontakte, statt
   // immer nur hochzuzählen). Dient nur als Vorschlag/Vorbelegung im
   // Eintragen-Formular - die Nummer bleibt frei editierbar, damit z. B.
-  // eine bestimmte, vorher mündlich vergebene Telegramm-Nummer eingetragen
-  // werden kann.
+  // eine bestimmte, vorher mündlich vergebene Nummer eingetragen werden
+  // kann.
   function ermittleNaechsteKontaktNummer() {
     const belegt = new Set(
       kontakte.map((k) => parseInt(k.nummer, 10)).filter((n) => Number.isInteger(n) && n > 0)
@@ -255,6 +255,15 @@
 
   function aktualisiereNaechsteKontaktNummer() {
     if (el.kontaktNummerInput && !el.kontaktNummerInput.value) el.kontaktNummerInput.value = ermittleNaechsteKontaktNummer();
+  }
+
+  // Nummer ist frei wählbar (keine feste "BW-"-Zählweise mehr), aber auf
+  // maximal 4 Ziffern begrenzt - live beim Tippen filtern statt erst beim
+  // Absenden zu meckern.
+  if (el.kontaktNummerInput) {
+    el.kontaktNummerInput.addEventListener("input", () => {
+      el.kontaktNummerInput.value = el.kontaktNummerInput.value.replace(/\D/g, "").slice(0, 4);
+    });
   }
 
   function starteKontakteListener() {
@@ -285,11 +294,9 @@
       const rolle = k.rolle || KONTAKTE_ROLLEN_FALLBACK;
       if (kontakteRollenFilter !== "alle" && rolle !== kontakteRollenFilter) return false;
       if (!begriff) return true;
-      const telegramm = `bw-${(k.nummer || "").toLowerCase()}`;
       return (
         (k.name || "").toLowerCase().includes(begriff) ||
         (k.nummer || "").toLowerCase().includes(begriff) ||
-        telegramm.includes(begriff) ||
         rolle.toLowerCase().includes(begriff) ||
         (k.notiz || "").toLowerCase().includes(begriff)
       );
@@ -367,7 +374,7 @@
     const farbe = kontakteRolleFarbe(k.rolle);
     const badgeStyle = farbe ? ` style="background:${farbe}26;color:${farbe};"` : "";
     return `<div class="reg-row reg-row--body kontakt-row">
-          <span class="kontakt-tel" data-kontakt-copy="BW-${escapeHtml(k.nummer)}" title="Kopieren">BW-${escapeHtml(k.nummer)}</span>
+          <span class="kontakt-tel" data-kontakt-copy="${escapeHtml(k.nummer)}" title="Kopieren">${escapeHtml(k.nummer)}</span>
           <span class="reg-name">${escapeHtml(k.name)}</span>
           <span><span class="badge kontakt-badge"${badgeStyle}>${escapeHtml(k.rolle || KONTAKTE_ROLLEN_FALLBACK)}</span></span>
           <span class="notiz-text">${k.notiz ? escapeHtml(k.notiz) : "—"}</span>
@@ -436,7 +443,7 @@
       const editBtn = event.target.closest("[data-kontakt-edit]");
       const delBtn = event.target.closest("[data-kontakt-delete]");
       if (copyEl) {
-        navigator.clipboard && navigator.clipboard.writeText(copyEl.getAttribute("data-kontakt-copy")).then(() => zeigeToast("Telegrammnummer kopiert."));
+        navigator.clipboard && navigator.clipboard.writeText(copyEl.getAttribute("data-kontakt-copy")).then(() => zeigeToast("Nummer kopiert."));
       } else if (favBtn) {
         const k = kontakte.find((x) => x.id === favBtn.getAttribute("data-kontakt-favorit"));
         if (!k) return;
@@ -468,15 +475,16 @@
   if (el.formKontakt) {
     el.formKontakt.addEventListener("submit", async (event) => {
       event.preventDefault();
-      // Die BW-ID wird beim Eintragen frei vergeben (das Feld ist lediglich
+      // Die Nummer wird beim Eintragen frei vergeben (das Feld ist lediglich
       // mit der nächsten freien Nummer vorbelegt) - nur nachträgliches
-      // Ändern einer bereits vergebenen BW-ID ist ausgeschlossen (siehe
+      // Ändern einer bereits vergebenen Nummer ist ausgeschlossen (siehe
       // Bearbeiten-Modal).
       const nummer = el.kontaktNummerInput.value.trim();
       const name = el.kontaktNameInput.value.trim();
       const rolle = el.kontaktBerufInput.value;
       const notiz = el.kontaktNotizInput.value.trim();
-      if (!nummer || !name) return zeigeToast("Bitte Telegrammnummer und Name eintragen.");
+      if (!nummer || !name) return zeigeToast("Bitte Nummer und Name eintragen.");
+      if (!/^\d{1,4}$/.test(nummer)) return zeigeToast("Die Nummer darf nur aus bis zu 4 Ziffern bestehen.");
 
       try {
         await db
@@ -499,7 +507,7 @@
       const name = el.kontaktEditName.value.trim();
       if (!name) return zeigeFeldFehler(el.kontaktEditError, "Bitte einen Namen eintragen.");
       try {
-        // Bewusst ohne "nummer": die BW-ID eines Kontakts ist nach dem
+        // Bewusst ohne "nummer": die Nummer eines Kontakts ist nach dem
         // Anlegen unveränderlich (siehe Anforderung 1/7).
         await db
           .collection(KONTAKTE_COLLECTION)

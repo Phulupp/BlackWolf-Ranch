@@ -8,41 +8,12 @@
   align-items: center;
 }
 
-.kontakt-nummer-field {
-  display: flex;
-  align-items: center;
-  border: 1.5px solid var(--leather-edge);
-  background: rgba(0, 0, 0, 0.25);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  flex: 0 0 120px;
-}
-
-.kontakt-nummer-field:focus-within {
-  border-color: var(--brass);
-  box-shadow: 0 0 0 3px var(--brass-soft);
-}
-
-.kontakt-nummer-field__prefix {
-  padding: 10px 0 10px 12px;
+.kontakt-nummer-input {
+  flex: 0 0 92px;
+  text-align: center;
   font-weight: 700;
-  color: var(--wood-text-muted);
-  font-size: 13.5px;
-}
-
-.kontakt-nummer-field input {
-  border: none;
-  background: transparent;
-  padding: 10px 12px 10px 2px;
-  font-weight: 700;
-  font-size: 13.5px;
-  color: var(--wood-text);
-  width: 100%;
-  min-width: 0;
-}
-
-.kontakt-nummer-field input:focus {
-  outline: none;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
 }
 
 .kontakt-row {
@@ -55,11 +26,26 @@
 }
 
 .kontakt-tel {
+  display: inline-block;
+  min-width: 46px;
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.03em;
+  text-align: center;
   color: var(--brass-bright);
   background: var(--brass-soft);
-  padding: 4px 10px;
-  border-radius: var(--radius-sm);
+  padding: 5px 12px;
+  border-radius: 999px;
   cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+.kontakt-tel:hover {
+  background: var(--brass);
+  color: var(--wood-text);
+}
+
+.kontakt-tel:active {
+  transform: scale(0.94);
 }
 

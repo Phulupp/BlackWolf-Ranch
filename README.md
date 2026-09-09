@@ -29,8 +29,8 @@ statt moderner Dashboard-Optik – im Stil einer hochwertigen internen Hofverwal
   (Anzahl Produkte, Gesamtmenge) und Status `Offen` / `In Bearbeitung` / `Abgeschlossen`.
 - **Handelsrechner** – berechnet Angebote und führt eine Historie der letzten Angebote; ein
   Angebot lässt sich direkt als neue Bestellung übernehmen.
-- **Kontakte** – Telegramm-Verzeichnis mit `BW-`-Nummern und Rollen (Bürger, Hofmeister, Sheriff,
-  Rancher, Schmied, Händler, …), verwaltbare Rollenliste.
+- **Kontakte** – Telegramm-Verzeichnis mit frei wählbaren, bis zu 4-stelligen Nummern und Rollen
+  (Bürger, Hofmeister, Sheriff, Rancher, Schmied, Händler, …), verwaltbare Rollenliste.
 - **Verkäufe** – Verkaufslog mit automatischer Tagesstatistik.
 - **Hofbuch** – die Chronik des Hofes: jeder freigegebene Mitarbeiter kann Einträge (Überschrift +
   Text) verfassen, die chronologisch in einem aufgeschlagenen Buch dargestellt werden.
