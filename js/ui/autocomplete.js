@@ -118,5 +118,18 @@
     // weggeschlossen wird.
     inputEl.addEventListener("blur", () => setTimeout(schliesse, 120));
     window.addEventListener("resize", schliesse);
-    document.addEventListener("scroll", schliesse, true);
+    // Scrollt man INNERHALB des Panels (die Liste ist ja selbst scrollbar,
+    // siehe max-height/overflow-y auf .custom-select__panel), darf das
+    // Panel nicht sofort wieder zufallen - nur Scrollen ANDERSWO auf der
+    // Seite (z. B. die scrollbare linke Spalte des Bestellungs-Modals)
+    // verschiebt den Trigger und macht die berechnete Position ungültig.
+    document.addEventListener(
+      "scroll",
+      (event) => {
+        if (panel.hidden) return;
+        if (event.target && panel.contains(event.target)) return;
+        schliesse();
+      },
+      true
+    );
   }
