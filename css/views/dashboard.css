@@ -12,7 +12,10 @@
    ungefiltert) liegt darüber - gleiche Technik wie beim Login-Hintergrund
    (siehe auth.css). */
 .dash-hero {
-  aspect-ratio: 3 / 1;
+  /* Deutlich kompakter als der ursprüngliche Cartoon-Banner (der hatte
+     3,83:1, also war schon flacher als eine naive 3:1-Fläche) - ein
+     größerer Wert hier bedeutet bei gleicher Breite eine NIEDRIGERE Box. */
+  aspect-ratio: 5.5 / 1;
   background:
     linear-gradient(90deg, rgba(20, 14, 8, 0.82) 0%, rgba(20, 14, 8, 0.5) 40%, rgba(20, 14, 8, 0.22) 70%, rgba(20, 14, 8, 0.32) 100%),
     url("../../assets/background/dashboard-background.webp.png") center 42% / cover no-repeat;
@@ -20,13 +23,13 @@
   border-left: 3px solid var(--brass);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card), 0 0 40px -14px rgba(169, 101, 63, 0.4);
-  padding: 28px 36px;
+  padding: 20px 32px;
   display: flex;
   /* Oben statt vertikal mittig ausgerichtet - im oberen Bereich des Fotos
      ist nur Himmel/Baumkrone, da stört die Begrüßung nichts; weiter unten
      kommen Windmühle/Scheune/Laterne stärker durch. */
   align-items: flex-start;
-  min-height: 172px;
+  min-height: 128px;
   gap: 24px;
   margin-bottom: 22px;
   position: relative;
@@ -161,12 +164,31 @@
 .dash-stat {
   background: linear-gradient(165deg, rgba(55, 37, 26, 0.4) 0%, var(--leather-800) 100%);
   border: 1px solid rgba(89, 64, 47, 0.6);
+  border-top: 3px solid rgba(89, 64, 47, 0.6);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
   padding: 20px 22px;
   display: flex;
   flex-direction: column;
   gap: 6px;
+}
+
+/* Alle drei Kacheln sahen bis auf Text komplett identisch aus - ein
+   dünner farbiger Rand oben, passend zur jeweiligen Kennzahl (nur auf der
+   Übersicht: Statistiken teilt sich .dash-stat, hat aber vier andere
+   Kacheln in anderer Bedeutung/Reihenfolge). Nutzt ausschließlich bereits
+   vorhandene Farbtöne (Status-Ocker, Kupfer, Gold-Preis-Ton) statt neuer
+   Farben. */
+#view-uebersicht .dash-stat:nth-child(1) {
+  border-top-color: var(--status-open);
+}
+
+#view-uebersicht .dash-stat:nth-child(2) {
+  border-top-color: var(--brass-bright);
+}
+
+#view-uebersicht .dash-stat:nth-child(3) {
+  border-top-color: var(--price-total);
 }
 
 .dash-stat__label {
@@ -199,12 +221,15 @@
   align-items: start;
 }
 
-/* Übersicht hat nur noch ein einzelnes Panel (Offene Bestellungen) - bewusst
-   nicht auf volle Breite gezogen, damit die Zeilen bei wenigen Einträgen
-   nicht unnötig auseinandergezogen wirken. */
+/* Übersicht hat nur noch ein einzelnes Panel (Offene Bestellungen) - lief
+   vorher schmaler und mittig zentriert (max-width:640px), während die
+   Kennzahlen-Kacheln direkt darüber die volle Breite einnehmen: eine
+   schwebende, schmalere Box mit auffälligem Leerraum links/rechts. Jetzt
+   volle Breite wie .dash-stats darüber - die Zeilen selbst (.dash-mini-row,
+   justify-content:space-between) sehen auch breiter noch aufgeräumt aus,
+   werden nicht "unnötig auseinandergezogen" wie der alte Kommentar befürchtete. */
 .dash-panel--solo {
-  max-width: 640px;
-  margin: 0 auto 30px;
+  margin-bottom: 30px;
 }
 
 .dash-panel {
