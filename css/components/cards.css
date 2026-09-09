@@ -34,3 +34,53 @@
   font-style: italic;
 }
 
+/* Kleine, thematisch zur jeweiligen Ansicht passende Strichzeichnung über
+   dem Platzhaltertext (statt reinem Fließtext) - eine Modifier-Klasse pro
+   Motiv, per data-URI-SVG (Kupfer-Ton --brass fest verdrahtet, da
+   background-image keine CSS-Variablen als Farbwert auflösen kann). Rein
+   dekorativ, keine der Klassen ist zwingend erforderlich - ein
+   .empty-state ohne Modifier zeigt weiterhin nur den Text wie bisher. */
+.empty-state::before {
+  content: "";
+  display: block;
+  width: 34px;
+  height: 34px;
+  margin: 0 auto 12px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: 0.6;
+}
+
+.empty-state:not([class*="empty-state--"])::before {
+  content: none;
+}
+
+.empty-state--suche::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238f573c' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='10' cy='10' r='6.5'/%3E%3Cline x1='15' y1='15' x2='20.5' y2='20.5'/%3E%3C/svg%3E");
+}
+
+.empty-state--buch::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238f573c' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 6c2.7-1.4 5.4-1.4 8 0v13c-2.6-1.4-5.3-1.4-8 0Z'/%3E%3Cpath d='M20.5 6c-2.7-1.4-5.4-1.4-8 0v13c2.6-1.4 5.3-1.4 8 0Z'/%3E%3C/svg%3E");
+}
+
+.empty-state--beleg::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238f573c' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 3h12v18l-2.5-1.6L13 21l-2.5-1.6L8 21l-2-1.6Z'/%3E%3Cline x1='9' y1='8' x2='15' y2='8'/%3E%3Cline x1='9' y1='12' x2='15' y2='12'/%3E%3Cline x1='9' y1='16' x2='13' y2='16'/%3E%3C/svg%3E");
+}
+
+.empty-state--kiste::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238f573c' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 8l9-4l9 4v9l-9 4l-9-4Z'/%3E%3Cpath d='M3 8l9 4l9-4'/%3E%3Cline x1='12' y1='12' x2='12' y2='21'/%3E%3C/svg%3E");
+}
+
+.empty-state--brief::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238f573c' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='6' width='18' height='13' rx='2'/%3E%3Cpath d='M3.5 7.5l8.5 6l8.5-6'/%3E%3C/svg%3E");
+}
+
+.empty-state--hufeisen::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238f573c' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6.5 4v6.5a5.5 5.5 0 0 0 11 0V4'/%3E%3Ccircle cx='6.5' cy='4' r='1' fill='%238f573c' stroke='none'/%3E%3Ccircle cx='17.5' cy='4' r='1' fill='%238f573c' stroke='none'/%3E%3C/svg%3E");
+}
+
+.empty-state--erledigt::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238f573c' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M7.5 12.5l3 3l6-6.5'/%3E%3C/svg%3E");
+}
+

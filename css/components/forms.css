@@ -15,6 +15,38 @@
   margin-top: 0;
 }
 
+/* Zeile aus Feld-Label + kleiner Inline-Aktion daneben (z. B. "+ Als
+   Kontakt anlegen" neben "Ansprechpartner" im Bestellungs-Fenster) - das
+   .field-label darin verliert seinen eigenen Außenabstand, die Zeile
+   übernimmt ihn stattdessen einmalig. */
+.field-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 12px 0 6px;
+}
+
+.field-label-row:first-child {
+  margin-top: 0;
+}
+
+.field-label-row .field-label {
+  margin: 0;
+}
+
+.field-inline-action {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--brass-bright);
+  white-space: nowrap;
+}
+
+.field-inline-action:hover {
+  color: var(--copper-hover);
+  text-decoration: underline;
+}
+
 .field-input {
   width: 100%;
   border: 1.5px solid #59402f;

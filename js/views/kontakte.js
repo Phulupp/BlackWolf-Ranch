@@ -84,7 +84,7 @@
 
   function befuelleKontakteRollenSelects() {
     const optionsHtml = kontakteRollenKatalog.map((r) => `<option value="${escapeHtml(r.name)}">${escapeHtml(r.name)}</option>`).join("");
-    [el.kontaktBerufInput, el.kontaktEditRolle].forEach((select) => {
+    [el.kontaktBerufInput, el.kontaktEditRolle, el.kontaktSchnellRolle].forEach((select) => {
       if (!select) return;
       const vorher = select.value;
       select.innerHTML = optionsHtml;
@@ -279,6 +279,10 @@
         renderKontakte();
         renderUebersicht();
         befuelleUnternehmenDatalist();
+        // Blendet "+ Als Kontakt anlegen" im ggf. offenen Bestellungs-Fenster
+        // sofort aus, sobald der eben erstellte Kontakt hier ankommt - ohne
+        // dass im Ansprechpartner-Feld erst erneut getippt werden muss.
+        aktualisiereBestellungKontaktAnlegenButton();
       },
       (fehler) => {
         if (!planeListenerNeustart("Kontakte", starteKontakteListener, fehler)) {
@@ -518,6 +522,55 @@
       } catch (fehler) {
         zeigeFeldFehler(el.kontaktEditError, "Speichern fehlgeschlagen.");
         console.error(fehler);
+      }
+    });
+  }
+
+  // Öffnet das kleine "Kontakt anlegen"-Fenster mit vorausgefülltem Namen -
+  // wird aus dem Bestellungs-Fenster heraus aufgerufen (siehe
+  // btnBestellungKontaktAnlegen in bestellungen.js), wenn der eingetragene
+  // Ansprechpartner noch keinen Telegramm-Kontakt hat. Legt sich als
+  // zusätzlicher Dialog OBEN auf das offene Bestellungs-Fenster (gleiches
+  // Stapel-Verhalten wie modal-delete, siehe oeffneModal in modals.js) -
+  // die Bestellung bleibt im Hintergrund geöffnet und unverändert.
+  function oeffneKontaktSchnellModal(vorschlagName) {
+    versteckeFeldFehler(el.kontaktSchnellError);
+    el.kontaktSchnellNummer.value = ermittleNaechsteKontaktNummer();
+    el.kontaktSchnellName.value = vorschlagName || "";
+    el.kontaktSchnellRolle.value = KONTAKTE_ROLLEN_FALLBACK;
+    aktualisiereCustomSelect(el.kontaktSchnellRolle);
+    el.kontaktSchnellNotiz.value = "";
+    oeffneModal("modal-kontakt-schnell");
+  }
+
+  if (el.kontaktSchnellNummer) {
+    el.kontaktSchnellNummer.addEventListener("input", () => {
+      el.kontaktSchnellNummer.value = el.kontaktSchnellNummer.value.replace(/\D/g, "").slice(0, 4);
+    });
+  }
+
+  if (el.btnConfirmKontaktSchnell) {
+    el.btnConfirmKontaktSchnell.addEventListener("click", async () => {
+      versteckeFeldFehler(el.kontaktSchnellError);
+      const nummer = el.kontaktSchnellNummer.value.trim();
+      const name = el.kontaktSchnellName.value.trim();
+      if (!nummer || !name) return zeigeFeldFehler(el.kontaktSchnellError, "Bitte Nummer und Name eintragen.");
+      if (!/^\d{1,4}$/.test(nummer)) return zeigeFeldFehler(el.kontaktSchnellError, "Die Nummer darf nur aus bis zu 4 Ziffern bestehen.");
+      try {
+        await db.collection(KONTAKTE_COLLECTION).add({
+          nummer,
+          name,
+          rolle: el.kontaktSchnellRolle.value,
+          notiz: el.kontaktSchnellNotiz.value.trim(),
+          favorit: false,
+          erstelltAm: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        aktualisiereNaechsteKontaktNummer();
+        schliesseModal("modal-kontakt-schnell");
+        zeigeToast("Kontakt hinzugefügt.");
+      } catch (fehler) {
+        console.error(fehler);
+        zeigeFeldFehler(el.kontaktSchnellError, "Kontakt konnte nicht gespeichert werden.");
       }
     });
   }

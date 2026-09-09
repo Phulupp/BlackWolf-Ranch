@@ -32,6 +32,7 @@
     // Übersicht
     dashboardGreeting: document.getElementById("dashboard-greeting"),
     dashboardName: document.getElementById("dashboard-name"),
+    dashboardHero: document.getElementById("dashboard-hero"),
     statOffeneBestellungen: document.getElementById("stat-offene-bestellungen"),
     statOffeneBestellungenSub: document.getElementById("stat-offene-bestellungen-sub"),
     statHeuteVerkauft: document.getElementById("stat-heute-verkauft"),
@@ -62,6 +63,7 @@
     bestellungEditingId: document.getElementById("bestellung-editing-id"),
     bestellungUnternehmenInput: document.getElementById("bestellung-unternehmen-input"),
     bestellungAnsprechpartnerInput: document.getElementById("bestellung-ansprechpartner-input"),
+    btnBestellungKontaktAnlegen: document.getElementById("btn-bestellung-kontakt-anlegen"),
     bestellungBestelldatumAnzeige: document.getElementById("bestellung-bestelldatum-anzeige"),
     bestellungBearbeiterAnzeige: document.getElementById("bestellung-bearbeiter-anzeige"),
     bestellungPositionForm: document.getElementById("bestellung-position-form"),
@@ -186,6 +188,12 @@
     kontaktEditNotiz: document.getElementById("kontakt-edit-notiz"),
     kontaktEditError: document.getElementById("kontakt-edit-error"),
     btnConfirmKontaktEdit: document.getElementById("btn-confirm-kontakt-edit"),
+    kontaktSchnellNummer: document.getElementById("kontakt-schnell-nummer"),
+    kontaktSchnellName: document.getElementById("kontakt-schnell-name"),
+    kontaktSchnellRolle: document.getElementById("kontakt-schnell-rolle"),
+    kontaktSchnellNotiz: document.getElementById("kontakt-schnell-notiz"),
+    kontaktSchnellError: document.getElementById("kontakt-schnell-error"),
+    btnConfirmKontaktSchnell: document.getElementById("btn-confirm-kontakt-schnell"),
 
     // Kunden (automatisch aus den "unternehmen"-Namen der Bestellungen)
     kundenSearch: document.getElementById("kunden-search"),
@@ -472,6 +480,7 @@
     el.rechnerProdukt,
     el.kontaktBerufInput,
     el.kontaktEditRolle,
+    el.kontaktSchnellRolle,
     el.kontakteSortierung,
     el.startseiteSelect,
     el.neuerBenutzerRolleInput,

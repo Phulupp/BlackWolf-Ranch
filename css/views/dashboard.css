@@ -35,6 +35,25 @@
   overflow: hidden;
 }
 
+/* Dezente Tageszeit-Lichtstimmung über dem Hof-Foto - Farbe/Deckkraft werden
+   per CSS-Variable von aktualisiereTageszeitAkzent() (js/views/dashboard.js)
+   anhand der lokalen Uhrzeit des Browsers gesetzt (RedM-Ingame-Zeit ist von
+   hier aus nicht auslesbar). Tagsüber bleibt es transparent (Foto unverändert),
+   morgens/abends/nachts legt sich ein warmer bzw. kühler Farbton mit
+   "overlay" darüber, ähnlich wie sich Licht auf dem Hof im Tagesverlauf
+   verändern würde. Rein kosmetisch, hat keinen Einfluss auf Lesbarkeit der
+   Begrüßung (liegt per z-index unter .dash-hero__greeting). */
+.dash-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--tageszeit-farbe, transparent);
+  opacity: var(--tageszeit-intensitaet, 0);
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  transition: background 1.4s ease, opacity 1.4s ease;
+}
+
 .dash-hero__greeting {
   position: relative;
   z-index: 1;
@@ -96,6 +115,25 @@
 
 .dash-hinweis svg {
   flex-shrink: 0;
+  animation: dash-hinweis-puls 1.8s ease-in-out infinite;
+}
+
+@keyframes dash-hinweis-puls {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.18);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dash-hinweis svg {
+    animation: none;
+  }
 }
 
 .dash-hinweis:last-of-type {

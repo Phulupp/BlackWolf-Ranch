@@ -425,6 +425,24 @@
 
 .view--active {
   display: block;
+  animation: view-einblenden 0.28s ease;
+}
+
+@keyframes view-einblenden {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .view--active {
+    animation: none;
+  }
 }
 
 /* Tabs (Alle/Offen/In Bearbeitung/Abgeschlossen etc.) */

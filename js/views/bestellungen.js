@@ -811,6 +811,7 @@
     el.bestellungEditingId.value = bestellung ? bestellung.id : "";
     el.bestellungUnternehmenInput.value = bestellung ? bestellung.unternehmen || "" : "";
     el.bestellungAnsprechpartnerInput.value = bestellung ? bestellung.ansprechpartner || "" : "";
+    aktualisiereBestellungKontaktAnlegenButton();
     el.bestellungBestelldatumAnzeige.textContent = bestellung ? formatDatumUhrzeit(bestellung.erstelltAm) : "Wird beim Speichern gesetzt";
     el.bestellungBearbeiterAnzeige.textContent = bestellung ? bestellung.bearbeiter || bestellung.erstelltVon || "—" : "—";
     el.bestellungStatusInput.value = bestellung ? bestellung.status : "Offen";
@@ -859,6 +860,29 @@
   // erscheinen bzw. verschwinden, ohne dass das Fenster neu geöffnet werden
   // muss.
   if (el.bestellungStatusInput) el.bestellungStatusInput.addEventListener("change", aktualisiereZahlungBereich);
+
+  // Zeigt "+ Als Kontakt anlegen" neben dem Ansprechpartner-Feld nur, wenn
+  // dort ein Name steht, der noch zu keinem bestehenden Telegramm-Kontakt
+  // gehört (Namensvergleich ohne Groß-/Kleinschreibung, da Kontakte frei
+  // vergeben werden - siehe js/views/kontakte.js). Läuft sowohl beim Öffnen
+  // des Bestellungs-Fensters als auch live bei jeder Eingabe.
+  function aktualisiereBestellungKontaktAnlegenButton() {
+    if (!el.btnBestellungKontaktAnlegen) return;
+    const name = el.bestellungAnsprechpartnerInput.value.trim();
+    const existiertBereits =
+      name && kontakte.some((k) => (k.name || "").trim().toLowerCase() === name.toLowerCase());
+    el.btnBestellungKontaktAnlegen.hidden = !name || existiertBereits;
+  }
+
+  if (el.bestellungAnsprechpartnerInput) {
+    el.bestellungAnsprechpartnerInput.addEventListener("input", aktualisiereBestellungKontaktAnlegenButton);
+  }
+
+  if (el.btnBestellungKontaktAnlegen) {
+    el.btnBestellungKontaktAnlegen.addEventListener("click", () => {
+      oeffneKontaktSchnellModal(el.bestellungAnsprechpartnerInput.value.trim());
+    });
+  }
 
   if (el.btnAddBestellung) el.btnAddBestellung.addEventListener("click", () => oeffneBestellungModal(null));
   document.querySelectorAll('[data-action="neue-bestellung"]').forEach((btn) =>

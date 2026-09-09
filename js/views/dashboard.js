@@ -51,6 +51,35 @@
     aktualisiereLagerHinweis();
   }
 
+  // Legt eine dezente Farbstimmung über das Hof-Foto im Übersicht-Header,
+  // abhängig von der lokalen Uhrzeit des Browsers (die RedM-Ingame-Uhrzeit
+  // ist von der Webseite aus nicht auslesbar). Tagsüber bleibt das Foto
+  // unverändert; morgens/abends/nachts kommt ein warmer bzw. kühler
+  // Overlay-Ton dazu (siehe .dash-hero::after in css/views/dashboard.css).
+  // Wird beim App-Start und danach im selben 15-Minuten-Takt wie die
+  // Übersicht-Hinweise neu berechnet (siehe dashHinweisTimer in main.js).
+  function aktualisiereTageszeitAkzent() {
+    if (!el.dashboardHero) return;
+    const stunde = new Date().getHours();
+    let farbe = "transparent";
+    let intensitaet = 0;
+
+    if (stunde >= 5 && stunde < 8) {
+      farbe = "#e8935a"; // Morgendämmerung
+      intensitaet = 0.16;
+    } else if (stunde >= 17 && stunde < 20) {
+      farbe = "#c9612f"; // Abendrot
+      intensitaet = 0.22;
+    } else if (stunde >= 20 || stunde < 5) {
+      farbe = "#1b2a4a"; // Nacht
+      intensitaet = 0.32;
+    }
+    // 8-17 Uhr: bleibt bei "transparent"/0 - Tageslicht am Foto unverändert.
+
+    el.dashboardHero.style.setProperty("--tageszeit-farbe", farbe);
+    el.dashboardHero.style.setProperty("--tageszeit-intensitaet", intensitaet);
+  }
+
   // Gleiches Klick-Muster wie bei der Bestellliste selbst (siehe
   // bestellungenTableBody-Listener in bestellungen.js) - eine Zeile hier
   // öffnet direkt das Bestellungs-Modal, statt nur über "Alle ansehen" auf

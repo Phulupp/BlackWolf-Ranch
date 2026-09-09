@@ -44,6 +44,7 @@
     if (istAdmin()) starteBenutzerverwaltung();
 
     zeigeAnsicht(ladeStartseite());
+    aktualisiereTageszeitAkzent();
     pruefeVersion();
     clearInterval(versionCheckTimer);
     versionCheckTimer = setInterval(pruefeVersion, 5 * 60 * 1000);
@@ -57,6 +58,7 @@
     dashHinweisTimer = setInterval(() => {
       aktualisiereLagerHinweis();
       aktualisiereBestellungenHinweis();
+      aktualisiereTageszeitAkzent();
     }, 15 * 60 * 1000);
   }
 
