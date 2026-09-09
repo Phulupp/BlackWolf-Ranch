@@ -72,7 +72,6 @@
           renderVerkaufshistorie();
           renderUebersicht();
           renderStatistiken();
-          befuelleUnternehmenDatalist();
           // Legt für neue/bisher unbekannte "unternehmen"-Namen automatisch
           // ein Kundenprofil an (siehe kunden.js) und hält die Kunden-Liste
           // mit den aktuellen Bestellungen synchron.
@@ -898,6 +897,14 @@
       oeffneKontaktSchnellModal(el.bestellungAnsprechpartnerInput.value.trim());
     });
   }
+
+  // Vorschläge (Kontakte + bereits verwendete Unternehmen) im App-eigenen
+  // Look statt der nativen <datalist>-Liste (siehe js/ui/autocomplete.js).
+  // unternehmenVorschlaege ist erst in js/views/kontakte.js definiert, das
+  // NACH dieser Datei lädt - deshalb hier hinter einer Pfeilfunktion
+  // verzögert aufgelöst statt den nackten Namen direkt zu übergeben (der
+  // wäre zu diesem Zeitpunkt noch nicht als globale Funktion vorhanden).
+  initialisiereAutocomplete(el.bestellungUnternehmenInput, () => unternehmenVorschlaege());
 
   if (el.btnAddBestellung) el.btnAddBestellung.addEventListener("click", () => oeffneBestellungModal(null));
   document.querySelectorAll('[data-action="neue-bestellung"]').forEach((btn) =>

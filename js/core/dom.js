@@ -136,7 +136,6 @@
     lagerGesamtwert: document.getElementById("lager-gesamtwert"),
 
     // Handelsrechner
-    unternehmenListe: document.getElementById("unternehmen-liste"),
     rechnerUnternehmen: document.getElementById("rechner-unternehmen"),
     rechnerProdukt: document.getElementById("rechner-produkt"),
     rechnerMenge: document.getElementById("rechner-menge"),
@@ -240,9 +239,7 @@
     rezeptProduktInput: document.getElementById("rezept-produkt-input"),
     rezeptErgebnisMenge: document.getElementById("rezept-ergebnis-menge"),
     rezeptKategorieInput: document.getElementById("rezept-kategorie-input"),
-    rezeptKategorienListe: document.getElementById("rezept-kategorien-liste"),
     rezeptZutatProduktInput: document.getElementById("rezept-zutat-produkt-input"),
-    rezeptZutatProdukteListe: document.getElementById("rezept-zutat-produkte-liste"),
     rezeptZutatMenge: document.getElementById("rezept-zutat-menge"),
     btnRezeptZutatHinzufuegen: document.getElementById("btn-rezept-zutat-hinzufuegen"),
     rezeptZutatenListe: document.getElementById("rezept-zutaten-liste"),

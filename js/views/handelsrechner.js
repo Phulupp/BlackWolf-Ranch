@@ -78,6 +78,12 @@
   [el.rechnerUnternehmen, el.rechnerProdukt, el.rechnerMenge, el.rechnerPreisInput].forEach((input) => {
     if (input) input.addEventListener("input", berechneHandelsrechner);
   });
+
+  // Vorschläge im App-eigenen Look statt der nativen <datalist>-Liste
+  // (siehe js/ui/autocomplete.js). unternehmenVorschlaege ist erst in
+  // js/views/kontakte.js definiert, das NACH dieser Datei lädt - deshalb
+  // hinter einer Pfeilfunktion verzögert aufgelöst.
+  initialisiereAutocomplete(el.rechnerUnternehmen, () => unternehmenVorschlaege());
   if (el.rechnerProdukt) el.rechnerProdukt.addEventListener("change", berechneHandelsrechner);
 
   [el.rechnerPreisbasisHandelRadio, el.rechnerPreisbasisPrivatRadio].forEach((radio) => {

@@ -78,7 +78,10 @@ without conflict. Because ES modules can't implicitly touch `window`,
   `istAdmin()`).
 - `js/ui/` — cross-cutting UI behavior not tied to one data view:
   `nav.js` (sidebar view switching, tabs), `modals.js`, `presence.js`
-  ("who's online" heartbeat), `version-check.js`.
+  ("who's online" heartbeat), `version-check.js`, `autocomplete.js`
+  (generic free-text suggestion dropdown, styled like the app's other
+  custom dropdowns — replaces native `<input list>`/`<datalist>`, which
+  the browser renders as unstyleable native UI).
 - `js/views/*.js` — one file per sidebar view (Waren, Bestellungen,
   Handelsrechner, Kontakte, Verkäufe, Hofbuch, Statistiken,
   Einstellungen, Admin). Each owns its own Firestore `onSnapshot` listener,

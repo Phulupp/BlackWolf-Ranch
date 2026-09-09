@@ -304,7 +304,6 @@
         aktualisiereNaechsteKontaktNummer();
         renderKontakte();
         renderUebersicht();
-        befuelleUnternehmenDatalist();
         // Blendet "+ Als Kontakt anlegen" im ggf. offenen Bestellungs-Fenster
         // sofort aus, sobald der eben erstellte Kontakt hier ankommt - ohne
         // dass im Ansprechpartner-Feld erst erneut getippt werden muss.
@@ -604,12 +603,15 @@
     });
   }
 
-  function befuelleUnternehmenDatalist() {
-    if (!el.unternehmenListe) return;
+  // Liefert alle bekannten Namen (Kontakte + bereits verwendete
+  // Unternehmen aus Bestellungen) als Vorschlagsliste fürs Unternehmen-Feld
+  // in Bestellungen/Handelsrechner (siehe initialisiereAutocomplete in
+  // js/ui/autocomplete.js) - wird bei jedem Öffnen/Tippen frisch
+  // aufgerufen, es muss also nirgends mehr aktiv "synchron gehalten"
+  // werden wie bei der früheren <datalist>.
+  function unternehmenVorschlaege() {
     const namen = new Set();
     kontakte.forEach((k) => k.name && namen.add(k.name));
     bestellungen.forEach((b) => b.unternehmen && namen.add(b.unternehmen));
-    el.unternehmenListe.innerHTML = Array.from(namen)
-      .map((n) => `<option value="${escapeHtml(n)}"></option>`)
-      .join("");
+    return Array.from(namen);
   }

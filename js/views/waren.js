@@ -102,13 +102,6 @@
     // Hofverwaltungs-Stil angezeigt - die muss bei jeder Aktualisierung der
     // Warenliste mit demselben Datenstand neu befüllt werden.
     befuelleBestellungProduktDropdown();
-    // Rohstoff-Eingabe im Rezept-Modal ist bewusst Freitext (siehe
-    // rezepte.js) - hier nur als Autocomplete-Vorschlag, kein Zwang, damit
-    // auch Rohstoffe eingetragen werden können, die es in Waren & Preise gar
-    // nicht gibt.
-    if (el.rezeptZutatProdukteListe) {
-      el.rezeptZutatProdukteListe.innerHTML = produkte.map((p) => `<option value="${escapeHtml(p.name)}"></option>`).join("");
-    }
   }
 
   function gefiltertProdukte() {

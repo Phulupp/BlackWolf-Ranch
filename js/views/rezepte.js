@@ -40,7 +40,6 @@
         aktualisiereRezeptrechnerMengeSchritt();
         snappeRezeptrechnerMenge();
         berechneRezeptrechner();
-        befuelleRezeptKategorienDatalist();
         renderRezepteListe();
       },
       (fehler) => {
@@ -57,14 +56,13 @@
     return (rezept.kategorie || "").trim() || REZEPT_KATEGORIE_STANDARD;
   }
 
-  // Füllt die Datalist im Anlegen/Bearbeiten-Modal mit allen bereits
+  // Vorschlagsliste im Anlegen/Bearbeiten-Modal mit allen bereits
   // verwendeten Kategorien, damit man beim Tippen bestehende vorgeschlagen
   // bekommt statt versehentlich Schreibvarianten derselben Kategorie
-  // anzulegen (z. B. "Backwaren" vs. "backwaren").
-  function befuelleRezeptKategorienDatalist() {
-    if (!el.rezeptKategorienListe) return;
-    const kategorien = Array.from(new Set(rezepte.map(kategorieVonRezept))).sort((a, b) => a.localeCompare(b, "de"));
-    el.rezeptKategorienListe.innerHTML = kategorien.map((k) => `<option value="${escapeHtml(k)}"></option>`).join("");
+  // anzulegen (z. B. "Backwaren" vs. "backwaren") - siehe
+  // initialisiereAutocomplete in js/ui/autocomplete.js.
+  function rezeptKategorienVorschlaege() {
+    return Array.from(new Set(rezepte.map(kategorieVonRezept))).sort((a, b) => a.localeCompare(b, "de"));
   }
 
   /* ------------------------- Rechner ------------------------- */
@@ -367,3 +365,10 @@
       }
     });
   }
+
+  // Vorschläge im App-eigenen Look statt der nativen <datalist>-Liste
+  // (siehe js/ui/autocomplete.js). Rohstoffe sind Freitext (siehe Kommentar
+  // oben bei DEFAULT_PRODUKT_KATEGORIEN/Rezept-Struktur) - "produkte" ist
+  // hier nur ein Vorschlag, kein Zwang.
+  initialisiereAutocomplete(el.rezeptZutatProduktInput, () => produkte.map((p) => p.name));
+  initialisiereAutocomplete(el.rezeptKategorieInput, rezeptKategorienVorschlaege);
