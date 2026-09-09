@@ -1,32 +1,30 @@
 /* --------------------------------------------------------------------------
    11. Übersicht (Dashboard)
    -------------------------------------------------------------------------- */
-/* Kopfbereich der Übersicht: echtes Farm-Illustrations-Foto als Hintergrund
-   über die ganze Karte (assets/background/dashboard-farm-crop.png - vom
-   Team bereitgestellt, auf den reinen Bildinhalt zugeschnitten, keine
-   schwarzen Ränder mehr). Ein Verlauf von links (dunkel, für die Lesbarkeit
-   der Begrüßung) nach rechts (transparent, Bild kommt voll durch) liegt
-   darüber - gleiche Technik wie beim Login-Hintergrund (siehe auth.css). */
+/* Kopfbereich der Übersicht: dasselbe stimmungsvolle Sonnenuntergangs-Foto
+   (Windmühle/Scheune/Laterne), das bereits als Hintergrund der gesamten App
+   dient (siehe css/base/textures.css) - vorher stand hier stattdessen
+   assets/background/dashboard-farm-crop.png, eine knallbunte, comichafte
+   Zeichnung (lächelnde Sonne, "MUH!"/"OINK!"-Sprechblasen), die stilistisch
+   nichts mit dem sonst durchgängig dunklen Leder-/Kupfer-1899-Look der App
+   gemein hatte. Ein Verlauf von links (dunkel, für die Lesbarkeit der
+   Begrüßung) nach rechts (heller, Bild kommt stärker durch, aber nie ganz
+   ungefiltert) liegt darüber - gleiche Technik wie beim Login-Hintergrund
+   (siehe auth.css). */
 .dash-hero {
-  /* Seitenverhältnis des Bildes selbst (1738 × 454 px) - die Box wird so
-     IMMER passend zum Bild hoch, statt eine feste (zu niedrige) Höhe zu
-     erzwingen, die "background-size: cover" oben/unten stark hätte
-     abschneiden lassen (Windmühle/Sonne fielen sonst raus). min-height
-     bleibt nur als Untergrenze auf sehr schmalen Bildschirmen. */
-  aspect-ratio: 1738 / 454;
+  aspect-ratio: 3 / 1;
   background:
-    linear-gradient(90deg, rgba(27, 21, 16, 0.88) 0%, rgba(27, 21, 16, 0.6) 35%, rgba(27, 21, 16, 0.15) 65%, transparent 100%),
-    url("../../assets/background/dashboard-farm-crop.png") center / cover no-repeat;
+    linear-gradient(90deg, rgba(20, 14, 8, 0.82) 0%, rgba(20, 14, 8, 0.5) 40%, rgba(20, 14, 8, 0.22) 70%, rgba(20, 14, 8, 0.32) 100%),
+    url("../../assets/background/dashboard-background.webp.png") center 42% / cover no-repeat;
   border: 1px solid var(--wood-line);
   border-left: 3px solid var(--brass);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card), 0 0 40px -14px rgba(169, 101, 63, 0.4);
   padding: 28px 36px;
   display: flex;
-  /* Oben statt vertikal mittig ausgerichtet - die Begrüßung saß vorher genau
-     auf Höhe des gemalten Holzschilds im Bild ("HORNHAUSEN HOF") und
-     überlagerte dessen Schrift. Oben ist im Bild nur Himmel, da stört sie
-     nichts. */
+  /* Oben statt vertikal mittig ausgerichtet - im oberen Bereich des Fotos
+     ist nur Himmel/Baumkrone, da stört die Begrüßung nichts; weiter unten
+     kommen Windmühle/Scheune/Laterne stärker durch. */
   align-items: flex-start;
   min-height: 172px;
   gap: 24px;
