@@ -18,7 +18,7 @@
   /* ------------------------------------------------------------------------
      1. Konstanten
      ------------------------------------------------------------------------ */
-  const VERSION_AKTUELL = 94;
+  const VERSION_AKTUELL = 95;
 
   // Ränge des Hofes (rein organisatorisch — Verwalterrechte sind unabhängig
   // davon und werden separat je Benutzer vergeben, siehe isAdmin).
@@ -179,11 +179,15 @@
   // intern aber woanders. Die "namen"-Listen bleiben nur als Fallback für
   // ältere Produkt-Dokumente ohne "kategorie"-Feld erhalten (siehe
   // ermittleProduktKategorie), neue/admin-angelegte Kategorien brauchen das
-  // nicht.
+  // nicht. "farbe" (Hex) steuert den kleinen Farbpunkt vor dem Kategorie-
+  // Namen in Waren & Preise statt eines Piktogramms (siehe
+  // warenbuch-kategorie__dot in js/views/waren.js) - ältere Kategorien ohne
+  // dieses Feld fallen dort auf einen neutralen Ton zurück.
   const DEFAULT_PRODUKT_KATEGORIEN = [
     {
       id: "feldfruechte",
       label: "Feldfrüchte",
+      farbe: "#6f8f5b",
       reihenfolgeIntern: 1,
       reihenfolgeOeffentlich: 1,
       namen: ["Weizen", "Mais", "Zuckerrohr", "Hopfen", "Zwiebel", "Kartoffel", "Salatkopf", "Tomaten", "Karotten", "Thymian", "Oregano", "Blaubeere"],
@@ -191,6 +195,7 @@
     {
       id: "tierprodukte",
       label: "Tierprodukte",
+      farbe: "#a15c3a",
       reihenfolgeIntern: 2,
       reihenfolgeOeffentlich: 2,
       namen: ["Milch", "Eier", "Rindfleisch", "Schweinefleisch", "Lammfleisch", "Speck"],
@@ -198,6 +203,7 @@
     {
       id: "verarbeitet",
       label: "Verarbeitete Waren",
+      farbe: "#bd9143",
       reihenfolgeIntern: 3,
       reihenfolgeOeffentlich: 3,
       namen: ["Mehl", "Zucker", "Mehlsack", "Zuckersack", "Stoff", "Maisbrot"],

@@ -111,6 +111,7 @@
     btnWarenSortieren: document.getElementById("btn-waren-sortieren"),
     btnOeffentlichePreise: document.getElementById("btn-oeffentliche-preise"),
     kategorieNeuInput: document.getElementById("kategorie-neu-input"),
+    kategorieNeuFarbe: document.getElementById("kategorie-neu-farbe"),
     btnKategorieErstellen: document.getElementById("btn-kategorie-erstellen"),
     kategorienInternListeEl: document.getElementById("kategorien-intern-liste"),
     kategorienOeffentlichListeEl: document.getElementById("kategorien-oeffentlich-liste"),

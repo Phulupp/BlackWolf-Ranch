@@ -313,12 +313,19 @@ body {
   flex-shrink: 0;
 }
 
-.preistafel__kategorie-icon {
-  width: 13px;
-  height: 13px;
+/* Farbpunkt statt Piktogramm (gleicher Wechsel wie in der internen App,
+   siehe warenbuch-kategorie__dot in css/views/waren.css) - bei 13px Größe
+   war ein mehrstrichiges Icon ohnehin kaum erkennbar, und jede admin-
+   angelegte Kategorie bekommt so automatisch eine passende Farbe statt
+   eines generischen Fallback-Icons. Ring dunkel statt hell, da diese Seite
+   (anders als die interne App) ein helles Holzbrett als Hintergrund hat. */
+.preistafel__kategorie-dot {
+  width: 9px;
+  height: 9px;
   flex-shrink: 0;
-  color: var(--tinte-preis);
-  opacity: 0.85;
+  border-radius: 50%;
+  background: var(--dot-farbe, var(--tinte-preis));
+  box-shadow: 0 0 0 2px rgba(44, 29, 16, 0.18);
 }
 
 .preistafel__kategorie-label {

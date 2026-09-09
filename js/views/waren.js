@@ -117,16 +117,19 @@
     return produkte.filter((p) => (p.name || "").toLowerCase().includes(begriff));
   }
 
-  // Dezente Line-Icons je Warenkategorie (gleicher Strichstil wie die
-  // Sidebar-Navigation: stroke=currentColor, viewBox 24x24) - rein
-  // dekorativ vor der jeweiligen Abschnittsüberschrift, bewusst klein
-  // gehalten statt großer Illustrationen.
-  const WAREN_KATEGORIE_ICONS = {
-    feldfruechte: '<path d="M12 21V10"/><path d="M12 10C12 6 9 4 6 4c0 4 2 7 6 7Z"/><path d="M12 13c0-3.5 2.5-6 6-6 0 3.8-2 6.5-6 6.5"/>',
-    tierprodukte: '<path d="M12 3c3.5 4.5 6 8.2 6 11.5a6 6 0 0 1-12 0C6 11.2 8.5 7.5 12 3Z"/>',
-    verarbeitet: '<path d="M8 8h8l1.5 5A5.5 5.5 0 0 1 12 19a5.5 5.5 0 0 1-5.5-6Z"/><path d="M9.5 8V6a2.5 2.5 0 0 1 5 0v2"/>',
-  };
-  const WAREN_KATEGORIE_ICON_STANDARD = '<path d="M6 4h8l4 4v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Z"/><path d="M14 4v4h4"/>';
+  // Fallback-Farbe für Kategorien ohne eigenes "farbe"-Feld (ältere,
+  // vor Einführung der Farbpunkte angelegte Kategorien) - neutraler
+  // Messing-Ton statt einer zufälligen/fehlenden Farbe.
+  const WAREN_KATEGORIE_FARBE_STANDARD = "#8a7654";
+
+  // Nächste vorgeschlagene Farbe für eine neu anzulegende Kategorie -
+  // gleiches Rotationsprinzip wie naechsteVorgeschlageneKontaktRolleFarbe
+  // in kontakte.js, nutzt bewusst dieselbe geteilte Palette (siehe
+  // KONTAKTE_ROLLEN_FARBEN_PALETTE in js/core/config.js) statt einer
+  // eigenen zweiten Liste.
+  function naechsteVorgeschlageneKategorieFarbe() {
+    return KONTAKTE_ROLLEN_FARBEN_PALETTE[produktKategorien.length % KONTAKTE_ROLLEN_FARBEN_PALETTE.length];
+  }
 
   // Sechs-Punkte-Ziehgriff (klassisches Drag-Handle-Symbol) - nur sichtbar,
   // solange der Anordnen-Modus aktiv ist (siehe warenSortierAktiv unten).
@@ -193,11 +196,11 @@
           })
           .join("");
 
-        const icon = WAREN_KATEGORIE_ICONS[kat.id] || WAREN_KATEGORIE_ICON_STANDARD;
+        const farbe = kat.farbe || WAREN_KATEGORIE_FARBE_STANDARD;
         return `<div class="warenbuch-kategorie" data-kategorie="${kat.id}">
             <span class="warenbuch-kategorie__linie warenbuch-kategorie__linie--links"></span>
             <span class="warenbuch-kategorie__mitte">
-              <svg class="warenbuch-kategorie__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icon}</svg>
+              <span class="warenbuch-kategorie__dot" style="--dot-farbe:${farbe};" aria-hidden="true"></span>
               <span class="warenbuch-kategorie__label">${escapeHtml(kat.label)}</span>
             </span>
             <span class="warenbuch-kategorie__linie warenbuch-kategorie__linie--rechts"></span>
@@ -305,6 +308,16 @@
   // "zusatz" ist optional zusätzlicher Inhalt rechts (z. B. der "Kategorie
   // hinzufügen"-Button in der öffentlichen Liste).
   function kategorieZeileHtml(kat, feld, istErsteImFeld, istLetzteImFeld, zusatzHtml) {
+    // Farbpunkt nur in der internen Liste editierbar (bestimmt den Punkt vor
+    // dem Kategorie-Namen in Waren & Preise, siehe renderWaren) - die
+    // öffentliche Liste hat kein eigenes Farbkonzept, ein zweites Farbfeld
+    // dort wäre nur verwirrend.
+    const farbFeld =
+      feld === "reihenfolgeIntern"
+        ? `<input type="color" value="${kat.farbe || WAREN_KATEGORIE_FARBE_STANDARD}" data-kategorie-farbe="${kat.id}" title="Farbpunkt für ${escapeHtml(
+            kat.label
+          )}" style="width:22px;height:22px;padding:0;border:none;border-radius:50%;background:none;cursor:pointer;flex-shrink:0;" />`
+        : "";
     return `<div class="oeffentliche-preise-zeile" data-kategorie-zeile="${kat.id}">
         <div class="kategorie-zeile__pfeile">
           <button type="button" class="icon-btn" data-kategorie-hoch="${kat.id}" data-feld="${feld}" title="Nach oben" ${
@@ -314,6 +327,7 @@
       istLetzteImFeld ? "disabled" : ""
     }>▼</button>
         </div>
+        ${farbFeld}
         <div style="flex:1; min-width:0;">
           ${
             feld === "reihenfolgeIntern"
@@ -388,6 +402,7 @@
   if (el.btnOeffentlichePreise) {
     el.btnOeffentlichePreise.addEventListener("click", () => {
       if (el.kategorieNeuInput) el.kategorieNeuInput.value = "";
+      if (el.kategorieNeuFarbe) el.kategorieNeuFarbe.value = naechsteVorgeschlageneKategorieFarbe();
       renderKategorienVerwaltung();
       oeffneModal("modal-oeffentliche-preise");
     });
@@ -405,12 +420,14 @@
       const neueKategorie = {
         id: erzeugeKategorieId(label),
         label,
+        farbe: el.kategorieNeuFarbe ? el.kategorieNeuFarbe.value : naechsteVorgeschlageneKategorieFarbe(),
         reihenfolgeIntern: maxIntern + 1,
         reihenfolgeOeffentlich: maxOeffentlich + 1,
       };
       try {
         await db.doc(PRODUKT_KATEGORIEN_DOC).update({ kategorien: [...produktKategorien, neueKategorie] });
         if (el.kategorieNeuInput) el.kategorieNeuInput.value = "";
+        if (el.kategorieNeuFarbe) el.kategorieNeuFarbe.value = naechsteVorgeschlageneKategorieFarbe();
         zeigeToast("Kategorie erstellt.");
       } catch (fehler) {
         console.error(fehler);
@@ -475,10 +492,23 @@
   if (el.kategorienInternListeEl) el.kategorienInternListeEl.addEventListener("click", kategorienListeKlick);
   if (el.kategorienOeffentlichListeEl) el.kategorienOeffentlichListeEl.addEventListener("click", kategorienListeKlick);
 
-  // Umbenennen (nur in der internen Liste, siehe kategorieZeileHtml) - erst
-  // beim Verlassen des Feldes (change), nicht bei jedem Tastendruck.
+  // Umbenennen und Farbpunkt ändern (beide nur in der internen Liste, siehe
+  // kategorieZeileHtml) - erst beim Verlassen des Feldes/Loslassen des
+  // Farbrads (change), nicht bei jedem Tastendruck. Der Farbpunkt wirkt sich
+  // sofort auf den Punkt vor dem Kategorie-Namen in Waren & Preise aus
+  // (siehe renderWaren).
   if (el.kategorienInternListeEl) {
     el.kategorienInternListeEl.addEventListener("change", async (event) => {
+      const farbInput = event.target.closest("[data-kategorie-farbe]");
+      if (farbInput) {
+        const id = farbInput.getAttribute("data-kategorie-farbe");
+        const neueListe = produktKategorien.map((k) => (k.id === id ? { ...k, farbe: farbInput.value } : k));
+        await db.doc(PRODUKT_KATEGORIEN_DOC).update({ kategorien: neueListe }).catch(() => {
+          zeigeToast("Farbe konnte nicht gespeichert werden.");
+        });
+        return;
+      }
+
       const input = event.target.closest("[data-kategorie-umbenennen]");
       if (!input) return;
       const id = input.getAttribute("data-kategorie-umbenennen");

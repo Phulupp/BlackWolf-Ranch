@@ -10,19 +10,16 @@
      Feld "reihenfolgeOeffentlich" je Kategorie, unabhängig von der internen
      Reihenfolge in Waren & Preise - siehe "Kategorien verwalten" dort).
    Bewusst eine eigenständige, schlanke Seite ohne das restliche App-Gerüst
-   (kein Auth-SDK, kein Sidebar/Modal-Code) - nur die Icons für die drei
-   ursprünglichen Kategorien sind hier fest hinterlegt (rein dekorativ, neue
-   admin-angelegte Kategorien bekommen automatisch das Standard-Icon).
+   (kein Auth-SDK, kein Sidebar/Modal-Code). Die Kategorie-Überschrift zeigt
+   einen Farbpunkt in der jeweiligen "farbe" der Kategorie (gepflegt in
+   Waren & Preise → "Kategorien verwalten", siehe js/views/waren.js) statt
+   eines Piktogramms - dieselbe Optik wie in der internen App, funktioniert
+   automatisch für jede admin-angelegte Kategorie ohne eigene Icon-Pflege.
    ------------------------------------------------------------------------ */
 
-const PREISE_KATEGORIE_ICONS = {
-  feldfruechte: '<path d="M12 21V10"/><path d="M12 10C12 6 9 4 6 4c0 4 2 7 6 7Z"/><path d="M12 13c0-3.5 2.5-6 6-6 0 3.8-2 6.5-6 6.5"/>',
-  tierprodukte: '<path d="M12 3c3.5 4.5 6 8.2 6 11.5a6 6 0 0 1-12 0C6 11.2 8.5 7.5 12 3Z"/>',
-  verarbeitet: '<path d="M8 8h8l1.5 5A5.5 5.5 0 0 1 12 19a5.5 5.5 0 0 1-5.5-6Z"/><path d="M9.5 8V6a2.5 2.5 0 0 1 5 0v2"/>',
-};
 const PREISE_KATEGORIE_SONSTIGE = "sonstige";
 const PREISE_KATEGORIE_SONSTIGE_LABEL = "Sonstige Waren";
-const PREISE_KATEGORIE_ICON_STANDARD = '<path d="M6 4h8l4 4v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Z"/><path d="M14 4v4h4"/>';
+const PREISE_KATEGORIE_FARBE_STANDARD = "#8a7654";
 
 let preiseKategorienListe = null; // null = noch nicht geladen
 let preiseProdukteListe = null;
@@ -93,11 +90,11 @@ function preiseRendern() {
         )
         .join("");
 
-      const icon = PREISE_KATEGORIE_ICONS[kat.id] || PREISE_KATEGORIE_ICON_STANDARD;
+      const farbe = kat.farbe || PREISE_KATEGORIE_FARBE_STANDARD;
       return `<div class="preistafel__kategorie" data-kategorie="${kat.id}">
           <span class="preistafel__kategorie-linie preistafel__kategorie-linie--links"></span>
           <span class="preistafel__kategorie-mitte">
-            <svg class="preistafel__kategorie-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icon}</svg>
+            <span class="preistafel__kategorie-dot" style="--dot-farbe:${farbe};" aria-hidden="true"></span>
             <span class="preistafel__kategorie-label">${preiseEscapeHtml(kat.label)}</span>
           </span>
           <span class="preistafel__kategorie-linie preistafel__kategorie-linie--rechts"></span>

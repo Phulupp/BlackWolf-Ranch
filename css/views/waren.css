@@ -48,11 +48,21 @@
   flex-shrink: 0;
 }
 
-.warenbuch-kategorie__icon {
-  width: 15px;
-  height: 15px;
+/* Farbpunkt statt Piktogramm: löst zwei Probleme des vorherigen
+   Line-Icon-Sets auf einmal - bei 15px Größe zerfielen mehrstrichige
+   Symbole zu unleserlichem Gekritzel, UND jede frei anlegbare Kategorie
+   (siehe "Kategorien verwalten") bekam mangels eigenem Icon einen
+   generischen, thematisch unpassenden Datei-Icon-Fallback. Ein farbiger
+   Punkt bleibt bei jeder Größe klar erkennbar und funktioniert automatisch
+   für jede künftige Kategorie, sobald ihr im Verwalten-Dialog eine Farbe
+   zugewiesen wird (siehe data-kategorie-farbe in js/views/waren.js). */
+.warenbuch-kategorie__dot {
+  width: 10px;
+  height: 10px;
   flex-shrink: 0;
-  color: var(--brass);
+  border-radius: 50%;
+  background: var(--dot-farbe, var(--brass));
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.22), 0 0 8px -1px var(--dot-farbe, var(--brass));
 }
 
 .warenbuch-kategorie__label {
