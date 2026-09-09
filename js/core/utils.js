@@ -143,6 +143,24 @@
     return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")} Uhr · ${formatDatum(ts)}`;
   }
 
+  // "vor 2 Stunden" statt volles Datum - für aktuelle Zeitpunkte (< 1 Woche),
+  // danach wird die relative Angabe ungenau/unübersichtlich und es fällt
+  // zurück auf das reine Datum (formatDatum). Aufrufer sollten das volle
+  // Datum/Uhrzeit zusätzlich als title-Attribut anzeigen (siehe Hofbuch).
+  function formatRelativZeit(ts) {
+    if (!ts) return "—";
+    const d = typeof ts.toDate === "function" ? ts.toDate() : new Date(ts);
+    const sekunden = Math.floor((Date.now() - d.getTime()) / 1000);
+    if (sekunden < 45) return "gerade eben";
+    const minuten = Math.floor(sekunden / 60);
+    if (minuten < 60) return `vor ${minuten} Minute${minuten === 1 ? "" : "n"}`;
+    const stunden = Math.floor(minuten / 60);
+    if (stunden < 24) return `vor ${stunden} Stunde${stunden === 1 ? "" : "n"}`;
+    const tage = Math.floor(stunden / 24);
+    if (tage < 7) return `vor ${tage} Tag${tage === 1 ? "" : "en"}`;
+    return formatDatum(ts);
+  }
+
   function istHeute(ts) {
     if (!ts) return false;
     const d = typeof ts.toDate === "function" ? ts.toDate() : new Date(ts);

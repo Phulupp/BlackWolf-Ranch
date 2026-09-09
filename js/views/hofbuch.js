@@ -5,6 +5,44 @@
      ------------------------------------------------------------------------ */
   // Schwarzes Brett: freie Notizen/Nachrichten ans Team mit Überschrift, für
   // alle freigegebenen Nutzer lesbar/schreibbar (analog zu Kontakte/Bestellungen).
+
+  // Zeitpunkt des letzten Hofbuch-Besuchs VOR dieser Sitzung - wird einmalig
+  // beim Laden der Seite aus localStorage gelesen und danach für die gesamte
+  // Sitzung nicht mehr verändert, damit "NEU"-Badges beim Wechseln zwischen
+  // Ansichten innerhalb derselben Sitzung nicht mittendrin verschwinden.
+  // markiereHofbuchAlsBesucht() (siehe js/ui/nav.js) schreibt beim Öffnen der
+  // Ansicht lediglich den Wert für den NÄCHSTEN Sitzungsstart fort.
+  const HOFBUCH_BESUCH_KEY = "hornhausenHof.hofbuchLetzterBesuch";
+  let hofbuchLetzterBesuchAnzeige = 0;
+  try {
+    hofbuchLetzterBesuchAnzeige = parseInt(localStorage.getItem(HOFBUCH_BESUCH_KEY), 10) || 0;
+  } catch (fehler) {
+    hofbuchLetzterBesuchAnzeige = 0;
+  }
+  let hofbuchBesuchGespeichert = false;
+
+  function markiereHofbuchAlsBesucht() {
+    if (hofbuchBesuchGespeichert) return;
+    hofbuchBesuchGespeichert = true;
+    try {
+      localStorage.setItem(HOFBUCH_BESUCH_KEY, String(Date.now()));
+    } catch (fehler) {
+      // Privater Modus/deaktiviertes localStorage - dann bleibt der Hinweis
+      // beim nächsten Mal einfach unverändert, kein Problem.
+    }
+  }
+
+  // Deterministischer, winziger "Schiefe"-Winkel je Eintrag (aus der
+  // Firestore-Dokument-ID abgeleitet, bleibt also über Neurendern hinweg
+  // stabil) - lässt die Karten wie tatsächlich angeheftete Zettel wirken
+  // statt wie eine reine Liste. Bewusst sehr klein (±1,1°).
+  function hofbuchRotationGrad(id) {
+    let hash = 0;
+    for (let i = 0; i < id.length; i++) hash = (hash * 31 + id.charCodeAt(i)) | 0;
+    const bereich = 1.1;
+    return (((Math.abs(hash) % 2000) / 1000 - 1) * bereich).toFixed(2);
+  }
+
   function starteHofbuchListener() {
     if (!db) return;
     if (unsubHofbuch) unsubHofbuch();
@@ -188,18 +226,27 @@
         const katBadge = kat.farbe
           ? `<span class="badge badge--outline" style="background:${kat.farbe}26;color:${kat.farbe};border-color:${kat.farbe};">${escapeHtml(kat.label)}</span>`
           : "";
-        return `<article class="hofbuch-eintrag${e.angeheftet ? " hofbuch-eintrag--angeheftet" : ""}">
+        // "NEU" nur, wenn schon einmal ein früherer Besuch bekannt ist (sonst
+        // stünde bei der allerersten Nutzung an jedem Eintrag NEU), der
+        // Eintrag danach entstand UND nicht vom eigenen Account stammt (den
+        // eigenen frischen Eintrag muss man sich nicht selbst markieren).
+        const istEigener = !!(aktuellerNutzer && e.autorUid && e.autorUid === aktuellerNutzer.uid);
+        const istNeu =
+          hofbuchLetzterBesuchAnzeige > 0 && !istEigener && hofbuchZeitstempelInMillis(e.erstelltAm) > hofbuchLetzterBesuchAnzeige;
+        const kartenStyle = `--kat-akzent:${kat.farbe || "var(--leather-edge)"};--rotation:${hofbuchRotationGrad(e.id)}deg;`;
+        return `<article class="hofbuch-eintrag${e.angeheftet ? " hofbuch-eintrag--angeheftet" : ""}" style="${kartenStyle}">
           <div class="hofbuch-eintrag__kopf">
             <div class="hofbuch-eintrag__kopf-text">
               ${e.angeheftet ? `<span class="badge hofbuch-pin-badge">📌 Angeheftet</span>` : ""}
+              ${istNeu ? `<span class="badge hofbuch-neu-badge">Neu</span>` : ""}
               ${katBadge}
               <span class="hofbuch-eintrag__titel">${escapeHtml(e.titel)}</span>
-              <span class="hofbuch-eintrag__meta">${escapeHtml(e.autor || "Unbekannt")} · ${formatDatumUhrzeit(e.erstelltAm)}</span>
+              <span class="hofbuch-eintrag__meta" title="${escapeHtml(formatDatumUhrzeit(e.erstelltAm))}">${escapeHtml(e.autor || "Unbekannt")} · ${formatRelativZeit(e.erstelltAm)}</span>
               ${
                 e.bearbeitetAm
-                  ? `<span class="hofbuch-eintrag__meta hofbuch-eintrag__meta--bearbeitet">Bearbeitet von ${escapeHtml(
-                      e.bearbeiter || "Unbekannt"
-                    )} · ${formatDatumUhrzeit(e.bearbeitetAm)}</span>`
+                  ? `<span class="hofbuch-eintrag__meta hofbuch-eintrag__meta--bearbeitet" title="${escapeHtml(
+                      formatDatumUhrzeit(e.bearbeitetAm)
+                    )}">Bearbeitet von ${escapeHtml(e.bearbeiter || "Unbekannt")} · ${formatRelativZeit(e.bearbeitetAm)}</span>`
                   : ""
               }
             </div>
