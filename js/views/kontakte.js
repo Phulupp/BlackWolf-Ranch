@@ -283,6 +283,15 @@
     });
   }
 
+  // Gleicher Live-Filter im Bearbeiten-Modal - die Nummer war früher nach
+  // dem Anlegen unveränderlich (siehe Git-Historie), ist jetzt aber genauso
+  // frei editierbar wie beim Neuanlegen.
+  if (el.kontaktEditNummer) {
+    el.kontaktEditNummer.addEventListener("input", () => {
+      el.kontaktEditNummer.value = el.kontaktEditNummer.value.replace(/\D/g, "").slice(0, 4);
+    });
+  }
+
   function starteKontakteListener() {
     if (!db) return;
     if (unsubKontakte) unsubKontakte();
@@ -528,15 +537,15 @@
     el.btnConfirmKontaktEdit.addEventListener("click", async () => {
       versteckeFeldFehler(el.kontaktEditError);
       const id = el.kontaktEditId.value;
+      const nummer = el.kontaktEditNummer.value.trim();
       const name = el.kontaktEditName.value.trim();
-      if (!name) return zeigeFeldFehler(el.kontaktEditError, "Bitte einen Namen eintragen.");
+      if (!nummer || !name) return zeigeFeldFehler(el.kontaktEditError, "Bitte Nummer und Name eintragen.");
+      if (!/^\d{1,4}$/.test(nummer)) return zeigeFeldFehler(el.kontaktEditError, "Die Nummer darf nur aus bis zu 4 Ziffern bestehen.");
       try {
-        // Bewusst ohne "nummer": die Nummer eines Kontakts ist nach dem
-        // Anlegen unveränderlich (siehe Anforderung 1/7).
         await db
           .collection(KONTAKTE_COLLECTION)
           .doc(id)
-          .update({ name, rolle: el.kontaktEditRolle.value, notiz: el.kontaktEditNotiz.value.trim() });
+          .update({ nummer, name, rolle: el.kontaktEditRolle.value, notiz: el.kontaktEditNotiz.value.trim() });
         schliesseModal("modal-kontakt-edit");
         zeigeToast("Kontakt gespeichert.");
       } catch (fehler) {
