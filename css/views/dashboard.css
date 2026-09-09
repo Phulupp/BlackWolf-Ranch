@@ -152,6 +152,14 @@
   margin-bottom: 30px;
 }
 
+/* Statistiken hat kein eigenes Stylesheet und teilt sich .dash-stats mit der
+   Übersicht - hat aber VIER Kennzahlen-Kacheln statt drei (siehe
+   #view-statistiken in index.html), was in der 3er-Spalte sonst eine
+   schiefe 3-dann-1-Zeile mit zwei leeren Zellen ergäbe. */
+#view-statistiken .dash-stats {
+  grid-template-columns: repeat(4, 1fr);
+}
+
 .dash-stat {
   background: linear-gradient(165deg, rgba(55, 37, 26, 0.4) 0%, var(--leather-800) 100%);
   border: 1px solid rgba(89, 64, 47, 0.6);

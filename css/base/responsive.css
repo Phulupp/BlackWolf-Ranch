@@ -5,7 +5,8 @@
   .dash-columns {
     grid-template-columns: 1fr;
   }
-  .dash-stats {
+  .dash-stats,
+  #view-statistiken .dash-stats {
     grid-template-columns: repeat(2, 1fr);
   }
   .rechner-layout {

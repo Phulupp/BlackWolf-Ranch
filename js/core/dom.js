@@ -92,6 +92,7 @@
     bestellungGesamtRabattBetrag: document.getElementById("bestellung-gesamtrabatt-betrag"),
     bestellungZusammenfassungSumme: document.getElementById("bestellung-zusammenfassung-summe"),
     btnBestellungLieferung: document.getElementById("btn-bestellung-lieferung"),
+    bestellungLieferungPauschaleText: document.getElementById("bestellung-lieferung-pauschale-text"),
     bestellungZahlung: document.getElementById("bestellung-zahlung"),
     bestellungZahlungBerechnet: document.getElementById("bestellung-zahlung-berechnet"),
     bestellungErhaltenInput: document.getElementById("bestellung-erhalten-input"),

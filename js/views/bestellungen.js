@@ -354,12 +354,21 @@
   }
 
   // Spiegelt bestellungEntwurfLieferung im Umschalter-Button (Haken +
-  // hervorgehobener Rahmen bei aktiver Lieferung).
+  // hervorgehobener Rahmen bei aktiver Lieferung). Der Pauschale-Betrag im
+  // Beschriftungstext war vorher fest "5,00 $" einprogrammiert (siehe
+  // index.html) und zeigte nach einer Änderung in Einstellungen → Hof-
+  // Einstellungen weiterhin den alten Wert an, obwohl tatsächlich die neue
+  // Pauschale berechnet wurde (berechneBestellungKennzahlen liest bereits
+  // korrekt hofEinstellungen.lieferpauschale) - daher hier live nachziehen,
+  // genau wie beim bestellung-lieferung-badge-Tooltip in der Liste.
   function aktualisiereBestellungLieferungButton() {
     if (!el.btnBestellungLieferung) return;
     el.btnBestellungLieferung.classList.toggle("bestellung-lieferung-toggle--aktiv", bestellungEntwurfLieferung);
     el.btnBestellungLieferung.setAttribute("aria-pressed", String(bestellungEntwurfLieferung));
     el.btnBestellungLieferung.disabled = bestellungModalArchiviert;
+    if (el.bestellungLieferungPauschaleText) {
+      el.bestellungLieferungPauschaleText.textContent = `(+${formatGeld(hofEinstellungen.lieferpauschale)} Pauschale)`;
+    }
   }
 
   // Zeigt den "Zahlung"-Bereich (berechnete Gesamtsumme + tatsächlich
