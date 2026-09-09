@@ -384,12 +384,19 @@ body {
   border-left-color: var(--tinte-preis);
 }
 
+/* min-width:0 + kein "white-space: nowrap" ist hier Pflicht, nicht nur
+   Kosmetik: als Flex-Kind neben der Punktlinie und dem Preis (.preistafel__
+   zeile, display:flex) wäre die volle Textbreite eines langen, nicht
+   umbrechenden Produktnamens sonst dessen Schrumpf-Untergrenze - bei
+   ungünstiger Fensterbreite drängt das den Preis aus dem Rahmen statt
+   umzubrechen, und .preistafel__flaeche schneidet Überstehendes per
+   "overflow: hidden" einfach ab, statt es sichtbar zu lassen. */
 .preistafel__zeile-name {
   font-family: var(--font-display);
   font-size: 16px;
   font-weight: 600;
   color: #150d06;
-  white-space: nowrap;
+  min-width: 0;
 }
 
 .preistafel__zeile-punkte {
@@ -426,9 +433,5 @@ body {
 
   .preistafel__titel {
     font-size: 24px;
-  }
-
-  .preistafel__zeile-name {
-    white-space: normal;
   }
 }

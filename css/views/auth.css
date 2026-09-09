@@ -156,6 +156,16 @@
   color: var(--brass-bright);
 }
 
+/* Fußzeile ("Datenschutz"/"Informationen") liegt hier direkt auf dem
+   Hof-Hintergrundfoto statt auf der Pergament-/Leder-Karte wie die übrigen
+   .auth-link-Vorkommen - ohne Schlagschatten war das die kleinste UND
+   dunkelste Textkombination der ganzen Seite, auf dem am wenigsten
+   vorhersehbaren Hintergrund. Gleiche Technik wie .dash-hero__eyebrow
+   (css/views/dashboard.css) für Text auf einem Foto. */
+.auth-screen .page-footer .auth-link {
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.65);
+}
+
 .auth-status {
   display: none;
   flex-direction: column;

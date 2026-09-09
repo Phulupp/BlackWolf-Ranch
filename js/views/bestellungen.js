@@ -476,7 +476,10 @@
           .sort((a, b) => (a.p.erledigt ? 1 : 0) - (b.p.erledigt ? 1 : 0));
         if (zeilenDieserKategorie.length === 0) return "";
         const zeilen = zeilenDieserKategorie.map(({ p, index }) => renderZeile(p, index)).join("");
-        return `<div class="bestellung-positionen-zeile bestellung-positionen-zeile--kategorie"><span>${escapeHtml(kat.label)}</span><span class="bestellung-positionen-zeile__kategorie-linie"></span></div>${zeilen}`;
+        const farbe = kat.farbe || KATEGORIE_FARBE_STANDARD;
+        return `<div class="bestellung-positionen-zeile bestellung-positionen-zeile--kategorie"><span><span class="kategorie-dot" style="--dot-farbe:${farbe};"></span>${escapeHtml(
+          kat.label
+        )}</span><span class="bestellung-positionen-zeile__kategorie-linie"></span></div>${zeilen}`;
       })
       .join("");
 
@@ -582,7 +585,10 @@
               }" data-produkt-option="${escapeHtml(p.id)}">${escapeHtml(p.name)}</button>`
           )
           .join("");
-        return `<div class="custom-select__kategorie"><span>${escapeHtml(kat.label)}</span></div>${optionen}`;
+        const farbe = kat.farbe || KATEGORIE_FARBE_STANDARD;
+        return `<div class="custom-select__kategorie"><span><span class="kategorie-dot" style="--dot-farbe:${farbe};"></span>${escapeHtml(
+          kat.label
+        )}</span></div>${optionen}`;
       })
       .join("");
     el.bestellungPositionProduktOptionen.innerHTML = html || `<div class="custom-select__leer">Keine Treffer</div>`;

@@ -96,8 +96,8 @@
           <div>
             <span class="settings-list__name">${escapeHtml(b.username || "Unbekannt")}</span>
             <span class="settings-list__role">${escapeHtml(b.rolle || "—")}</span>
-            ${b.isAdmin ? '<span class="settings-list__protected">Verwalter</span>' : ""}
-            ${statusLabel ? `<span class="settings-list__wartet">${statusLabel}</span>` : ""}
+            ${b.isAdmin ? '<span class="badge badge--verwalter">Verwalter</span>' : ""}
+            ${statusLabel ? `<span class="badge badge--danger-soft">${statusLabel}</span>` : ""}
             <span class="settings-list__role" style="opacity:.6;">Letzter Login: ${formatDatumUhrzeit(b.lastLogin)}</span>
           </div>
           <span style="opacity:.5;">›</span>

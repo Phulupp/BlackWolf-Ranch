@@ -9,6 +9,24 @@
     return div.innerHTML;
   }
 
+  // Prüft, ob eine frei gewählte Hex-Farbe auf dem dunklen Leder-/Holz-
+  // Hintergrund (Helligkeit von --leather-800/--leather-900 liegt bei
+  // ungefähr 26-32) noch als Badge-/Punkt-Farbe lesbar wäre - verhindert,
+  // dass z. B. bei den Kontakte-Rollen oder Waren-Kategorien ein sehr
+  // dunkler Farbton gewählt wird, der mit dem Hintergrund praktisch
+  // verschmilzt. Genutzt von den Color-Pickern in js/views/kontakte.js und
+  // js/views/waren.js. Luma-Berechnung (nicht die genauere WCAG-Relativ-
+  // Luminanz) reicht hier völlig aus, es geht nur um eine grobe Schwelle.
+  function farbeAusreichendHell(hex) {
+    const wert = (hex || "").replace("#", "");
+    if (wert.length !== 6 || /[^0-9a-fA-F]/.test(wert)) return true;
+    const r = parseInt(wert.slice(0, 2), 16);
+    const g = parseInt(wert.slice(2, 4), 16);
+    const b = parseInt(wert.slice(4, 6), 16);
+    const luma = 0.299 * r + 0.587 * g + 0.114 * b;
+    return luma >= 90;
+  }
+
   // --- Formatierter Text (Schwarzes Brett) ----------------------------------
   // Erlaubt genau eine feste, kleine Auswahl an Formatierungen (fett, kursiv,
   // unterstrichen, Zeilenumbruch, Textfarbe aus HOFBUCH_FARBEN) und verwirft

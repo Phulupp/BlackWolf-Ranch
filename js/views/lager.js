@@ -69,8 +69,11 @@
 
         const kategorieWert = produkte.filter(gehoertZuKategorie).reduce((sum, p) => sum + (p.lagerMenge || 0) * (p.verkaufspreis || 0), 0);
         const zeilen = sichtbareProdukte.map(lagerZeileHtml).join("");
+        const farbe = kat.farbe || KATEGORIE_FARBE_STANDARD;
 
-        return `<div class="reg-row reg-row--kategorie"><span>${escapeHtml(kat.label)}</span></div>${zeilen}<div class="reg-row reg-row--summe">Lagerwert ${escapeHtml(kat.label)}: ${formatGeld(kategorieWert)}</div>`;
+        return `<div class="reg-row reg-row--kategorie"><span><span class="kategorie-dot" style="--dot-farbe:${farbe};"></span>${escapeHtml(
+          kat.label
+        )}</span></div>${zeilen}<div class="reg-row reg-row--summe">Lagerwert ${escapeHtml(kat.label)}: ${formatGeld(kategorieWert)}</div>`;
       })
       .join("");
   }

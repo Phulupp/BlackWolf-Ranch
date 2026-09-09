@@ -49,3 +49,55 @@
   background: rgba(184, 148, 90, 0.22);
   color: var(--old-brass);
 }
+
+/* Admin/Verwaltung: Konto-Status ("Wartet auf Freigabe"/"Abgelehnt"/
+   "Gesperrt") und die "Verwalter"-Markierung nutzten bisher eigenes,
+   handgestricktes CSS (.settings-list__wartet/__protected in
+   css/views/admin.css) statt dieser geteilten .badge-Basis, die der Rest
+   der App (Kontakte, Bestellungen, Kunden, Hofbuch) für dasselbe
+   Pillen-Muster verwendet - eine künftige Änderung an Padding/Radius/
+   Schriftgröße der Badges wäre hier sonst stillschweigend nicht
+   angekommen. Nur die Farben/der Punkt bleiben eigene Modifier-Klassen. */
+.badge--danger-soft {
+  color: var(--status-danger-bright);
+  background: var(--status-danger-soft);
+  margin-left: 8px;
+}
+
+.badge--verwalter {
+  color: var(--brass-bright);
+  background: var(--brass-soft);
+  padding-left: 20px;
+  margin-left: 8px;
+  position: relative;
+}
+
+.badge--verwalter::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brass-deep);
+}
+
+/* Kleiner Farbpunkt vor Kategorie-/Rollen-Überschriften (Lager, Kontakte
+   nach Rolle gruppiert, Produktgruppen im Bestellungs-Fenster, Produkt-
+   Auswahl-Dropdown) - Farbe kommt je Aufrufstelle per Inline-Style
+   (--dot-farbe), analog zum bereits bestehenden .warenbuch-kategorie__dot
+   in Waren & Preise (dort bewusst eigenständig, da größer/eigener Flex-
+   Kontext). Bewusst inline statt eigenem Flex-Wrapper, damit sich der
+   Punkt einfach vor beliebigen Textknoten einfügen lässt. */
+.kategorie-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--dot-farbe, var(--brass));
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+  margin-right: 8px;
+  vertical-align: middle;
+}

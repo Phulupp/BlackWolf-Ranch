@@ -152,6 +152,9 @@
         const wert = input.value.trim();
         if (!wert) return;
         if (kontakteRollenKatalog.some((r) => r.name === wert)) return zeigeToast("Diese Rolle gibt es bereits.");
+        if (farbeInput && !farbeAusreichendHell(farbeInput.value)) {
+          return zeigeToast("Diese Farbe ist zu dunkel und wäre auf dem Hintergrund kaum lesbar. Bitte einen helleren Ton wählen.");
+        }
         const neueRolle = { name: wert, farbe: farbeInput ? farbeInput.value : naechsteVorgeschlageneKontaktRolleFarbe() };
         const sammelrolle = kontakteRollenKatalog.find((r) => r.name === KONTAKTE_ROLLEN_FALLBACK) || { name: KONTAKTE_ROLLEN_FALLBACK, farbe: null };
         const neueListe = [...kontakteRollenKatalog.filter((r) => r.name !== KONTAKTE_ROLLEN_FALLBACK), neueRolle, sammelrolle];
@@ -187,10 +190,19 @@
       const farbeInput = event.target.closest("[data-rolle-farbe]");
       if (farbeInput) {
         const name = farbeInput.getAttribute("data-rolle-farbe");
-        // Sibling-Hex-Feld (selbe Rollen-Zeile) live mitziehen, damit beide
-        // Eingaben immer denselben Wert zeigen.
         const zeile = farbeInput.closest("span");
         const hexSibling = zeile && zeile.querySelector("[data-rolle-farbe-hex]");
+        if (!farbeAusreichendHell(farbeInput.value)) {
+          zeigeToast("Diese Farbe ist zu dunkel und wäre auf dem Hintergrund kaum lesbar. Bitte einen helleren Ton wählen.");
+          // Auf die zuletzt gespeicherte Farbe zurücksetzen (Farbrad zeigt
+          // sonst weiter die zu dunkle, nicht gespeicherte Auswahl an).
+          const alt = kontakteRollenKatalog.find((r) => r.name === name);
+          farbeInput.value = alt && alt.farbe ? alt.farbe : farbeInput.value;
+          if (hexSibling) hexSibling.value = farbeInput.value;
+          return;
+        }
+        // Sibling-Hex-Feld (selbe Rollen-Zeile) live mitziehen, damit beide
+        // Eingaben immer denselben Wert zeigen.
         if (hexSibling) hexSibling.value = farbeInput.value;
         const neueListe = kontakteRollenKatalog.map((r) => (r.name === name ? { ...r, farbe: farbeInput.value } : r));
         await db.doc(KONTAKTE_ROLLEN_DOC).update({ rollen: neueListe });
@@ -206,6 +218,11 @@
         if (!wert) {
           // Ungültige Eingabe (z. B. "abc123z") - auf den zuletzt gültigen
           // Wert zurücksetzen statt einen kaputten Farbcode zu speichern.
+          farbeHexInput.value = farbeSibling ? farbeSibling.value : "";
+          return;
+        }
+        if (!farbeAusreichendHell(wert)) {
+          zeigeToast("Diese Farbe ist zu dunkel und wäre auf dem Hintergrund kaum lesbar. Bitte einen helleren Ton wählen.");
           farbeHexInput.value = farbeSibling ? farbeSibling.value : "";
           return;
         }
@@ -427,7 +444,10 @@
     rollenReihenfolge.forEach((rolle) => {
       const gruppe = rest.filter((k) => (k.rolle || KONTAKTE_ROLLEN_FALLBACK) === rolle).sort(vergleicheKontakte);
       if (!gruppe.length) return;
-      html += `<div class="reg-row reg-row--kategorie"><span>${escapeHtml(rolle)}</span></div>`;
+      const farbe = kontakteRolleFarbe(rolle) || KATEGORIE_FARBE_STANDARD;
+      html += `<div class="reg-row reg-row--kategorie"><span><span class="kategorie-dot" style="--dot-farbe:${farbe};"></span>${escapeHtml(
+        rolle
+      )}</span></div>`;
       html += gruppe.map(kontaktZeileHtml).join("");
     });
     el.kontaktList.innerHTML = html;

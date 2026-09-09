@@ -44,36 +44,6 @@
   margin-left: 8px;
 }
 
-.settings-list__protected {
-  font-size: 10.5px;
-  color: var(--brass-bright);
-  background: var(--brass-soft);
-  padding: 3px 8px 3px 20px;
-  border-radius: 999px;
-  margin-left: 8px;
-  position: relative;
-}
-
-.settings-list__protected::before {
-  content: "";
-  position: absolute;
-  left: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--brass-deep);
-}
-
-.settings-list__wartet {
-  font-size: 10.5px;
-  color: var(--status-danger-bright);
-  background: var(--status-danger-soft);
-  padding: 3px 8px;
-  border-radius: 999px;
-}
-
 .admin-log__item {
   display: flex;
   flex-direction: column;
@@ -106,12 +76,20 @@
   flex-wrap: wrap;
 }
 
+/* flex-basis 130px reichte für Admins kurze Labels (Rang, Status, Notiz, …)
+   locker, aber Einstellungen teilt sich diese Klasse und hat deutlich
+   längere Beschriftungen (z. B. `Bestellung gilt als "alt" nach (Tagen)`,
+   39 Zeichen) - die brachen bei 130px auf 2-3 Zeilen um, während das
+   einzeilige Eingabefeld daneben unverändert blieb, was die Zeilen der
+   Liste ungleichmäßig hoch wirken ließ. Etwas breiter plus etwas weniger
+   Sperrung (letter-spacing) schafft für fast alle Labels wieder eine Zeile,
+   ohne dass es im kurzlabeligen Admin-Dialog unruhig aussieht. */
 .detail-row__label {
   font-size: 10.5px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--wood-text-muted);
-  flex: 0 0 130px;
+  flex: 0 0 190px;
 }
 

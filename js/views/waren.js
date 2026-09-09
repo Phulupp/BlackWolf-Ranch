@@ -117,11 +117,6 @@
     return produkte.filter((p) => (p.name || "").toLowerCase().includes(begriff));
   }
 
-  // Fallback-Farbe für Kategorien ohne eigenes "farbe"-Feld (ältere,
-  // vor Einführung der Farbpunkte angelegte Kategorien) - neutraler
-  // Messing-Ton statt einer zufälligen/fehlenden Farbe.
-  const WAREN_KATEGORIE_FARBE_STANDARD = "#8a7654";
-
   // Nächste vorgeschlagene Farbe für eine neu anzulegende Kategorie -
   // gleiches Rotationsprinzip wie naechsteVorgeschlageneKontaktRolleFarbe
   // in kontakte.js, nutzt bewusst dieselbe geteilte Palette (siehe
@@ -196,7 +191,7 @@
           })
           .join("");
 
-        const farbe = kat.farbe || WAREN_KATEGORIE_FARBE_STANDARD;
+        const farbe = kat.farbe || KATEGORIE_FARBE_STANDARD;
         return `<div class="warenbuch-kategorie" data-kategorie="${kat.id}">
             <span class="warenbuch-kategorie__linie warenbuch-kategorie__linie--links"></span>
             <span class="warenbuch-kategorie__mitte">
@@ -314,7 +309,7 @@
     // dort wäre nur verwirrend.
     const farbFeld =
       feld === "reihenfolgeIntern"
-        ? `<input type="color" value="${kat.farbe || WAREN_KATEGORIE_FARBE_STANDARD}" data-kategorie-farbe="${kat.id}" title="Farbpunkt für ${escapeHtml(
+        ? `<input type="color" value="${kat.farbe || KATEGORIE_FARBE_STANDARD}" data-kategorie-farbe="${kat.id}" title="Farbpunkt für ${escapeHtml(
             kat.label
           )}" style="width:22px;height:22px;padding:0;border:none;border-radius:50%;background:none;cursor:pointer;flex-shrink:0;" />`
         : "";
@@ -415,6 +410,9 @@
       if (produktKategorien.some((k) => k.label.toLowerCase() === label.toLowerCase())) {
         return zeigeToast("Diese Kategorie gibt es bereits.");
       }
+      if (el.kategorieNeuFarbe && !farbeAusreichendHell(el.kategorieNeuFarbe.value)) {
+        return zeigeToast("Diese Farbe ist zu dunkel und wäre auf dem Hintergrund kaum lesbar. Bitte einen helleren Ton wählen.");
+      }
       const maxIntern = Math.max(0, ...produktKategorien.map((k) => k.reihenfolgeIntern || 0));
       const maxOeffentlich = Math.max(0, ...produktKategorien.map((k) => k.reihenfolgeOeffentlich || 0));
       const neueKategorie = {
@@ -502,6 +500,12 @@
       const farbInput = event.target.closest("[data-kategorie-farbe]");
       if (farbInput) {
         const id = farbInput.getAttribute("data-kategorie-farbe");
+        if (!farbeAusreichendHell(farbInput.value)) {
+          zeigeToast("Diese Farbe ist zu dunkel und wäre auf dem Hintergrund kaum lesbar. Bitte einen helleren Ton wählen.");
+          const alt = produktKategorien.find((k) => k.id === id);
+          farbInput.value = alt && alt.farbe ? alt.farbe : farbInput.value;
+          return;
+        }
         const neueListe = produktKategorien.map((k) => (k.id === id ? { ...k, farbe: farbInput.value } : k));
         await db.doc(PRODUKT_KATEGORIEN_DOC).update({ kategorien: neueListe }).catch(() => {
           zeigeToast("Farbe konnte nicht gespeichert werden.");

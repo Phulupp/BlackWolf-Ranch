@@ -18,7 +18,7 @@
   /* ------------------------------------------------------------------------
      1. Konstanten
      ------------------------------------------------------------------------ */
-  const VERSION_AKTUELL = 96;
+  const VERSION_AKTUELL = 97;
 
   // Ränge des Hofes (rein organisatorisch — Verwalterrechte sind unabhängig
   // davon und werden separat je Benutzer vergeben, siehe isAdmin).
@@ -212,6 +212,14 @@
   const PRODUKT_KATEGORIEN_DOC = "kataloge/produktKategorien";
   const PRODUKT_KATEGORIE_SONSTIGE = "sonstige";
   const PRODUKT_KATEGORIE_SONSTIGE_LABEL = "Sonstige Waren";
+  // Fallback-Farbe für Kategorien/Rollen ohne eigenes "farbe"-Feld (ältere,
+  // vor Einführung der Farbpunkte angelegte Kategorien, sowie "Sonstige
+  // Waren"/"Sonstiges", die absichtlich nie ein eigenes Farbfeld bekommen) -
+  // neutraler Messing-Ton statt einer fehlenden Farbe. Zentral hier statt in
+  // js/views/waren.js, da mittlerweile auch Lager, Bestellungen
+  // (Produktgruppen/-auswahl) UND die Kontakte-Rollengruppierung denselben
+  // Fallback brauchen.
+  const KATEGORIE_FARBE_STANDARD = "#8a7654";
 
   // Liefert die admin-verwalteten Kategorien (siehe "produktKategorien" in
   // js/core/state.js) sortiert nach der gewünschten Reihenfolge-Variante -
