@@ -193,12 +193,17 @@
       `<button type="button" class="tabs__tab${hofbuchKategorieFilter === "alle" ? " tabs__tab--active" : ""}" data-hofbuch-kategoriefilter="alle">Alle</button>`,
     ]
       .concat(
-        HOFBUCH_KATEGORIEN.map(
-          (k) =>
-            `<button type="button" class="tabs__tab${hofbuchKategorieFilter === k.id ? " tabs__tab--active" : ""}" data-hofbuch-kategoriefilter="${k.id}">${escapeHtml(
-              k.label
-            )}</button>`
-        )
+        // Ein aktiver Kategorie-Tab übernimmt per Inline-Style die Farbe der
+        // Kategorie (gleiches Muster wie die Kategorie-Badges auf den
+        // Karten) - überschreibt damit gezielt nur diesen einen Tab, statt
+        // die geteilte .tabs__tab-Basis für alle Ansichten anzufassen.
+        HOFBUCH_KATEGORIEN.map((k) => {
+          const aktiv = hofbuchKategorieFilter === k.id;
+          const farbStyle = aktiv && k.farbe ? ` style="background:${k.farbe}26;color:${k.farbe};border-color:${k.farbe};"` : "";
+          return `<button type="button" class="tabs__tab${aktiv ? " tabs__tab--active" : ""}" data-hofbuch-kategoriefilter="${k.id}"${farbStyle}>${escapeHtml(
+            k.label
+          )}</button>`;
+        })
       )
       .join("");
   }

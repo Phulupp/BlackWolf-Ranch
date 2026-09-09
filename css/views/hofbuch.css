@@ -11,6 +11,18 @@
   min-height: 380px;
 }
 
+/* Eigener, sichtbar abgesetzter "Notiz aufgeben"-Kasten statt einfach im
+   selben Braunton wie die restliche Karte zu verschwimmen - dunkler als
+   .hofbuch-card, damit Formular/Menüleiste/Liste als klar getrennte
+   Bereiche wahrnehmbar sind statt als eine einzige durchgehende Fläche. */
+.hofbuch-card__form-wrap {
+  background: var(--leather-900);
+  border: 1px solid var(--leather-edge);
+  border-radius: var(--radius-md);
+  padding: 22px 24px 20px;
+  box-shadow: inset 0 1px 0 rgba(240, 220, 180, 0.05);
+}
+
 .hofbuch-card__form-wrap h3 {
   font-family: var(--font-brand);
   font-size: 20px;
@@ -26,6 +38,14 @@
   align-items: flex-start;
   max-width: 640px;
   margin: 0 auto;
+}
+
+/* Hofbuch sitzt (anders als Bestellungen/Waren/Kontakte) in einer eigenen
+   .hofbuch-card statt im allgemeinen Seitenhintergrund - die geteilte
+   .search-field-Basis (siehe components/tables.css) nutzt dieselbe Farbe wie
+   diese Karte und würde sonst optisch verschwinden. */
+#view-hofbuch .search-field {
+  background: var(--leather-900);
 }
 
 .hofbuch-rope-divider {
@@ -57,11 +77,12 @@
   position: relative;
   background: linear-gradient(165deg, var(--leather-600) 0%, var(--leather-700) 60%, var(--leather-700) 100%);
   border: 1px solid var(--leather-edge);
-  border-left: 3px solid var(--kat-akzent, var(--leather-edge));
+  border-left: 5px solid var(--kat-akzent, var(--leather-edge));
   border-radius: var(--radius-md);
   padding: 14px 16px;
   box-shadow: inset 0 -10px 16px rgba(0, 0, 0, 0.14);
   transform: rotate(var(--rotation, 0deg));
+  overflow: hidden;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -70,7 +91,23 @@
   }
 }
 
+/* Dezenter Farbschimmer über der ganzen Karte in der Kategorie-Farbe (nicht
+   nur der linke Rand) - macht das Brett auf den ersten Blick weniger
+   einförmig braun, ohne den Text darunter schwerer lesbar zu machen (siehe
+   z-index:1 auf Kopf/Text weiter unten, damit beides über dem Schimmer liegt). */
+.hofbuch-eintrag::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--kat-akzent, transparent);
+  opacity: 0.07;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
 .hofbuch-eintrag__kopf {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -78,9 +115,15 @@
   margin-bottom: 6px;
 }
 
+/* align-items:flex-start ist hier Pflicht, kein Stil-Feinschliff: ohne sie
+   greift Flexboxs Standardverhalten (align-items:stretch) und zieht jedes
+   Kind (Badges, Titel) auf die volle Spaltenbreite - bei den Kategorie-
+   Badges (nur Rahmen, kein Hintergrund) sah man dadurch eine leere, breit
+   gezogene Pillenform statt der kompakten Badge. */
 .hofbuch-eintrag__kopf-text {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 3px;
   min-width: 0;
 }
@@ -142,6 +185,8 @@
 }
 
 .hofbuch-eintrag__text {
+  position: relative;
+  z-index: 1;
   font-size: 13px;
   color: var(--wood-text-muted);
   line-height: 1.65;
