@@ -6,8 +6,8 @@
    Elemente), klare serifenlose Schrift statt Western-Schmuckschriften.
    Keine Foto-/Holztexturen mehr - reine Flächen/Verläufe.
 
-   Hinweis zu den Variablennamen: die Tokens heißen weiterhin --wood-*/
-   --leather-*/--brass* wie zuvor im Western-Theme - nur die FARBWERTE
+   Hinweis zu den Variablennamen: die Tokens heißen weiterhin "wood",
+   "leather" und "brass" wie zuvor im Western-Theme - nur die FARBWERTE
    dahinter sind komplett neu. Das hält den Diff in allen anderen CSS-
    Dateien (die diese Variablen an hunderten Stellen referenzieren) minimal
    und risikoarm; ein vollständiges Umbenennen der Variablen selbst wäre ein
