@@ -3,17 +3,17 @@
   /* ------------------------------------------------------------------------
      21. Start / Stop der App (reagiert auf js/auth.js-Events)
      ------------------------------------------------------------------------ */
-  // Rang-Text in der Sidebar-Profilkarte setzen - Top-2-Ränge bekommen
-  // zusätzlich eine farbige Badge samt Akzentring um den Avatar (siehe
-  // RANG_AKZENTE in js/core/config.js), alle anderen Ränge bleiben schlichter
-  // Text wie bisher.
+  // Rang-Badge + Avatar-Farbe in der Sidebar-Profilkarte setzen - jeder Rang
+  // bekommt seine eigene Farbe (siehe RANG_AKZENTE in js/core/config.js),
+  // die beiden Spitzenränge (RANG_AKZENTRING) zusätzlich einen leuchtenden
+  // Akzentring um den Avatar.
   function aktualisiereSidebarRang(rolle) {
     el.sidebarUserRole.textContent = rolle;
-    const farbe = RANG_AKZENTE[rolle];
-    el.sidebarUserRole.className = "sidebar__user-role" + (farbe ? " badge badge--outline" : "");
-    el.sidebarUserRole.style.cssText = farbe ? `background:${farbe}26;color:${farbe};border-color:${farbe};` : "";
-    el.sidebarUserAvatar.classList.toggle("sidebar__user-avatar--akzent", !!farbe);
-    el.sidebarUserAvatar.style.setProperty("--rang-farbe", farbe || "");
+    const farbe = RANG_AKZENTE[rolle] || RANG_AKZENT_STANDARD;
+    el.sidebarUserRole.className = "sidebar__user-role badge badge--outline";
+    el.sidebarUserRole.style.cssText = `background:${farbe}26;color:${farbe};border-color:${farbe};`;
+    el.sidebarUserAvatar.style.setProperty("--rang-farbe", farbe);
+    el.sidebarUserAvatar.classList.toggle("sidebar__user-avatar--akzent", RANG_AKZENTRING.includes(rolle));
   }
 
   function starteApp(detail) {

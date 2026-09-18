@@ -12,22 +12,35 @@
   /* ------------------------------------------------------------------------
      1. Konstanten
      ------------------------------------------------------------------------ */
-  const VERSION_AKTUELL = 107;
+  const VERSION_AKTUELL = 108;
 
   // Ränge im MD (rein organisatorisch — Verwalterrechte sind unabhängig davon
   // und werden separat je Benutzer vergeben, siehe isAdmin).
   const BENUTZER_RAENGE = ["Praktikant", "Rettungssanitäter", "Assistenzarzt", "Facharzt", "Chefarzt", "Ärztlicher Leiter"];
   const NEUER_BENUTZER_STANDARD_RANG = "Praktikant";
 
-  // Optischer Akzent für die Sidebar-Profilkarte (siehe
-  // aktualisiereSidebarRang in js/main.js): nur die beiden aktuell wirklich
-  // genutzten Spitzenränge bekommen eine farbige Rang-Badge samt Akzentring
-  // um den Avatar, alle anderen Ränge bleiben bewusst schlichter Text wie
-  // bisher.
+  // Optischer Akzent für die Rang-Badge - JEDER Rang bekommt jetzt eine
+  // eigene Farbe (abgestuft von gedämpftem Blau-Grau für Junior-Ränge bis
+  // zum kräftigen Marken-Rot für den höchsten Rang), statt wie vorher nur
+  // die beiden Spitzenränge farbig und der Rest reiner Text. Siehe
+  // aktualisiereSidebarRang in js/main.js (Sidebar-Profilkarte) und
+  // rangBadgeHtml in js/core/utils.js (Benutzerverwaltung).
   const RANG_AKZENTE = {
-    "Ärztlicher Leiter": "#d0b276",
-    Chefarzt: "#a9653f",
+    Praktikant: "#6b7d89",
+    Rettungssanitäter: "#4f92a6",
+    Assistenzarzt: "#5b8fd6",
+    Facharzt: "#c9a227",
+    Chefarzt: "#d9724a",
+    "Ärztlicher Leiter": "#d94452",
   };
+  // Fallback für unbekannte/veraltete Rang-Werte (z. B. noch nicht
+  // umgestellte Bestandsaccounts) - neutrales Blau-Grau statt eines Fehlers.
+  const RANG_AKZENT_STANDARD = "#6b7d89";
+  // Nur diese beiden bekommen zusätzlich den leuchtenden Akzentring um den
+  // Avatar (siehe .sidebar__user-avatar--akzent in css/layout/shell.css) -
+  // eine zusätzliche, seltenere Auszeichnung für die Führungsebene, obendrauf
+  // auf die Farbbadge, die jeder Rang bekommt.
+  const RANG_AKZENTRING = ["Chefarzt", "Ärztlicher Leiter"];
 
   const PATIENTEN_COLLECTION = "patienten";
   const AKTEN_COLLECTION = "akten";

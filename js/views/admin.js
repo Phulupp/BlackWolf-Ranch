@@ -97,11 +97,11 @@
           <div class="settings-list__info">
             <div class="settings-list__toprow">
               <span class="settings-list__name">${escapeHtml(b.username || "Unbekannt")}</span>
+              ${rangBadgeHtml(b.rolle)}
               ${b.isAdmin ? '<span class="badge badge--verwalter">Verwalter</span>' : ""}
               ${statusLabel ? `<span class="badge badge--danger-soft">${statusLabel}</span>` : ""}
             </div>
             <div class="settings-list__subrow">
-              <span class="settings-list__role">${escapeHtml(b.rolle || "—")}</span>
               <span class="settings-list__role settings-list__role--dezent">Letzter Login: ${formatDatumUhrzeit(b.lastLogin)}</span>
             </div>
           </div>

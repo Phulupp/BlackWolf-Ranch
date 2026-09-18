@@ -182,11 +182,15 @@
   background: var(--brass-soft);
 }
 
+/* Hintergrund kommt jetzt aus der individuellen Rang-Farbe (--rang-farbe,
+   wird in aktualisiereSidebarRang in js/main.js gesetzt) statt einer für
+   alle gleichen Marken-Farbe - der Avatar zeigt den Rang auf den ersten
+   Blick mit, nicht nur das Badge daneben. */
 .sidebar__user-avatar {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: linear-gradient(180deg, var(--brass-bright), var(--brass-deep));
+  background: var(--rang-farbe, var(--brass-bright));
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
   color: #ffffff;
   font-family: var(--font-display);
@@ -197,6 +201,7 @@
   justify-content: center;
   flex-shrink: 0;
   border: 2px solid var(--wood-line);
+  transition: background 0.15s ease;
 }
 
 .sidebar__user-info {
@@ -219,14 +224,15 @@
 
 .sidebar__user-role {
   font-size: 10.5px;
-  color: var(--brass-bright);
+  font-weight: 700;
 }
 
-/* Farbiger Akzentring um den Avatar für die beiden Spitzenränge (siehe
-   RANG_AKZENTE in js/core/config.js) - ergänzt den normalen Schatten um
-   einen zusätzlichen, farbigen Ring statt ihn zu ersetzen. */
+/* Leuchtender Akzentring um den Avatar - nur für die beiden Spitzenränge
+   (RANG_AKZENTRING in js/core/config.js), zusätzlich zur Farbbadge, die
+   jeder Rang bekommt. Weicher Glow statt nur eines harten Rings, damit die
+   Auszeichnung wirklich als "besonders" auffällt. */
 .sidebar__user-avatar--akzent {
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4), 0 0 0 2px var(--rang-farbe);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4), 0 0 0 3px rgba(255, 255, 255, 0.12), 0 0 12px 1px var(--rang-farbe);
 }
 
 .sidebar__user-chevron {
