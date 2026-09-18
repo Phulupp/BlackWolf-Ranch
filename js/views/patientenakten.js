@@ -22,6 +22,43 @@
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   }
 
+  // Baut den dauerhaften, direkt teilbaren Link zu einer Akte - einfach die
+  // aktuelle Adresse mit "?akte=<id>" statt eines fest einprogrammierten
+  // "index.html", damit es unabhängig davon funktioniert, ob die Seite über
+  // "/" oder "/index.html" aufgerufen wurde.
+  function akteLink(akteId) {
+    return `?akte=${encodeURIComponent(akteId)}`;
+  }
+
+  function neueAkteLink(patientId) {
+    return `?neueAkte=1&patient=${encodeURIComponent(patientId)}`;
+  }
+
+  // Öffnet automatisch die per URL angeforderte Akte (Link auf eine
+  // bestehende Akte) bzw. das Anlegen-Formular (Link von "+ Neue Akte", das
+  // bewusst in einem eigenen Fenster/Tab aufgeht statt im selben Fenster wie
+  // die Patientenübersicht) - siehe akteLink/neueAkteLink oben. Wird nach
+  // jedem Patienten-/Akten-Snapshot erneut aufgerufen, tut aber nach dem
+  // ersten erfolgreichen Ausführen nichts mehr (urlAktionAusgefuehrt in
+  // js/core/state.js) und wartet einfach weiter, falls die benötigten Daten
+  // (Patient bzw. Akte) noch nicht geladen sind.
+  function pruefeUrlAktion() {
+    if (urlAktionAusgefuehrt) return;
+    const params = new URLSearchParams(location.search);
+    const akteId = params.get("akte");
+    const neuFuerPatient = params.get("patient");
+
+    if (akteId) {
+      if (!akten.some((a) => a.id === akteId)) return;
+      urlAktionAusgefuehrt = true;
+      oeffneAkteDetailModal(akteId);
+    } else if (params.get("neueAkte") && neuFuerPatient) {
+      if (!patienten.some((p) => p.id === neuFuerPatient)) return;
+      urlAktionAusgefuehrt = true;
+      oeffneAkteFormModal(neuFuerPatient, null);
+    }
+  }
+
   function starteAktenListener() {
     if (!db) return;
     if (unsubAkten) unsubAkten();
@@ -33,6 +70,7 @@
           akten = [];
           snap.forEach((docSnap) => akten.push({ id: docSnap.id, ...docSnap.data() }));
           if (offenerPatientId) renderPatientDetailAkten(offenerPatientId);
+          pruefeUrlAktion();
         },
         (fehler) => console.error("Akten konnten nicht geladen werden:", fehler)
       );
@@ -53,6 +91,7 @@
             const p = patienten.find((x) => x.id === offenerPatientId);
             if (p) fuellePatientDetailFelder(p);
           }
+          pruefeUrlAktion();
         },
         (fehler) => console.error("Patienten konnten nicht geladen werden:", fehler)
       );
@@ -141,6 +180,7 @@
     offenerPatientId = patientId;
     fuellePatientDetailFelder(p);
     renderPatientDetailAkten(patientId);
+    aktualisiereNeueAkteLink(patientId);
     oeffneModal("modal-patient-detail");
   }
 
@@ -193,34 +233,31 @@
     return akten.filter((a) => a.patientId === patientId).sort((a, b) => zeitstempelWert(a.erstelltAm) - zeitstempelWert(b.erstelltAm));
   }
 
+  // Jede Akte ist ein echter Link (eigenes Fenster/Tab, siehe akteLink oben)
+  // statt eines nur per JavaScript klickbaren div - Rechtsklick "Link
+  // kopieren", Strg-Klick, Lesezeichen etc. funktionieren dadurch ganz normal
+  // wie bei jedem anderen Link auch, ganz ohne eigenen Klick-Handler.
   function renderPatientDetailAkten(patientId) {
     if (!el.patientAktenListe) return;
     const liste = patientAkten(patientId);
     el.patientAktenLeer.hidden = liste.length !== 0;
     el.patientAktenListe.innerHTML = liste
       .map(
-        (a, index) => `<div class="reg-row reg-row--body" style="grid-template-columns: 110px 1fr 110px;" data-akte-oeffnen="${a.id}">
+        (a, index) => `<a class="reg-row reg-row--body" style="grid-template-columns: 110px 1fr 110px;" href="${akteLink(a.id)}" target="_blank" rel="noopener">
             <span class="reg-name">Akte ${index + 1}</span>
             <span>${escapeHtml(a.behandlungsgrund || "—")}</span>
             <span>${escapeHtml(formatDatum(a.datum))}</span>
-          </div>`
+          </a>`
       )
       .join("");
   }
 
-  if (el.patientAktenListe) {
-    el.patientAktenListe.addEventListener("click", (event) => {
-      const zeile = event.target.closest("[data-akte-oeffnen]");
-      if (!zeile) return;
-      oeffneAkteDetailModal(zeile.getAttribute("data-akte-oeffnen"));
-    });
-  }
-
-  if (el.btnAkteNeu) {
-    el.btnAkteNeu.addEventListener("click", () => {
-      if (!offenerPatientId) return;
-      oeffneAkteFormModal(offenerPatientId, null);
-    });
+  // "+ Neue Akte" ist ebenfalls ein echter Link (eigenes Fenster), dessen
+  // Ziel-Adresse sich mit dem gerade geöffneten Patienten ändert - deshalb
+  // hier statt eines festen Klick-Handlers gesetzt, jedes Mal wenn ein
+  // Patient geöffnet wird (siehe oeffnePatientDetailModal).
+  function aktualisiereNeueAkteLink(patientId) {
+    if (el.btnAkteNeu) el.btnAkteNeu.href = neueAkteLink(patientId);
   }
 
   // --- Akte anlegen/bearbeiten (ein gemeinsames Formular) -------------------
@@ -265,13 +302,24 @@
       try {
         if (bearbeiteteAkteId) {
           await db.collection(AKTEN_COLLECTION).doc(bearbeiteteAkteId).update(daten);
+          schliesseModal("modal-akte-form");
+          zeigeToast("Akte gespeichert.");
         } else {
           daten.erstelltAm = firebase.firestore.FieldValue.serverTimestamp();
           daten.erstelltVon = aktuellerNutzer ? aktuellerNutzer.name : null;
-          await db.collection(AKTEN_COLLECTION).add(daten);
+          const ref = await db.collection(AKTEN_COLLECTION).add(daten);
+          schliesseModal("modal-akte-form");
+          zeigeToast("Akte gespeichert.");
+          // Dieses Fenster wurde extra für die Neuanlage geöffnet (Link von
+          // "+ Neue Akte", siehe neueAkteLink/pruefeUrlAktion oben) - jetzt,
+          // wo die Akte wirklich existiert, bekommt genau dieses Fenster
+          // ohne Neuladen ihren echten, dauerhaften Link und zeigt die
+          // gerade angelegte Akte gleich an.
+          if (new URLSearchParams(location.search).get("neueAkte")) {
+            history.replaceState(null, "", akteLink(ref.id));
+            oeffneAkteDetailModal(ref.id);
+          }
         }
-        schliesseModal("modal-akte-form");
-        zeigeToast("Akte gespeichert.");
       } catch (fehler) {
         console.error(fehler);
         zeigeFeldFehler(el.akteError, "Speichern fehlgeschlagen. Bitte erneut versuchen.");

@@ -11,6 +11,8 @@
   display: grid;
   align-items: center;
   column-gap: 14px;
+  text-decoration: none;
+  color: inherit;
 }
 
 .reg-row--head {

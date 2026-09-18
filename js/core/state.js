@@ -19,6 +19,11 @@
   // um nach dem Anlegen/Bearbeiten/Löschen einer Akte die Detailansicht
   // korrekt neu zu rendern.
   let offenerPatientId = null;
+  // true, sobald die per URL angeforderte Aktion (?akte=… oder
+  // ?neueAkte=…&patient=…, siehe pruefeUrlAktion in patientenakten.js)
+  // einmal ausgeführt wurde - verhindert, dass ein erneuter Snapshot
+  // (z. B. nach dem Speichern) dieselbe Aktion ein zweites Mal auslöst.
+  let urlAktionAusgefuehrt = false;
 
   let unsubLeitfaeden = null;
   let leitfaeden = [];
