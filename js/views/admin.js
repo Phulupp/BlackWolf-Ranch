@@ -93,14 +93,19 @@
       .map((b) => {
         const statusLabel = b.status === "pending" ? "Wartet auf Freigabe" : b.status === "rejected" ? "Abgelehnt" : b.status === "locked" ? "Gesperrt" : "";
         return `<div class="settings-list__item" data-benutzer-oeffnen="${b.uid}">
-          <div>
-            <span class="settings-list__name">${escapeHtml(b.username || "Unbekannt")}</span>
-            <span class="settings-list__role">${escapeHtml(b.rolle || "—")}</span>
-            ${b.isAdmin ? '<span class="badge badge--verwalter">Verwalter</span>' : ""}
-            ${statusLabel ? `<span class="badge badge--danger-soft">${statusLabel}</span>` : ""}
-            <span class="settings-list__role" style="opacity:.6;">Letzter Login: ${formatDatumUhrzeit(b.lastLogin)}</span>
+          <div class="settings-list__avatar">${escapeHtml(initialenAvatar(b.username))}</div>
+          <div class="settings-list__info">
+            <div class="settings-list__toprow">
+              <span class="settings-list__name">${escapeHtml(b.username || "Unbekannt")}</span>
+              ${b.isAdmin ? '<span class="badge badge--verwalter">Verwalter</span>' : ""}
+              ${statusLabel ? `<span class="badge badge--danger-soft">${statusLabel}</span>` : ""}
+            </div>
+            <div class="settings-list__subrow">
+              <span class="settings-list__role">${escapeHtml(b.rolle || "—")}</span>
+              <span class="settings-list__role settings-list__role--dezent">Letzter Login: ${formatDatumUhrzeit(b.lastLogin)}</span>
+            </div>
           </div>
-          <span style="opacity:.5;">›</span>
+          <span class="settings-list__chevron">›</span>
         </div>`;
       })
       .join("");
@@ -139,7 +144,7 @@
                 <button class="btn btn--danger btn--sm" data-benutzer-aktion="ablehnen">Ablehnen</button></div>`
             : ""
         }
-        <div class="detail-row"><span class="detail-row__label">Rang</span>
+        <div class="detail-row detail-row--rang"><span class="detail-row__label">Rang</span>
           <select class="field-input" id="detail-rolle-select" style="max-width:220px;">${rangOptions}</select></div>
         <div class="detail-row"><span class="detail-row__label">Verwalterrechte</span>
           <label class="field-checkbox-row"><input type="checkbox" id="detail-admin-checkbox" ${b.isAdmin ? "checked" : ""}/> Verwalter</label></div>
@@ -174,8 +179,19 @@
         </div>
       </div>`;
 
+    // Die beiden <select>-Felder hier werden per innerHTML neu erzeugt, sind
+    // also zur Ladezeit noch nicht Teil des generischen Custom-Select-Upgrades
+    // (siehe erzeugeCustomSelect in js/core/dom.js) - ohne diesen Aufruf
+    // blieben sie das native, unauffällige Browser-Dropdown, wodurch die
+    // Rang-Änderung leicht wie ein reines Text-Label statt einer echten
+    // Aktion wirkt.
     const rolleSelect = document.getElementById("detail-rolle-select");
-    if (rolleSelect) rolleSelect.addEventListener("change", () => window.BenutzerVerwaltung.setzeRolle(uid, rolleSelect.value, b.username));
+    if (rolleSelect) {
+      erzeugeCustomSelect(rolleSelect);
+      rolleSelect.addEventListener("change", () => window.BenutzerVerwaltung.setzeRolle(uid, rolleSelect.value, b.username));
+    }
+    const sperrDauerSelect = document.getElementById("detail-sperr-dauer");
+    if (sperrDauerSelect) erzeugeCustomSelect(sperrDauerSelect);
 
     const adminCheckbox = document.getElementById("detail-admin-checkbox");
     if (adminCheckbox) adminCheckbox.addEventListener("change", () => window.BenutzerVerwaltung.setzeAdmin(uid, adminCheckbox.checked, b.username));

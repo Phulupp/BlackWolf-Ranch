@@ -38,11 +38,15 @@
   width: 150px;
   height: 150px;
   transform: translateX(-50%);
-  background: radial-gradient(circle, var(--brass-soft) 0%, rgba(53, 181, 189, 0) 72%);
+  background: radial-gradient(circle, var(--brass-soft) 0%, rgba(217, 68, 82, 0) 72%);
   pointer-events: none;
   z-index: -1;
 }
 
+/* Weißer Kreis mit rotem Puls-Icon - bewusste Anlehnung an das klassische
+   Rotkreuz-Symbol (rot auf weiß statt umgekehrt), damit "mehr Weiß" nicht
+   nur Text-/Randfarbe bleibt, sondern an einer prominenten Stelle wirklich
+   sichtbar wird. */
 .sidebar__brand-icon {
   display: flex;
   align-items: center;
@@ -51,7 +55,7 @@
   height: 88px;
   border-radius: 50%;
   margin: 0 auto;
-  background: linear-gradient(165deg, var(--leather-700) 0%, var(--leather-900) 100%);
+  background: #f4f7f8;
   border: 2px solid var(--brass-bright);
   color: var(--brass-bright);
   box-shadow: var(--shadow-card), 0 0 0 6px var(--brass-soft);
@@ -184,7 +188,7 @@
   border-radius: 50%;
   background: linear-gradient(180deg, var(--brass-bright), var(--brass-deep));
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-  color: #06171a;
+  color: #ffffff;
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 14px;

@@ -38,20 +38,23 @@
   --leather-edge-soft: rgba(130, 170, 190, 0.12);
 
   /* Text auf dunklem Slate — kühles Weiß/Grau statt warmem Pergament. */
-  --wood-text: #e6edf2;
+  --wood-text: #f2f7f9;
   --wood-text-muted: #97acb9;
   --wood-text-soft: #6f8794;
   --wood-text-placeholder: #55707d;
 
-  /* Teal/Cyan — die einzige lebendige Akzentfarbe für aktive/wichtige/
-     interaktive Elemente. "brass*"-Namen bleiben bestehen (an ihnen hängt
-     der Großteil der Anwendung), tragen jetzt aber Teal-Werte. */
-  --brass: #2f9aa0; /* Teal Muted - Normalgewicht (Ränder, Icons in Ruhe) */
-  --brass-bright: #35b5bd; /* Primary Teal - wichtige/aktive/fokussierte Elemente */
-  --brass-deep: #227479; /* Teal Dark */
-  --brass-soft: rgba(53, 181, 189, 0.16);
-  --copper-hover: #4fd0d8;
-  --copper-light: #7fe1e6;
+  /* Medizin-Rot — die lebendige Hauptakzentfarbe für aktive/wichtige/
+     interaktive Elemente (Rotkreuz-Assoziation). "brass*"-Namen bleiben
+     bestehen (an ihnen hängt der Großteil der Anwendung), tragen jetzt aber
+     Rot-Werte. Bewusst ein anderer Rotton als --status-danger weiter unten,
+     damit "aktiv/wichtig" (Akzent) und "gefährlich/löschen" (Status) trotz
+     gemeinsamer Rot-Familie unterscheidbar bleiben. */
+  --brass: #a8323d; /* Rot Muted - Normalgewicht (Ränder, Icons in Ruhe) */
+  --brass-bright: #d94452; /* Primary Rot - wichtige/aktive/fokussierte Elemente */
+  --brass-deep: #7a2530; /* Rot Dark */
+  --brass-soft: rgba(217, 68, 82, 0.16);
+  --copper-hover: #ea5865;
+  --copper-light: #f28d96;
 
   /* Zweiter, seltener Sekundärakzent (z. B. Rang-Badge "Chefarzt"). */
   --old-brass: #5b8fd6;

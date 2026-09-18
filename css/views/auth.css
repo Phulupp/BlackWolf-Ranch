@@ -65,7 +65,7 @@
   width: 84px;
   height: 84px;
   border-radius: 50%;
-  background: linear-gradient(165deg, var(--leather-700) 0%, var(--leather-900) 100%);
+  background: #f4f7f8;
   border: 2px solid var(--brass-bright);
   color: var(--brass-bright);
   box-shadow: var(--shadow-modal), 0 0 0 8px var(--brass-soft);

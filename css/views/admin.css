@@ -18,30 +18,76 @@
 .settings-list__item {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  gap: 14px;
   background: var(--leather-700);
-  border-radius: var(--radius-sm);
-  padding: 11px 14px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  padding: 11px 16px;
   cursor: pointer;
-  transition: box-shadow 0.15s ease;
+  transition: border-color 0.15s ease, transform 0.15s ease;
 }
 
 .settings-list__item:hover {
-  box-shadow: inset 0 0 0 1px var(--brass);
+  border-color: var(--brass);
+  transform: translateX(2px);
+}
+
+.settings-list__avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, var(--brass-bright), var(--brass-deep));
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.settings-list__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.settings-list__toprow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.settings-list__subrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.settings-list__chevron {
+  color: var(--wood-text-soft);
+  font-size: 15px;
+  flex-shrink: 0;
 }
 
 .settings-list__name {
   font-weight: 700;
   font-size: 13px;
-  margin-right: 8px;
   color: var(--wood-text);
 }
 
 .settings-list__role {
   font-size: 11.5px;
   color: var(--wood-text-muted);
-  margin-left: 8px;
+}
+
+.settings-list__role--dezent {
+  opacity: 0.65;
 }
 
 .admin-log__item {
@@ -76,14 +122,8 @@
   flex-wrap: wrap;
 }
 
-/* flex-basis 130px reichte für Admins kurze Labels (Rang, Status, Notiz, …)
-   locker, aber Einstellungen teilt sich diese Klasse und hat deutlich
-   längere Beschriftungen (z. B. `Bestellung gilt als "alt" nach (Tagen)`,
-   39 Zeichen) - die brachen bei 130px auf 2-3 Zeilen um, während das
-   einzeilige Eingabefeld daneben unverändert blieb, was die Zeilen der
-   Liste ungleichmäßig hoch wirken ließ. Etwas breiter plus etwas weniger
-   Sperrung (letter-spacing) schafft für fast alle Labels wieder eine Zeile,
-   ohne dass es im kurzlabeligen Admin-Dialog unruhig aussieht. */
+/* flex-basis 190px hält kurze Labels (Rang, Status, Notiz, …) auf einer
+   Zeile mit ihrem Steuerelement. */
 .detail-row__label {
   font-size: 10.5px;
   font-weight: 700;
@@ -93,3 +133,12 @@
   flex: 0 0 190px;
 }
 
+/* Der Rang-Regler ist die einzige Zeile, die sich beim Öffnen sofort ändern
+   lässt und in der Praxis am häufigsten gebraucht wird (Rang hoch-/
+   runterstufen) - ein dezenter linker Akzentstreifen hebt sie von den
+   übrigen, selteneren Aktionen ab, ohne eine zweite Box/Karte einzuführen. */
+.detail-row--rang {
+  border-left: 2px solid var(--brass-bright);
+  padding-left: 12px;
+  margin-left: -14px;
+}
