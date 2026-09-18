@@ -16,6 +16,29 @@
     el.sidebarUserAvatar.classList.toggle("sidebar__user-avatar--akzent", RANG_AKZENTRING.includes(rolle));
   }
 
+  // Akte-Fokus-Modus (Link auf eine einzelne Akte oder "+ Neue Akte", siehe
+  // istAkteFokusModus/pruefeUrlAktion in js/views/patientenakten.js): zeigt
+  // NUR die Akte als eigenständige Dokumentenseite, die normale App
+  // (Sidebar/Startseite) bleibt komplett verborgen.
+  //
+  // WICHTIG: js/auth.js setzt "el.appRoot.hidden = false" NICHT nur beim
+  // allerersten Login, sondern bei JEDEM Firestore-Snapshot des eigenen
+  // users/{uid}-Dokuments - und dieser Snapshot feuert so gut wie immer ein
+  // zweites Mal kurz nach dem Laden (erst aus dem lokalen Cache, dann vom
+  // Server bestätigt), was dann als "hof:auth-profile-updated" bei
+  // aktualisiereNutzerProfil() ankommt. Ohne den Aufruf dort würde die App
+  // sich also von selbst wieder einblenden, kurz nachdem starteApp() sie für
+  // den Akte-Fokus-Modus extra verborgen hat - die Akte-Seite wäre zwar
+  // korrekt befüllt, aber unsichtbar unterhalb der wieder sichtbaren
+  // Startseite (genau das beobachtete Symptom "es öffnet sich einfach nur
+  // die Website"). Deshalb wird dieser Zustand bei JEDEM der beiden Events
+  // erneut durchgesetzt, nicht nur beim ersten.
+  function wendeAkteFokusModusAn() {
+    if (!istAkteFokusModus()) return;
+    if (el.appRoot) el.appRoot.hidden = true;
+    if (el.akteFokusRoot) el.akteFokusRoot.hidden = false;
+  }
+
   function starteApp(detail) {
     aktuellerNutzer = { uid: detail.uid, name: detail.username, rolle: detail.rolle, admin: !!detail.isAdmin };
 
@@ -33,16 +56,8 @@
     starteLeitfaedenListener();
     if (istAdmin()) starteBenutzerverwaltung();
 
-    // Akte-Fokus-Modus (Link auf eine einzelne Akte oder "+ Neue Akte",
-    // siehe istAkteFokusModus/pruefeUrlAktion in js/views/patientenakten.js):
-    // zeigt NUR die Akte als eigenständige Dokumentenseite, die normale App
-    // (Sidebar/Startseite) bleibt komplett verborgen.
-    if (istAkteFokusModus()) {
-      if (el.appRoot) el.appRoot.hidden = true;
-      if (el.akteFokusRoot) el.akteFokusRoot.hidden = false;
-    } else {
-      zeigeAnsicht(ladeStartseite());
-    }
+    wendeAkteFokusModusAn();
+    if (!istAkteFokusModus()) zeigeAnsicht(ladeStartseite());
 
     pruefeVersion();
     clearInterval(versionCheckTimer);
@@ -62,6 +77,7 @@
       if (aktuelleAnsicht === "admin" || aktuelleAnsicht === "admin-log") zeigeAnsicht("startseite");
     }
     renderBeispiele();
+    wendeAkteFokusModusAn();
   }
 
   function stoppeApp() {
