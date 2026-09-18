@@ -1,0 +1,37 @@
+/* --------------------------------------------------------------------------
+   17. Startseite
+   -------------------------------------------------------------------------- */
+.startseite-hero {
+  padding: 36px 4px 30px;
+}
+
+.startseite-hero__eyebrow {
+  font-size: 13px;
+  color: var(--wood-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.startseite-hero__name {
+  font-family: var(--font-display);
+  font-size: 38px;
+  margin-top: 6px;
+}
+
+.startseite-kacheln {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.startseite-kachel {
+  display: block;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.startseite-kachel:hover {
+  transform: translateY(-2px);
+}

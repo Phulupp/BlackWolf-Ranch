@@ -3,11 +3,10 @@
   /* ------------------------------------------------------------------------
      21. Start / Stop der App (reagiert auf js/auth.js-Events)
      ------------------------------------------------------------------------ */
-  // Rang-Text in der Sidebar-Profilkarte setzen - Hofherr/Hofmeister bekommen
+  // Rang-Text in der Sidebar-Profilkarte setzen - Top-2-Ränge bekommen
   // zusätzlich eine farbige Badge samt Akzentring um den Avatar (siehe
   // RANG_AKZENTE in js/core/config.js), alle anderen Ränge bleiben schlichter
-  // Text wie bisher. Das ${farbe}26-Muster (Hex + Alpha-Suffix) entspricht
-  // demselben Ansatz wie bei den Hofbuch-Kategorie-Badges.
+  // Text wie bisher.
   function aktualisiereSidebarRang(rolle) {
     el.sidebarUserRole.textContent = rolle;
     const farbe = RANG_AKZENTE[rolle];
@@ -23,43 +22,21 @@
     el.sidebarUserAvatar.textContent = initialenAvatar(aktuellerNutzer.name);
     el.sidebarUserName.textContent = aktuellerNutzer.name;
     aktualisiereSidebarRang(aktuellerNutzer.rolle);
-    el.dashboardName.textContent = aktuellerNutzer.name;
-    el.dashboardGreeting.textContent = `Willkommen zurück, ${aktuellerNutzer.name.split(" ")[0]}.`;
+    renderStartseiteGreeting();
 
     el.navAdminToggle.hidden = !istAdmin();
     if (!istAdmin()) el.navAdminBadge.hidden = true;
 
     starteHeartbeat();
-    starteHofEinstellungenListener();
-    starteProduktKategorienListener();
-    starteProdukteListener();
-    starteLagerStatusListener();
-    starteRezepteListener();
-    starteBestellungenListener();
-    starteAngeboteListener();
-    starteKontakteRollenListener();
-    starteKontakteListener();
-    starteKundenListener();
-    starteHofbuchListener();
+    startePatientenListener();
+    starteAktenListener();
+    starteLeitfaedenListener();
     if (istAdmin()) starteBenutzerverwaltung();
 
     zeigeAnsicht(ladeStartseite());
-    aktualisiereTageszeitAkzent();
     pruefeVersion();
     clearInterval(versionCheckTimer);
     versionCheckTimer = setInterval(pruefeVersion, 5 * 60 * 1000);
-
-    // Aktualisiert die Übersicht-Hinweise (Lager, alte Bestellungen) auch
-    // ohne neue Firestore-Daten laufend - beide Schwellen (24h bzw.
-    // BESTELLUNG_ALT_SCHWELLE_TAGE) können sonst erst mit der nächsten
-    // Datenänderung erkannt werden, obwohl sie rein zeitbasiert sind (siehe
-    // aktualisiereLagerHinweis/aktualisiereBestellungenHinweis in dashboard.js).
-    clearInterval(dashHinweisTimer);
-    dashHinweisTimer = setInterval(() => {
-      aktualisiereLagerHinweis();
-      aktualisiereBestellungenHinweis();
-      aktualisiereTageszeitAkzent();
-    }, 15 * 60 * 1000);
   }
 
   function aktualisiereNutzerProfil(detail) {
@@ -72,36 +49,23 @@
     if (!warAdmin && istAdmin()) starteBenutzerverwaltung();
     if (warAdmin && !istAdmin()) {
       stoppeBenutzerverwaltung();
-      if (aktuelleAnsicht === "admin" || aktuelleAnsicht === "admin-log") zeigeAnsicht("uebersicht");
+      if (aktuelleAnsicht === "admin" || aktuelleAnsicht === "admin-log") zeigeAnsicht("startseite");
     }
-    renderWaren();
-    renderKontakteRollenVerwaltung();
-    renderVerkaufshistorie();
-    renderHofEinstellungen();
+    renderBeispiele();
   }
 
   function stoppeApp() {
     aktuellerNutzer = null;
-    [unsubProdukte, unsubLagerStatus, unsubRezepte, unsubBestellungen, unsubAngebote, unsubKontakte, unsubKunden, unsubHofbuch, unsubKontakteRollen, unsubHofEinstellungen].forEach(
-      (unsub) => unsub && unsub()
-    );
-    unsubProdukte = unsubLagerStatus = unsubRezepte = unsubBestellungen = unsubAngebote = unsubKontakte = unsubKunden = unsubHofbuch = unsubKontakteRollen = unsubHofEinstellungen = null;
+    [unsubPatienten, unsubAkten, unsubLeitfaeden].forEach((unsub) => unsub && unsub());
+    unsubPatienten = unsubAkten = unsubLeitfaeden = null;
     stoppeBenutzerverwaltung();
     stoppeHeartbeat();
     clearInterval(versionCheckTimer);
-    clearInterval(dashHinweisTimer);
-    produkte = [];
-    lagerStatus = null;
-    rezepte = [];
-    rezeptEntwurfZutaten = [];
-    bestellungen = [];
-    bekannteBestellungIds = null;
-    angebote = [];
-    kontakte = [];
-    kunden = [];
-    kundenGeladen = false;
-    hofbuchEintraege = [];
-    hofEinstellungen = { ...HOF_EINSTELLUNGEN_STANDARD };
+    patienten = [];
+    akten = [];
+    leitfaeden = [];
+    bearbeiteteAkteId = null;
+    offenerPatientId = null;
   }
 
   window.addEventListener("hof:auth-approved", (event) => starteApp(event.detail));

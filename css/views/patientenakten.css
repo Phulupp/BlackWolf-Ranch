@@ -1,0 +1,50 @@
+/* --------------------------------------------------------------------------
+   18. Patientenakten
+   -------------------------------------------------------------------------- */
+.field-static {
+  font-size: 13.5px;
+  color: var(--wood-text);
+  padding: 8px 0;
+}
+
+#patient-detail-name {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.patient-detail-body h3 {
+  margin-top: 28px;
+  margin-bottom: 4px;
+  font-size: 15px;
+}
+
+.akte-vorlage__kopf {
+  display: flex;
+  gap: 24px;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--leather-edge);
+  font-size: 14px;
+}
+
+.akte-vorlage__abschnitt {
+  margin-bottom: 18px;
+}
+
+.akte-vorlage__label {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--wood-text-muted);
+  margin-bottom: 4px;
+}
+
+.akte-vorlage__abschnitt p {
+  white-space: pre-wrap;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--wood-text);
+}

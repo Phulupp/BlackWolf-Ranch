@@ -6,10 +6,6 @@
   function zeigeAnsicht(view) {
     aktuelleAnsicht = view;
     el.views.forEach((section) => section.classList.toggle("view--active", section.id === `view-${view}`));
-    // Merkt sich den Zeitpunkt für den NÄCHSTEN Sitzungsstart (siehe
-    // markiereHofbuchAlsBesucht in js/views/hofbuch.js) - die "NEU"-Badges
-    // dieser laufenden Sitzung bleiben davon unberührt.
-    if (view === "hofbuch") markiereHofbuchAlsBesucht();
 
     document.querySelectorAll(".sidebar__item").forEach((btn) => {
       btn.classList.toggle("sidebar__item--active", btn.getAttribute("data-view") === view || (view === "admin-log" && btn.getAttribute("data-view") === "admin"));
@@ -36,14 +32,6 @@
 
   document.querySelectorAll("[data-admin-subview]").forEach((btn) => {
     btn.addEventListener("click", () => zeigeAnsicht(btn.getAttribute("data-admin-subview")));
-  });
-
-  document.querySelectorAll("#bestellungen-tabs .tabs__tab").forEach((tab) => {
-    tab.addEventListener("click", () => {
-      bestellungenStatusFilter = tab.getAttribute("data-status-filter");
-      document.querySelectorAll("#bestellungen-tabs .tabs__tab").forEach((t) => t.classList.toggle("tabs__tab--active", t === tab));
-      renderBestellungen();
-    });
   });
 
   if (el.sidebarUserBtn) {

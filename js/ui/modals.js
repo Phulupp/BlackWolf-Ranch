@@ -50,15 +50,10 @@
     });
   });
 
-  // ESC schließt zuerst eine ggf. offene Produktauswahl-Dropdown-Liste,
-  // andernfalls den zuletzt geöffneten Dialog (Klick auf ✕, außerhalb des
-  // Fensters und jetzt auch ESC führen also alle zum selben Ergebnis).
+  // ESC schließt den zuletzt geöffneten Dialog (Klick auf ✕, außerhalb des
+  // Fensters und ESC führen also alle zum selben Ergebnis).
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Escape") return;
-    if (el.bestellungPositionProduktPanel && !el.bestellungPositionProduktPanel.hidden) {
-      schliesseBestellungProduktDropdown();
-      return;
-    }
     const obersterId = offeneModalStapel[offeneModalStapel.length - 1];
     if (obersterId) schliesseModal(obersterId);
   });

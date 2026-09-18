@@ -1,15 +1,15 @@
 /* ==========================================================================
-   Login-, Registrierungs- und Benutzersystem — Zur Dicken Kuh
+   Login-, Registrierungs- und Benutzersystem — Medical Department
    ==========================================================================
-   Diese Datei ist bewusst KOMPLETT GETRENNT vom Rest der App (js/app.js).
-   Der ganze Rest der Website (Bestellungen, Waren & Preise, Handelsrechner,
-   Kontakte, Verkäufe, Statistiken, ...) benutzt weiterhin die "alte"
-   Firebase-Schreibweise (das "Compat SDK", z. B. `db.collection("...").doc(
-   "...")`). Diese Datei hier benutzt bewusst die NEUE, moderne Firebase-
-   Schreibweise (das "Modular SDK", z. B. `doc(db, "users", uid)`). Beide
-   Schreibweisen können ganz normal gleichzeitig auf dieselbe Firebase-
-   Datenbank zugreifen - das ist kein Problem, es sind nur zwei
-   unterschiedliche "Sprachen", um mit derselben Datenbank zu reden.
+   Diese Datei ist bewusst KOMPLETT GETRENNT vom Rest der App (js/core,
+   js/ui, js/views, js/main.js). Der ganze Rest der Website (Startseite,
+   Patientenakten, Beispiele, Einstellungen, Verwaltung, ...) benutzt
+   weiterhin die "alte" Firebase-Schreibweise (das "Compat SDK", z. B.
+   `db.collection("...").doc("...")`). Diese Datei hier benutzt bewusst die
+   NEUE, moderne Firebase-Schreibweise (das "Modular SDK", z. B. `doc(db,
+   "users", uid)`). Beide Schreibweisen können ganz normal gleichzeitig auf
+   dieselbe Firebase-Datenbank zugreifen - das ist kein Problem, es sind nur
+   zwei unterschiedliche "Sprachen", um mit derselben Datenbank zu reden.
 
    Diese Datei ist ein "ES-Modul" (deshalb `type="module"` im <script>-Tag
    in index.html) und wird deshalb NACH den anderen <script>-Tags ausgeführt.
@@ -73,8 +73,8 @@ import {
 const firebaseConfig = window.firebaseConfig;
 
 // Der Rang, den ein neu registrierter Benutzer automatisch erhält (unterster
-// Rang der Hof-Hierarchie) - siehe erstelleBenutzerProfil weiter unten.
-const STANDARD_RANG_NEUER_BENUTZER = "Tagelöhner";
+// Rang der MD-Hierarchie) - siehe erstelleBenutzerProfil weiter unten.
+const STANDARD_RANG_NEUER_BENUTZER = "Praktikant";
 
 if (!firebaseConfig || !firebaseConfig.apiKey) {
   console.warn("auth.js: Firebase-Konfiguration fehlt - Login-System wird nicht gestartet.");

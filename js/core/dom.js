@@ -29,266 +29,72 @@
 
     toast: document.getElementById("toast"),
 
-    // Übersicht
-    dashboardGreeting: document.getElementById("dashboard-greeting"),
-    dashboardName: document.getElementById("dashboard-name"),
-    dashboardHero: document.getElementById("dashboard-hero"),
-    statOffeneBestellungen: document.getElementById("stat-offene-bestellungen"),
-    statOffeneBestellungenSub: document.getElementById("stat-offene-bestellungen-sub"),
-    statHeuteVerkauft: document.getElementById("stat-heute-verkauft"),
-    statHeuteVerkauftSub: document.getElementById("stat-heute-verkauft-sub"),
-    statGesamtgewinn: document.getElementById("stat-gesamtgewinn"),
-    dashOffeneBestellungen: document.getElementById("dash-offene-bestellungen"),
-    dashOffeneBestellungenEmpty: document.getElementById("dash-offene-bestellungen-empty"),
-    dashBestellungenHinweis: document.getElementById("dash-bestellungen-hinweis"),
-    dashBestellungenHinweisText: document.getElementById("dash-bestellungen-hinweis-text"),
-    dashLagerHinweis: document.getElementById("dash-lager-hinweis"),
-    dashLagerHinweisText: document.getElementById("dash-lager-hinweis-text"),
+    // Startseite
+    startseiteGreeting: document.getElementById("startseite-greeting"),
+    startseiteName: document.getElementById("startseite-name"),
 
-    // Bestellungen
-    bestellungenTabs: document.getElementById("bestellungen-tabs"),
-    bestellungenSearch: document.getElementById("bestellungen-search"),
-    bestellungenTableBody: document.getElementById("bestellungen-table-body"),
-    bestellungenEmpty: document.getElementById("bestellungen-empty"),
-    bestellungenNoResults: document.getElementById("bestellungen-no-results"),
-    btnAddBestellung: document.getElementById("btn-add-bestellung"),
-    bestellungenBulkBar: document.getElementById("bestellungen-bulk-bar"),
-    bestellungenBulkAnzahl: document.getElementById("bestellungen-bulk-anzahl"),
-    bestellungenBulkStatus: document.getElementById("bestellungen-bulk-status"),
-    btnBestellungenBulkAnwenden: document.getElementById("btn-bestellungen-bulk-anwenden"),
-    btnBestellungenBulkAbbrechen: document.getElementById("btn-bestellungen-bulk-abbrechen"),
-    modalBestellung: document.getElementById("modal-bestellung"),
-    modalBestellungTitel: document.getElementById("modal-bestellung-titel"),
-    bestellungArchivHinweis: document.getElementById("bestellung-archiv-hinweis"),
-    bestellungEditingId: document.getElementById("bestellung-editing-id"),
-    bestellungUnternehmenInput: document.getElementById("bestellung-unternehmen-input"),
-    bestellungAnsprechpartnerInput: document.getElementById("bestellung-ansprechpartner-input"),
-    btnBestellungKontaktAnlegen: document.getElementById("btn-bestellung-kontakt-anlegen"),
-    bestellungBestelldatumAnzeige: document.getElementById("bestellung-bestelldatum-anzeige"),
-    bestellungBearbeiterAnzeige: document.getElementById("bestellung-bearbeiter-anzeige"),
-    bestellungPositionForm: document.getElementById("bestellung-position-form"),
-    bestellungPositionProdukt: document.getElementById("bestellung-position-produkt"),
-    bestellungPositionProduktDropdown: document.getElementById("bestellung-position-produkt-dropdown"),
-    bestellungPositionProduktTrigger: document.getElementById("bestellung-position-produkt-trigger"),
-    bestellungPositionProduktLabel: document.getElementById("bestellung-position-produkt-label"),
-    bestellungPositionProduktPanel: document.getElementById("bestellung-position-produkt-panel"),
-    bestellungPositionProduktSuche: document.getElementById("bestellung-position-produkt-suche"),
-    bestellungPositionProduktOptionen: document.getElementById("bestellung-position-produkt-optionen"),
-    bestellungPositionMenge: document.getElementById("bestellung-position-menge"),
-    bestellungPositionRabatt: document.getElementById("bestellung-position-rabatt"),
-    bestellungPositionVorschau: document.getElementById("bestellung-position-vorschau"),
-    bestellungPositionVorschauStandard: document.getElementById("bestellung-position-vorschau-standard"),
-    bestellungPositionVorschauEndpreis: document.getElementById("bestellung-position-vorschau-endpreis"),
-    bestellungPositionVorschauGesamt: document.getElementById("bestellung-position-vorschau-gesamt"),
-    bestellungPositionVorschauHinweis: document.getElementById("bestellung-position-vorschau-hinweis"),
-    btnBestellungPositionHinzufuegen: document.getElementById("btn-bestellung-position-hinzufuegen"),
-    bestellungPositionenListe: document.getElementById("bestellung-positionen-liste"),
-    bestellungPositionenLeer: document.getElementById("bestellung-positionen-leer"),
-    bestellungZusammenfassung: document.getElementById("bestellung-zusammenfassung"),
-    bestellungZusammenfassungAnzahl: document.getElementById("bestellung-zusammenfassung-anzahl"),
-    bestellungZusammenfassungMenge: document.getElementById("bestellung-zusammenfassung-menge"),
-    bestellungZusammenfassungRabatt: document.getElementById("bestellung-zusammenfassung-rabatt"),
-    bestellungGesamtRabattInput: document.getElementById("bestellung-gesamtrabatt-input"),
-    bestellungGesamtRabattBetrag: document.getElementById("bestellung-gesamtrabatt-betrag"),
-    bestellungZusammenfassungSumme: document.getElementById("bestellung-zusammenfassung-summe"),
-    btnBestellungLieferung: document.getElementById("btn-bestellung-lieferung"),
-    bestellungLieferungPauschaleText: document.getElementById("bestellung-lieferung-pauschale-text"),
-    bestellungZahlung: document.getElementById("bestellung-zahlung"),
-    bestellungZahlungBerechnet: document.getElementById("bestellung-zahlung-berechnet"),
-    bestellungErhaltenInput: document.getElementById("bestellung-erhalten-input"),
-    bestellungStatusInput: document.getElementById("bestellung-status-input"),
-    bestellungNotizInput: document.getElementById("bestellung-notiz-input"),
-    bestellungError: document.getElementById("bestellung-error"),
-    btnBestellungLoeschen: document.getElementById("btn-bestellung-loeschen"),
-    btnBestellungArchivieren: document.getElementById("btn-bestellung-archivieren"),
-    btnConfirmBestellung: document.getElementById("btn-confirm-bestellung"),
+    // Patientenakten
+    patientenSearch: document.getElementById("patienten-search"),
+    patientenListe: document.getElementById("patienten-liste"),
+    patientenEmpty: document.getElementById("patienten-empty"),
+    patientenNoResults: document.getElementById("patienten-no-results"),
+    btnPatientAnlegen: document.getElementById("btn-patient-anlegen"),
 
-    // Waren & Preise
-    warenSearch: document.getElementById("waren-search"),
-    warenTableBody: document.getElementById("waren-table-body"),
-    warenEmpty: document.getElementById("waren-empty"),
-    warenNoResults: document.getElementById("waren-no-results"),
-    btnAddWare: document.getElementById("btn-add-ware"),
-    btnWarenSortieren: document.getElementById("btn-waren-sortieren"),
-    btnOeffentlichePreise: document.getElementById("btn-oeffentliche-preise"),
-    kategorieNeuInput: document.getElementById("kategorie-neu-input"),
-    kategorieNeuFarbe: document.getElementById("kategorie-neu-farbe"),
-    btnKategorieErstellen: document.getElementById("btn-kategorie-erstellen"),
-    kategorienInternListeEl: document.getElementById("kategorien-intern-liste"),
-    kategorienOeffentlichListeEl: document.getElementById("kategorien-oeffentlich-liste"),
-    modalWare: document.getElementById("modal-ware"),
-    modalWareTitel: document.getElementById("modal-ware-titel"),
-    wareEditingId: document.getElementById("ware-editing-id"),
-    wareNameInput: document.getElementById("ware-name-input"),
-    wareKategorieInput: document.getElementById("ware-kategorie-input"),
-    wareVerkaufspreisInput: document.getElementById("ware-verkaufspreis-input"),
-    warePrivatpreisInput: document.getElementById("ware-privatpreis-input"),
-    wareOeffentlichInput: document.getElementById("ware-oeffentlich-input"),
-    wareError: document.getElementById("ware-error"),
-    btnConfirmWare: document.getElementById("btn-confirm-ware"),
+    modalPatientAnlegen: document.getElementById("modal-patient-anlegen"),
+    patientAnlegenName: document.getElementById("patient-anlegen-name"),
+    patientAnlegenError: document.getElementById("patient-anlegen-error"),
+    btnConfirmPatientAnlegen: document.getElementById("btn-confirm-patient-anlegen"),
 
-    // Lager
-    lagerSearch: document.getElementById("lager-search"),
-    lagerSortierung: document.getElementById("lager-sortierung"),
-    lagerTableBody: document.getElementById("lager-table-body"),
-    lagerEmpty: document.getElementById("lager-empty"),
-    lagerNoResults: document.getElementById("lager-no-results"),
-    lagerGesamtwert: document.getElementById("lager-gesamtwert"),
+    modalPatientDetail: document.getElementById("modal-patient-detail"),
+    patientDetailTitel: document.getElementById("patient-detail-titel"),
+    patientDetailId: document.getElementById("patient-detail-id"),
+    patientDetailName: document.getElementById("patient-detail-name"),
+    patientGeburtsdatum: document.getElementById("patient-geburtsdatum"),
+    patientTelefonnummer: document.getElementById("patient-telefonnummer"),
+    patientAllergien: document.getElementById("patient-allergien"),
+    patientVorerkrankungen: document.getElementById("patient-vorerkrankungen"),
+    patientBesondereHinweise: document.getElementById("patient-besondere-hinweise"),
+    patientNotfallkontakt: document.getElementById("patient-notfallkontakt"),
+    patientNotfallkontaktTelefon: document.getElementById("patient-notfallkontakt-telefon"),
+    patientProfilError: document.getElementById("patient-profil-error"),
+    btnConfirmPatientProfil: document.getElementById("btn-confirm-patient-profil"),
+    patientAktenListe: document.getElementById("patient-akten-liste"),
+    patientAktenLeer: document.getElementById("patient-akten-leer"),
+    btnAkteNeu: document.getElementById("btn-akte-neu"),
 
-    // Handelsrechner
-    rechnerUnternehmen: document.getElementById("rechner-unternehmen"),
-    rechnerProdukt: document.getElementById("rechner-produkt"),
-    rechnerMenge: document.getElementById("rechner-menge"),
-    rechnerPreisbasisWrap: document.getElementById("rechner-preisbasis-wrap"),
-    rechnerPreisbasisHandelRadio: document.querySelector('input[name="rechner-preisbasis"][value="handel"]'),
-    rechnerPreisbasisPrivatRadio: document.querySelector('input[name="rechner-preisbasis"][value="privat"]'),
-    rechnerModusRabattRadio: document.querySelector('input[name="rechner-modus"][value="rabatt"]'),
-    rechnerModusPreisRadio: document.querySelector('input[name="rechner-modus"][value="preis"]'),
-    rechnerModusRabattWrap: document.getElementById("rechner-modus-rabatt"),
-    rechnerModusPreisWrap: document.getElementById("rechner-modus-preis"),
-    rechnerRabattRange: document.getElementById("rechner-rabatt-range"),
-    rechnerRabattInput: document.getElementById("rechner-rabatt-input"),
-    rechnerRabattMinus: document.getElementById("rechner-rabatt-minus"),
-    rechnerRabattPlus: document.getElementById("rechner-rabatt-plus"),
-    rechnerPreisInput: document.getElementById("rechner-preis-input"),
-    rechnerStandardpreis: document.getElementById("rechner-standardpreis"),
-    rechnerNeuerStueckpreis: document.getElementById("rechner-neuer-stueckpreis"),
-    rechnerGesamtpreis: document.getElementById("rechner-gesamtpreis"),
-    vorschauUnternehmen: document.getElementById("vorschau-unternehmen"),
-    vorschauProdukt: document.getElementById("vorschau-produkt"),
-    vorschauMenge: document.getElementById("vorschau-menge"),
-    vorschauStandardpreis: document.getElementById("vorschau-standardpreis"),
-    vorschauRabatt: document.getElementById("vorschau-rabatt"),
-    vorschauNeuerPreis: document.getElementById("vorschau-neuer-preis"),
-    vorschauGesamtpreis: document.getElementById("vorschau-gesamtpreis"),
-    btnAngebotUebernehmen: document.getElementById("btn-angebot-uebernehmen"),
-    btnRechnerReset: document.getElementById("btn-rechner-reset"),
-    angeboteTableBody: document.getElementById("angebote-table-body"),
-    angeboteEmpty: document.getElementById("angebote-empty"),
+    modalAkteForm: document.getElementById("modal-akte-form"),
+    akteFormTitel: document.getElementById("akte-form-titel"),
+    akteEditingId: document.getElementById("akte-editing-id"),
+    akteFormPatientId: document.getElementById("akte-form-patient-id"),
+    akteFormPatientName: document.getElementById("akte-form-patient-name"),
+    akteDatum: document.getElementById("akte-datum"),
+    akteBehandlungsgrund: document.getElementById("akte-behandlungsgrund"),
+    akteBefund: document.getElementById("akte-befund"),
+    akteBehandlung: document.getElementById("akte-behandlung"),
+    akteBemerkungen: document.getElementById("akte-bemerkungen"),
+    akteError: document.getElementById("akte-error"),
+    btnConfirmAkte: document.getElementById("btn-confirm-akte"),
 
-    // Kontakte
-    formKontakt: document.getElementById("form-kontakt"),
-    kontaktNummerInput: document.getElementById("kontakt-nummer-input"),
-    kontaktNameInput: document.getElementById("kontakt-name-input"),
-    kontaktBerufInput: document.getElementById("kontakt-beruf-input"),
-    kontaktNotizInput: document.getElementById("kontakt-notiz-input"),
-    kontaktList: document.getElementById("kontakt-list"),
-    kontakteEmpty: document.getElementById("kontakte-empty"),
-    kontakteNoResults: document.getElementById("kontakte-no-results"),
-    kontakteSearch: document.getElementById("kontakte-search"),
-    kontakteRollenFilter: document.getElementById("kontakte-rollen-filter"),
-    kontakteSortierung: document.getElementById("kontakte-sortierung"),
-    btnToggleKontakteGruppierung: document.getElementById("btn-toggle-kontakte-gruppierung"),
-    btnToggleKontakteRollen: document.getElementById("btn-toggle-kontakte-rollen"),
-    kontakteRollenVerwaltung: document.getElementById("kontakte-rollen-verwaltung"),
-    modalKontaktEdit: document.getElementById("modal-kontakt-edit"),
-    kontaktEditId: document.getElementById("kontakt-edit-id"),
-    kontaktEditNummer: document.getElementById("kontakt-edit-nummer"),
-    kontaktEditName: document.getElementById("kontakt-edit-name"),
-    kontaktEditRolle: document.getElementById("kontakt-edit-rolle"),
-    kontaktEditNotiz: document.getElementById("kontakt-edit-notiz"),
-    kontaktEditError: document.getElementById("kontakt-edit-error"),
-    btnConfirmKontaktEdit: document.getElementById("btn-confirm-kontakt-edit"),
-    kontaktSchnellNummer: document.getElementById("kontakt-schnell-nummer"),
-    kontaktSchnellName: document.getElementById("kontakt-schnell-name"),
-    kontaktSchnellRolle: document.getElementById("kontakt-schnell-rolle"),
-    kontaktSchnellNotiz: document.getElementById("kontakt-schnell-notiz"),
-    kontaktSchnellError: document.getElementById("kontakt-schnell-error"),
-    btnConfirmKontaktSchnell: document.getElementById("btn-confirm-kontakt-schnell"),
+    modalAkteDetail: document.getElementById("modal-akte-detail"),
+    akteDetailTitel: document.getElementById("akte-detail-titel"),
+    akteDetailInhalt: document.getElementById("akte-detail-inhalt"),
+    btnAkteBearbeiten: document.getElementById("btn-akte-bearbeiten"),
+    btnAkteLoeschen: document.getElementById("btn-akte-loeschen"),
 
-    // Kunden (automatisch aus den "unternehmen"-Namen der Bestellungen)
-    kundenSearch: document.getElementById("kunden-search"),
-    kundenSortierung: document.getElementById("kunden-sortierung"),
-    kundenTableBody: document.getElementById("kunden-table-body"),
-    kundenEmpty: document.getElementById("kunden-empty"),
-    kundenNoResults: document.getElementById("kunden-no-results"),
-    modalKunde: document.getElementById("modal-kunde"),
-    modalKundeTitel: document.getElementById("modal-kunde-titel"),
-    kundeEditingId: document.getElementById("kunde-editing-id"),
-    kundeNameInput: document.getElementById("kunde-name-input"),
-    kundeNotizInput: document.getElementById("kunde-notiz-input"),
-    kundeError: document.getElementById("kunde-error"),
-    kundeStatAnzahl: document.getElementById("kunde-stat-anzahl"),
-    kundeStatUmsatz: document.getElementById("kunde-stat-umsatz"),
-    kundeStatLetzte: document.getElementById("kunde-stat-letzte"),
-    kundeTopWaren: document.getElementById("kunde-top-waren"),
-    kundeTopWarenEmpty: document.getElementById("kunde-top-waren-empty"),
-    kundeBestellungen: document.getElementById("kunde-bestellungen"),
-    kundeBestellungenEmpty: document.getElementById("kunde-bestellungen-empty"),
-    btnKundeLoeschen: document.getElementById("btn-kunde-loeschen"),
-    btnConfirmKunde: document.getElementById("btn-confirm-kunde"),
-
-    // Rezeptrechner (Herstellung - eigene View, aufrufbar per Button in der
-    // Lager-Ansicht, siehe data-quicklink="rezepte")
-    rezeptrechnerRezeptSelect: document.getElementById("rezeptrechner-rezept-select"),
-    rezeptrechnerMenge: document.getElementById("rezeptrechner-menge"),
-    rezeptrechnerTatsaechlicheMenge: document.getElementById("rezeptrechner-tatsaechliche-menge"),
-    rezeptrechnerDurchgaenge: document.getElementById("rezeptrechner-durchgaenge"),
-    rezeptrechnerUeberschussHinweis: document.getElementById("rezeptrechner-ueberschuss-hinweis"),
-    rezeptrechnerErgebnis: document.getElementById("rezeptrechner-ergebnis"),
-    rezeptrechnerErgebnisLeer: document.getElementById("rezeptrechner-ergebnis-leer"),
-    btnRezeptNeu: document.getElementById("btn-rezept-neu"),
-    rezepteKategorieFilterEl: document.getElementById("rezepte-kategorie-filter"),
-    rezepteListe: document.getElementById("rezepte-liste"),
-    rezepteEmpty: document.getElementById("rezepte-empty"),
-
-    // Rezept anlegen/bearbeiten
-    modalRezeptBearbeiten: document.getElementById("modal-rezept-bearbeiten"),
-    modalRezeptBearbeitenTitel: document.getElementById("modal-rezept-bearbeiten-titel"),
-    rezeptEditingId: document.getElementById("rezept-editing-id"),
-    rezeptProduktInput: document.getElementById("rezept-produkt-input"),
-    rezeptErgebnisMenge: document.getElementById("rezept-ergebnis-menge"),
-    rezeptKategorieInput: document.getElementById("rezept-kategorie-input"),
-    rezeptZutatProduktInput: document.getElementById("rezept-zutat-produkt-input"),
-    rezeptZutatMenge: document.getElementById("rezept-zutat-menge"),
-    btnRezeptZutatHinzufuegen: document.getElementById("btn-rezept-zutat-hinzufuegen"),
-    rezeptZutatenListe: document.getElementById("rezept-zutaten-liste"),
-    rezeptZutatenLeer: document.getElementById("rezept-zutaten-leer"),
-    rezeptError: document.getElementById("rezept-error"),
-    btnConfirmRezept: document.getElementById("btn-confirm-rezept"),
-
-    // Verkaufshistorie (automatisch aus abgeschlossenen Bestellungen)
-    verkaeufeSearch: document.getElementById("verkaeufe-search"),
-    verkaeufeTableBody: document.getElementById("verkaeufe-table-body"),
-    verkaeufeEmpty: document.getElementById("verkaeufe-empty"),
-    verkaeufeNoResults: document.getElementById("verkaeufe-no-results"),
-
-    // Hofbuch
-    formHofbuch: document.getElementById("form-hofbuch"),
-    hofbuchTitelInput: document.getElementById("hofbuch-titel-input"),
-    hofbuchKategorieInput: document.getElementById("hofbuch-kategorie-input"),
-    hofbuchTextInput: document.getElementById("hofbuch-text-input"),
-    hofbuchKategorieFilterEl: document.getElementById("hofbuch-kategorie-filter"),
-    hofbuchEintraegeEl: document.getElementById("hofbuch-eintraege"),
-    hofbuchEmpty: document.getElementById("hofbuch-empty"),
-    hofbuchNoResults: document.getElementById("hofbuch-no-results"),
-    hofbuchSearch: document.getElementById("hofbuch-search"),
-    btnHofbuchSortToggle: document.getElementById("btn-hofbuch-sort-toggle"),
-    hofbuchEditId: document.getElementById("hofbuch-edit-id"),
-    hofbuchEditTitel: document.getElementById("hofbuch-edit-titel"),
-    hofbuchEditKategorie: document.getElementById("hofbuch-edit-kategorie"),
-    hofbuchEditText: document.getElementById("hofbuch-edit-text"),
-    hofbuchEditError: document.getElementById("hofbuch-edit-error"),
-    btnConfirmHofbuchEdit: document.getElementById("btn-confirm-hofbuch-edit"),
-
-    // Statistiken
-    statVerkaeufeAnzahl: document.getElementById("stat-verkaeufe-anzahl"),
-    statUmsatzGesamt: document.getElementById("stat-umsatz-gesamt"),
-    statBestellungenGesamt: document.getElementById("stat-bestellungen-gesamt"),
-    statStatOffene: document.getElementById("stat-stat-offene"),
-    statistikTopWaren: document.getElementById("statistik-top-waren"),
-    statistikTopWarenEmpty: document.getElementById("statistik-top-waren-empty"),
-    statistikTopKunden: document.getElementById("statistik-top-kunden"),
-    statistikTopKundenEmpty: document.getElementById("statistik-top-kunden-empty"),
+    // Beispiele (Behandlungsleitfäden)
+    beispieleListe: document.getElementById("beispiele-liste"),
+    beispieleEmpty: document.getElementById("beispiele-empty"),
+    btnBeispielHinzufuegen: document.getElementById("btn-beispiel-hinzufuegen"),
+    modalBeispielBearbeiten: document.getElementById("modal-beispiel-bearbeiten"),
+    beispielBearbeitenTitel: document.getElementById("beispiel-bearbeiten-titel"),
+    beispielEditingId: document.getElementById("beispiel-editing-id"),
+    beispielTitelInput: document.getElementById("beispiel-titel-input"),
+    beispielTextInput: document.getElementById("beispiel-text-input"),
+    beispielError: document.getElementById("beispiel-error"),
+    btnConfirmBeispiel: document.getElementById("btn-confirm-beispiel"),
 
     // Einstellungen
     startseiteSelect: document.getElementById("startseite-select"),
-    hofEinstellungenHinweis: document.getElementById("hof-einstellungen-hinweis"),
-    einstLieferpauschale: document.getElementById("einst-lieferpauschale"),
-    einstLagerSchwelle: document.getElementById("einst-lager-schwelle"),
-    einstBestellungAltSchwelle: document.getElementById("einst-bestellung-alt-schwelle"),
-    einstStammkundeBestellungen: document.getElementById("einst-stammkunde-bestellungen"),
-    einstStammkundeUmsatz: document.getElementById("einst-stammkunde-umsatz"),
 
     // Verwaltung
     formAddBenutzer: document.getElementById("form-add-benutzer"),
@@ -325,7 +131,7 @@
      funktionieren unverändert weiter) - es wird nur visuell durch einen
      Button + eine aufklappbare Liste ersetzt. Ein MutationObserver hält die
      sichtbare Liste automatisch synchron, wenn eine Funktion die Optionen
-     des <select> später per innerHTML neu befüllt (z. B. befuelleProduktSelects). */
+     des <select> später per innerHTML neu befüllt. */
   const customSelectRegistry = new Map();
 
   function aktualisiereCustomSelect(select) {
@@ -356,11 +162,10 @@
     panel.hidden = true;
 
     // Manche <select>-Felder haben ein Inline-style für ihre Breite im
-    // Layout (z. B. flex: 0 0 160px bei der Kontakt-Rolle, max-width beim
-    // Startseite-Feld) - dieses muss auf den neuen, sichtbaren Wrapper
-    // übertragen werden, sonst würde der Wrapper (der jetzt statt des
-    // <select> die Breite im Layout bestimmt) einfach die volle Breite
-    // einnehmen und das Formular verrutschen lassen.
+    // Layout - dieses muss auf den neuen, sichtbaren Wrapper übertragen
+    // werden, sonst würde der Wrapper (der jetzt statt des <select> die
+    // Breite im Layout bestimmt) einfach die volle Breite einnehmen und das
+    // Formular verrutschen lassen.
     const inlineStyle = select.getAttribute("style");
     if (inlineStyle) wrapper.setAttribute("style", inlineStyle);
 
@@ -415,10 +220,6 @@
       trigger.classList.add("custom-select__trigger--offen");
     }
 
-
-
-    
-
     function schliessen() {
       panel.hidden = true;
       trigger.classList.remove("custom-select__trigger--offen");
@@ -457,8 +258,7 @@
     );
 
     // Fängt Fälle ab, in denen eine Funktion die Optionsliste des <select>
-    // per innerHTML neu aufbaut (z. B. befuelleProduktSelects,
-    // befuelleKontakteRollenSelects) - die sichtbare Liste bleibt dadurch
+    // per innerHTML neu aufbaut - die sichtbare Liste bleibt dadurch
     // automatisch aktuell, auch ohne dass jede Stelle im Code extra Bescheid
     // geben muss.
     new MutationObserver(sync).observe(select, { childList: true });
@@ -469,24 +269,5 @@
   }
 
   // Alle noch verbliebenen "normalen" <select>-Felder der Seite auf das
-  // dunkle Custom-Dropdown umstellen (Status, Produktauswahl im
-  // Handelsrechner, Rollen-Auswahl bei Kontakten, Startseite, Rang bei
-  // neuen Benutzern). Die Produktauswahl im Bestellungs-Fenster hat bereits
-  // ihr eigenes, älteres Custom-Dropdown (siehe Abschnitt "Bestellungen")
-  // und wird hier bewusst nicht noch einmal angefasst.
-  [
-    el.bestellungStatusInput,
-    el.rechnerProdukt,
-    el.kontaktBerufInput,
-    el.kontaktEditRolle,
-    el.kontaktSchnellRolle,
-    el.kontakteSortierung,
-    el.startseiteSelect,
-    el.neuerBenutzerRolleInput,
-    el.lagerSortierung,
-    el.hofbuchKategorieInput,
-    el.hofbuchEditKategorie,
-    el.bestellungenBulkStatus,
-    el.rezeptrechnerRezeptSelect,
-  ].forEach(erzeugeCustomSelect);
-
+  // dunkle Custom-Dropdown umstellen (Startseite, Rang bei neuen Benutzern).
+  [el.startseiteSelect, el.neuerBenutzerRolleInput].forEach(erzeugeCustomSelect);

@@ -1,5 +1,5 @@
 /* ============================================================================
-   Firestore Security Rules — Zur Dicken Kuh
+   Firestore Security Rules — Medical Department
    ============================================================================
    WICHTIG: Diese Datei hier ist nur eine ARCHIV-/VERSIONS-KOPIE. Sie wird
    NICHT automatisch von Firebase gelesen! Damit sie wirklich gilt, musst du
@@ -9,23 +9,15 @@
      "Regeln" -> kompletten bisherigen Inhalt löschen -> den Inhalt dieser
      Datei hier hineinkopieren -> "Veröffentlichen" klicken.
 
-   Diese Datei ist die 1:1 übernommene, bisherige Fassung (users/usernames/
-   adminLog/presence/kontakte bleiben unverändert, inkl. "unantastbar"-
-   Schutz, Selbstheilungs-Mechanismus für befristete Sperren, ...) - ergänzt
-   um die neuen Collections der Hofverwaltung (produkte, bestellungen,
-   angebote, kataloge) und bereinigt um die medizinspezifischen Collections,
-   die es in der neuen App nicht mehr gibt (department, notizen, verkaufslog,
-   ankuendigungen, handbuch + darfHandbuchSehen()).
-   Falls dort noch alte Daten liegen, bleiben sie einfach ungenutzt in der
-   Datenbank liegen - das schadet nichts, sie sind über die neue Seite nur
-   nicht mehr erreichbar.
-
-   Die frühere Collection "verkaeufe" gibt es nicht mehr: Eine abgeschlossene
-   Bestellung IST der Verkauf (siehe "Verkaufshistorie" in js/app.js), eine
-   separate Verkaufserfassung entfällt. Alte "verkaeufe"-Dokumente bleiben
-   ungenutzt in der Datenbank liegen, falls vorhanden - ohne eigene Regel
-   dafür sind sie über die Firestore-Regeln standardmäßig für niemanden mehr
-   erreichbar (schadet nichts).
+   users/usernames/adminLog/presence bleiben unverändert (inkl.
+   "unantastbar"-Schutz, Selbstheilungs-Mechanismus für befristete Sperren,
+   ...) - ergänzt um die Collections des Medical Department (patienten,
+   akten, kataloge) und bereinigt um alle Ranch-spezifischen Collections aus
+   der früheren Hofverwaltung (produkte, lagerStatus, bestellungen, angebote,
+   kontakte, kunden, rezepte, einstellungen, hofbuch), die es in der neuen
+   App nicht mehr gibt. Falls dort noch alte Daten liegen, bleiben sie
+   einfach ungenutzt in der Datenbank liegen - das schadet nichts, sie sind
+   über die neue Seite nur nicht mehr erreichbar.
    ============================================================================ */
 
 rules_version = '2';
@@ -50,7 +42,7 @@ service cloud.firestore {
     }
 
     // Ist der eingeloggte Nutzer ein Admin (= Verwalter)? Unabhängig vom
-    // Rang (Hofherr/Hofmeister/Stallmeister/Hofarbeiter/Knecht/Tagelöhner).
+    // Rang.
     function istAdmin() {
       return istEingeloggt() && eigenesUserDoc().isAdmin == true;
     }
@@ -194,128 +186,28 @@ service cloud.firestore {
     }
 
     /* ------------------------------------------------------------------
-       kontakte/{dokument} — Telegramm-Verzeichnis mit frei wählbaren
-       Nummern, unverändert aus dem bisherigen Projekt übernommen.
-       ------------------------------------------------------------------ */
-    match /kontakte/{dokument} {
-      allow read, write: if istFreigegeben();
-    }
-
-    /* ------------------------------------------------------------------
-       Neue Collections der Hofverwaltung
+       Collections des Medical Department
        ------------------------------------------------------------------ */
 
-    // Waren & Preise: alle freigegebenen Nutzer dürfen die Preisliste
-    // sehen (auch für den Handelsrechner nötig), aber nur Verwalter dürfen
-    // Produkte anlegen/löschen oder vollständig bearbeiten (Name/Preise).
-    // AUSNAHME: das Feld "lagerMenge" dürfen auch nicht-Verwalter ändern -
-    // das ist nötig, damit die manuelle Bestandskorrektur auf der Lager-Seite
-    // (siehe js/views/lager.js) für alle freigegebenen Nutzer nutzbar bleibt.
-    // Die Lager-Seite ist bewusst NICHT mit Bestellungen verknüpft - Status-
-    // Änderungen bei Bestellungen wirken sich nie auf "lagerMenge" aus.
-    // request.resource.data.diff(...) stellt sicher, dass dabei wirklich NUR
-    // "lagerMenge" geändert wird - alle anderen Felder bleiben weiterhin
-    // Verwaltern vorbehalten.
-    // ZUSÄTZLICH: Produkte mit "oeffentlich" == true dürfen auch OHNE Login
-    // gelesen werden - Grundlage für die öffentliche, login-freie Preisliste
-    // unter preise/index.html (blackwolfranch.de/preise). Nur Verwalter
-    // können dieses Feld über das "Produkt bearbeiten"-Modal in Waren &
-    // Preise setzen (siehe js/views/waren.js) - alle Felder eines nicht als
-    // "oeffentlich" markierten Produkts bleiben für unangemeldete Besucher
-    // weiterhin komplett unsichtbar.
-    match /produkte/{dokument} {
-      allow read: if istFreigegeben() || resource.data.get('oeffentlich', false) == true;
-      allow create, delete: if istAdmin();
-      allow update: if istAdmin()
-                    || (istFreigegeben() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['lagerMenge']));
-    }
-
-    // lagerStatus/status — ein einzelnes Dokument, das nur festhält, WANN
-    // zuletzt jemand einen Lagerbestand (lagerMenge) korrigiert hat (siehe
-    // aktualisiereLagerStatus in js/views/lager.js). Dient ausschließlich dem
-    // team-weiten 24h-Hinweis "Lagerbestand überprüfen" auf der Übersicht -
-    // enthält keine Produktdaten selbst, daher dieselben, unkritischen
-    // Rechte wie bei presence/kontakte.
-    match /lagerStatus/{dokument} {
+    // Patienten: Profil (Name + Stammdaten) - jeder freigegebene Nutzer darf
+    // Patienten anlegen, lesen und bearbeiten.
+    match /patienten/{dokument} {
       allow read, write: if istFreigegeben();
     }
 
-    // Bestellungen: jeder freigegebene Nutzer darf Bestellungen anlegen und
-    // bearbeiten (z. B. Status ändern, Produkte/Preise/Rabatte anpassen).
-    // Löschen ist erlaubt, solange die Bestellung noch nicht archiviert ist
-    // ("archiviert" != true), ODER wenn sie archiviert ist UND seit
-    // mindestens 30 Tagen archiviert ist (request.time >= archiviertAm + 30
-    // Tage) - das ist die serverseitige Absicherung derselben Regel, die der
-    // Client automatisch anwendet (siehe
-    // pruefeAutomatischeArchivierungUndLoeschung in js/views/bestellungen.js):
-    // frisch archivierte Bestellungen bleiben vor den 30 Tagen weiterhin vor
-    // jeder Löschung geschützt, auch vor Verwaltern.
-    match /bestellungen/{dokument} {
-      allow read: if istFreigegeben();
-      allow create, update: if istFreigegeben();
-      allow delete: if istFreigegeben() &&
-                    (resource.data.get('archiviert', false) != true ||
-                     (resource.data.get('archiviertAm', null) != null &&
-                      request.time >= resource.data.archiviertAm + duration.value(30, 'd')));
-    }
-
-    // Handelsrechner-Angebote (Ledger "Letzte Angebote").
-    match /angebote/{dokument} {
+    // Akten: eine Behandlungs-Akte pro Dokument, referenziert ihren
+    // Patienten über "patientId". Jeder freigegebene Nutzer darf Akten
+    // anlegen, lesen, bearbeiten und löschen.
+    match /akten/{dokument} {
       allow read, write: if istFreigegeben();
     }
 
-    // Verwaltete Kataloge (z. B. die Rollen-Liste der Kontakte-Seite):
-    // lesen dürfen alle freigegebenen Nutzer, ändern nur Verwalter.
+    // Verwaltete Kataloge (z. B. kataloge/leitfaeden, die admin-gepflegten
+    // Behandlungsleitfäden): lesen dürfen alle freigegebenen Nutzer, ändern
+    // nur Verwalter.
     match /kataloge/{dokument} {
       allow read: if istFreigegeben();
       allow write: if istAdmin();
-    }
-
-    // AUSNAHME innerhalb von "kataloge": Die Produkt-Kategorien
-    // (kataloge/produktKategorien) müssen auch OHNE Login lesbar sein - sie
-    // bestimmen Gruppierung/Reihenfolge auf der öffentlichen Preisliste
-    // (preise/index.html, siehe "reihenfolgeOeffentlich" je Kategorie).
-    // Dieser spezifischere match-Block gilt zusätzlich zum allgemeinen
-    // "kataloge"-Block oben (Firestore verknüpft mehrere passende Regeln mit
-    // ODER) - Schreiben bleibt weiterhin ausschließlich Verwaltern
-    // vorbehalten (über die "write"-Regel im allgemeinen Block oben).
-    match /kataloge/produktKategorien {
-      allow read: if true;
-    }
-
-    // Kunden: ein Profil pro "unternehmen"-Namen aus den Bestellungen, wird
-    // automatisch angelegt (siehe sorgeFuerKundenBackfill in js/views/kunden.js) -
-    // jeder freigegebene Nutzer darf Profile lesen, automatisch anlegen,
-    // umbenennen (inkl. Notiz) und löschen, genau wie bei Kontakte.
-    match /kunden/{dokument} {
-      allow read, write: if istFreigegeben();
-    }
-
-    // Rezepte für den Herstellungsrechner (Lager-Ansicht): vom Team selbst
-    // gepflegt, genau wie Kontakte/Kunden - jeder freigegebene Nutzer darf
-    // Rezepte anlegen, bearbeiten und löschen.
-    match /rezepte/{dokument} {
-      allow read, write: if istFreigegeben();
-    }
-
-    // Hof-Einstellungen (einstellungen/hof): Lieferpauschale, Warnschwellen,
-    // Stammkunde-Kriterium - für alle freigegebenen Nutzer lesbar (fließt in
-    // Preisberechnungen/Anzeigen ein, die jeder sieht), aber nur von
-    // Verwaltern änderbar.
-    match /einstellungen/{dokument} {
-      allow read: if istFreigegeben();
-      allow write: if istAdmin();
-    }
-
-    // Hofbuch: die Chronik des Hofes. Jeder freigegebene Nutzer darf Einträge
-    // schreiben und lesen. Löschen dürfen Verwalter (jeden Eintrag) sowie der
-    // Verfasser selbst (nur den eigenen Eintrag, anhand der beim Anlegen
-    // gespeicherten autorUid) - Bearbeiten bleibt Verwaltern vorbehalten,
-    // damit die Chronik nicht nachträglich verfälscht werden kann.
-    match /hofbuch/{dokument} {
-      allow read, create: if istFreigegeben();
-      allow update, delete: if istAdmin()
-                    || (istFreigegeben() && resource.data.get('autorUid', null) == request.auth.uid);
     }
   }
 }

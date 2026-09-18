@@ -11,7 +11,7 @@
        obwohl längst neue Dateien hochgeladen wurden. Der Update-Banner würde
        dann fälschlich dauerhaft anzeigen, dass eine neue Version verfügbar
        ist, weil das eigentlich schon geladene app.js selbst noch die alte
-       Versionsnummer enthält. */
+       Versionsnummer enthält. -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
@@ -24,8 +24,8 @@
        blieb das Tab-/Lesezeichen-Icon in genau diesen Fällen leer, selbst
        wenn das PNG unten technisch korrekt eingebunden war. -->
   <link rel="shortcut icon" href="/favicon.ico" />
-  <link rel="icon" type="image/png" href="assets/logo/favicon-neu.png?v=102" />
-  <link rel="apple-touch-icon" href="assets/logo/favicon-neu.png?v=102" />
+  <link rel="icon" type="image/png" href="assets/logo/favicon-neu.png?v=103" />
+  <link rel="apple-touch-icon" href="assets/logo/favicon-neu.png?v=103" />
 
   <!-- Google Fonts: Rye (Farmschild/Wordmark), Playfair Display (Überschriften), Vollkorn (Fließtext/Pergament) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -35,34 +35,27 @@
     rel="stylesheet"
   />
 
-  <!-- Stylesheets: gleiche Kaskaden-Reihenfolge wie zuvor in der einen
-       style.css - nur jetzt nach Zweck aufgeteilt (base > layout >
-       components > views), damit man den passenden Abschnitt schneller
-       findet. Reihenfolge ist wichtig und darf nicht vertauscht werden. -->
-  <link rel="stylesheet" href="css/base/tokens.css?v=102" />
-  <link rel="stylesheet" href="css/base/reset.css?v=102" />
-  <link rel="stylesheet" href="css/base/textures.css?v=102" />
-  <link rel="stylesheet" href="css/views/auth.css?v=102" />
-  <link rel="stylesheet" href="css/components/forms.css?v=102" />
-  <link rel="stylesheet" href="css/components/buttons.css?v=102" />
-  <link rel="stylesheet" href="css/layout/shell.css?v=102" />
-  <link rel="stylesheet" href="css/components/cards.css?v=102" />
-  <link rel="stylesheet" href="css/components/badges.css?v=102" />
-  <link rel="stylesheet" href="css/views/dashboard.css?v=102" />
-  <link rel="stylesheet" href="css/components/tables.css?v=102" />
-  <link rel="stylesheet" href="css/views/waren.css?v=102" />
-  <link rel="stylesheet" href="css/views/lager.css?v=102" />
-  <link rel="stylesheet" href="css/views/bestellungen.css?v=102" />
-  <link rel="stylesheet" href="css/views/kontakte.css?v=102" />
-  <link rel="stylesheet" href="css/views/handelsrechner.css?v=102" />
-  <link rel="stylesheet" href="css/views/rezepte.css?v=102" />
-  <link rel="stylesheet" href="css/components/modals.css?v=102" />
-  <link rel="stylesheet" href="css/views/admin.css?v=102" />
-  <link rel="stylesheet" href="css/components/toast.css?v=102" />
-  <link rel="stylesheet" href="css/layout/footer.css?v=102" />
-  <link rel="stylesheet" href="css/components/kataloge.css?v=102" />
-  <link rel="stylesheet" href="css/views/hofbuch.css?v=102" />
-  <link rel="stylesheet" href="css/base/responsive.css?v=102" />
+  <!-- Stylesheets: gleiche Kaskaden-Reihenfolge wie zuvor (base > layout >
+       components > views). Reihenfolge ist wichtig und darf nicht vertauscht
+       werden. -->
+  <link rel="stylesheet" href="css/base/tokens.css?v=103" />
+  <link rel="stylesheet" href="css/base/reset.css?v=103" />
+  <link rel="stylesheet" href="css/base/textures.css?v=103" />
+  <link rel="stylesheet" href="css/views/auth.css?v=103" />
+  <link rel="stylesheet" href="css/components/forms.css?v=103" />
+  <link rel="stylesheet" href="css/components/buttons.css?v=103" />
+  <link rel="stylesheet" href="css/layout/shell.css?v=103" />
+  <link rel="stylesheet" href="css/components/cards.css?v=103" />
+  <link rel="stylesheet" href="css/components/badges.css?v=103" />
+  <link rel="stylesheet" href="css/views/startseite.css?v=103" />
+  <link rel="stylesheet" href="css/components/tables.css?v=103" />
+  <link rel="stylesheet" href="css/views/patientenakten.css?v=103" />
+  <link rel="stylesheet" href="css/views/beispiele.css?v=103" />
+  <link rel="stylesheet" href="css/components/modals.css?v=103" />
+  <link rel="stylesheet" href="css/views/admin.css?v=103" />
+  <link rel="stylesheet" href="css/components/toast.css?v=103" />
+  <link rel="stylesheet" href="css/layout/footer.css?v=103" />
+  <link rel="stylesheet" href="css/base/responsive.css?v=103" />
 
   <!-- Firebase SDK (Authentifizierung + Datenbank). "defer" statt normaler
        blockierender <script>-Tags: der Browser kann so den Rest der Seite
@@ -103,7 +96,7 @@
 
     <div class="auth-gate">
       <div class="auth-gate__sign-wrap">
-        <img class="auth-gate__sign-img" src="assets/logo/hornhausen-sign.png?v=102" alt="Zur Dicken Kuh – Est. 1899" />
+        <img class="auth-gate__sign-img" src="assets/logo/hornhausen-sign.png?v=103" alt="Zur Dicken Kuh – Est. 1899" />
       </div>
 
       <div class="auth-card">
@@ -235,7 +228,7 @@
   <!-- APP (erst sichtbar nach Login) -->
   <!-- ============================ -->
   <div class="update-banner" id="update-banner" hidden>
-    <img class="update-banner__logo" src="assets/logo/hornhausen-sign.png?v=102" alt="" aria-hidden="true" />
+    <img class="update-banner__logo" src="assets/logo/hornhausen-sign.png?v=103" alt="" aria-hidden="true" />
     <span>Eine neue Version ist verfügbar. Danach ist eine erneute Anmeldung nötig.</span>
     <button type="button" class="btn btn--primary" id="update-banner-btn">Jetzt aktualisieren</button>
   </div>
@@ -246,43 +239,23 @@
     <!-- ============================ -->
     <aside class="sidebar">
       <div class="sidebar__brand">
-        <img class="sidebar__brand-icon" src="assets/logo/logo-dicke-kuh.png?v=102" alt="Zur Dicken Kuh - Est. 1899" />
+        <img class="sidebar__brand-icon" src="assets/logo/logo-dicke-kuh.png?v=103" alt="Zur Dicken Kuh - Est. 1899" />
       </div>
 
       <nav class="sidebar__nav" id="sidebar-nav">
-        <button class="sidebar__item sidebar__item--active" data-view="uebersicht">
+        <button class="sidebar__item sidebar__item--active" data-view="startseite">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1V10"/><path d="M9.5 20.5v-6h5v6"/></svg>
-          <span>Übersicht</span>
+          <span>Startseite</span>
         </button>
-        <button class="sidebar__item" data-view="hofbuch">
+        <button class="sidebar__item" data-view="patientenakten">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+          <span>Patientenakten</span>
+        </button>
+        <button class="sidebar__item" data-view="beispiele">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5.5C10 4 6.5 3.6 4 4.3v14.3c2.5-.7 6-.3 8 1.2"/><path d="M12 5.5c2-1.5 5.5-1.9 8-1.2v14.3c-2.5-.7-6-.3-8 1.2Z"/><line x1="12" y1="5.5" x2="12" y2="19.8"/></svg>
-          <span>Schwarzes Brett</span>
-        </button>
-        <button class="sidebar__item" data-view="bestellungen">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="12" height="17" rx="1.5"/><path d="M9 4V3.3A1.3 1.3 0 0 1 10.3 2h3.4A1.3 1.3 0 0 1 15 3.3V4"/><line x1="9" y1="10.5" x2="15" y2="10.5"/><line x1="9" y1="14" x2="15" y2="14"/><line x1="9" y1="17.5" x2="13" y2="17.5"/></svg>
-          <span>Bestellungen</span>
-        </button>
-        <button class="sidebar__item" data-view="waren">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5 12 4l9 4.5-9 4.5-9-4.5Z"/><path d="M3 8.5v7L12 20l9-4.5v-7"/><path d="M12 13v7"/></svg>
-          <span>Waren &amp; Preise</span>
-        </button>
-        <button class="sidebar__item" data-view="lager">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 4l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Z"/><path d="M9 21v-7h6v7"/></svg>
-          <span>Lager</span>
-        </button>
-        <button class="sidebar__item" data-view="kunden">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8" r="3.2"/><path d="M2.5 19c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M15.5 5.3a3.2 3.2 0 0 1 0 6.2"/><path d="M15 13.6c2.9.3 4.9 2.4 4.9 5.4"/></svg>
-          <span>Kunden</span>
-        </button>
-        <button class="sidebar__item" data-view="kontakte">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h3l1.5 4.5-2 1.5a11 11 0 0 0 5.5 5.5l1.5-2L20 14v3a2 2 0 0 1-2 2C10.8 19 5 13.2 5 6a2 2 0 0 1 1-3z"/></svg>
-          <span>Kontakte</span>
+          <span>Beispiele</span>
         </button>
         <div class="sidebar__divider"></div>
-        <button class="sidebar__item" data-view="statistiken">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="20" x2="19" y2="20"/><rect x="6" y="12" width="3.4" height="8"/><rect x="10.3" y="7" width="3.4" height="13"/><rect x="14.6" y="10" width="3.4" height="10"/></svg>
-          <span>Statistiken</span>
-        </button>
         <button class="sidebar__item" data-view="einstellungen">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 13.5a7.6 7.6 0 0 0 0-3l2-1.5-2-3.5-2.4.8a7.6 7.6 0 0 0-2.6-1.5L14 2h-4l-.4 2.3a7.6 7.6 0 0 0-2.6 1.5l-2.4-.8-2 3.5 2 1.5a7.6 7.6 0 0 0 0 3l-2 1.5 2 3.5 2.4-.8a7.6 7.6 0 0 0 2.6 1.5L10 22h4l.4-2.3a7.6 7.6 0 0 0 2.6-1.5l2.4.8 2-3.5Z"/></svg>
           <span>Einstellungen</span>
@@ -329,436 +302,66 @@
       <div class="content-shell">
         <div class="page-header" id="page-header">
           <div class="page-header__text">
-            <h1 id="view-title">Übersicht</h1>
-            <p id="view-subtitle">Hier behältst du alles im Blick.</p>
+            <h1 id="view-title">Startseite</h1>
+            <p id="view-subtitle"></p>
           </div>
         </div>
 
         <div class="main">
           <!-- ============================ -->
-          <!-- VIEW: ÜBERSICHT               -->
+          <!-- VIEW: STARTSEITE              -->
           <!-- ============================ -->
-          <section class="view view--active" id="view-uebersicht">
-            <div class="dash-hero" id="dashboard-hero">
-              <div class="dash-hero__greeting">
-                <p class="dash-hero__eyebrow" id="dashboard-greeting">Willkommen zurück,</p>
-                <h1 class="dash-hero__name" id="dashboard-name">—</h1>
-                <p class="dash-hero__sub">Hier behältst du alles im Blick.</p>
-              </div>
+          <section class="view view--active" id="view-startseite">
+            <div class="startseite-hero">
+              <p class="startseite-hero__eyebrow" id="startseite-greeting">Willkommen zurück,</p>
+              <h1 class="startseite-hero__name" id="startseite-name">—</h1>
             </div>
 
-            <button type="button" class="dash-hinweis" id="dash-bestellungen-hinweis" data-quicklink="bestellungen" hidden>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5 22 20.5H2Z"/><line x1="12" y1="9.5" x2="12" y2="14.5"/><circle cx="12" cy="17.5" r="0.9" fill="currentColor" stroke="none"/></svg>
-              <span id="dash-bestellungen-hinweis-text">Bestellungen überprüfen</span>
-            </button>
-            <button type="button" class="dash-hinweis" id="dash-lager-hinweis" data-quicklink="lager" hidden>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5 22 20.5H2Z"/><line x1="12" y1="9.5" x2="12" y2="14.5"/><circle cx="12" cy="17.5" r="0.9" fill="currentColor" stroke="none"/></svg>
-              <span id="dash-lager-hinweis-text">Lagerbestand überprüfen</span>
-            </button>
-
-            <div class="dash-stats">
-              <div class="dash-stat">
-                <span class="dash-stat__label">Offene Bestellungen</span>
-                <span class="dash-stat__value" id="stat-offene-bestellungen">0</span>
-                <span class="dash-stat__sub" id="stat-offene-bestellungen-sub">Bestellungen zu erledigen</span>
-              </div>
-              <div class="dash-stat">
-                <span class="dash-stat__label">Heute verkauft</span>
-                <span class="dash-stat__value" id="stat-heute-verkauft">0,00 $</span>
-                <span class="dash-stat__sub" id="stat-heute-verkauft-sub">Aus 0 abgeschlossenen Bestellungen</span>
-              </div>
-              <div class="dash-stat">
-                <span class="dash-stat__label">Gesamtgewinn</span>
-                <span class="dash-stat__value" id="stat-gesamtgewinn">0,00 $</span>
-                <span class="dash-stat__sub">Diesen Monat</span>
-              </div>
-            </div>
-
-            <div class="dash-panel dash-panel--solo">
-              <div class="dash-panel__header">
-                <span class="dash-panel__title">Offene Bestellungen</span>
-                <button type="button" class="dash-panel__more" data-quicklink="bestellungen">Alle ansehen ›</button>
-              </div>
-              <div class="dash-panel__body" id="dash-offene-bestellungen"></div>
-              <p class="empty-state empty-state--erledigt" id="dash-offene-bestellungen-empty" hidden>Keine offenen Bestellungen.</p>
+            <div class="startseite-kacheln">
+              <button type="button" class="parch-card startseite-kachel" data-quicklink="patientenakten">
+                <h3>Patientenakten</h3>
+                <p class="parch-card__hint">Patienten suchen, anlegen und Behandlungen dokumentieren.</p>
+              </button>
+              <button type="button" class="parch-card startseite-kachel" data-quicklink="beispiele">
+                <h3>Beispiele</h3>
+                <p class="parch-card__hint">Behandlungsleitfäden für häufige Fälle nachschlagen.</p>
+              </button>
             </div>
           </section>
 
           <!-- ============================ -->
-          <!-- VIEW: BESTELLUNGEN            -->
+          <!-- VIEW: PATIENTENAKTEN          -->
           <!-- ============================ -->
-          <section class="view" id="view-bestellungen">
-            <div class="tabs" id="bestellungen-tabs">
-              <button class="tabs__tab tabs__tab--active" data-status-filter="Offen">Offen</button>
-              <button class="tabs__tab" data-status-filter="In Bearbeitung">In Bearbeitung</button>
-              <button class="tabs__tab" data-status-filter="Abgeschlossen">Abgeschlossen</button>
-              <button class="tabs__tab" data-status-filter="Archiv">Archiv</button>
-            </div>
-
+          <section class="view" id="view-patientenakten">
             <div class="toolbar">
               <div class="search-field">
-                <input type="text" id="bestellungen-search" placeholder="Nach Unternehmen oder Produkt suchen..." autocomplete="off" />
+                <input type="text" id="patienten-search" placeholder="Patient suchen..." autocomplete="off" />
               </div>
               <div class="toolbar__buttons">
-                <button class="btn btn--primary" id="btn-add-bestellung">＋ Bestellung hinzufügen</button>
-              </div>
-            </div>
-
-            <div class="toolbar" id="bestellungen-bulk-bar" hidden>
-              <span id="bestellungen-bulk-anzahl" style="font-weight:700;"></span>
-              <select id="bestellungen-bulk-status" class="field-input" style="max-width:200px;">
-                <option value="Offen">Offen</option>
-                <option value="In Bearbeitung">In Bearbeitung</option>
-                <option value="Abgeschlossen">Abgeschlossen</option>
-              </select>
-              <div class="toolbar__buttons">
-                <button type="button" class="btn btn--primary btn--sm" id="btn-bestellungen-bulk-anwenden">Übernehmen</button>
-                <button type="button" class="btn btn--ghost btn--sm" id="btn-bestellungen-bulk-abbrechen">Auswahl aufheben</button>
+                <button class="btn btn--primary" id="btn-patient-anlegen">＋ Patient anlegen</button>
               </div>
             </div>
 
             <div class="table-card">
               <div class="reg-table">
-                <div class="reg-row reg-row--head bestellungen-row">
-                  <span></span>
-                  <span>Produkte</span>
-                  <span>Gesamtmenge</span>
-                  <span>Erstellt am</span>
-                  <span>Status</span>
-                </div>
-                <div id="bestellungen-table-body"></div>
+                <div id="patienten-liste"></div>
               </div>
-              <p class="empty-state empty-state--beleg" id="bestellungen-empty" hidden>Noch keine Bestellungen eingetragen.</p>
+              <p class="empty-state" id="patienten-empty" hidden>Noch keine Patienten angelegt.</p>
             </div>
-            <p class="empty-state empty-state--suche" id="bestellungen-no-results" hidden>Keine Bestellungen gefunden, die zu deiner Suche passen.</p>
+            <p class="empty-state" id="patienten-no-results" hidden>Keine Patienten gefunden, die zu deiner Suche passen.</p>
           </section>
 
           <!-- ============================ -->
-          <!-- VIEW: WAREN & PREISE          -->
+          <!-- VIEW: BEISPIELE               -->
           <!-- ============================ -->
-          <section class="view" id="view-waren">
+          <section class="view" id="view-beispiele">
             <div class="toolbar">
-              <div class="search-field">
-                <input type="text" id="waren-search" placeholder="Ware suchen..." autocomplete="off" />
-              </div>
               <div class="toolbar__buttons">
-                <button class="btn btn--ghost btn--sm" id="btn-waren-sortieren" hidden title="Reihenfolge der Produkte per Ziehen ändern">✎ Anordnen</button>
-                <button class="btn btn--ghost" data-open-modal="modal-handelsrechner">Handelsrechner</button>
-                <button class="btn btn--ghost" id="btn-oeffentliche-preise" hidden>Kategorien verwalten</button>
-                <button class="btn btn--primary" id="btn-add-ware" hidden>＋ Produkt hinzufügen</button>
+                <button class="btn btn--primary" id="btn-beispiel-hinzufuegen" hidden>＋ Beispiel hinzufügen</button>
               </div>
             </div>
-
-            <div class="table-card">
-              <div class="reg-table">
-                <div id="waren-table-body"></div>
-              </div>
-              <p class="empty-state empty-state--kiste" id="waren-empty" hidden>Noch keine Waren hinterlegt.</p>
-            </div>
-            <p class="empty-state empty-state--suche" id="waren-no-results" hidden>Keine Waren gefunden, die zu deiner Suche passen.</p>
-          </section>
-
-          <!-- ============================ -->
-          <!-- VIEW: LAGER                   -->
-          <!-- ============================ -->
-          <section class="view" id="view-lager">
-            <div class="parch-card lager-summary">
-              <span class="dash-stat__label">Gesamter Lagerwert</span>
-              <p class="dash-stat__value lager-summary__wert" id="lager-gesamtwert">0,00 $</p>
-            </div>
-
-            <div class="toolbar">
-              <div class="search-field">
-                <input type="text" id="lager-search" placeholder="Ware suchen, z. B. Mais..." autocomplete="off" />
-              </div>
-              <select id="lager-sortierung" class="field-input" style="max-width: 240px;">
-                <option value="kategorie">Nach Kategorie</option>
-                <option value="bestand-auf">Niedrigster Bestand zuerst</option>
-                <option value="bestand-ab">Höchster Bestand zuerst</option>
-                <option value="name">Alphabetisch (A-Z)</option>
-              </select>
-              <div class="toolbar__buttons">
-                <button class="btn btn--ghost" data-quicklink="rezepte">Herstellung</button>
-              </div>
-            </div>
-
-            <div class="table-card">
-              <div class="reg-table">
-                <div class="reg-row reg-row--head lager-row">
-                  <span>Produkt</span>
-                  <span>Bestand</span>
-                  <span>Stückwert (VK)</span>
-                  <span>Gesamtwert</span>
-                </div>
-                <div id="lager-table-body"></div>
-              </div>
-              <p class="empty-state empty-state--kiste" id="lager-empty" hidden>Noch keine Waren im Lager erfasst.</p>
-            </div>
-            <p class="empty-state empty-state--suche" id="lager-no-results" hidden>Keine Waren gefunden, die zu deiner Suche passen.</p>
-          </section>
-
-          <!-- ============================ -->
-          <!-- VIEW: HERSTELLUNG (Rezepte)   -->
-          <!-- ============================ -->
-          <section class="view" id="view-rezepte">
-            <div class="parch-card">
-              <p class="rechner-section-title">Menge berechnen</p>
-              <div class="rechner-grid-2">
-                <div>
-                  <label class="field-label" for="rezeptrechner-rezept-select">Produkt</label>
-                  <select id="rezeptrechner-rezept-select" class="field-input"></select>
-                </div>
-                <div>
-                  <label class="field-label" for="rezeptrechner-menge">Benötigte Menge</label>
-                  <input type="number" id="rezeptrechner-menge" class="field-input" min="1" step="1" value="1" />
-                </div>
-              </div>
-
-              <!-- Herstellung läuft immer in vollen Durchgängen (z. B. 4er-
-                   Schritte bei Zucker) - dieser Block zeigt, wie viel dabei
-                   TATSÄCHLICH herauskommt, statt nur die eingegebene Wunsch-
-                   menge unkommentiert zu übernehmen (siehe berechneRezeptrechner
-                   in js/views/rezepte.js). -->
-              <div class="rechner-grid-2" style="margin-top: 14px;">
-                <div class="rechner-field-box">
-                  <div class="rechner-field-box__label">Tatsächliche Menge</div>
-                  <div class="rechner-field-box__value">
-                    <span id="rezeptrechner-tatsaechliche-menge">–</span><span class="rechner-field-box__unit">Stück</span>
-                  </div>
-                </div>
-                <div class="rechner-field-box">
-                  <div class="rechner-field-box__label">Herstellungsdurchgänge</div>
-                  <div class="rechner-field-box__value">
-                    <span id="rezeptrechner-durchgaenge">–</span><span class="rechner-field-box__unit">×</span>
-                  </div>
-                </div>
-              </div>
-              <p class="rechner-hinweis" id="rezeptrechner-ueberschuss-hinweis" hidden></p>
-
-              <p class="rechner-section-title" style="margin-top: 20px;">Benötigte Rohstoffe</p>
-              <div id="rezeptrechner-ergebnis" class="rezeptrechner-ergebnis-liste"></div>
-              <p class="empty-state" id="rezeptrechner-ergebnis-leer" style="padding: 6px 0 0;">Wähle ein Produkt aus, um die benötigten Rohstoffe zu berechnen.</p>
-            </div>
-
-            <div class="parch-card">
-              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 4px;">
-                <h3>Rezepte</h3>
-                <button type="button" class="btn btn--primary btn--sm" id="btn-rezept-neu">＋ Neues Rezept</button>
-              </div>
-              <p class="parch-card__hint">Von euch selbst gepflegt - trage ein Rezept mitsamt Kategorie ein, sobald ihr die Herstellungsmengen im Spiel herausgefunden habt.</p>
-              <div class="tabs" id="rezepte-kategorie-filter"></div>
-              <div id="rezepte-liste"></div>
-              <p class="empty-state empty-state--kiste" id="rezepte-empty" hidden>Noch keine Rezepte hinterlegt.</p>
-            </div>
-          </section>
-
-          <!-- ============================ -->
-          <!-- VIEW: KONTAKTE                -->
-          <!-- ============================ -->
-          <section class="view" id="view-kontakte">
-            <div class="parch-card">
-              <h3>Neuen Kontakt eintragen</h3>
-              <form class="kontakt-form" id="form-kontakt">
-                <input type="text" id="kontakt-nummer-input" class="field-input kontakt-nummer-input" inputmode="numeric" pattern="\d{1,4}" maxlength="4" placeholder="1234" required title="Nummer (bis zu 4 Ziffern, frei wählbar)" />
-                <input type="text" id="kontakt-name-input" class="field-input" placeholder="Name, z. B. Heinrich Hornhausen" required style="flex: 1 1 200px;" />
-                <select id="kontakt-beruf-input" class="field-input" style="flex: 0 0 160px;"></select>
-                <input type="text" id="kontakt-notiz-input" class="field-input" placeholder="Wer ist die Person? z. B. Hofmeister" style="flex: 1 1 200px;" />
-                <button type="submit" class="btn btn--primary">Hinzufügen</button>
-              </form>
-            </div>
-
-            <div class="tabs" id="kontakte-rollen-filter"></div>
-
-            <div class="toolbar">
-              <div class="search-field">
-                <input type="text" id="kontakte-search" placeholder="Nach Nummer, Name, Rolle oder Notiz suchen..." autocomplete="off" />
-              </div>
-              <div class="toolbar__buttons">
-                <select id="kontakte-sortierung" class="field-input" style="flex: 0 0 180px;">
-                  <option value="name">Sortierung: Name (A-Z)</option>
-                  <option value="nummer">Sortierung: Nummer</option>
-                  <option value="rolle">Sortierung: Rolle</option>
-                </select>
-                <button type="button" class="btn btn--ghost" id="btn-toggle-kontakte-gruppierung">Nach Rolle gruppieren</button>
-                <button type="button" class="btn btn--ghost" id="btn-toggle-kontakte-rollen" hidden>Rollen verwalten</button>
-              </div>
-            </div>
-
-            <div class="katalog-box" id="kontakte-rollen-verwaltung" hidden></div>
-
-            <div class="table-card">
-              <div class="reg-table">
-                <div class="reg-row reg-row--head kontakt-row">
-                  <span>Telegramm</span>
-                  <span>Name</span>
-                  <span>Rolle</span>
-                  <span>Notiz</span>
-                  <span class="reg-row__actions-col">Aktionen</span>
-                </div>
-                <div id="kontakt-list"></div>
-              </div>
-              <p class="empty-state empty-state--brief" id="kontakte-empty" hidden>Noch keine Kontakte eingetragen.</p>
-            </div>
-            <p class="empty-state empty-state--suche" id="kontakte-no-results" hidden>Keine Kontakte gefunden, die zu deiner Suche passen.</p>
-            <p class="parch-card__hint" style="padding: 0 6px;">Nummern sind frei wählbar - bis zu 4 Ziffern.</p>
-          </section>
-
-          <!-- ============================ -->
-          <!-- VIEW: KUNDEN                  -->
-          <!-- ============================ -->
-          <!-- Kundenprofile werden automatisch angelegt, sobald in einer
-               Bestellung ein neues Unternehmen auftaucht (siehe
-               sorgeFuerKundenBackfill in kunden.js) - keine manuelle
-               Neuanlage nötig, nur Umbenennen/Notizen bearbeiten/Löschen. -->
-          <section class="view" id="view-kunden">
-            <div class="toolbar">
-              <div class="search-field">
-                <input type="text" id="kunden-search" placeholder="Nach Kundenname suchen..." autocomplete="off" />
-              </div>
-              <div class="toolbar__buttons">
-                <select id="kunden-sortierung" class="field-input" style="flex: 0 0 240px;">
-                  <option value="umsatz">Sortierung: Gesamtumsatz</option>
-                  <option value="anzahl">Sortierung: Anzahl Bestellungen</option>
-                  <option value="letzte">Sortierung: Letzte Bestellung</option>
-                  <option value="name">Sortierung: Name (A-Z)</option>
-                </select>
-              </div>
-            </div>
-            <div class="table-card">
-              <div class="reg-table">
-                <div class="reg-row reg-row--head" style="grid-template-columns: 34fr 18fr 20fr 20fr;">
-                  <span>Kunde</span>
-                  <span>Bestellungen</span>
-                  <span>Gesamtumsatz</span>
-                  <span>Letzte Bestellung</span>
-                </div>
-                <div id="kunden-table-body"></div>
-              </div>
-              <p class="empty-state empty-state--hufeisen" id="kunden-empty" hidden>Noch keine Kunden — sobald eine Bestellung für ein Unternehmen angelegt wird, erscheint hier automatisch ein Profil.</p>
-            </div>
-            <p class="empty-state empty-state--suche" id="kunden-no-results" hidden>Keine Kunden gefunden, die zu deiner Suche passen.</p>
-          </section>
-
-          <!-- ============================ -->
-          <!-- VIEW: VERKAUFSHISTORIE        -->
-          <!-- ============================ -->
-          <!-- Rein automatisch aus abgeschlossenen Bestellungen erzeugt - keine
-               manuelle Erfassung mehr. Eine abgeschlossene Bestellung IST der
-               Verkauf; ein Klick auf eine Zeile öffnet die vollständigen
-               Details der zugrunde liegenden Bestellung (dasselbe Modal wie
-               auf der Bestellungen-Seite). -->
-          <section class="view" id="view-verkaeufe">
-            <div class="toolbar">
-              <div class="search-field">
-                <input type="text" id="verkaeufe-search" placeholder="Nach Unternehmen suchen..." autocomplete="off" />
-              </div>
-            </div>
-
-            <div class="table-card">
-              <div class="reg-table">
-                <div class="reg-row reg-row--head" style="grid-template-columns: 16fr 22fr 16fr 14fr 14fr 14fr 14fr;">
-                  <span>Datum</span>
-                  <span>Unternehmen</span>
-                  <span>Anzahl Produkte</span>
-                  <span>Gesamtmenge</span>
-                  <span>Umsatz</span>
-                  <span>Gewinn</span>
-                  <span>Bearbeiter</span>
-                </div>
-                <div id="verkaeufe-table-body"></div>
-              </div>
-              <p class="empty-state empty-state--beleg" id="verkaeufe-empty" hidden>Noch keine abgeschlossenen Bestellungen.</p>
-            </div>
-            <p class="empty-state empty-state--suche" id="verkaeufe-no-results" hidden>Keine Einträge gefunden, die zu deiner Suche passen.</p>
-          </section>
-
-          <!-- ============================ -->
-          <!-- VIEW: HOFBUCH                 -->
-          <!-- ============================ -->
-          <section class="view" id="view-hofbuch">
-            <div class="hofbuch-card">
-              <div class="hofbuch-card__form-wrap">
-                <h3>Neue Notiz ans Schwarze Brett heften</h3>
-                <form class="hofbuch-form" id="form-hofbuch">
-                  <input type="text" id="hofbuch-titel-input" class="field-input" placeholder="Überschrift, z. B. Preise ab morgen geändert" required style="flex: 1 1 240px;" />
-                  <select id="hofbuch-kategorie-input" class="field-input" style="flex: 0 0 160px;">
-                    <option value="wichtig">Wichtig</option>
-                    <option value="allgemein" selected>Allgemein</option>
-                    <option value="sonstiges">Vorlagen</option>
-                  </select>
-                  <button type="submit" class="btn btn--primary">Eintragen</button>
-                  <div class="richtext" style="flex: 1 1 100%;">
-                    <div class="richtext__toolbar" role="toolbar" aria-label="Textformatierung"></div>
-                    <div
-                      id="hofbuch-text-input"
-                      class="field-input field-textarea richtext__editor"
-                      contenteditable="true"
-                      role="textbox"
-                      aria-multiline="true"
-                      aria-label="Notiztext"
-                      data-placeholder="Was möchtest du dem Team mitteilen?"
-                    ></div>
-                  </div>
-                </form>
-              </div>
-
-              <div class="hofbuch-rope-divider" aria-hidden="true"></div>
-
-              <div class="tabs" id="hofbuch-kategorie-filter" style="max-width: 640px; margin: 0 auto 12px;"></div>
-
-              <div class="toolbar" style="max-width: 640px; margin: 0 auto 16px;">
-                <div class="search-field">
-                  <input type="text" id="hofbuch-search" placeholder="Nach Titel, Inhalt oder Autor suchen..." autocomplete="off" />
-                </div>
-                <div class="toolbar__buttons">
-                  <button type="button" class="btn btn--ghost" id="btn-hofbuch-sort-toggle">Älteste zuerst</button>
-                </div>
-              </div>
-
-              <div id="hofbuch-eintraege"></div>
-              <p class="empty-state empty-state--buch" id="hofbuch-empty" hidden>Das Schwarze Brett ist noch leer — trage die erste Notiz ein.</p>
-              <p class="empty-state empty-state--suche" id="hofbuch-no-results" hidden>Keine Einträge gefunden, die zu deiner Suche passen.</p>
-            </div>
-          </section>
-
-          <!-- ============================ -->
-          <!-- VIEW: STATISTIKEN             -->
-          <!-- ============================ -->
-          <section class="view" id="view-statistiken">
-            <div class="dash-stats">
-              <div class="dash-stat">
-                <span class="dash-stat__label">Verkäufe gesamt</span>
-                <span class="dash-stat__value" id="stat-verkaeufe-anzahl">0</span>
-              </div>
-              <div class="dash-stat">
-                <span class="dash-stat__label">Umsatz gesamt</span>
-                <span class="dash-stat__value" id="stat-umsatz-gesamt">0,00 $</span>
-              </div>
-              <div class="dash-stat">
-                <span class="dash-stat__label">Bestellungen gesamt</span>
-                <span class="dash-stat__value" id="stat-bestellungen-gesamt">0</span>
-              </div>
-              <div class="dash-stat">
-                <span class="dash-stat__label">Offene Bestellungen</span>
-                <span class="dash-stat__value" id="stat-stat-offene">0</span>
-              </div>
-            </div>
-
-            <div class="dash-columns" style="grid-template-columns: 1fr 1fr;">
-              <div class="dash-panel">
-                <div class="dash-panel__header"><span class="dash-panel__title">Meistverkaufte Waren</span></div>
-                <div class="dash-panel__body" id="statistik-top-waren"></div>
-                <p class="empty-state empty-state--kiste" id="statistik-top-waren-empty" hidden>Noch keine abgeschlossenen Bestellungen.</p>
-              </div>
-              <div class="dash-panel">
-                <div class="dash-panel__header">
-                  <span class="dash-panel__title">Beste Kunden nach Umsatz</span>
-                  <button type="button" class="dash-panel__more" data-quicklink="verkaeufe">Verkaufshistorie ›</button>
-                </div>
-                <div class="dash-panel__body" id="statistik-top-kunden"></div>
-                <p class="empty-state empty-state--hufeisen" id="statistik-top-kunden-empty" hidden>Noch keine abgeschlossenen Bestellungen.</p>
-              </div>
-            </div>
+            <div id="beispiele-liste"></div>
+            <p class="empty-state" id="beispiele-empty" hidden>Noch keine Beispiele hinterlegt.</p>
           </section>
 
           <!-- ============================ -->
@@ -769,33 +372,10 @@
               <h3>Standard-Startseite</h3>
               <p class="parch-card__hint">Diese Seite öffnet sich automatisch, sobald du dich anmeldest — nur in deinem eigenen Browser gespeichert.</p>
               <select id="startseite-select" class="field-input" style="max-width: 320px;">
-                <option value="uebersicht">Übersicht</option>
-                <option value="hofbuch">Schwarzes Brett</option>
-                <option value="bestellungen">Bestellungen</option>
-                <option value="waren">Waren &amp; Preise</option>
-                <option value="lager">Lager</option>
-                <option value="kunden">Kunden</option>
-                <option value="kontakte">Kontakte</option>
-                <option value="verkaeufe">Verkaufshistorie</option>
-                <option value="statistiken">Statistiken</option>
+                <option value="startseite">Startseite</option>
+                <option value="patientenakten">Patientenakten</option>
+                <option value="beispiele">Beispiele</option>
               </select>
-            </div>
-
-            <div class="parch-card" id="hof-einstellungen-card">
-              <h3>Hof-Einstellungen</h3>
-              <p class="parch-card__hint" id="hof-einstellungen-hinweis">Diese Werte gelten für alle — Änderungen wirken sich sofort auf die ganze Hofverwaltung aus.</p>
-              <div class="detail-grid">
-                <div class="detail-row"><span class="detail-row__label">Lieferpauschale</span>
-                  <input type="number" class="field-input" id="einst-lieferpauschale" min="0" step="0.5" style="max-width:120px;" /></div>
-                <div class="detail-row"><span class="detail-row__label">Lagerhinweis nach (Stunden)</span>
-                  <input type="number" class="field-input" id="einst-lager-schwelle" min="1" step="1" style="max-width:120px;" /></div>
-                <div class="detail-row"><span class="detail-row__label">Bestellung gilt als "alt" nach (Tagen)</span>
-                  <input type="number" class="field-input" id="einst-bestellung-alt-schwelle" min="1" step="1" style="max-width:120px;" /></div>
-                <div class="detail-row"><span class="detail-row__label">Stammkunde ab (Bestellungen)</span>
-                  <input type="number" class="field-input" id="einst-stammkunde-bestellungen" min="1" step="1" style="max-width:120px;" /></div>
-                <div class="detail-row"><span class="detail-row__label">Stammkunde ab (Umsatz)</span>
-                  <input type="number" class="field-input" id="einst-stammkunde-umsatz" min="0" step="1" style="max-width:120px;" /></div>
-              </div>
             </div>
           </section>
 
@@ -813,15 +393,15 @@
               <p class="parch-card__hint">Hier verwaltest du alle Accounts: Registrierungsanfragen freigeben oder ablehnen, Rang und Verwalterrechte vergeben, Benutzer sperren/entsperren/löschen/umbenennen und interne Notizen hinterlegen. <strong>Verwalterrechte</strong> sind unabhängig vom Rang und werden separat je Benutzer vergeben.</p>
 
               <form class="settings-form" id="form-add-benutzer">
-                <input type="text" id="neuer-benutzer-name-input" class="field-input" placeholder="Benutzername, z. B. Heinrich Hornhausen" required style="flex: 1 1 200px;" />
+                <input type="text" id="neuer-benutzer-name-input" class="field-input" placeholder="Benutzername, z. B. Grete Hornhausen" required style="flex: 1 1 200px;" />
                 <input type="email" id="neuer-benutzer-email-input" class="field-input" placeholder="E-Mail-Adresse" required style="flex: 1 1 200px;" />
                 <select id="neuer-benutzer-rolle-input" class="field-input" style="flex: 0 0 170px;">
-                  <option value="Tagelöhner">Tagelöhner</option>
-                  <option value="Knecht">Knecht</option>
-                  <option value="Hofarbeiter">Hofarbeiter</option>
-                  <option value="Stallmeister">Stallmeister</option>
-                  <option value="Hofmeister">Hofmeister</option>
-                  <option value="Hofherr">Hofherr</option>
+                  <option value="Praktikant">Praktikant</option>
+                  <option value="Rettungssanitäter">Rettungssanitäter</option>
+                  <option value="Assistenzarzt">Assistenzarzt</option>
+                  <option value="Facharzt">Facharzt</option>
+                  <option value="Chefarzt">Chefarzt</option>
+                  <option value="Ärztlicher Leiter">Ärztlicher Leiter</option>
                 </select>
                 <button type="submit" class="btn btn--primary">Benutzer erstellen</button>
               </form>
@@ -865,561 +445,166 @@
   </div>
 
   <!-- ============================ -->
-  <!-- MODAL: Bestellung hinzufügen/bearbeiten -->
+  <!-- MODAL: Patient anlegen        -->
   <!-- ============================ -->
-  <div class="modal-overlay" id="modal-bestellung">
-    <div class="modal modal--xlarge">
-      <div class="modal__header">
-        <h3 id="modal-bestellung-titel">Neue Bestellung</h3>
-        <button class="modal__close" data-close-modal="modal-bestellung">✕</button>
-      </div>
-      <div class="modal__body">
-        <input type="hidden" id="bestellung-editing-id" value="" />
-
-        <!-- LINKE SPALTE: Allgemeine Infos -->
-        <div class="bestellung-spalte bestellung-spalte--links">
-          <span class="badge status-pill" id="bestellung-archiv-hinweis" hidden style="margin-bottom:14px;">Im Archiv – nur ansehen</span>
-
-          <div class="detail-grid" style="margin-bottom:22px;">
-            <div class="bestellung-form-zeile">
-              <div class="field-group">
-                <label class="field-label" for="bestellung-unternehmen-input">Unternehmen</label>
-                <input type="text" id="bestellung-unternehmen-input" class="field-input field-input--titel" autocomplete="off" placeholder="z. B. Blackwater Saloon" />
-              </div>
-            </div>
-            <div class="bestellung-form-zeile">
-              <div class="field-group">
-                <div class="field-label-row">
-                  <label class="field-label" for="bestellung-ansprechpartner-input">Ansprechpartner</label>
-                  <button type="button" class="field-inline-action" id="btn-bestellung-kontakt-anlegen" hidden>+ Als Kontakt anlegen</button>
-                </div>
-                <input type="text" id="bestellung-ansprechpartner-input" class="field-input" placeholder="z. B. Marlene Cross" />
-              </div>
-            </div>
-            <div class="bestellung-form-zeile bestellung-form-zeile--klein bestellung-form-zeile--dezent">
-              <div class="field-group">
-                <span class="field-label">Bestelldatum</span>
-                <p class="field-static" id="bestellung-bestelldatum-anzeige">Wird beim Speichern gesetzt</p>
-              </div>
-              <div class="field-group">
-                <span class="field-label">Bearbeiter</span>
-                <p class="field-static" id="bestellung-bearbeiter-anzeige">—</p>
-              </div>
-            </div>
-            <div class="bestellung-form-zeile">
-              <div class="field-group">
-                <label class="field-label" for="bestellung-status-input">Status</label>
-                <select id="bestellung-status-input" class="field-input">
-                  <option value="Offen">Offen</option>
-                  <option value="In Bearbeitung">In Bearbeitung</option>
-                  <option value="Abgeschlossen">Abgeschlossen</option>
-                </select>
-              </div>
-            </div>
-            <div class="bestellung-form-zeile bestellung-form-zeile--dezent">
-              <div class="field-group">
-                <label class="field-label" for="bestellung-notiz-input">Notiz (optional)</label>
-                <input type="text" id="bestellung-notiz-input" class="field-input field-input--dezent" placeholder="z. B. Dringend" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- RECHTE SPALTE: Produkt hinzufügen (kompakt) + Live-Zusammenfassung -->
-        <div class="bestellung-spalte bestellung-spalte--rechts">
-          <p class="field-label" style="margin-bottom:8px;">Produkt hinzufügen</p>
-          <div class="bestellung-position-form bestellung-position-form--kompakt" id="bestellung-position-form">
-            <div class="field-group field-group--produkt">
-              <span class="field-label field-label--klein">Produkt</span>
-              <div class="custom-select" id="bestellung-position-produkt-dropdown">
-                <button type="button" class="custom-select__trigger" id="bestellung-position-produkt-trigger">
-                  <span id="bestellung-position-produkt-label">Kein Produkt vorhanden</span>
-                  <span class="custom-select__chevron">⌄</span>
-                </button>
-                <div class="custom-select__panel custom-select__panel--mit-suche" id="bestellung-position-produkt-panel" hidden>
-                  <div class="custom-select__suche">
-                    <input type="text" id="bestellung-position-produkt-suche" class="custom-select__suche-input" placeholder="Suchen..." autocomplete="off" />
-                  </div>
-                  <div class="custom-select__optionen" id="bestellung-position-produkt-optionen"></div>
-                </div>
-                <select id="bestellung-position-produkt" class="visually-hidden" tabindex="-1" aria-hidden="true"></select>
-              </div>
-            </div>
-            <div class="field-group field-group--menge">
-              <span class="field-label field-label--klein">Menge</span>
-              <input type="number" id="bestellung-position-menge" class="field-input" min="1" step="1" value="1" placeholder="Menge" />
-            </div>
-            <div class="field-group field-group--rabatt">
-              <span class="field-label field-label--klein">Rabatt %</span>
-              <input type="number" id="bestellung-position-rabatt" class="field-input" min="0" max="100" step="0.1" value="0" placeholder="Rabatt %" title="Rabatt anpassen (falls berechtigt)" />
-            </div>
-            <button type="button" class="btn btn--primary btn--sm" id="btn-bestellung-position-hinzufuegen">＋ Produkt hinzufügen</button>
-          </div>
-          <div class="bestellung-position-vorschau" id="bestellung-position-vorschau">
-            <span>Standardpreis <strong id="bestellung-position-vorschau-standard">–</strong></span>
-            <span>Endpreis <strong id="bestellung-position-vorschau-endpreis">–</strong></span>
-            <span>Gesamtpreis <strong id="bestellung-position-vorschau-gesamt">–</strong></span>
-            <span class="bestellung-position-vorschau__hinweis" id="bestellung-position-vorschau-hinweis" hidden>Kein Standardpreis hinterlegt – bitte in „Waren &amp; Preise" prüfen.</span>
-          </div>
-          <p class="field-error" id="bestellung-error" hidden></p>
-
-          <p class="field-label" style="margin: 14px 0 8px;">Produkte in dieser Bestellung</p>
-          <div class="bestellung-positionen-tabelle" id="bestellung-positionen-wrap">
-            <div class="bestellung-positionen-zeile bestellung-positionen-zeile--kopf">
-              <span>Produkt</span>
-              <span>Menge</span>
-              <span>Standardpreis</span>
-              <span>Rabatt</span>
-              <span>Endpreis</span>
-              <span>Gesamtpreis</span>
-              <span></span>
-            </div>
-            <div id="bestellung-positionen-liste"></div>
-          </div>
-          <p class="empty-state" id="bestellung-positionen-leer" style="padding:16px 0;">Noch keine Produkte hinzugefügt.</p>
-
-          <div class="bestellung-zusammenfassung" id="bestellung-zusammenfassung" hidden>
-            <span class="bestellung-zusammenfassung__mini"><strong id="bestellung-zusammenfassung-anzahl">0</strong> Produkte</span>
-            <span class="bestellung-zusammenfassung__mini"><strong id="bestellung-zusammenfassung-menge">0</strong> Stück gesamt</span>
-            <span class="bestellung-zusammenfassung__mini"><strong id="bestellung-zusammenfassung-rabatt">0,00 $</strong> Rabatt gesamt</span>
-            <span class="bestellung-gesamtrabatt" title="Rabatt auf die komplette Bestellung, zusätzlich zu evtl. Rabatten je Produkt">
-              <label for="bestellung-gesamtrabatt-input">Rabatt auf Gesamtsumme</label>
-              <input type="number" id="bestellung-gesamtrabatt-input" min="0" max="100" step="0.5" value="0" />
-              <span class="bestellung-gesamtrabatt__prozent">%</span>
-              <span class="bestellung-gesamtrabatt__betrag" id="bestellung-gesamtrabatt-betrag" hidden></span>
-            </span>
-            <button type="button" class="bestellung-lieferung-toggle" id="btn-bestellung-lieferung" aria-pressed="false">
-              <span class="bestellung-lieferung-toggle__box">✓</span>
-              <span class="bestellung-lieferung-toggle__label">Lieferung gewünscht <span class="bestellung-lieferung-toggle__pauschale" id="bestellung-lieferung-pauschale-text">(+5,00 $ Pauschale)</span></span>
-            </button>
-            <span class="bestellung-zusammenfassung__haupt">
-              <span class="bestellung-zusammenfassung__haupt-label">Gesamtsumme</span>
-              <strong id="bestellung-zusammenfassung-summe" class="bestellung-zusammenfassung__haupt-wert">0,00 $</strong>
-            </span>
-          </div>
-
-          <!-- Erscheint nur bei Status "Abgeschlossen": trennt den
-               berechneten (vereinbarten) Verkaufspreis vom tatsächlich
-               erhaltenen Betrag (Aufrunden, Trinkgeld, Nachverhandeln im RP).
-               Für Dashboard/Statistiken/Verkaufshistorie zählt ab jetzt der
-               tatsächlich erhaltene Betrag, falls eingetragen. -->
-          <div class="bestellung-zahlung" id="bestellung-zahlung" hidden>
-            <p class="field-label" style="margin: 14px 0 8px;">Zahlung</p>
-            <div class="bestellung-form-zeile bestellung-form-zeile--klein">
-              <div class="field-group">
-                <span class="field-label">Berechnete Gesamtsumme</span>
-                <p class="field-static" id="bestellung-zahlung-berechnet">0,00 $</p>
-              </div>
-              <div class="field-group">
-                <label class="field-label" for="bestellung-erhalten-input">Tatsächlich erhalten</label>
-                <input type="number" id="bestellung-erhalten-input" class="field-input" min="0" step="0.01" placeholder="z. B. 60,00" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal__footer">
-        <button class="btn btn--danger" id="btn-bestellung-loeschen" style="margin-right:auto;">Löschen</button>
-        <button class="btn btn--ghost" id="btn-bestellung-archivieren" hidden>Archivieren</button>
-        <button class="btn btn--ghost" data-close-modal="modal-bestellung">Abbrechen</button>
-        <button class="btn btn--primary" id="btn-confirm-bestellung">Speichern</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ============================ -->
-  <!-- MODAL: Produkt hinzufügen/bearbeiten -->
-  <!-- ============================ -->
-  <div class="modal-overlay" id="modal-ware">
+  <div class="modal-overlay" id="modal-patient-anlegen">
     <div class="modal">
       <div class="modal__header">
-        <h3 id="modal-ware-titel">Neues Produkt</h3>
-        <button class="modal__close" data-close-modal="modal-ware">✕</button>
+        <h3>Patient anlegen</h3>
+        <button class="modal__close" data-close-modal="modal-patient-anlegen">✕</button>
       </div>
       <div class="modal__body">
-        <input type="hidden" id="ware-editing-id" value="" />
-        <label class="field-label" for="ware-name-input">Produktname</label>
-        <input type="text" id="ware-name-input" class="field-input" placeholder="z. B. Weizen" />
-
-        <label class="field-label" for="ware-kategorie-input">Kategorie</label>
-        <select id="ware-kategorie-input" class="field-input">
-          <option value="feldfruechte">Feldfrüchte</option>
-          <option value="tierprodukte">Tierprodukte</option>
-          <option value="verarbeitet">Verarbeitete Waren</option>
-          <option value="sonstige">Sonstige Waren</option>
-        </select>
-
-        <label class="field-label" for="ware-verkaufspreis-input">Verkaufspreis ($)</label>
-        <input type="number" id="ware-verkaufspreis-input" class="field-input" min="0" step="0.01" />
-
-        <label class="field-label" for="ware-privatpreis-input">Privatverkaufspreis ($, optional)</label>
-        <input type="number" id="ware-privatpreis-input" class="field-input" min="0" step="0.01" placeholder="leer lassen, falls nicht benötigt" />
-
-        <label class="field-checkbox-row" for="ware-oeffentlich-input" style="margin-top: 14px;">
-          <input type="checkbox" id="ware-oeffentlich-input" />
-          <span>Auf der öffentlichen Preisliste (blackwolfranch.de/preise) zeigen</span>
-        </label>
-
-        <p class="field-error" id="ware-error" hidden></p>
+        <label class="field-label" for="patient-anlegen-name">Name</label>
+        <input type="text" id="patient-anlegen-name" class="field-input" placeholder="Vor- und Nachname" />
+        <p class="field-error" id="patient-anlegen-error" hidden></p>
       </div>
       <div class="modal__footer">
-        <button class="btn btn--ghost" data-close-modal="modal-ware">Abbrechen</button>
-        <button class="btn btn--primary" id="btn-confirm-ware">Speichern</button>
+        <button class="btn btn--ghost" data-close-modal="modal-patient-anlegen">Abbrechen</button>
+        <button class="btn btn--primary" id="btn-confirm-patient-anlegen">Anlegen</button>
       </div>
     </div>
   </div>
 
   <!-- ============================ -->
-  <!-- MODAL: Kategorien verwalten    -->
+  <!-- MODAL: Patient-Detail (Profil + Akten) -->
   <!-- ============================ -->
-  <div class="modal-overlay" id="modal-oeffentliche-preise">
+  <div class="modal-overlay" id="modal-patient-detail">
     <div class="modal modal--large">
       <div class="modal__header">
-        <h3>Kategorien verwalten</h3>
-        <button class="modal__close" data-close-modal="modal-oeffentliche-preise">✕</button>
+        <h3 id="patient-detail-titel">Patient</h3>
+        <button class="modal__close" data-close-modal="modal-patient-detail">✕</button>
       </div>
       <div class="modal__body">
-        <label class="field-label" for="kategorie-neu-input">Neue Kategorie</label>
-        <div style="display:flex; gap:8px; align-items:center;">
-          <input type="color" id="kategorie-neu-farbe" title="Farbpunkt der neuen Kategorie" style="width:30px; height:30px; padding:0; border:1px solid var(--leather-edge); border-radius:50%; background:none; cursor:pointer; flex-shrink:0;" />
-          <input type="text" id="kategorie-neu-input" class="field-input" placeholder="z. B. Backwaren" style="flex:1;" />
-          <button type="button" class="btn btn--ghost" id="btn-kategorie-erstellen">Erstellen</button>
-        </div>
+        <div class="patient-detail-body">
+          <input type="hidden" id="patient-detail-id" value="" />
+          <label class="field-label" for="patient-detail-name">Name</label>
+          <input type="text" id="patient-detail-name" class="field-input" />
 
-        <p class="rechner-section-title" style="margin-top: 22px;">Reihenfolge in Waren & Preise, Lager, Bestellungen</p>
-        <p class="parch-card__hint">Pfeile verschieben die Kategorie in dieser Ansicht nach oben/unten. „Sonstige Waren" steht als Auffangbereich immer ganz unten und lässt sich nicht verschieben.</p>
-        <div id="kategorien-intern-liste"></div>
+          <label class="field-label" for="patient-geburtsdatum">Geburtsdatum</label>
+          <input type="text" id="patient-geburtsdatum" class="field-input" placeholder="z. B. 12.03.1874" />
 
-        <p class="rechner-section-title" style="margin-top: 22px;">Reihenfolge auf der öffentlichen Preisliste (blackwolfranch.de/preise)</p>
-        <p class="parch-card__hint">
-          Eigene, unabhängige Reihenfolge nur für die öffentliche Seite. „Kategorie hinzufügen" nimmt alle Produkte
-          dieser Kategorie auf einen Schlag mit auf - einzelne Produkte kannst du danach wie gewohnt über „Produkt
-          bearbeiten" wieder herausnehmen, die bleiben dann auch beim erneuten Hinzufügen draußen.
-        </p>
-        <div id="kategorien-oeffentlich-liste"></div>
-      </div>
-      <div class="modal__footer">
-        <button class="btn btn--ghost" data-close-modal="modal-oeffentliche-preise">Schließen</button>
-      </div>
-    </div>
-  </div>
+          <label class="field-label" for="patient-telefonnummer">Telefonnummer</label>
+          <input type="text" id="patient-telefonnummer" class="field-input" />
 
-  <!-- ============================ -->
-  <!-- MODAL: Handelsrechner         -->
-  <!-- ============================ -->
-  <div class="modal-overlay" id="modal-handelsrechner">
-    <div class="modal modal--rechner">
-      <div class="modal__header">
-        <h3>Handelsrechner</h3>
-        <button class="modal__close" data-close-modal="modal-handelsrechner">✕</button>
-      </div>
-      <div class="modal__body">
-        <div class="rechner-layout">
-          <div>
-            <div class="parch-card">
-              <p class="rechner-section-title">Angebot erstellen</p>
-              <div class="rechner-grid-3">
-                <div>
-                  <label class="field-label" for="rechner-unternehmen">Unternehmen</label>
-                  <input type="text" id="rechner-unternehmen" class="field-input" autocomplete="off" placeholder="z. B. Blackwater Saloon" />
-                </div>
-                <div>
-                  <label class="field-label" for="rechner-produkt">Produkt</label>
-                  <select id="rechner-produkt" class="field-input"></select>
-                </div>
-                <div>
-                  <label class="field-label" for="rechner-menge">Menge</label>
-                  <input type="number" id="rechner-menge" class="field-input" min="1" step="1" value="1" />
-                </div>
-              </div>
+          <label class="field-label" for="patient-allergien">Allergien / Unverträglichkeiten</label>
+          <textarea id="patient-allergien" class="field-input field-textarea" rows="2"></textarea>
 
-              <div id="rechner-preisbasis-wrap" style="margin-top: 14px;" hidden>
-                <label class="field-label">Preisbasis</label>
-                <div class="rechner-toggle" style="margin-bottom: 0;">
-                  <label class="rechner-radio"><input type="radio" name="rechner-preisbasis" value="handel" checked /> Handelspreis</label>
-                  <label class="rechner-radio"><input type="radio" name="rechner-preisbasis" value="privat" /> Privatverkauf</label>
-                </div>
-              </div>
-            </div>
+          <label class="field-label" for="patient-vorerkrankungen">Vorerkrankungen</label>
+          <textarea id="patient-vorerkrankungen" class="field-input field-textarea" rows="2"></textarea>
 
-            <div class="parch-card">
-              <p class="rechner-section-title">Handelskonditionen</p>
-              <div class="rechner-toggle">
-                <label class="rechner-radio"><input type="radio" name="rechner-modus" value="rabatt" checked /> Rabatt in %</label>
-                <label class="rechner-radio"><input type="radio" name="rechner-modus" value="preis" /> Neuer Stückpreis</label>
-              </div>
+          <label class="field-label" for="patient-besondere-hinweise">Besondere Hinweise</label>
+          <textarea id="patient-besondere-hinweise" class="field-input field-textarea" rows="2"></textarea>
 
-              <div id="rechner-modus-rabatt">
-                <label class="field-label" for="rechner-rabatt-input">Rabatt</label>
-                <div class="rechner-slider-row">
-                  <button type="button" class="rechner-slider-btn" id="rechner-rabatt-minus">−</button>
-                  <input type="range" id="rechner-rabatt-range" min="0" max="100" value="0" step="1" />
-                  <button type="button" class="rechner-slider-btn" id="rechner-rabatt-plus">+</button>
-                  <input type="number" id="rechner-rabatt-input" class="field-input" style="max-width: 90px;" min="0" max="100" value="0" />
-                </div>
-                <div class="rechner-slider-scale"><span>0%</span><span>50%</span><span>100%</span></div>
-              </div>
+          <label class="field-label" for="patient-notfallkontakt">Notfallkontakt</label>
+          <input type="text" id="patient-notfallkontakt" class="field-input" />
 
-              <div id="rechner-modus-preis" hidden>
-                <label class="field-label" for="rechner-preis-input">Neuer Stückpreis ($)</label>
-                <input type="number" id="rechner-preis-input" class="field-input" min="0" step="0.01" />
-              </div>
-            </div>
+          <label class="field-label" for="patient-notfallkontakt-telefon">Notfallkontakt Telefonnummer</label>
+          <input type="text" id="patient-notfallkontakt-telefon" class="field-input" />
 
-            <div class="parch-card">
-              <p class="rechner-section-title">Berechnung</p>
-              <div class="rechner-grid-3">
-                <div class="rechner-field-box">
-                  <div class="rechner-field-box__label">Standardpreis</div>
-                  <div class="rechner-field-box__value"><span id="rechner-standardpreis">–</span><span class="rechner-field-box__unit">pro Stück</span></div>
-                </div>
-                <div class="rechner-field-box">
-                  <div class="rechner-field-box__label">Neuer Stückpreis</div>
-                  <div class="rechner-field-box__value"><span id="rechner-neuer-stueckpreis">–</span><span class="rechner-field-box__unit">pro Stück</span></div>
-                </div>
-                <div class="rechner-field-box">
-                  <div class="rechner-field-box__label">Gesamtpreis</div>
-                  <div class="rechner-field-box__value"><span id="rechner-gesamtpreis">–</span></div>
-                </div>
-              </div>
-            </div>
+          <p class="field-error" id="patient-profil-error" hidden></p>
+          <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
+            <button class="btn btn--primary" id="btn-confirm-patient-profil">Profil speichern</button>
           </div>
 
-          <div>
-            <div class="parch-card rechner-preview">
-              <p class="rechner-section-title">Angebotsvorschau</p>
-              <div class="rechner-preview__row"><span class="rechner-preview__label">Unternehmen</span><span class="rechner-preview__value" id="vorschau-unternehmen">—</span></div>
-              <div class="rechner-preview__row"><span class="rechner-preview__label">Produkt</span><span class="rechner-preview__value" id="vorschau-produkt">—</span></div>
-              <div class="rechner-preview__row"><span class="rechner-preview__label">Menge</span><span class="rechner-preview__value" id="vorschau-menge">— Stück</span></div>
-              <div class="rechner-preview__row"><span class="rechner-preview__label">Standardpreis</span><span class="rechner-preview__value" id="vorschau-standardpreis">–</span></div>
-              <div class="rechner-preview__row"><span class="rechner-preview__label">Rabatt</span><span class="rechner-preview__value" id="vorschau-rabatt">0 %</span></div>
-              <div class="rechner-preview__row"><span class="rechner-preview__label">Neuer Stückpreis</span><span class="rechner-preview__value" id="vorschau-neuer-preis">–</span></div>
-              <div class="rechner-preview__total"><span class="rechner-preview__total-label">Gesamtpreis</span><span class="rechner-preview__total-value" id="vorschau-gesamtpreis">0,00 $</span></div>
-
-              <p class="rechner-preview__notice">Dieses Angebot ist noch nicht gespeichert. Übernimm es als Bestellung, um es in deiner Übersicht zu sehen.</p>
-
-              <button type="button" class="btn btn--primary btn--full" id="btn-angebot-uebernehmen">📜 Angebot übernehmen</button>
-              <button type="button" class="btn btn--ghost btn--full" id="btn-rechner-reset" style="margin-top: 10px;">↺ Zurücksetzen</button>
+          <h3>Akten</h3>
+          <div class="toolbar">
+            <div class="toolbar__buttons">
+              <button type="button" class="btn btn--ghost btn--sm" id="btn-akte-neu">＋ Neue Akte</button>
             </div>
           </div>
-        </div>
-
-        <div class="parch-card" style="margin-top: 8px;">
-          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 14px;">
-            <h3>Letzte Angebote</h3>
-          </div>
-          <div class="reg-table">
-            <div class="reg-row reg-row--head rechner-angebote-row">
-              <span>Datum</span>
-              <span>Unternehmen</span>
-              <span>Produkt</span>
-              <span>Menge</span>
-              <span>Rabatt</span>
-              <span>Stückpreis</span>
-              <span>Gesamtpreis</span>
-              <span>Status</span>
-              <span>Aktionen</span>
+          <div class="table-card">
+            <div class="reg-table">
+              <div id="patient-akten-liste"></div>
             </div>
-            <div id="angebote-table-body"></div>
+            <p class="empty-state" id="patient-akten-leer" hidden>Noch keine Akten für diesen Patienten.</p>
           </div>
-          <p class="empty-state empty-state--beleg" id="angebote-empty" hidden>Noch keine Angebote erstellt.</p>
         </div>
       </div>
     </div>
   </div>
 
   <!-- ============================ -->
-  <!-- MODAL: Rezept anlegen/bearbeiten -->
+  <!-- MODAL: Akte anlegen/bearbeiten -->
   <!-- ============================ -->
-  <div class="modal-overlay" id="modal-rezept-bearbeiten">
+  <div class="modal-overlay" id="modal-akte-form">
     <div class="modal">
       <div class="modal__header">
-        <h3 id="modal-rezept-bearbeiten-titel">Neues Rezept</h3>
-        <button class="modal__close" data-close-modal="modal-rezept-bearbeiten">✕</button>
+        <h3 id="akte-form-titel">Neue Akte</h3>
+        <button class="modal__close" data-close-modal="modal-akte-form">✕</button>
       </div>
       <div class="modal__body">
-        <input type="hidden" id="rezept-editing-id" value="" />
-        <label class="field-label" for="rezept-produkt-input">Was wird hergestellt?</label>
-        <input type="text" id="rezept-produkt-input" class="field-input" placeholder="z. B. Zucker" />
-        <label class="field-label" for="rezept-ergebnis-menge">Wie viel entsteht?</label>
-        <input type="number" id="rezept-ergebnis-menge" class="field-input" min="1" step="1" value="1" />
+        <input type="hidden" id="akte-editing-id" value="" />
+        <input type="hidden" id="akte-form-patient-id" value="" />
 
-        <p class="field-label" style="margin-top: 16px;">Benötigte Rohstoffe</p>
-        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end;">
-          <div style="flex: 1 1 200px;">
-            <input type="text" id="rezept-zutat-produkt-input" class="field-input" autocomplete="off" placeholder="z. B. Zuckerrohr" />
-          </div>
-          <div style="flex: 0 0 100px;">
-            <input type="number" id="rezept-zutat-menge" class="field-input" min="1" step="1" value="1" placeholder="Menge" />
-          </div>
-          <button type="button" class="btn btn--ghost btn--sm" id="btn-rezept-zutat-hinzufuegen">＋ Hinzufügen</button>
-        </div>
-        <div id="rezept-zutaten-liste" class="rezept-zutaten-liste"></div>
-        <p class="empty-state" id="rezept-zutaten-leer" style="padding: 8px 0;">Noch keine Rohstoffe hinzugefügt.</p>
+        <label class="field-label">Patient</label>
+        <p class="field-static" id="akte-form-patient-name">—</p>
 
-        <label class="field-label" for="rezept-kategorie-input" style="margin-top: 12px;">Kategorie</label>
-        <input type="text" id="rezept-kategorie-input" class="field-input" autocomplete="off" placeholder="z. B. Backwaren" />
+        <label class="field-label" for="akte-datum">Datum</label>
+        <input type="date" id="akte-datum" class="field-input" />
 
-        <p class="field-error" id="rezept-error" hidden></p>
+        <label class="field-label" for="akte-behandlungsgrund">Behandlungsgrund</label>
+        <textarea id="akte-behandlungsgrund" class="field-input field-textarea" rows="2" placeholder="Kurze Beschreibung"></textarea>
+
+        <label class="field-label" for="akte-befund">Befund</label>
+        <textarea id="akte-befund" class="field-input field-textarea" rows="2" placeholder="Festgestellte Verletzungen / Beschwerden"></textarea>
+
+        <label class="field-label" for="akte-behandlung">Behandlung</label>
+        <textarea id="akte-behandlung" class="field-input field-textarea" rows="2" placeholder="Durchgeführte Maßnahmen"></textarea>
+
+        <label class="field-label" for="akte-bemerkungen">Bemerkungen</label>
+        <textarea id="akte-bemerkungen" class="field-input field-textarea" rows="2"></textarea>
+
+        <p class="field-error" id="akte-error" hidden></p>
       </div>
       <div class="modal__footer">
-        <button class="btn btn--ghost" data-close-modal="modal-rezept-bearbeiten">Abbrechen</button>
-        <button class="btn btn--primary" id="btn-confirm-rezept">Speichern</button>
+        <button class="btn btn--ghost" data-close-modal="modal-akte-form">Abbrechen</button>
+        <button class="btn btn--primary" id="btn-confirm-akte">Speichern</button>
       </div>
     </div>
   </div>
 
   <!-- ============================ -->
-  <!-- MODAL: Kontakt bearbeiten     -->
+  <!-- MODAL: Akte-Detail (feste Vorlage) -->
   <!-- ============================ -->
-  <div class="modal-overlay" id="modal-kontakt-edit">
+  <div class="modal-overlay" id="modal-akte-detail">
+    <div class="modal modal--large">
+      <div class="modal__header">
+        <h3 id="akte-detail-titel">Akte</h3>
+        <button class="modal__close" data-close-modal="modal-akte-detail">✕</button>
+      </div>
+      <div class="modal__body">
+        <div class="akte-detail-body" id="akte-detail-inhalt"></div>
+      </div>
+      <div class="modal__footer">
+        <button class="btn btn--danger" id="btn-akte-loeschen" style="margin-right: auto;">Löschen</button>
+        <button class="btn btn--ghost" id="btn-akte-bearbeiten">Bearbeiten</button>
+        <button class="btn btn--ghost" data-close-modal="modal-akte-detail">Schließen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================ -->
+  <!-- MODAL: Beispiel anlegen/bearbeiten -->
+  <!-- ============================ -->
+  <div class="modal-overlay" id="modal-beispiel-bearbeiten">
     <div class="modal">
       <div class="modal__header">
-        <h3>Kontakt bearbeiten</h3>
-        <button class="modal__close" data-close-modal="modal-kontakt-edit">✕</button>
+        <h3 id="beispiel-bearbeiten-titel">Neues Beispiel</h3>
+        <button class="modal__close" data-close-modal="modal-beispiel-bearbeiten">✕</button>
       </div>
       <div class="modal__body">
-        <input type="hidden" id="kontakt-edit-id" value="" />
-        <label class="field-label" for="kontakt-edit-nummer">Nummer</label>
-        <input type="text" id="kontakt-edit-nummer" class="field-input" inputmode="numeric" pattern="\d{1,4}" maxlength="4" title="Nummer (bis zu 4 Ziffern, frei wählbar)" />
-        <label class="field-label" for="kontakt-edit-name">Name</label>
-        <input type="text" id="kontakt-edit-name" class="field-input" />
-        <label class="field-label" for="kontakt-edit-rolle">Rolle</label>
-        <select id="kontakt-edit-rolle" class="field-input"></select>
-        <label class="field-label" for="kontakt-edit-notiz">Notiz</label>
-        <input type="text" id="kontakt-edit-notiz" class="field-input" />
-        <p class="field-error" id="kontakt-edit-error" hidden></p>
+        <input type="hidden" id="beispiel-editing-id" value="" />
+        <label class="field-label" for="beispiel-titel-input">Titel</label>
+        <input type="text" id="beispiel-titel-input" class="field-input" placeholder="z. B. Schürfwunde" />
+
+        <label class="field-label" for="beispiel-text-input">Schritt für Schritt</label>
+        <textarea id="beispiel-text-input" class="field-input field-textarea" rows="8" placeholder="1. ...&#10;2. ...&#10;3. ..."></textarea>
+
+        <p class="field-error" id="beispiel-error" hidden></p>
       </div>
       <div class="modal__footer">
-        <button class="btn btn--ghost" data-close-modal="modal-kontakt-edit">Abbrechen</button>
-        <button class="btn btn--primary" id="btn-confirm-kontakt-edit">Speichern</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ============================ -->
-  <!-- MODAL: Kontakt schnell anlegen (aus dem Bestellungs-Fenster heraus) -->
-  <!-- ============================ -->
-  <div class="modal-overlay" id="modal-kontakt-schnell">
-    <div class="modal">
-      <div class="modal__header">
-        <h3>Kontakt anlegen</h3>
-        <button class="modal__close" data-close-modal="modal-kontakt-schnell">✕</button>
-      </div>
-      <div class="modal__body">
-        <label class="field-label" for="kontakt-schnell-nummer">Nummer</label>
-        <input type="text" id="kontakt-schnell-nummer" class="field-input" inputmode="numeric" pattern="\d{1,4}" maxlength="4" placeholder="1234" />
-        <label class="field-label" for="kontakt-schnell-name">Name</label>
-        <input type="text" id="kontakt-schnell-name" class="field-input" />
-        <label class="field-label" for="kontakt-schnell-rolle">Rolle</label>
-        <select id="kontakt-schnell-rolle" class="field-input"></select>
-        <label class="field-label" for="kontakt-schnell-notiz">Notiz</label>
-        <input type="text" id="kontakt-schnell-notiz" class="field-input" placeholder="Wer ist die Person? z. B. Händler" />
-        <p class="field-error" id="kontakt-schnell-error" hidden></p>
-      </div>
-      <div class="modal__footer">
-        <button class="btn btn--ghost" data-close-modal="modal-kontakt-schnell">Abbrechen</button>
-        <button class="btn btn--primary" id="btn-confirm-kontakt-schnell">Kontakt anlegen</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ============================ -->
-  <!-- MODAL: Kunde                  -->
-  <!-- ============================ -->
-  <div class="modal-overlay" id="modal-kunde">
-    <div class="modal modal--xlarge">
-      <div class="modal__header">
-        <h3 id="modal-kunde-titel">Kunde</h3>
-        <button class="modal__close" data-close-modal="modal-kunde">✕</button>
-      </div>
-      <div class="modal__body">
-        <!-- LINKE SPALTE: Profil (Name/Notiz) + Kennzahlen -->
-        <div class="bestellung-spalte bestellung-spalte--links">
-          <input type="hidden" id="kunde-editing-id" value="" />
-          <div class="bestellung-form-zeile">
-            <div class="field-group">
-              <label class="field-label" for="kunde-name-input">Name</label>
-              <input type="text" id="kunde-name-input" class="field-input field-input--titel" />
-            </div>
-          </div>
-          <div class="bestellung-form-zeile" style="margin-top: 16px;">
-            <div class="field-group">
-              <label class="field-label" for="kunde-notiz-input">Notiz</label>
-              <textarea id="kunde-notiz-input" class="field-input field-textarea" rows="4" placeholder="z. B. bevorzugt Lieferung, guter Stammkunde..."></textarea>
-            </div>
-          </div>
-          <p class="field-error" id="kunde-error" hidden></p>
-
-          <div class="dash-stats" style="grid-template-columns: 1fr; gap: 12px; margin-top: 24px;">
-            <div class="dash-stat">
-              <span class="dash-stat__label">Bestellungen gesamt</span>
-              <span class="dash-stat__value" id="kunde-stat-anzahl">0</span>
-            </div>
-            <div class="dash-stat">
-              <span class="dash-stat__label">Gesamtumsatz</span>
-              <span class="dash-stat__value" id="kunde-stat-umsatz">0,00 $</span>
-            </div>
-            <div class="dash-stat">
-              <span class="dash-stat__label">Letzte Bestellung</span>
-              <span class="dash-stat__value" id="kunde-stat-letzte" style="font-size: 22px;">—</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- RECHTE SPALTE: Meistgekaufte Waren + Bestellhistorie -->
-        <div class="bestellung-spalte bestellung-spalte--rechts">
-          <p class="field-label" style="margin-bottom: 8px;">Meistgekaufte Waren</p>
-          <div id="kunde-top-waren"></div>
-          <p class="empty-state" id="kunde-top-waren-empty" hidden>Noch keine abgeschlossenen Bestellungen.</p>
-
-          <p class="field-label" style="margin: 22px 0 8px;">Bestellhistorie</p>
-          <div id="kunde-bestellungen"></div>
-          <p class="empty-state" id="kunde-bestellungen-empty" hidden>Noch keine Bestellungen.</p>
-        </div>
-      </div>
-      <div class="modal__footer">
-        <button class="btn btn--danger" id="btn-kunde-loeschen" style="margin-right: auto;">Löschen</button>
-        <button class="btn btn--ghost" data-close-modal="modal-kunde">Abbrechen</button>
-        <button class="btn btn--primary" id="btn-confirm-kunde">Speichern</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal-overlay" id="modal-hofbuch-edit">
-    <div class="modal">
-      <div class="modal__header">
-        <h3>Notiz bearbeiten</h3>
-        <button class="modal__close" data-close-modal="modal-hofbuch-edit">✕</button>
-      </div>
-      <div class="modal__body">
-        <input type="hidden" id="hofbuch-edit-id" value="" />
-        <label class="field-label" for="hofbuch-edit-titel">Überschrift</label>
-        <input type="text" id="hofbuch-edit-titel" class="field-input" />
-        <label class="field-label" for="hofbuch-edit-kategorie">Kategorie</label>
-        <select id="hofbuch-edit-kategorie" class="field-input">
-          <option value="wichtig">Wichtig</option>
-          <option value="allgemein">Allgemein</option>
-          <option value="sonstiges">Vorlagen</option>
-        </select>
-        <label class="field-label" for="hofbuch-edit-text">Text</label>
-        <div class="richtext">
-          <div class="richtext__toolbar" role="toolbar" aria-label="Textformatierung"></div>
-          <div
-            id="hofbuch-edit-text"
-            class="field-input field-textarea richtext__editor"
-            contenteditable="true"
-            role="textbox"
-            aria-multiline="true"
-            aria-label="Notiztext"
-            data-placeholder="Was möchtest du dem Team mitteilen?"
-          ></div>
-        </div>
-        <p class="field-error" id="hofbuch-edit-error" hidden></p>
-      </div>
-      <div class="modal__footer">
-        <button class="btn btn--ghost" data-close-modal="modal-hofbuch-edit">Abbrechen</button>
-        <button class="btn btn--primary" id="btn-confirm-hofbuch-edit">Speichern</button>
+        <button class="btn btn--ghost" data-close-modal="modal-beispiel-bearbeiten">Abbrechen</button>
+        <button class="btn btn--primary" id="btn-confirm-beispiel">Speichern</button>
       </div>
     </div>
   </div>
@@ -1476,7 +661,7 @@
         <p style="margin-top: 8px;">Zur Anmeldung und Benutzerverwaltung werden folgende Daten gespeichert: Benutzername (RP-/Ingame-Name), E-Mail-Adresse, Registrierungsdatum, letzter Login, Rang sowie interne Systemberechtigungen.</p>
         <p style="margin-top: 8px;">Die E-Mail-Adresse wird ausschließlich für Anmeldung, Passwort-Zurücksetzung und Authentifizierung verwendet und niemals öffentlich angezeigt.</p>
         <h3 style="margin-top: 18px; font-size: 16px;">Zweck der Website</h3>
-        <p style="margin-top: 8px;">Die Website dient ausschließlich der internen Verwaltung des Hofes „Zur Dicken Kuh" innerhalb eines privaten RedM-Roleplay-Projekts. Es werden keine Waren oder Dienstleistungen real angeboten, und es erfolgt keine kommerzielle Nutzung.</p>
+        <p style="margin-top: 8px;">Die Website dient ausschließlich der internen Verwaltung innerhalb eines privaten Roleplay-Projekts. Es werden keine Waren oder Dienstleistungen real angeboten, und es erfolgt keine kommerzielle Nutzung.</p>
         <h3 style="margin-top: 18px; font-size: 16px;">Weitergabe an Dritte</h3>
         <p style="margin-top: 8px;">Es werden ausschließlich die für den Betrieb der Website notwendigen personenbezogenen Daten verarbeitet. Eine Weitergabe an Dritte erfolgt nicht — ausgenommen technisch erforderliche Dienste im Rahmen der Firebase Authentication von Google.</p>
       </div>
@@ -1496,9 +681,9 @@
         <button class="modal__close" data-close-modal="modal-informationen">✕</button>
       </div>
       <div class="modal__body">
-        <p>Diese Website dient ausschließlich der internen Dokumentation und Verwaltung des Hofes „Zur Dicken Kuh" innerhalb eines privaten RedM-Roleplay-Projekts (1899).</p>
-        <p style="margin-top: 12px;">Sämtliche Namen, Unternehmen, Bestellungen und Ereignisse beziehen sich ausschließlich auf fiktive Rollenspielcharaktere und fiktive Ereignisse innerhalb des Spiels.</p>
-        <p style="margin-top: 12px;">Es besteht keinerlei Bezug zu realen Personen, realen Unternehmen oder tatsächlichen Ereignissen.</p>
+        <p>Diese Website dient ausschließlich der internen Dokumentation und Verwaltung innerhalb eines privaten Roleplay-Projekts.</p>
+        <p style="margin-top: 12px;">Sämtliche Namen, Patienten und Ereignisse beziehen sich ausschließlich auf fiktive Rollenspielcharaktere und fiktive Ereignisse innerhalb des Spiels.</p>
+        <p style="margin-top: 12px;">Es besteht keinerlei Bezug zu realen Personen oder tatsächlichen Ereignissen.</p>
         <p style="margin-top: 12px;">Die Website verfolgt keinerlei kommerzielle Zwecke und dient ausschließlich der internen Organisation und Dokumentation des Projekts.</p>
       </div>
       <div class="modal__footer">
@@ -1517,37 +702,26 @@
        <head> stehen. js/auth.js ist als type="module" ohnehin automatisch
        "deferred" und reiht sich an derselben Stelle ein.
 
-       js/app.js ist nach Themen aufgeteilt (js/core, js/ui, js/views,
-       js/main.js) - alle als normale (nicht type="module") "defer"-Skripte,
-       damit sie sich wie zuvor gemeinsame globale Variablen/Funktionen
-       teilen können. Die Reihenfolge entspricht exakt den frueheren
-       nummerierten Abschnitten in app.js und darf nicht vertauscht werden:
-       js/main.js muss immer zuletzt kommen, da es die App erst startet. -->
-  <script defer src="js/firebase-config.js?v=102"></script>
-  <script defer src="js/core/config.js?v=102"></script>
-  <script defer src="js/core/state.js?v=102"></script>
-  <script defer src="js/core/dom.js?v=102"></script>
-  <script defer src="js/core/firebase-init.js?v=102"></script>
-  <script defer src="js/core/utils.js?v=102"></script>
-  <script defer src="js/ui/modals.js?v=102"></script>
-  <script defer src="js/ui/nav.js?v=102"></script>
-  <script defer src="js/ui/autocomplete.js?v=102"></script>
-  <script defer src="js/ui/presence.js?v=102"></script>
-  <script defer src="js/views/waren.js?v=102"></script>
-  <script defer src="js/views/lager.js?v=102"></script>
-  <script defer src="js/views/rezepte.js?v=102"></script>
-  <script defer src="js/views/bestellungen.js?v=102"></script>
-  <script defer src="js/views/handelsrechner.js?v=102"></script>
-  <script defer src="js/views/kontakte.js?v=102"></script>
-  <script defer src="js/views/verkaeufe.js?v=102"></script>
-  <script defer src="js/views/kunden.js?v=102"></script>
-  <script defer src="js/views/hofbuch.js?v=102"></script>
-  <script defer src="js/views/statistiken.js?v=102"></script>
-  <script defer src="js/views/dashboard.js?v=102"></script>
-  <script defer src="js/views/einstellungen.js?v=102"></script>
-  <script defer src="js/views/admin.js?v=102"></script>
-  <script defer src="js/ui/version-check.js?v=102"></script>
-  <script defer src="js/main.js?v=102"></script>
-  <script type="module" src="js/auth.js?v=102"></script>
+       Alle App-Skripte (js/core, js/ui, js/views, js/main.js) sind normale
+       (nicht type="module") "defer"-Skripte, damit sie sich gemeinsame
+       globale Variablen/Funktionen teilen können. js/main.js muss immer
+       zuletzt kommen, da es die App erst startet. -->
+  <script defer src="js/firebase-config.js?v=103"></script>
+  <script defer src="js/core/config.js?v=103"></script>
+  <script defer src="js/core/state.js?v=103"></script>
+  <script defer src="js/core/dom.js?v=103"></script>
+  <script defer src="js/core/firebase-init.js?v=103"></script>
+  <script defer src="js/core/utils.js?v=103"></script>
+  <script defer src="js/ui/modals.js?v=103"></script>
+  <script defer src="js/ui/nav.js?v=103"></script>
+  <script defer src="js/ui/presence.js?v=103"></script>
+  <script defer src="js/views/startseite.js?v=103"></script>
+  <script defer src="js/views/patientenakten.js?v=103"></script>
+  <script defer src="js/views/beispiele.js?v=103"></script>
+  <script defer src="js/views/einstellungen.js?v=103"></script>
+  <script defer src="js/views/admin.js?v=103"></script>
+  <script defer src="js/ui/version-check.js?v=103"></script>
+  <script defer src="js/main.js?v=103"></script>
+  <script type="module" src="js/auth.js?v=103"></script>
 </body>
 </html>
