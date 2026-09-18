@@ -13,10 +13,29 @@
   font-weight: 700;
 }
 
-.patient-detail-body h3 {
-  margin-top: 28px;
+/* Zwei Felder nebeneinander statt jedes einzeln auf eigener Zeile - bricht
+   die vorher eintönige "eine Zeile pro Feld"-Listenoptik des Profilformulars
+   auf. */
+.field-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 16px;
+}
+
+/* Abschnitts-Überschrift innerhalb des Patientenprofils (Medizinische
+   Hinweise / Notfallkontakt / Akten) - Trennlinie + kleine Kupfer-Beschriftung
+   statt einer einfachen <h3>, damit das lange Formular in klar erkennbare
+   Blöcke zerfällt statt wie eine durchgehende Feldliste zu wirken. */
+.patient-detail-body__abschnitt {
+  margin-top: 30px;
   margin-bottom: 4px;
-  font-size: 15px;
+  padding-top: 20px;
+  border-top: 1px solid var(--leather-edge);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brass-bright);
 }
 
 .akte-vorlage__kopf {
@@ -47,4 +66,103 @@
   font-size: 14px;
   line-height: 1.6;
   color: var(--wood-text);
+}
+
+/* --------------------------------------------------------------------------
+   18b. Akte-Fokus: eigenständige Dokumentenseite (kein Modal)
+   --------------------------------------------------------------------------
+   Ersetzt die komplette App (Sidebar/Topbar bleiben verborgen, siehe
+   starteApp in js/main.js) durch eine einzelne, papierartige "Aktenseite",
+   damit eine Akte in ihrem eigenen Fenster/Tab wirklich wie ein
+   eigenständiges Dokument aussieht statt wie ein Popup über der dunklen App.
+   Bewusst ein warmes Off-White statt reinem Weiß (wie echtes Papier) mit
+   dunkler "Tinten"-Schrift - deutlicher Kontrast zur sonst durchgängig
+   dunklen App, an genau dieser einen, bewusst dokumentartigen Stelle. */
+.akte-fokus {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 64px 24px;
+}
+
+.akte-dokument {
+  width: 100%;
+  max-width: 640px;
+  height: fit-content;
+  background: #f5f1e8;
+  color: #241d14;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-modal);
+  padding: 44px 48px 36px;
+}
+
+.akte-dokument__marke {
+  display: inline-block;
+  margin-bottom: 26px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--brass-deep);
+}
+
+.akte-dokument__marke:hover {
+  text-decoration: underline;
+}
+
+.akte-dokument h1 {
+  font-size: 25px;
+  color: #241d14;
+  margin-bottom: 18px;
+}
+
+.akte-dokument .field-label {
+  color: #7a6c54;
+}
+
+.akte-dokument .field-input {
+  background: #ffffff;
+  border-color: #d9cfb8;
+  color: #241d14;
+  box-shadow: none;
+}
+
+.akte-dokument .field-input:hover {
+  border-color: #b8a97f;
+}
+
+.akte-dokument .field-input:focus {
+  border-color: var(--brass-bright);
+  box-shadow: 0 0 0 3px var(--brass-soft);
+}
+
+.akte-dokument .field-input::placeholder {
+  color: #ab9c7c;
+}
+
+.akte-dokument .field-static {
+  color: #241d14;
+  font-weight: 600;
+}
+
+.akte-dokument .akte-vorlage__kopf {
+  color: #524731;
+  border-bottom-color: #ddd2b7;
+}
+
+.akte-dokument .akte-vorlage__label {
+  color: #8a7a54;
+}
+
+.akte-dokument .akte-vorlage__abschnitt p {
+  color: #241d14;
+}
+
+.akte-dokument__aktionen {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e3d9bf;
 }

@@ -16,7 +16,7 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>Medical Department — Verwaltung</title>
-  <link rel="icon" type="image/svg+xml" href="assets/logo/favicon.svg?v=108" />
+  <link rel="icon" type="image/svg+xml" href="assets/logo/favicon.svg?v=109" />
 
   <!-- Google Fonts: Inter für die gesamte App (klar, modern, klinisch). -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -29,24 +29,24 @@
   <!-- Stylesheets: gleiche Kaskaden-Reihenfolge wie zuvor (base > layout >
        components > views). Reihenfolge ist wichtig und darf nicht vertauscht
        werden. -->
-  <link rel="stylesheet" href="css/base/tokens.css?v=108" />
-  <link rel="stylesheet" href="css/base/reset.css?v=108" />
-  <link rel="stylesheet" href="css/base/textures.css?v=108" />
-  <link rel="stylesheet" href="css/views/auth.css?v=108" />
-  <link rel="stylesheet" href="css/components/forms.css?v=108" />
-  <link rel="stylesheet" href="css/components/buttons.css?v=108" />
-  <link rel="stylesheet" href="css/layout/shell.css?v=108" />
-  <link rel="stylesheet" href="css/components/cards.css?v=108" />
-  <link rel="stylesheet" href="css/components/badges.css?v=108" />
-  <link rel="stylesheet" href="css/views/startseite.css?v=108" />
-  <link rel="stylesheet" href="css/components/tables.css?v=108" />
-  <link rel="stylesheet" href="css/views/patientenakten.css?v=108" />
-  <link rel="stylesheet" href="css/views/beispiele.css?v=108" />
-  <link rel="stylesheet" href="css/components/modals.css?v=108" />
-  <link rel="stylesheet" href="css/views/admin.css?v=108" />
-  <link rel="stylesheet" href="css/components/toast.css?v=108" />
-  <link rel="stylesheet" href="css/layout/footer.css?v=108" />
-  <link rel="stylesheet" href="css/base/responsive.css?v=108" />
+  <link rel="stylesheet" href="css/base/tokens.css?v=109" />
+  <link rel="stylesheet" href="css/base/reset.css?v=109" />
+  <link rel="stylesheet" href="css/base/textures.css?v=109" />
+  <link rel="stylesheet" href="css/views/auth.css?v=109" />
+  <link rel="stylesheet" href="css/components/forms.css?v=109" />
+  <link rel="stylesheet" href="css/components/buttons.css?v=109" />
+  <link rel="stylesheet" href="css/layout/shell.css?v=109" />
+  <link rel="stylesheet" href="css/components/cards.css?v=109" />
+  <link rel="stylesheet" href="css/components/badges.css?v=109" />
+  <link rel="stylesheet" href="css/views/startseite.css?v=109" />
+  <link rel="stylesheet" href="css/components/tables.css?v=109" />
+  <link rel="stylesheet" href="css/views/patientenakten.css?v=109" />
+  <link rel="stylesheet" href="css/views/beispiele.css?v=109" />
+  <link rel="stylesheet" href="css/components/modals.css?v=109" />
+  <link rel="stylesheet" href="css/views/admin.css?v=109" />
+  <link rel="stylesheet" href="css/components/toast.css?v=109" />
+  <link rel="stylesheet" href="css/layout/footer.css?v=109" />
+  <link rel="stylesheet" href="css/base/responsive.css?v=109" />
 
   <!-- Firebase SDK (Authentifizierung + Datenbank). "defer" statt normaler
        blockierender <script>-Tags: der Browser kann so den Rest der Seite
@@ -444,6 +444,65 @@
   </div>
 
   <!-- ============================ -->
+  <!-- AKTE-FOKUS: eigenständige Dokumentenseite (kein Modal) -->
+  <!-- ============================ -->
+  <!-- Wird NUR sichtbar, wenn die Seite mit "?akte=<id>" oder
+       "?neueAkte=1&patient=<id>" aufgerufen wurde (siehe pruefeUrlAktion in
+       js/views/patientenakten.js) - ersetzt dann komplett die normale App
+       (Sidebar/Topbar bleiben verborgen, siehe starteApp in js/main.js),
+       damit eine Akte wirklich wie ein eigenständiges Dokument in einem
+       eigenen Fenster wirkt statt wie ein Popup über der App. -->
+  <div class="akte-fokus" id="akte-fokus-root" hidden>
+    <div class="akte-dokument">
+      <a class="akte-dokument__marke" href="?">Medical Department</a>
+
+      <div id="akte-fokus-ansicht">
+        <h1 id="akte-detail-titel">Akte</h1>
+        <div class="akte-vorlage__kopf">
+          <span><strong>Patient:</strong> <span id="akte-detail-patient">—</span></span>
+          <span><strong>Datum:</strong> <span id="akte-detail-datum">—</span></span>
+        </div>
+        <div id="akte-detail-inhalt"></div>
+        <div class="akte-dokument__aktionen">
+          <button type="button" class="btn btn--danger" id="btn-akte-loeschen" style="margin-right: auto;">Löschen</button>
+          <button type="button" class="btn btn--primary" id="btn-akte-bearbeiten">Bearbeiten</button>
+        </div>
+      </div>
+
+      <div id="akte-fokus-formular" hidden>
+        <h1 id="akte-form-titel">Neue Akte</h1>
+        <input type="hidden" id="akte-editing-id" value="" />
+        <input type="hidden" id="akte-form-patient-id" value="" />
+
+        <label class="field-label">Patient</label>
+        <p class="field-static" id="akte-form-patient-name">—</p>
+
+        <label class="field-label" for="akte-datum">Datum</label>
+        <input type="date" id="akte-datum" class="field-input" />
+
+        <label class="field-label" for="akte-behandlungsgrund">Behandlungsgrund</label>
+        <textarea id="akte-behandlungsgrund" class="field-input field-textarea" rows="2" placeholder="Kurze Beschreibung"></textarea>
+
+        <label class="field-label" for="akte-befund">Befund</label>
+        <textarea id="akte-befund" class="field-input field-textarea" rows="2" placeholder="Festgestellte Verletzungen / Beschwerden"></textarea>
+
+        <label class="field-label" for="akte-behandlung">Behandlung</label>
+        <textarea id="akte-behandlung" class="field-input field-textarea" rows="2" placeholder="Durchgeführte Maßnahmen"></textarea>
+
+        <label class="field-label" for="akte-bemerkungen">Bemerkungen</label>
+        <textarea id="akte-bemerkungen" class="field-input field-textarea" rows="2"></textarea>
+
+        <p class="field-error" id="akte-error" hidden></p>
+
+        <div class="akte-dokument__aktionen">
+          <button type="button" class="btn btn--ghost" id="btn-akte-fokus-abbrechen">Abbrechen</button>
+          <button type="button" class="btn btn--primary" id="btn-confirm-akte">Speichern</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================ -->
   <!-- MODAL: Patient anlegen        -->
   <!-- ============================ -->
   <div class="modal-overlay" id="modal-patient-anlegen">
@@ -479,12 +538,18 @@
           <label class="field-label" for="patient-detail-name">Name</label>
           <input type="text" id="patient-detail-name" class="field-input" />
 
-          <label class="field-label" for="patient-geburtsdatum">Geburtsdatum</label>
-          <input type="text" id="patient-geburtsdatum" class="field-input" placeholder="z. B. 12.03.1874" />
+          <div class="field-grid-2">
+            <div>
+              <label class="field-label" for="patient-geburtsdatum">Geburtsdatum</label>
+              <input type="text" id="patient-geburtsdatum" class="field-input" placeholder="z. B. 12.03.1874" />
+            </div>
+            <div>
+              <label class="field-label" for="patient-telefonnummer">Telefonnummer</label>
+              <input type="text" id="patient-telefonnummer" class="field-input" />
+            </div>
+          </div>
 
-          <label class="field-label" for="patient-telefonnummer">Telefonnummer</label>
-          <input type="text" id="patient-telefonnummer" class="field-input" />
-
+          <h3 class="patient-detail-body__abschnitt">Medizinische Hinweise</h3>
           <label class="field-label" for="patient-allergien">Allergien / Unverträglichkeiten</label>
           <textarea id="patient-allergien" class="field-input field-textarea" rows="2"></textarea>
 
@@ -494,21 +559,27 @@
           <label class="field-label" for="patient-besondere-hinweise">Besondere Hinweise</label>
           <textarea id="patient-besondere-hinweise" class="field-input field-textarea" rows="2"></textarea>
 
-          <label class="field-label" for="patient-notfallkontakt">Notfallkontakt</label>
-          <input type="text" id="patient-notfallkontakt" class="field-input" />
-
-          <label class="field-label" for="patient-notfallkontakt-telefon">Notfallkontakt Telefonnummer</label>
-          <input type="text" id="patient-notfallkontakt-telefon" class="field-input" />
+          <h3 class="patient-detail-body__abschnitt">Notfallkontakt</h3>
+          <div class="field-grid-2">
+            <div>
+              <label class="field-label" for="patient-notfallkontakt">Name</label>
+              <input type="text" id="patient-notfallkontakt" class="field-input" />
+            </div>
+            <div>
+              <label class="field-label" for="patient-notfallkontakt-telefon">Telefonnummer</label>
+              <input type="text" id="patient-notfallkontakt-telefon" class="field-input" />
+            </div>
+          </div>
 
           <p class="field-error" id="patient-profil-error" hidden></p>
           <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
             <button class="btn btn--primary" id="btn-confirm-patient-profil">Profil speichern</button>
           </div>
 
-          <h3>Akten</h3>
+          <h3 class="patient-detail-body__abschnitt">Akten</h3>
           <div class="toolbar">
             <div class="toolbar__buttons">
-              <a class="btn btn--ghost btn--sm" id="btn-akte-neu" href="#" target="_blank" rel="noopener">＋ Neue Akte (neues Fenster)</a>
+              <a class="btn btn--ghost btn--sm" id="btn-akte-neu" href="#" target="_blank" rel="noopener">＋ Neue Akte (eigenes Fenster)</a>
             </div>
           </div>
           <div class="table-card">
@@ -523,65 +594,7 @@
   </div>
 
   <!-- ============================ -->
-  <!-- MODAL: Akte anlegen/bearbeiten -->
-  <!-- ============================ -->
-  <div class="modal-overlay" id="modal-akte-form">
-    <div class="modal">
-      <div class="modal__header">
-        <h3 id="akte-form-titel">Neue Akte</h3>
-        <button class="modal__close" data-close-modal="modal-akte-form">✕</button>
-      </div>
-      <div class="modal__body">
-        <input type="hidden" id="akte-editing-id" value="" />
-        <input type="hidden" id="akte-form-patient-id" value="" />
-
-        <label class="field-label">Patient</label>
-        <p class="field-static" id="akte-form-patient-name">—</p>
-
-        <label class="field-label" for="akte-datum">Datum</label>
-        <input type="date" id="akte-datum" class="field-input" />
-
-        <label class="field-label" for="akte-behandlungsgrund">Behandlungsgrund</label>
-        <textarea id="akte-behandlungsgrund" class="field-input field-textarea" rows="2" placeholder="Kurze Beschreibung"></textarea>
-
-        <label class="field-label" for="akte-befund">Befund</label>
-        <textarea id="akte-befund" class="field-input field-textarea" rows="2" placeholder="Festgestellte Verletzungen / Beschwerden"></textarea>
-
-        <label class="field-label" for="akte-behandlung">Behandlung</label>
-        <textarea id="akte-behandlung" class="field-input field-textarea" rows="2" placeholder="Durchgeführte Maßnahmen"></textarea>
-
-        <label class="field-label" for="akte-bemerkungen">Bemerkungen</label>
-        <textarea id="akte-bemerkungen" class="field-input field-textarea" rows="2"></textarea>
-
-        <p class="field-error" id="akte-error" hidden></p>
-      </div>
-      <div class="modal__footer">
-        <button class="btn btn--ghost" data-close-modal="modal-akte-form">Abbrechen</button>
-        <button class="btn btn--primary" id="btn-confirm-akte">Speichern</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ============================ -->
-  <!-- MODAL: Akte-Detail (feste Vorlage) -->
-  <!-- ============================ -->
-  <div class="modal-overlay" id="modal-akte-detail">
-    <div class="modal modal--large">
-      <div class="modal__header">
-        <h3 id="akte-detail-titel">Akte</h3>
-        <button class="modal__close" data-close-modal="modal-akte-detail">✕</button>
-      </div>
-      <div class="modal__body">
-        <div class="akte-detail-body" id="akte-detail-inhalt"></div>
-      </div>
-      <div class="modal__footer">
-        <button class="btn btn--danger" id="btn-akte-loeschen" style="margin-right: auto;">Löschen</button>
-        <button class="btn btn--ghost" id="btn-akte-bearbeiten">Bearbeiten</button>
-        <button class="btn btn--ghost" data-close-modal="modal-akte-detail">Schließen</button>
-      </div>
-    </div>
-  </div>
-
+  <!-- MODAL: Beispiel anlegen/bearbeiten -->
   <!-- ============================ -->
   <!-- MODAL: Beispiel anlegen/bearbeiten -->
   <!-- ============================ -->
@@ -705,22 +718,22 @@
        (nicht type="module") "defer"-Skripte, damit sie sich gemeinsame
        globale Variablen/Funktionen teilen können. js/main.js muss immer
        zuletzt kommen, da es die App erst startet. -->
-  <script defer src="js/firebase-config.js?v=108"></script>
-  <script defer src="js/core/config.js?v=108"></script>
-  <script defer src="js/core/state.js?v=108"></script>
-  <script defer src="js/core/dom.js?v=108"></script>
-  <script defer src="js/core/firebase-init.js?v=108"></script>
-  <script defer src="js/core/utils.js?v=108"></script>
-  <script defer src="js/ui/modals.js?v=108"></script>
-  <script defer src="js/ui/nav.js?v=108"></script>
-  <script defer src="js/ui/presence.js?v=108"></script>
-  <script defer src="js/views/startseite.js?v=108"></script>
-  <script defer src="js/views/patientenakten.js?v=108"></script>
-  <script defer src="js/views/beispiele.js?v=108"></script>
-  <script defer src="js/views/einstellungen.js?v=108"></script>
-  <script defer src="js/views/admin.js?v=108"></script>
-  <script defer src="js/ui/version-check.js?v=108"></script>
-  <script defer src="js/main.js?v=108"></script>
-  <script type="module" src="js/auth.js?v=108"></script>
+  <script defer src="js/firebase-config.js?v=109"></script>
+  <script defer src="js/core/config.js?v=109"></script>
+  <script defer src="js/core/state.js?v=109"></script>
+  <script defer src="js/core/dom.js?v=109"></script>
+  <script defer src="js/core/firebase-init.js?v=109"></script>
+  <script defer src="js/core/utils.js?v=109"></script>
+  <script defer src="js/ui/modals.js?v=109"></script>
+  <script defer src="js/ui/nav.js?v=109"></script>
+  <script defer src="js/ui/presence.js?v=109"></script>
+  <script defer src="js/views/startseite.js?v=109"></script>
+  <script defer src="js/views/patientenakten.js?v=109"></script>
+  <script defer src="js/views/beispiele.js?v=109"></script>
+  <script defer src="js/views/einstellungen.js?v=109"></script>
+  <script defer src="js/views/admin.js?v=109"></script>
+  <script defer src="js/ui/version-check.js?v=109"></script>
+  <script defer src="js/main.js?v=109"></script>
+  <script type="module" src="js/auth.js?v=109"></script>
 </body>
 </html>

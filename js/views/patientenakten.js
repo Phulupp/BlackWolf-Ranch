@@ -34,6 +34,15 @@
     return `?neueAkte=1&patient=${encodeURIComponent(patientId)}`;
   }
 
+  // Ist diese Seite gerade als eigenständige Akte-Dokumentenseite aufgerufen
+  // worden (Link auf eine bestehende Akte, oder "+ Neue Akte")? Wird in
+  // js/main.js (starteApp) ausgewertet, um statt der normalen App (Sidebar +
+  // Startseite) nur die Akte zu zeigen.
+  function istAkteFokusModus() {
+    const params = new URLSearchParams(location.search);
+    return !!(params.get("akte") || (params.get("neueAkte") && params.get("patient")));
+  }
+
   // Öffnet automatisch die per URL angeforderte Akte (Link auf eine
   // bestehende Akte) bzw. das Anlegen-Formular (Link von "+ Neue Akte", das
   // bewusst in einem eigenen Fenster/Tab aufgeht statt im selben Fenster wie
@@ -51,11 +60,11 @@
     if (akteId) {
       if (!akten.some((a) => a.id === akteId)) return;
       urlAktionAusgefuehrt = true;
-      oeffneAkteDetailModal(akteId);
+      zeigeAkteFokusAnsicht(akteId);
     } else if (params.get("neueAkte") && neuFuerPatient) {
       if (!patienten.some((p) => p.id === neuFuerPatient)) return;
       urlAktionAusgefuehrt = true;
-      oeffneAkteFormModal(neuFuerPatient, null);
+      zeigeAkteFokusFormular(neuFuerPatient, null);
     }
   }
 
@@ -70,6 +79,11 @@
           akten = [];
           snap.forEach((docSnap) => akten.push({ id: docSnap.id, ...docSnap.data() }));
           if (offenerPatientId) renderPatientDetailAkten(offenerPatientId);
+          // Falls die Akte-Fokus-Seite gerade eine Akte per vorläufigem
+          // Platzhalter zeigt (siehe zeigeAkteFokusAnsicht/vorabDaten unten,
+          // direkt nach dem Anlegen), aktualisiert dieser Aufruf sie mit dem
+          // echten, jetzt geladenen Stand (korrekte Akte-Nummer etc.).
+          if (offeneAkteDetailId) zeigeAkteFokusAnsicht(offeneAkteDetailId);
           pruefeUrlAktion();
         },
         (fehler) => console.error("Akten konnten nicht geladen werden:", fehler)
@@ -260,8 +274,11 @@
     if (el.btnAkteNeu) el.btnAkteNeu.href = neueAkteLink(patientId);
   }
 
-  // --- Akte anlegen/bearbeiten (ein gemeinsames Formular) -------------------
-  function oeffneAkteFormModal(patientId, akteId) {
+  // --- Akte-Fokus: Formular-Ansicht (Anlegen/Bearbeiten) --------------------
+  // Zeigt das Formular innerhalb der Akte-Fokus-Seite (kein Modal mehr,
+  // siehe css/views/patientenakten.css "18b") - ein gemeinsames Formular für
+  // Anlegen (akteId null) und Bearbeiten (akteId gesetzt).
+  function zeigeAkteFokusFormular(patientId, akteId) {
     bearbeiteteAkteId = akteId;
     const patient = patienten.find((x) => x.id === patientId);
     el.akteFormPatientId.value = patientId;
@@ -277,7 +294,8 @@
     el.akteBehandlung.value = a ? a.behandlung || "" : "";
     el.akteBemerkungen.value = a ? a.bemerkungen || "" : "";
 
-    oeffneModal("modal-akte-form");
+    if (el.akteFokusFormular) el.akteFokusFormular.hidden = false;
+    if (el.akteFokusAnsicht) el.akteFokusAnsicht.hidden = true;
   }
 
   if (el.btnConfirmAkte) {
@@ -302,23 +320,21 @@
       try {
         if (bearbeiteteAkteId) {
           await db.collection(AKTEN_COLLECTION).doc(bearbeiteteAkteId).update(daten);
-          schliesseModal("modal-akte-form");
           zeigeToast("Akte gespeichert.");
+          zeigeAkteFokusAnsicht(bearbeiteteAkteId);
         } else {
           daten.erstelltAm = firebase.firestore.FieldValue.serverTimestamp();
           daten.erstelltVon = aktuellerNutzer ? aktuellerNutzer.name : null;
           const ref = await db.collection(AKTEN_COLLECTION).add(daten);
-          schliesseModal("modal-akte-form");
           zeigeToast("Akte gespeichert.");
           // Dieses Fenster wurde extra für die Neuanlage geöffnet (Link von
-          // "+ Neue Akte", siehe neueAkteLink/pruefeUrlAktion oben) - jetzt,
-          // wo die Akte wirklich existiert, bekommt genau dieses Fenster
-          // ohne Neuladen ihren echten, dauerhaften Link und zeigt die
-          // gerade angelegte Akte gleich an.
-          if (new URLSearchParams(location.search).get("neueAkte")) {
-            history.replaceState(null, "", akteLink(ref.id));
-            oeffneAkteDetailModal(ref.id);
-          }
+          // "+ Neue Akte", siehe neueAkteLink oben) - jetzt, wo die Akte
+          // wirklich existiert, bekommt genau dieses Fenster ohne Neuladen
+          // ihren echten, dauerhaften Link und zeigt die Akte gleich an
+          // ("vorabDaten" überbrückt die kurze Zeit, bis der Firestore-
+          // Listener den frisch angelegten Datensatz tatsächlich liefert).
+          history.replaceState(null, "", akteLink(ref.id));
+          zeigeAkteFokusAnsicht(ref.id, { id: ref.id, ...daten });
         }
       } catch (fehler) {
         console.error(fehler);
@@ -327,20 +343,37 @@
     });
   }
 
-  // --- Akte-Detail (feste Vorlage, siehe css/views/patientenakten.css) -----
-  function oeffneAkteDetailModal(akteId) {
-    const a = akten.find((x) => x.id === akteId);
+  if (el.btnAkteFokusAbbrechen) {
+    el.btnAkteFokusAbbrechen.addEventListener("click", () => {
+      if (bearbeiteteAkteId) {
+        // Bearbeiten einer bestehenden Akte abgebrochen - zurück zur Ansicht.
+        zeigeAkteFokusAnsicht(bearbeiteteAkteId);
+      } else {
+        // Neuanlage abgebrochen - dieses Fenster wurde extra dafür geöffnet
+        // (siehe neueAkteLink), schließt sich also wieder. Falls der Browser
+        // das Schließen verweigert (z. B. weil noch andere Verlaufseinträge
+        // existieren), landet man ersatzweise auf der normalen Startseite.
+        window.close();
+        location.href = "?";
+      }
+    });
+  }
+
+  // --- Akte-Fokus: Ansicht (feste Vorlage) ----------------------------------
+  // "vorabDaten" wird nur direkt nach dem Anlegen übergeben (siehe oben),
+  // damit die Seite sofort mit dem gerade Gespeicherten zeigt, statt kurz
+  // leer zu erscheinen, bis der Firestore-Listener zurückkommt.
+  function zeigeAkteFokusAnsicht(akteId, vorabDaten) {
+    const vorhanden = akten.find((x) => x.id === akteId);
+    const a = vorhanden || vorabDaten;
     if (!a) return;
     offeneAkteDetailId = akteId;
     const patient = patienten.find((x) => x.id === a.patientId);
-    const nummer = patientAkten(a.patientId).findIndex((x) => x.id === akteId) + 1;
 
-    el.akteDetailTitel.textContent = `Akte ${nummer}`;
+    el.akteDetailTitel.textContent = vorhanden ? `Akte ${patientAkten(a.patientId).findIndex((x) => x.id === akteId) + 1}` : "Akte";
+    el.akteDetailPatient.textContent = patient ? patient.name : "—";
+    el.akteDetailDatum.textContent = formatDatum(a.datum);
     el.akteDetailInhalt.innerHTML = `
-        <div class="akte-vorlage__kopf">
-          <span><strong>Patient:</strong> ${escapeHtml(patient ? patient.name : "—")}</span>
-          <span><strong>Datum:</strong> ${escapeHtml(formatDatum(a.datum))}</span>
-        </div>
         <div class="akte-vorlage__abschnitt">
           <span class="akte-vorlage__label">Behandlungsgrund</span>
           <p>${escapeHtml(a.behandlungsgrund || "—")}</p>
@@ -357,7 +390,9 @@
           <span class="akte-vorlage__label">Bemerkungen</span>
           <p>${escapeHtml(a.bemerkungen || "—")}</p>
         </div>`;
-    oeffneModal("modal-akte-detail");
+
+    if (el.akteFokusAnsicht) el.akteFokusAnsicht.hidden = false;
+    if (el.akteFokusFormular) el.akteFokusFormular.hidden = true;
   }
 
   if (el.btnAkteBearbeiten) {
@@ -365,8 +400,7 @@
       if (!offeneAkteDetailId) return;
       const a = akten.find((x) => x.id === offeneAkteDetailId);
       if (!a) return;
-      schliesseModal("modal-akte-detail");
-      oeffneAkteFormModal(a.patientId, a.id);
+      zeigeAkteFokusFormular(a.patientId, a.id);
     });
   }
 
@@ -376,8 +410,15 @@
       const id = offeneAkteDetailId;
       fordereLoeschungAn("Akte löschen", "Möchtest du diese Akte wirklich unwiderruflich löschen?", async () => {
         await db.collection(AKTEN_COLLECTION).doc(id).delete();
-        schliesseModal("modal-akte-detail");
-        zeigeToast("Akte gelöscht.");
+        zeigeToast("Akte gelöscht. Dieses Fenster schließt sich gleich …");
+        // Die Akte gibt es nicht mehr - dieses Fenster wurde extra für sie
+        // geöffnet, schließt sich also. Klappt das Schließen nicht (z. B.
+        // weil der Browser es bei diesem Tab verweigert), landet man
+        // ersatzweise auf der normalen Startseite.
+        setTimeout(() => {
+          window.close();
+          location.href = "?";
+        }, 900);
       });
     });
   }

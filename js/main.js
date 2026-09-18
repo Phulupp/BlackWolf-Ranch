@@ -33,7 +33,17 @@
     starteLeitfaedenListener();
     if (istAdmin()) starteBenutzerverwaltung();
 
-    zeigeAnsicht(ladeStartseite());
+    // Akte-Fokus-Modus (Link auf eine einzelne Akte oder "+ Neue Akte",
+    // siehe istAkteFokusModus/pruefeUrlAktion in js/views/patientenakten.js):
+    // zeigt NUR die Akte als eigenständige Dokumentenseite, die normale App
+    // (Sidebar/Startseite) bleibt komplett verborgen.
+    if (istAkteFokusModus()) {
+      if (el.appRoot) el.appRoot.hidden = true;
+      if (el.akteFokusRoot) el.akteFokusRoot.hidden = false;
+    } else {
+      zeigeAnsicht(ladeStartseite());
+    }
+
     pruefeVersion();
     clearInterval(versionCheckTimer);
     versionCheckTimer = setInterval(pruefeVersion, 5 * 60 * 1000);
@@ -66,6 +76,9 @@
     leitfaeden = [];
     bearbeiteteAkteId = null;
     offenerPatientId = null;
+    offeneAkteDetailId = null;
+    urlAktionAusgefuehrt = false;
+    if (el.akteFokusRoot) el.akteFokusRoot.hidden = true;
   }
 
   window.addEventListener("hof:auth-approved", (event) => starteApp(event.detail));

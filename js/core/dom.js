@@ -62,7 +62,13 @@
     patientAktenLeer: document.getElementById("patient-akten-leer"),
     btnAkteNeu: document.getElementById("btn-akte-neu"),
 
-    modalAkteForm: document.getElementById("modal-akte-form"),
+    // Akte-Fokus: eigenständige Dokumentenseite statt Modal (siehe
+    // js/views/patientenakten.js und die entsprechende HTML-Sektion nach
+    // dem schließenden .app-div in index.html).
+    akteFokusRoot: document.getElementById("akte-fokus-root"),
+    akteFokusAnsicht: document.getElementById("akte-fokus-ansicht"),
+    akteFokusFormular: document.getElementById("akte-fokus-formular"),
+
     akteFormTitel: document.getElementById("akte-form-titel"),
     akteEditingId: document.getElementById("akte-editing-id"),
     akteFormPatientId: document.getElementById("akte-form-patient-id"),
@@ -74,9 +80,11 @@
     akteBemerkungen: document.getElementById("akte-bemerkungen"),
     akteError: document.getElementById("akte-error"),
     btnConfirmAkte: document.getElementById("btn-confirm-akte"),
+    btnAkteFokusAbbrechen: document.getElementById("btn-akte-fokus-abbrechen"),
 
-    modalAkteDetail: document.getElementById("modal-akte-detail"),
     akteDetailTitel: document.getElementById("akte-detail-titel"),
+    akteDetailPatient: document.getElementById("akte-detail-patient"),
+    akteDetailDatum: document.getElementById("akte-detail-datum"),
     akteDetailInhalt: document.getElementById("akte-detail-inhalt"),
     btnAkteBearbeiten: document.getElementById("btn-akte-bearbeiten"),
     btnAkteLoeschen: document.getElementById("btn-akte-loeschen"),
