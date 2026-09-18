@@ -15,47 +15,38 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <title>Zur Dicken Kuh — Hofverwaltung</title>
-  <!-- "favicon.ico" im Wurzelverzeichnis ist bewusst ZUSÄTZLICH zum PNG unten
-       vorhanden: viele Browser (v. a. beim Setzen eines Lesezeichens, bei
-       Desktop-Verknüpfungen oder in älteren/nicht-Chromium-Browsern) fragen
-       IMMER "/favicon.ico" direkt an der Domain-Wurzel ab, unabhängig vom
-       untenstehenden <link>-Tag - fehlte dieses .ico bisher komplett (404),
-       blieb das Tab-/Lesezeichen-Icon in genau diesen Fällen leer, selbst
-       wenn das PNG unten technisch korrekt eingebunden war. -->
-  <link rel="shortcut icon" href="/favicon.ico" />
-  <link rel="icon" type="image/png" href="assets/logo/favicon-neu.png?v=103" />
-  <link rel="apple-touch-icon" href="assets/logo/favicon-neu.png?v=103" />
+  <title>Medical Department — Verwaltung</title>
+  <link rel="icon" type="image/svg+xml" href="assets/logo/favicon.svg?v=104" />
 
-  <!-- Google Fonts: Rye (Farmschild/Wordmark), Playfair Display (Überschriften), Vollkorn (Fließtext/Pergament) -->
+  <!-- Google Fonts: Inter für die gesamte App (klar, modern, klinisch). -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Rye&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Vollkorn:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap"
     rel="stylesheet"
   />
 
   <!-- Stylesheets: gleiche Kaskaden-Reihenfolge wie zuvor (base > layout >
        components > views). Reihenfolge ist wichtig und darf nicht vertauscht
        werden. -->
-  <link rel="stylesheet" href="css/base/tokens.css?v=103" />
-  <link rel="stylesheet" href="css/base/reset.css?v=103" />
-  <link rel="stylesheet" href="css/base/textures.css?v=103" />
-  <link rel="stylesheet" href="css/views/auth.css?v=103" />
-  <link rel="stylesheet" href="css/components/forms.css?v=103" />
-  <link rel="stylesheet" href="css/components/buttons.css?v=103" />
-  <link rel="stylesheet" href="css/layout/shell.css?v=103" />
-  <link rel="stylesheet" href="css/components/cards.css?v=103" />
-  <link rel="stylesheet" href="css/components/badges.css?v=103" />
-  <link rel="stylesheet" href="css/views/startseite.css?v=103" />
-  <link rel="stylesheet" href="css/components/tables.css?v=103" />
-  <link rel="stylesheet" href="css/views/patientenakten.css?v=103" />
-  <link rel="stylesheet" href="css/views/beispiele.css?v=103" />
-  <link rel="stylesheet" href="css/components/modals.css?v=103" />
-  <link rel="stylesheet" href="css/views/admin.css?v=103" />
-  <link rel="stylesheet" href="css/components/toast.css?v=103" />
-  <link rel="stylesheet" href="css/layout/footer.css?v=103" />
-  <link rel="stylesheet" href="css/base/responsive.css?v=103" />
+  <link rel="stylesheet" href="css/base/tokens.css?v=104" />
+  <link rel="stylesheet" href="css/base/reset.css?v=104" />
+  <link rel="stylesheet" href="css/base/textures.css?v=104" />
+  <link rel="stylesheet" href="css/views/auth.css?v=104" />
+  <link rel="stylesheet" href="css/components/forms.css?v=104" />
+  <link rel="stylesheet" href="css/components/buttons.css?v=104" />
+  <link rel="stylesheet" href="css/layout/shell.css?v=104" />
+  <link rel="stylesheet" href="css/components/cards.css?v=104" />
+  <link rel="stylesheet" href="css/components/badges.css?v=104" />
+  <link rel="stylesheet" href="css/views/startseite.css?v=104" />
+  <link rel="stylesheet" href="css/components/tables.css?v=104" />
+  <link rel="stylesheet" href="css/views/patientenakten.css?v=104" />
+  <link rel="stylesheet" href="css/views/beispiele.css?v=104" />
+  <link rel="stylesheet" href="css/components/modals.css?v=104" />
+  <link rel="stylesheet" href="css/views/admin.css?v=104" />
+  <link rel="stylesheet" href="css/components/toast.css?v=104" />
+  <link rel="stylesheet" href="css/layout/footer.css?v=104" />
+  <link rel="stylesheet" href="css/base/responsive.css?v=104" />
 
   <!-- Firebase SDK (Authentifizierung + Datenbank). "defer" statt normaler
        blockierender <script>-Tags: der Browser kann so den Rest der Seite
@@ -89,14 +80,18 @@
       </defs>
     </svg>
 
-    <!-- Foto-Hintergrund: Hof bei Sonnenuntergang (echtes Bild statt Vektor-Illustration) -->
     <div class="auth-screen__bg"></div>
 
     <div class="auth-screen__vignette"></div>
 
     <div class="auth-gate">
       <div class="auth-gate__sign-wrap">
-        <img class="auth-gate__sign-img" src="assets/logo/hornhausen-sign.png?v=103" alt="Zur Dicken Kuh – Est. 1899" />
+        <div class="auth-gate__sign-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 13h3.2l2-5.5L11.5 19l2.7-12 2 6H22" />
+          </svg>
+        </div>
+        <p class="auth-gate__sign-name">Medical Department</p>
       </div>
 
       <div class="auth-card">
@@ -151,7 +146,7 @@
           <label class="field-label" for="register-username">Benutzername (RP-/Ingame-Name)</label>
           <div class="field-icon-wrap">
             <svg class="field-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#auth-icon-person"></use></svg>
-            <input type="text" id="register-username" class="field-input field-input--icon" placeholder="z. B. Grete Hornhausen" autocomplete="off" required />
+            <input type="text" id="register-username" class="field-input field-input--icon" placeholder="z. B. Max Mustermann" autocomplete="off" required />
           </div>
 
           <label class="field-label" for="register-email">E-Mail-Adresse</label>
@@ -183,7 +178,7 @@
           <label class="field-label" for="google-username-input">Wähle deinen Benutzernamen (RP-/Ingame-Name)</label>
           <div class="field-icon-wrap">
             <svg class="field-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#auth-icon-person"></use></svg>
-            <input type="text" id="google-username-input" class="field-input field-input--icon" placeholder="z. B. Grete Hornhausen" autocomplete="off" required />
+            <input type="text" id="google-username-input" class="field-input field-input--icon" placeholder="z. B. Max Mustermann" autocomplete="off" required />
           </div>
 
           <p class="field-error" id="google-username-error" hidden></p>
@@ -193,19 +188,19 @@
 
         <!-- Status: Account wartet auf Freigabe -->
         <div class="auth-status" id="auth-status-pending">
-          <p class="auth-status__text">Dein Account wurde erfolgreich erstellt und wartet derzeit auf die Freigabe durch den Hofherrn oder einen Verwalter.</p>
+          <p class="auth-status__text">Dein Account wurde erfolgreich erstellt und wartet derzeit auf die Freigabe durch einen Verwalter.</p>
           <button type="button" class="btn btn--ghost auth-submit" id="btn-pending-logout">Abmelden</button>
         </div>
 
         <!-- Status: Account wurde abgelehnt -->
         <div class="auth-status" id="auth-status-rejected">
-          <p class="auth-status__text">Deine Registrierung wurde leider abgelehnt. Bitte wende dich an einen Verwalter des Hofes.</p>
+          <p class="auth-status__text">Deine Registrierung wurde leider abgelehnt. Bitte wende dich an einen Verwalter.</p>
           <button type="button" class="btn btn--ghost auth-submit" id="btn-rejected-logout">Abmelden</button>
         </div>
 
         <!-- Status: Account wurde gesperrt -->
         <div class="auth-status" id="auth-status-locked">
-          <p class="auth-status__text" id="auth-status-locked-text">Dein Account wurde gesperrt. Bitte wende dich an einen Verwalter des Hofes.</p>
+          <p class="auth-status__text" id="auth-status-locked-text">Dein Account wurde gesperrt. Bitte wende dich an einen Verwalter.</p>
           <button type="button" class="btn btn--ghost auth-submit" id="btn-locked-logout">Abmelden</button>
         </div>
 
@@ -228,7 +223,6 @@
   <!-- APP (erst sichtbar nach Login) -->
   <!-- ============================ -->
   <div class="update-banner" id="update-banner" hidden>
-    <img class="update-banner__logo" src="assets/logo/hornhausen-sign.png?v=103" alt="" aria-hidden="true" />
     <span>Eine neue Version ist verfügbar. Danach ist eine erneute Anmeldung nötig.</span>
     <button type="button" class="btn btn--primary" id="update-banner-btn">Jetzt aktualisieren</button>
   </div>
@@ -239,7 +233,12 @@
     <!-- ============================ -->
     <aside class="sidebar">
       <div class="sidebar__brand">
-        <img class="sidebar__brand-icon" src="assets/logo/logo-dicke-kuh.png?v=103" alt="Zur Dicken Kuh - Est. 1899" />
+        <div class="sidebar__brand-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 13h3.2l2-5.5L11.5 19l2.7-12 2 6H22" />
+          </svg>
+        </div>
+        <p class="sidebar__brand-name">Medical Department</p>
       </div>
 
       <nav class="sidebar__nav" id="sidebar-nav">
@@ -285,7 +284,7 @@
     <!-- ============================ -->
     <!-- HAUPTBEREICH (Pergament)     -->
     <!-- ============================ -->
-    <div class="main-area tex-parchment">
+    <div class="main-area">
       <div class="topbar">
         <div class="online-widget">
           <button class="online-widget__btn" id="online-widget-btn">
@@ -393,7 +392,7 @@
               <p class="parch-card__hint">Hier verwaltest du alle Accounts: Registrierungsanfragen freigeben oder ablehnen, Rang und Verwalterrechte vergeben, Benutzer sperren/entsperren/löschen/umbenennen und interne Notizen hinterlegen. <strong>Verwalterrechte</strong> sind unabhängig vom Rang und werden separat je Benutzer vergeben.</p>
 
               <form class="settings-form" id="form-add-benutzer">
-                <input type="text" id="neuer-benutzer-name-input" class="field-input" placeholder="Benutzername, z. B. Grete Hornhausen" required style="flex: 1 1 200px;" />
+                <input type="text" id="neuer-benutzer-name-input" class="field-input" placeholder="Benutzername, z. B. Max Mustermann" required style="flex: 1 1 200px;" />
                 <input type="email" id="neuer-benutzer-email-input" class="field-input" placeholder="E-Mail-Adresse" required style="flex: 1 1 200px;" />
                 <select id="neuer-benutzer-rolle-input" class="field-input" style="flex: 0 0 170px;">
                   <option value="Praktikant">Praktikant</option>
@@ -433,8 +432,8 @@
         </div>
 
         <footer class="page-footer">
-          <p>Zur Dicken Kuh</p>
-          <p>Hofverwaltung — Est. 1899</p>
+          <p>Medical Department</p>
+          <p>Interne Verwaltung</p>
           <p class="page-footer__links">
             <button type="button" class="auth-link" data-open-modal="modal-datenschutz">Datenschutz</button>
             <button type="button" class="auth-link" data-open-modal="modal-informationen">Informationen</button>
@@ -706,22 +705,22 @@
        (nicht type="module") "defer"-Skripte, damit sie sich gemeinsame
        globale Variablen/Funktionen teilen können. js/main.js muss immer
        zuletzt kommen, da es die App erst startet. -->
-  <script defer src="js/firebase-config.js?v=103"></script>
-  <script defer src="js/core/config.js?v=103"></script>
-  <script defer src="js/core/state.js?v=103"></script>
-  <script defer src="js/core/dom.js?v=103"></script>
-  <script defer src="js/core/firebase-init.js?v=103"></script>
-  <script defer src="js/core/utils.js?v=103"></script>
-  <script defer src="js/ui/modals.js?v=103"></script>
-  <script defer src="js/ui/nav.js?v=103"></script>
-  <script defer src="js/ui/presence.js?v=103"></script>
-  <script defer src="js/views/startseite.js?v=103"></script>
-  <script defer src="js/views/patientenakten.js?v=103"></script>
-  <script defer src="js/views/beispiele.js?v=103"></script>
-  <script defer src="js/views/einstellungen.js?v=103"></script>
-  <script defer src="js/views/admin.js?v=103"></script>
-  <script defer src="js/ui/version-check.js?v=103"></script>
-  <script defer src="js/main.js?v=103"></script>
-  <script type="module" src="js/auth.js?v=103"></script>
+  <script defer src="js/firebase-config.js?v=104"></script>
+  <script defer src="js/core/config.js?v=104"></script>
+  <script defer src="js/core/state.js?v=104"></script>
+  <script defer src="js/core/dom.js?v=104"></script>
+  <script defer src="js/core/firebase-init.js?v=104"></script>
+  <script defer src="js/core/utils.js?v=104"></script>
+  <script defer src="js/ui/modals.js?v=104"></script>
+  <script defer src="js/ui/nav.js?v=104"></script>
+  <script defer src="js/ui/presence.js?v=104"></script>
+  <script defer src="js/views/startseite.js?v=104"></script>
+  <script defer src="js/views/patientenakten.js?v=104"></script>
+  <script defer src="js/views/beispiele.js?v=104"></script>
+  <script defer src="js/views/einstellungen.js?v=104"></script>
+  <script defer src="js/views/admin.js?v=104"></script>
+  <script defer src="js/ui/version-check.js?v=104"></script>
+  <script defer src="js/main.js?v=104"></script>
+  <script type="module" src="js/auth.js?v=104"></script>
 </body>
 </html>

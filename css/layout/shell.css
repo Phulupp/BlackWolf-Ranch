@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-   8. App-Grundgerüst: Holz-Sidebar + Pergament-Inhalt
+   8. App-Grundgerüst: Slate-Sidebar + Inhaltsbereich
    -------------------------------------------------------------------------- */
 .app {
   display: flex;
@@ -15,55 +15,60 @@
   align-self: flex-start;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid rgba(0, 0, 0, 0.4);
-  box-shadow: 6px 0 18px rgba(0, 0, 0, 0.3), -1px 0 0 rgba(89, 64, 47, 0.12) inset;
+  border-right: 1px solid rgba(0, 0, 0, 0.5);
+  box-shadow: 6px 0 18px rgba(0, 0, 0, 0.35), -1px 0 0 rgba(130, 170, 190, 0.08) inset;
   z-index: 20;
-  /* assets/textures/sidebar-background.webp.png - eigens für die Sidebar
-     vorgesehenes Holzpaneel-Foto mit Eisenbeschlägen (siehe README), bisher
-     nirgends eingebunden. Gleiche Technik wie beim App-Hintergrund weiter
-     unten (.app): abgedunkelter Verlauf über dem Foto statt reiner
-     Flächenfarbe, damit Text/Icons weiterhin gut lesbar bleiben. */
-  background-image: linear-gradient(180deg, rgba(11, 6, 3, 0.82) 0%, rgba(7, 4, 2, 0.9) 100%),
-    url("../../assets/textures/sidebar-background.webp.png");
-  background-repeat: no-repeat, no-repeat;
-  background-size: cover, cover;
-  background-position: center, center;
+  background: linear-gradient(180deg, var(--wood-950) 0%, var(--wood-900) 100%);
 }
 
 .sidebar__brand {
-  padding: 28px 22px 24px;
+  padding: 30px 22px 24px;
   text-align: center;
-  border-bottom: 1px solid rgba(89, 64, 47, 0.5);
+  border-bottom: 1px solid rgba(130, 170, 190, 0.16);
   position: relative;
 }
 
-/* Dezenter warmer Schein hinter dem Logo - negatives z-index, damit er
-   garantiert hinter dem Icon bleibt (auch wenn das selbst nicht
-   positioniert ist). Das Logo enthält den Hofnamen/"Est. 1899" bereits
-   selbst als Bildschriftzug, daher bewusst KEIN zusätzlicher Text-Titel
-   mehr darunter (wäre doppelt) - das Icon soll allein für sich stehen. */
+/* Dezenter Teal-Schein hinter dem Icon - negatives z-index, damit er
+   garantiert hinter dem Icon bleibt. */
 .sidebar__brand::before {
   content: "";
   position: absolute;
   left: 50%;
-  top: 9px;
-  width: 210px;
-  height: 210px;
+  top: 14px;
+  width: 150px;
+  height: 150px;
   transform: translateX(-50%);
-  background: radial-gradient(circle, rgba(169, 101, 63, 0.16) 0%, rgba(169, 101, 63, 0) 72%);
+  background: radial-gradient(circle, var(--brass-soft) 0%, rgba(53, 181, 189, 0) 72%);
   pointer-events: none;
   z-index: -1;
 }
 
 .sidebar__brand-icon {
-  display: block;
-  width: 176px;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 88px;
+  height: 88px;
   border-radius: 50%;
-  border: 2px solid var(--brass-bright);
   margin: 0 auto;
-  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5));
+  background: linear-gradient(165deg, var(--leather-700) 0%, var(--leather-900) 100%);
+  border: 2px solid var(--brass-bright);
+  color: var(--brass-bright);
+  box-shadow: var(--shadow-card), 0 0 0 6px var(--brass-soft);
+}
+
+.sidebar__brand-icon svg {
+  width: 42px;
+  height: 42px;
+}
+
+.sidebar__brand-name {
+  margin-top: 14px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--wood-text);
 }
 
 .sidebar__nav {
@@ -84,7 +89,7 @@
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.02em;
-  color: #c0ac8b;
+  color: #8ba0ad;
   transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
   text-align: left;
   position: relative;
@@ -97,8 +102,8 @@
 }
 
 .sidebar__item:hover {
-  color: #e1d0b0;
-  background: #302117;
+  color: var(--wood-text);
+  background: var(--leather-700);
   transform: translateX(2px);
 }
 
@@ -107,9 +112,9 @@
 }
 
 .sidebar__item--active {
-  color: #e8d7b8;
-  background: #3a281c;
-  box-shadow: 0 1px 0 rgba(240, 220, 180, 0.05) inset, 0 4px 10px rgba(0, 0, 0, 0.18);
+  color: #eaf4f7;
+  background: var(--leather-600);
+  box-shadow: 0 1px 0 rgba(180, 210, 225, 0.05) inset, 0 4px 10px rgba(0, 0, 0, 0.22);
 }
 
 .sidebar__item--active:hover {
@@ -127,9 +132,9 @@
   top: 6px;
   bottom: 6px;
   width: 3px;
-  background: #a9653f;
+  background: var(--brass-bright);
   border-radius: 0 3px 3px 0;
-  box-shadow: 0 0 6px rgba(169, 101, 63, 0.55);
+  box-shadow: 0 0 6px var(--shadow-copper-glow);
 }
 
 .sidebar__badge {
@@ -142,19 +147,19 @@
   padding: 0 5px;
   border-radius: 999px;
   background: var(--status-danger);
-  color: #f0dec0;
+  color: #fff;
   font-size: 10px;
   font-weight: 700;
 }
 
 .sidebar__divider {
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(89, 64, 47, 0.5) 50%, transparent);
+  background: linear-gradient(90deg, transparent, rgba(130, 170, 190, 0.2) 50%, transparent);
   margin: 10px 6px;
 }
 
 .sidebar__footer {
-  border-top: 1px solid rgba(89, 64, 47, 0.5);
+  border-top: 1px solid rgba(130, 170, 190, 0.16);
   padding: 14px;
   position: relative;
 }
@@ -170,7 +175,7 @@
 }
 
 .sidebar__user:hover {
-  background: rgba(169, 101, 63, 0.1);
+  background: var(--brass-soft);
 }
 
 .sidebar__user-avatar {
@@ -178,8 +183,8 @@
   height: 36px;
   border-radius: 50%;
   background: linear-gradient(180deg, var(--brass-bright), var(--brass-deep));
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
-  color: #f0dec0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  color: #06171a;
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 14px;
@@ -217,7 +222,7 @@
    RANG_AKZENTE in js/core/config.js) - ergänzt den normalen Schatten um
    einen zusätzlichen, farbigen Ring statt ihn zu ersetzen. */
 .sidebar__user-avatar--akzent {
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35), 0 0 0 2px var(--rang-farbe);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4), 0 0 0 2px var(--rang-farbe);
 }
 
 .sidebar__user-chevron {
@@ -293,16 +298,16 @@
   color: var(--wood-text-muted);
   padding: 9px 16px;
   border-radius: 999px;
-  background: linear-gradient(165deg, rgba(55, 37, 26, 0.55) 0%, rgba(42, 29, 20, 0.6) 100%);
-  border: 1.5px solid rgba(89, 64, 47, 0.6);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25), 0 1px 0 rgba(240, 220, 180, 0.06) inset;
+  background: linear-gradient(165deg, var(--leather-700) 0%, var(--leather-800) 100%);
+  border: 1.5px solid var(--leather-edge);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(180, 210, 225, 0.05) inset;
   transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease, color 0.15s ease;
 }
 
 .online-widget__btn:hover {
   color: var(--wood-text);
   border-color: var(--brass);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(240, 220, 180, 0.08) inset, 0 0 0 3px var(--brass-soft);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35), 0 1px 0 rgba(180, 210, 225, 0.07) inset, 0 0 0 3px var(--brass-soft);
   transform: translateY(-1px);
 }
 
@@ -317,17 +322,17 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #a8b482, var(--status-done) 70%);
+  background: radial-gradient(circle at 35% 30%, #9fe6b8, var(--status-done) 70%);
   animation: online-dot-puls 2.4s ease-in-out infinite alternate;
   flex-shrink: 0;
 }
 
 @keyframes online-dot-puls {
   from {
-    box-shadow: 0 0 3px rgba(168, 180, 130, 0.55), 0 0 0 2px rgba(127, 138, 90, 0.2);
+    box-shadow: 0 0 3px rgba(67, 181, 122, 0.55), 0 0 0 2px rgba(67, 181, 122, 0.2);
   }
   to {
-    box-shadow: 0 0 7px rgba(168, 180, 130, 0.9), 0 0 0 4px rgba(127, 138, 90, 0.3);
+    box-shadow: 0 0 7px rgba(67, 181, 122, 0.9), 0 0 0 4px rgba(67, 181, 122, 0.3);
   }
 }
 
@@ -338,9 +343,9 @@
   right: 0;
   width: 210px;
   background: linear-gradient(165deg, var(--leather-700) 0%, var(--leather-800) 30%, var(--leather-800) 100%);
-  border: 1.5px solid rgba(89, 64, 47, 0.7);
+  border: 1.5px solid var(--leather-edge);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-raised), 0 1px 0 rgba(240, 220, 180, 0.05) inset;
+  box-shadow: var(--shadow-raised), 0 1px 0 rgba(180, 210, 225, 0.05) inset;
   padding: 12px;
   z-index: 50;
 }
@@ -391,12 +396,13 @@
 }
 
 .page-header__text h1 {
-  font-size: 34px;
-  letter-spacing: 0.01em;
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
   line-height: 1.1;
 }
 
-/* Kleiner Messing-Akzentstrich unter jedem Seitentitel - da .page-header__text
+/* Kleiner Teal-Akzentstrich unter jedem Seitentitel - da .page-header__text
    nur einmal im Markup existiert und Titel/Untertitel pro View per JS
    ausgetauscht werden (siehe VIEW_META in config.js), wirkt diese eine Regel
    automatisch auf jede einzelne Seite. */
@@ -444,7 +450,7 @@
   }
 }
 
-/* Tabs (Alle/Offen/In Bearbeitung/Abgeschlossen etc.) */
+/* Tabs (Verwaltung: Benutzer/Aktivitäts-Log) */
 .tabs {
   display: flex;
   gap: 8px;
@@ -458,7 +464,7 @@
   font-size: 12.5px;
   font-weight: 700;
   color: var(--wood-text-muted);
-  background: rgba(89, 64, 47, 0.3);
+  background: rgba(130, 170, 190, 0.1);
   border: 1px solid transparent;
   transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
@@ -472,4 +478,3 @@
   color: var(--brass-bright);
   border-color: var(--wood-line);
 }
-

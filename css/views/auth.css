@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-   5. Login-Bildschirm (Farmtor mit Holzschild)
+   5. Login-Bildschirm
    -------------------------------------------------------------------------- */
 @keyframes auth-fade-in {
   from { opacity: 0; transform: translateY(10px); }
@@ -13,28 +13,28 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: #1b1510;
+  background: var(--wood-950);
 }
 
-/* Foto-Hintergrund: echtes Bild des Hofes bei Sonnenuntergang aus dem neuen
-   Asset-Pack (assets/background/login-background.webp) - liegt als eigene
-   Ebene hinter der Vignette, die weiterhin für Tiefe/Kontrast sorgt. */
+/* Kein Foto mehr - dieselbe ruhige, technische Rasterfläche wie im
+   eingeloggten Bereich (siehe .app in css/base/textures.css), nur ohne
+   Sidebar drumherum. */
 .auth-screen__bg {
   position: absolute;
   inset: 0;
   z-index: 0;
   background:
-    linear-gradient(180deg, rgba(27, 21, 16, 0.58) 0%, rgba(27, 21, 16, 0.36) 30%, rgba(27, 21, 16, 0.52) 70%, rgba(27, 21, 16, 0.78) 100%),
-    url("../../assets/background/login-background.webp.png") center 42% / cover no-repeat;
+    radial-gradient(circle at 50% 0%, rgba(53, 181, 189, 0.07) 0%, transparent 50%),
+    repeating-linear-gradient(0deg, rgba(130, 170, 190, 0.035) 0, rgba(130, 170, 190, 0.035) 1px, transparent 1px, transparent 48px),
+    repeating-linear-gradient(90deg, rgba(130, 170, 190, 0.035) 0, rgba(130, 170, 190, 0.035) 1px, transparent 1px, transparent 48px),
+    linear-gradient(180deg, var(--wood-950) 0%, var(--wood-900) 100%);
 }
 
 .auth-screen__vignette {
   position: absolute;
   inset: 0;
   z-index: 2;
-  background:
-    radial-gradient(ellipse 1300px 950px at 50% 32%, transparent 45%, rgba(27, 21, 16, 0.5) 100%),
-    linear-gradient(180deg, rgba(27, 21, 16, 0.28) 0%, transparent 12%, transparent 82%, rgba(27, 21, 16, 0.4) 100%);
+  background: radial-gradient(ellipse 1300px 950px at 50% 32%, transparent 45%, rgba(2, 5, 8, 0.5) 100%);
   pointer-events: none;
 }
 
@@ -52,16 +52,37 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 14px;
 }
 
-/* Echtes Hänge-Schild-Foto aus dem Asset-Pack (assets/logo/hornhausen-sign),
-   das große Logo der Login-Seite. */
-.auth-gate__sign-img {
-  display: block;
-  width: 290px;
-  max-width: 60vw;
-  height: auto;
-  filter: drop-shadow(0 14px 22px rgba(15, 9, 5, 0.5));
+/* Icon-Badge statt Hänge-Schild-Foto - derselbe Puls-/EKG-Strich wie in der
+   Sidebar (siehe .sidebar__brand-icon in css/layout/shell.css), hier nur
+   größer für die Login-Seite. */
+.auth-gate__sign-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: linear-gradient(165deg, var(--leather-700) 0%, var(--leather-900) 100%);
+  border: 2px solid var(--brass-bright);
+  color: var(--brass-bright);
+  box-shadow: var(--shadow-modal), 0 0 0 8px var(--brass-soft);
+}
+
+.auth-gate__sign-icon svg {
+  width: 40px;
+  height: 40px;
+}
+
+.auth-gate__sign-name {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--wood-text);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 }
 
 /* Schlichte, hochwertige Anmelde-Karte: dunkles Leder mit Messing-Kante,
@@ -123,7 +144,7 @@
   background: var(--status-danger-soft);
   padding: 12px 14px;
   border-radius: var(--radius-sm);
-  border: 1px solid rgba(169, 79, 63, 0.3);
+  border: 1px solid rgba(217, 83, 79, 0.3);
 }
 
 .auth-hint code {
@@ -157,11 +178,9 @@
 }
 
 /* Fußzeile ("Datenschutz"/"Informationen") liegt hier direkt auf dem
-   Hof-Hintergrundfoto statt auf der Pergament-/Leder-Karte wie die übrigen
-   .auth-link-Vorkommen - ohne Schlagschatten war das die kleinste UND
-   dunkelste Textkombination der ganzen Seite, auf dem am wenigsten
-   vorhersehbaren Hintergrund. Gleiche Technik wie .dash-hero__eyebrow
-   (css/views/dashboard.css) für Text auf einem Foto. */
+   Seitenhintergrund statt auf der Leder-Karte wie die übrigen
+   .auth-link-Vorkommen - ein leichter Schlagschatten hält den Text auch auf
+   der dunklen Fläche lesbar. */
 .auth-screen .page-footer .auth-link {
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.65);
 }
@@ -248,8 +267,14 @@
     gap: 14px;
   }
 
-  .auth-gate__sign-img {
-    width: 240px;
+  .auth-gate__sign-icon {
+    width: 66px;
+    height: 66px;
+  }
+
+  .auth-gate__sign-icon svg {
+    width: 32px;
+    height: 32px;
   }
 
   .auth-card {
@@ -262,8 +287,14 @@
 }
 
 @media (max-height: 700px) {
-  .auth-gate__sign-img {
-    width: 190px;
+  .auth-gate__sign-icon {
+    width: 52px;
+    height: 52px;
+  }
+
+  .auth-gate__sign-icon svg {
+    width: 26px;
+    height: 26px;
   }
 
   .auth-card {

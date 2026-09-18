@@ -36,7 +36,7 @@
 }
 
 .reg-row--body:hover {
-  background: #38271c;
+  background: var(--leather-700);
   border-left-color: var(--brass-bright);
 }
 

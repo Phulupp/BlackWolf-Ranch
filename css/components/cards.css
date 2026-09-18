@@ -1,8 +1,5 @@
 /* --------------------------------------------------------------------------
-   10. Karten: dunkles Leder mit feiner Messing-Kante statt Pergament —
-   die eigentliche Anwendung ist jetzt ein modernes, ruhiges Verwaltungs-
-   system; Pergament bleibt Dokumenten (Hofbuch, Datenschutz/Informationen)
-   vorbehalten.
+   10. Karten: dunkle Slate-Fläche mit feiner Teal-Kante.
    -------------------------------------------------------------------------- */
 .parch-card {
   background: linear-gradient(165deg, var(--leather-700) 0%, var(--leather-800) 55%, var(--leather-800) 100%);

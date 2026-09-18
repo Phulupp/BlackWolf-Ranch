@@ -34,16 +34,10 @@
   justify-content: center;
   gap: 16px;
   background: var(--brass-bright);
-  color: #f0dec0;
+  color: #04181b;
   padding: 10px 20px;
   font-size: 13px;
   font-weight: 700;
-}
-
-.update-banner__logo {
-  width: 26px;
-  height: auto;
-  flex-shrink: 0;
 }
 
 .update-banner .btn {

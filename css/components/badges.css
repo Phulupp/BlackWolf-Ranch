@@ -1,10 +1,6 @@
 /* --------------------------------------------------------------------------
-   Badges — gemeinsame Basis für alle kleinen "Pillen"-Hinweise der Seite
-   (Kontakt-Rolle, Bestellungs-Hinweise, Status, Hofbuch-Anheften/Kategorie,
-   Stammkunde, ...). Vorher hatte jeder dieser Badges seine eigene, leicht
-   abweichende CSS-Regel (Größe/Rahmen/Füllung einzeln definiert) - .badge
-   bündelt die gemeinsame Form, die einzelnen Klassen (siehe kontakte.css,
-   bestellungen.css, hofbuch.css, dashboard.css) setzen nur noch Farben.
+   Badges — gemeinsame Basis für kleine "Pillen"-Hinweise (Rang-Badge in der
+   Sidebar, Konto-Status/Verwalter-Markierung in der Benutzerverwaltung).
    -------------------------------------------------------------------------- */
 .badge {
   display: inline-flex;
@@ -21,33 +17,6 @@
 .badge--outline {
   background: transparent;
   border: 1px solid currentColor;
-}
-
-.badge--alert {
-  color: #f0dec0;
-  background: var(--status-danger);
-  box-shadow: 0 0 0 3px var(--status-danger-soft), 0 2px 6px rgba(169, 79, 63, 0.45);
-}
-
-/* Kompakte, runde Variante für einzelne Symbol-Badges (z. B. ★ Stammkunde) -
-   fällt durch die Form auf, ohne wie ein textlastiges Label zu wirken. */
-.badge--icon {
-  padding: 3px;
-  min-width: 19px;
-  min-height: 19px;
-  justify-content: center;
-  border-radius: 50%;
-  font-size: 10px;
-  background: var(--brass-soft);
-  color: var(--brass-bright);
-}
-
-/* Seltene, kleine dekorative Highlights (Stammkunde-Stern, Hofbuch-
-   Anheften) nutzen bewusst den alten Messing-/Gold-Ton statt Kupfer -
-   Kupfer bleibt der Hauptakzent, Gold nur noch sparsamer Sekundärakzent. */
-.badge-stammkunde {
-  background: rgba(184, 148, 90, 0.22);
-  color: var(--old-brass);
 }
 
 /* Admin/Verwaltung: Konto-Status ("Wartet auf Freigabe"/"Abgelehnt"/
@@ -82,22 +51,4 @@
   height: 6px;
   border-radius: 50%;
   background: var(--brass-deep);
-}
-
-/* Kleiner Farbpunkt vor Kategorie-/Rollen-Überschriften (Lager, Kontakte
-   nach Rolle gruppiert, Produktgruppen im Bestellungs-Fenster, Produkt-
-   Auswahl-Dropdown) - Farbe kommt je Aufrufstelle per Inline-Style
-   (--dot-farbe), analog zum bereits bestehenden .warenbuch-kategorie__dot
-   in Waren & Preise (dort bewusst eigenständig, da größer/eigener Flex-
-   Kontext). Bewusst inline statt eigenem Flex-Wrapper, damit sich der
-   Punkt einfach vor beliebigen Textknoten einfügen lässt. */
-.kategorie-dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--dot-farbe, var(--brass));
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
-  margin-right: 8px;
-  vertical-align: middle;
 }

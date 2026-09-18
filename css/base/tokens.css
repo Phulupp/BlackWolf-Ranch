@@ -1,99 +1,86 @@
 /* ==========================================================================
-   HORNHAUSEN-HOF — Hofverwaltung (1899)
+   MEDICAL DEPARTMENT — Hofverwaltung
    ---------------------------------------------------------------------------
-   Moderne, ruhige Hofverwaltung im Stil von Red Dead Redemption 2: dunkles
-   Leder und Holz mit Messing-/Gold-Akzenten als Rahmen und Highlights. Kein
-   Pergament/Papier mehr als Hintergrund für Karten, Formulare oder Tabellen
-   irgendwo in der Anwendung — der Fokus liegt auf Lesbarkeit und Funktion.
+   Dunkles, klinisch-technisches Design: kühles Anthrazit/Slate-Blau als
+   Fläche, Teal/Cyan als einzige lebendige Akzentfarbe (Status/aktive
+   Elemente), klare serifenlose Schrift statt Western-Schmuckschriften.
+   Keine Foto-/Holztexturen mehr - reine Flächen/Verläufe.
+
+   Hinweis zu den Variablennamen: die Tokens heißen weiterhin --wood-*/
+   --leather-*/--brass* wie zuvor im Western-Theme - nur die FARBWERTE
+   dahinter sind komplett neu. Das hält den Diff in allen anderen CSS-
+   Dateien (die diese Variablen an hunderten Stellen referenzieren) minimal
+   und risikoarm; ein vollständiges Umbenennen der Variablen selbst wäre ein
+   rein kosmetischer Zusatzschritt ohne visuellen Effekt.
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   1. Design-Tokens — Farbthema "Erdbraun & Kupfer"
+   1. Design-Tokens — Farbthema "Clinical Slate & Teal"
    -------------------------------------------------------------------------- */
 :root {
-  /* Dunkles Holz (Sidebar, Kopfleisten, Footer) — Holzstruktur/-textur bleibt
-     bewusst unverändert (siehe CLAUDE.md-Vorgabe "Sidebar nicht neu
-     gestalten"), nur die darauf liegenden UI-Farben (weiter unten) wechseln
-     auf Erdbraun/Kupfer. */
-  --wood-950: #0d0704;
-  --wood-900: #170e07;
-  --wood-850: #1e1208;
-  --wood-800: #33200f;
-  --wood-700: #4f3016;
-  --wood-600: #714623;
-  --wood-line: #090402;
-  --wood-grain: rgba(0, 0, 0, 0.32);
-  --wood-grain-light: rgba(255, 208, 140, 0.06);
+  /* Dunkles Anthrazit/Slate (Sidebar, Kopfleisten, Footer). */
+  --wood-950: #05080b;
+  --wood-900: #0a1116;
+  --wood-850: #0e161c;
+  --wood-800: #142029;
+  --wood-700: #1b2c38;
+  --wood-600: #24404f;
+  --wood-line: #030507;
 
-  /* Warmer Akzentton (nur noch als Textfarbe, z. B. auf dem Übersicht-Hero) -
-     jetzt "Old Brass", da Gold nur noch als seltener Sekundärakzent dient. */
-  --parch-200: #b8945a;
+  /* Karten-/Panel-Ebenen: vier abgestufte, kühle Slate-Ebenen -
+     "leather-800" bleibt die meistgenutzte Haupt-Panel-Ebene, "leather-900"
+     die dunkelste (Inputs), "leather-600" die hellste (Highlights/Hover). */
+  --leather-900: #0a1319;
+  --leather-800: #0f1a21;
+  --leather-700: #142530;
+  --leather-600: #1a2f3b;
+  --leather-edge: rgba(130, 170, 190, 0.22);
+  --leather-edge-soft: rgba(130, 170, 190, 0.12);
 
-  /* Karten-/Panel-Ebenen: die gesamte Anwendung (Karten, Tabellen, Modals,
-     Login, Hofbuch) nutzt vier abgestufte, warme Erdbraun-Ebenen statt
-     Pergament/Papier - "leather-800" bleibt die meistgenutzte Haupt-Panel-
-     Ebene, "leather-900" die dunkelste (Inputs), "leather-600" die hellste
-     (Highlights/Hover). Kanten sind jetzt warmes dunkles Braun statt Gold. */
-  --leather-900: #211811; /* Input */
-  --leather-800: #2a1d14; /* Card (Hauptfläche für Panels/Tabellen) */
-  --leather-700: #302117; /* Card Secondary */
-  --leather-600: #37251a; /* Card Highlight */
-  --leather-edge: rgba(89, 64, 47, 0.45);
-  --leather-edge-soft: rgba(89, 64, 47, 0.24);
+  /* Text auf dunklem Slate — kühles Weiß/Grau statt warmem Pergament. */
+  --wood-text: #e6edf2;
+  --wood-text-muted: #97acb9;
+  --wood-text-soft: #6f8794;
+  --wood-text-placeholder: #55707d;
 
-  /* Text auf dunklem Holz/Leder — warmes altes Pergament, kein Grau/Weiß. */
-  --wood-text: #e1d0b0;
-  --wood-text-muted: #b9a487;
-  --wood-text-soft: #917c63;
-  --wood-text-placeholder: #796650;
+  /* Teal/Cyan — die einzige lebendige Akzentfarbe für aktive/wichtige/
+     interaktive Elemente. "brass*"-Namen bleiben bestehen (an ihnen hängt
+     der Großteil der Anwendung), tragen jetzt aber Teal-Werte. */
+  --brass: #2f9aa0; /* Teal Muted - Normalgewicht (Ränder, Icons in Ruhe) */
+  --brass-bright: #35b5bd; /* Primary Teal - wichtige/aktive/fokussierte Elemente */
+  --brass-deep: #227479; /* Teal Dark */
+  --brass-soft: rgba(53, 181, 189, 0.16);
+  --copper-hover: #4fd0d8;
+  --copper-light: #7fe1e6;
 
-  /* Kupfer — die neue Hauptakzentfarbe für aktive/wichtige/interaktive
-     Elemente (ersetzt die bisherige dominante Goldfarbe). "brass*"-Namen
-     bleiben bestehen (an ihnen hängt der Großteil der Anwendung), tragen
-     jetzt aber Kupfer-Werte statt Messing/Gold. */
-  --brass: #8f573c; /* Copper Muted - Normalgewicht (Ränder, Icons in Ruhe) */
-  --brass-bright: #a9653f; /* Primary Copper - wichtige/aktive/fokussierte Elemente */
-  --brass-deep: #7d472f; /* Copper Dark */
-  --brass-soft: rgba(169, 101, 63, 0.18);
-  --copper-hover: #bd7650;
-  --copper-light: #c98a63;
+  /* Zweiter, seltener Sekundärakzent (z. B. Rang-Badge "Chefarzt"). */
+  --old-brass: #5b8fd6;
+  --old-brass-light: #82aee0;
 
-  /* Messing/Gold — jetzt nur noch seltener Sekundärakzent (kleine
-     dekorative Highlights, siehe .badge-stammkunde/.hofbuch-pin-badge). */
-  --old-brass: #b8945a;
-  --old-brass-light: #d0b276;
-
-  /* Preise/Geldbeträge — gealtertes Kupfer statt leuchtendem Gold. */
-  --price: #c48a61;
-  --price-strong: #d39a6c;
-  --price-total: #e0aa78;
-
-  /* Status-Akzente (gedämpft, erdig, an Kupfer/Erdbraun angelehnt) */
-  --status-open: #b58a4a;      /* Offen / gedämpftes Warm-Ocker */
-  --status-open-soft: rgba(181, 138, 74, 0.18);
-  --status-progress: #8f573c;  /* In Bearbeitung / Kupfer-Muted, "aktiv" */
-  --status-progress-soft: rgba(143, 87, 60, 0.2);
-  --status-done: #7f8a5a;      /* übernommen/geschlossen, gedämpftes Erdgrün */
-  --status-done-soft: rgba(127, 138, 90, 0.2);
-  --status-danger: #a94f3f;
-  --status-danger-soft: rgba(169, 79, 63, 0.18);
-  --status-danger-bright: #c97a63; /* Rot-Text auf dunklen Leder-Flächen */
+  /* Status-Akzente (klar, funktional statt gedämpft-erdig) */
+  --status-open: #d8a53d;
+  --status-open-soft: rgba(216, 165, 61, 0.18);
+  --status-progress: #35b5bd;
+  --status-progress-soft: rgba(53, 181, 189, 0.2);
+  --status-done: #43b57a;
+  --status-done-soft: rgba(67, 181, 122, 0.2);
+  --status-danger: #d9534f;
+  --status-danger-soft: rgba(217, 83, 79, 0.18);
+  --status-danger-bright: #ff7a75;
 
   --radius-sm: 3px;
   --radius-md: 6px;
   --radius-lg: 10px;
 
-  --shadow-card: 0 4px 13px rgba(15, 9, 5, 0.34), 0 1px 0 rgba(240, 220, 180, 0.16) inset;
-  --shadow-raised: 0 16px 38px rgba(15, 9, 5, 0.5);
-  --shadow-modal: 0 32px 76px rgba(15, 9, 5, 0.68);
-  --shadow-copper-glow: rgba(169, 101, 63, 0.15);
+  --shadow-card: 0 4px 13px rgba(2, 5, 8, 0.44), 0 1px 0 rgba(180, 210, 225, 0.07) inset;
+  --shadow-raised: 0 16px 38px rgba(2, 5, 8, 0.58);
+  --shadow-modal: 0 32px 76px rgba(2, 5, 8, 0.72);
+  --shadow-copper-glow: rgba(53, 181, 189, 0.18);
 
   --sidebar-width: 232px;
   --content-width: 1360px;
 
-  --font-brand: "Rye", "Playfair Display", serif;
-  --font-display: "Playfair Display", Georgia, serif;
-  --font-body: "Vollkorn", Georgia, "Times New Roman", serif;
-  --font-mono: "Vollkorn", Georgia, serif;
+  --font-brand: "Inter", system-ui, -apple-system, sans-serif;
+  --font-display: "Inter", system-ui, -apple-system, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, sans-serif;
 }
-
