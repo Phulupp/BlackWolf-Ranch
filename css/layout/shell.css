@@ -21,23 +21,31 @@
   background: linear-gradient(180deg, var(--wood-950) 0%, var(--wood-900) 100%);
 }
 
+/* Sidebar-Kopf: Marke oben, direkt darunter die eigene Identität (Avatar +
+   Name + Rang-Stufen-Balken) wie ein Dienstausweis - ersetzt das frühere
+   separate Konto-Menü unten in der Sidebar komplett. */
 .sidebar__brand {
-  padding: 30px 22px 24px;
-  text-align: center;
+  padding: 22px 20px 20px;
   border-bottom: 1px solid rgba(130, 170, 190, 0.16);
   position: relative;
 }
 
-/* Dezenter Teal-Schein hinter dem Icon - negatives z-index, damit er
+.sidebar__brand-row {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+/* Dezenter Rot-Schein hinter dem Icon - negatives z-index, damit er
    garantiert hinter dem Icon bleibt. */
 .sidebar__brand::before {
   content: "";
   position: absolute;
-  left: 50%;
-  top: 14px;
-  width: 150px;
-  height: 150px;
-  transform: translateX(-50%);
+  left: 42px;
+  top: 42px;
+  width: 84px;
+  height: 84px;
+  transform: translate(-50%, -50%);
   background: radial-gradient(circle, var(--brass-soft) 0%, rgba(217, 68, 82, 0) 72%);
   pointer-events: none;
   z-index: -1;
@@ -51,28 +59,54 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 88px;
-  height: 88px;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
   border-radius: 50%;
-  margin: 0 auto;
   background: #f4f7f8;
   border: 2px solid var(--brass-bright);
   color: var(--brass-bright);
-  box-shadow: var(--shadow-card), 0 0 0 6px var(--brass-soft);
+  box-shadow: var(--shadow-card), 0 0 0 4px var(--brass-soft);
 }
 
 .sidebar__brand-icon svg {
-  width: 42px;
-  height: 42px;
+  width: 22px;
+  height: 22px;
 }
 
 .sidebar__brand-name {
-  margin-top: 14px;
-  font-size: 12.5px;
+  font-size: 11.5px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
+  line-height: 1.4;
   color: var(--wood-text);
+}
+
+.sidebar__identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(130, 170, 190, 0.14);
+}
+
+/* Rang-Stufen-Balken: ein Segment pro Rang in BENUTZER_RAENGE, gefüllt bis
+   zur eigenen Stufe (siehe aktualisiereSidebarRang in js/main.js) - zeigt
+   die Position in der MD-Hierarchie auf einen Blick, ohne Pille/Rahmen um
+   den Rangnamen selbst. */
+.sidebar__rang-stufen {
+  display: flex;
+  gap: 3px;
+  margin-top: 7px;
+}
+
+.sidebar__rang-stufe {
+  width: 13px;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(130, 170, 190, 0.16);
 }
 
 .sidebar__nav {
@@ -157,24 +191,34 @@
   margin: 10px 6px;
 }
 
+/* Nur noch "Abmelden" - die Identität (Avatar/Name/Rang) lebt jetzt oben in
+   .sidebar__brand, kein separates Konto-Menü mehr nötig. */
 .sidebar__footer {
   border-top: 1px solid rgba(130, 170, 190, 0.16);
   padding: 14px;
-  position: relative;
 }
 
-.sidebar__user {
+.sidebar__logout {
   display: flex;
   align-items: center;
   gap: 10px;
   width: 100%;
-  padding: 8px;
+  padding: 10px 12px;
   border-radius: var(--radius-md);
-  transition: background 0.15s ease;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--wood-text-muted);
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
-.sidebar__user:hover {
-  background: var(--brass-soft);
+.sidebar__logout svg {
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.sidebar__logout:hover {
+  background: var(--status-danger-soft);
+  color: var(--status-danger-bright);
 }
 
 /* Hintergrund kommt jetzt aus der individuellen Rang-Farbe (--rang-farbe,
@@ -235,45 +279,6 @@
    Auszeichnung wirklich als "besonders" auffällt. */
 .sidebar__user-avatar--akzent {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4), 0 0 0 3px rgba(255, 255, 255, 0.12), 0 0 12px 1px var(--rang-farbe);
-}
-
-.sidebar__user-chevron {
-  color: var(--wood-text-soft);
-  font-size: 15px;
-  flex-shrink: 0;
-}
-
-.sidebar__user-menu {
-  display: none;
-  position: absolute;
-  bottom: calc(100% + 6px);
-  left: 14px;
-  right: 14px;
-  background: var(--leather-800);
-  border: 1.5px solid var(--leather-edge);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-raised);
-  padding: 6px;
-  z-index: 50;
-}
-
-.sidebar__user-menu--visible {
-  display: block;
-}
-
-.sidebar__user-menu-item {
-  display: block;
-  width: 100%;
-  text-align: left;
-  padding: 9px 12px;
-  border-radius: var(--radius-sm);
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--wood-text);
-}
-
-.sidebar__user-menu-item:hover {
-  background: var(--brass-soft);
 }
 
 /* --------------------------------------------------------------------------

@@ -2,7 +2,7 @@
    17. Startseite
    -------------------------------------------------------------------------- */
 .startseite-hero {
-  padding: 36px 4px 30px;
+  padding: 36px 4px 26px;
 }
 
 .startseite-hero__eyebrow {
@@ -18,6 +18,36 @@
   margin-top: 6px;
 }
 
+.startseite-stats {
+  display: flex;
+  gap: 40px;
+  margin: 4px 4px 32px;
+  padding-bottom: 26px;
+  border-bottom: 1px solid var(--leather-edge);
+}
+
+.startseite-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.startseite-stat__wert {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--wood-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.startseite-stat__label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--wood-text-soft);
+}
+
 .startseite-kacheln {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -28,10 +58,39 @@
   display: block;
   width: 100%;
   text-align: left;
+  padding: 24px 26px;
+  background: var(--leather-700);
+  border: 1px solid var(--leather-edge);
+  border-radius: var(--radius-lg);
   cursor: pointer;
-  transition: transform 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
 }
 
 .startseite-kachel:hover {
+  border-color: var(--brass);
+  background: var(--leather-600);
   transform: translateY(-2px);
+}
+
+.startseite-kachel__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-md);
+  background: var(--brass-soft);
+  color: var(--brass-bright);
+  margin-bottom: 16px;
+}
+
+.startseite-kachel h3 {
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+
+.startseite-kachel p {
+  font-size: 12.5px;
+  color: var(--wood-text-muted);
+  line-height: 1.6;
 }

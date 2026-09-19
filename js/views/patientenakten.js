@@ -17,9 +17,24 @@
   // state.js, da es nur den Klick-Fluss innerhalb dieser Datei betrifft.
   let offeneAkteDetailId = null;
 
-  function heutigesDatum() {
+  // Default-Wert für das <input type="datetime-local"> beim Anlegen einer
+  // neuen Akte - "jetzt", auf die Minute genau (Sekunden lässt das Feld
+  // ohnehin weg).
+  function jetzigerZeitpunkt() {
     const d = new Date();
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    const pad = (n) => String(n).padStart(2, "0");
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  // Zeigt das in "akte-datum" gespeicherte datetime-local ("YYYY-MM-
+  // DDTHH:mm") als "TT.MM.JJJJ, HH:mm Uhr" an.
+  function formatDatumZeit(wert) {
+    if (!wert) return "—";
+    const d = new Date(wert);
+    if (isNaN(d.getTime())) return "—";
+    return `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1).padStart(2, "0")}.${d.getFullYear()}, ${String(
+      d.getHours()
+    ).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")} Uhr`;
   }
 
   // Baut den dauerhaften, direkt teilbaren Link zu einer Akte - einfach die
@@ -84,6 +99,7 @@
           // direkt nach dem Anlegen), aktualisiert dieser Aufruf sie mit dem
           // echten, jetzt geladenen Stand (korrekte Akte-Nummer etc.).
           if (offeneAkteDetailId) zeigeAkteFokusAnsicht(offeneAkteDetailId);
+          renderStartseiteStats();
           pruefeUrlAktion();
         },
         (fehler) => console.error("Akten konnten nicht geladen werden:", fehler)
@@ -105,6 +121,7 @@
             const p = patienten.find((x) => x.id === offenerPatientId);
             if (p) fuellePatientDetailFelder(p);
           }
+          renderStartseiteStats();
           pruefeUrlAktion();
         },
         (fehler) => console.error("Patienten konnten nicht geladen werden:", fehler)
@@ -261,10 +278,10 @@
     el.patientAktenLeer.hidden = liste.length !== 0;
     el.patientAktenListe.innerHTML = liste
       .map(
-        (a, index) => `<a class="reg-row reg-row--body" style="grid-template-columns: 110px 1fr 110px;" href="${akteLink(a.id)}" target="_blank" rel="noopener">
+        (a, index) => `<a class="reg-row reg-row--body" style="grid-template-columns: 100px 1fr 170px;" href="${akteLink(a.id)}" target="_blank" rel="noopener">
             <span class="reg-name">Akte ${index + 1}</span>
             <span>${escapeHtml(a.behandlungsgrund || "—")}</span>
-            <span>${escapeHtml(formatDatum(a.datum))}</span>
+            <span>${escapeHtml(formatDatumZeit(a.datum))}</span>
           </a>`
       )
       .join("");
@@ -292,12 +309,17 @@
     const a = akteId ? akten.find((x) => x.id === akteId) : null;
     el.akteFormTitel.textContent = akteId ? "Akte bearbeiten" : "Neue Akte";
     el.akteEditingId.value = akteId || "";
-    el.akteDatum.value = a ? a.datum || heutigesDatum() : heutigesDatum();
+    // "a.datum && !a.datum.includes('T')" fängt Akten ab, die noch vor der
+    // Uhrzeit-Erweiterung mit reinem <input type="date"> angelegt wurden -
+    // ohne das würde das jetzige datetime-local-Feld einen solchen Altwert
+    // stillschweigend als ungültig verwerfen und leer bleiben.
+    el.akteDatum.value = a ? (a.datum && !a.datum.includes("T") ? `${a.datum}T00:00` : a.datum) || jetzigerZeitpunkt() : jetzigerZeitpunkt();
     el.akteBehandlungsgrund.value = a ? a.behandlungsgrund || "" : "";
     el.akteBefund.value = a ? a.befund || "" : "";
     el.akteBehandlung.value = a ? a.behandlung || "" : "";
     el.akteBemerkungen.value = a ? a.bemerkungen || "" : "";
 
+    if (el.akteFokusLade) el.akteFokusLade.hidden = true;
     if (el.akteFokusFormular) el.akteFokusFormular.hidden = false;
     if (el.akteFokusAnsicht) el.akteFokusAnsicht.hidden = true;
   }
@@ -376,7 +398,7 @@
 
     el.akteDetailTitel.textContent = vorhanden ? `Akte ${patientAkten(a.patientId).findIndex((x) => x.id === akteId) + 1}` : "Akte";
     el.akteDetailPatient.textContent = patient ? patient.name : "—";
-    el.akteDetailDatum.textContent = formatDatum(a.datum);
+    el.akteDetailDatum.textContent = formatDatumZeit(a.datum);
     el.akteDetailInhalt.innerHTML = `
         <div class="akte-vorlage__abschnitt">
           <span class="akte-vorlage__label">Behandlungsgrund</span>
@@ -395,6 +417,7 @@
           <p>${escapeHtml(a.bemerkungen || "—")}</p>
         </div>`;
 
+    if (el.akteFokusLade) el.akteFokusLade.hidden = true;
     if (el.akteFokusAnsicht) el.akteFokusAnsicht.hidden = false;
     if (el.akteFokusFormular) el.akteFokusFormular.hidden = true;
   }

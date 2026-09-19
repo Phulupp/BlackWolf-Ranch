@@ -199,6 +199,65 @@
   margin-bottom: 18px;
 }
 
+/* Ladezustand (siehe #akte-fokus-lade in index.html) - sichtbar, bis Patient/
+   Akte tatsächlich geladen sind, statt sofort eine leere Vorlage mit lauter
+   "—"-Platzhaltern zu zeigen. */
+.akte-fokus__lade {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 30px 0;
+  color: var(--wood-text-muted);
+  font-size: 13.5px;
+}
+
+.akte-fokus__lade-spinner {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 2px solid var(--leather-edge);
+  border-top-color: var(--brass-bright);
+  animation: akte-fokus-spin 0.7s linear infinite;
+}
+
+@keyframes akte-fokus-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .akte-fokus__lade-spinner {
+    animation: none;
+  }
+}
+
+/* Sanftes Einblenden statt eines harten Schnitts, sobald der Ladezustand
+   durch die echte Ansicht/das Formular ersetzt wird. */
+#akte-fokus-ansicht,
+#akte-fokus-formular {
+  animation: akte-fokus-einblenden 0.22s ease;
+}
+
+@keyframes akte-fokus-einblenden {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #akte-fokus-ansicht,
+  #akte-fokus-formular {
+    animation: none;
+  }
+}
+
 .akte-dokument__aktionen {
   display: flex;
   justify-content: flex-end;

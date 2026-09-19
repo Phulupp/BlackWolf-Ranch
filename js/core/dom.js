@@ -20,11 +20,10 @@
     onlinePanel: document.getElementById("online-panel"),
     onlinePanelList: document.getElementById("online-panel-list"),
 
-    sidebarUserBtn: document.getElementById("sidebar-user-btn"),
     sidebarUserAvatar: document.getElementById("sidebar-user-avatar"),
     sidebarUserName: document.getElementById("sidebar-user-name"),
     sidebarUserRole: document.getElementById("sidebar-user-role"),
-    sidebarUserMenu: document.getElementById("sidebar-user-menu"),
+    sidebarRangStufen: document.getElementById("sidebar-rang-stufen"),
     btnLogout: document.getElementById("btn-logout"),
 
     toast: document.getElementById("toast"),
@@ -32,6 +31,8 @@
     // Startseite
     startseiteGreeting: document.getElementById("startseite-greeting"),
     startseiteName: document.getElementById("startseite-name"),
+    startseiteStatPatienten: document.getElementById("startseite-stat-patienten"),
+    startseiteStatAkten: document.getElementById("startseite-stat-akten"),
 
     // Patientenakten
     patientenSearch: document.getElementById("patienten-search"),
@@ -67,6 +68,7 @@
     // js/views/patientenakten.js und die entsprechende HTML-Sektion nach
     // dem schließenden .app-div in index.html).
     akteFokusRoot: document.getElementById("akte-fokus-root"),
+    akteFokusLade: document.getElementById("akte-fokus-lade"),
     akteFokusAnsicht: document.getElementById("akte-fokus-ansicht"),
     akteFokusFormular: document.getElementById("akte-fokus-formular"),
 

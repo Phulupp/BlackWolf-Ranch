@@ -3,9 +3,11 @@
   /* ------------------------------------------------------------------------
      21. Start / Stop der App (reagiert auf js/auth.js-Events)
      ------------------------------------------------------------------------ */
-  // Rang-Badge + Avatar-Farbe in der Sidebar-Profilkarte setzen - jeder Rang
-  // bekommt seine eigene Farbe (siehe RANG_AKZENTE in js/core/config.js),
-  // die beiden Spitzenränge (RANG_AKZENTRING) zusätzlich einen leuchtenden
+  // Rang-Anzeige in der Sidebar-Identität setzen - Name/Avatar-Farbe (siehe
+  // RANG_AKZENTE in js/core/config.js) UND ein Rang-Stufen-Balken, der die
+  // Position innerhalb der MD-Hierarchie zeigt (ein Segment pro Rang in
+  // BENUTZER_RAENGE, gefüllt bis zur eigenen Stufe) - die beiden
+  // Spitzenränge (RANG_AKZENTRING) bekommen zusätzlich einen leuchtenden
   // Akzentring um den Avatar.
   function aktualisiereSidebarRang(rolle) {
     el.sidebarUserRole.textContent = rolle;
@@ -13,6 +15,14 @@
     el.sidebarUserRole.style.color = farbe;
     el.sidebarUserAvatar.style.setProperty("--rang-farbe", farbe);
     el.sidebarUserAvatar.classList.toggle("sidebar__user-avatar--akzent", RANG_AKZENTRING.includes(rolle));
+
+    if (el.sidebarRangStufen) {
+      const stufe = BENUTZER_RAENGE.indexOf(rolle) + 1;
+      el.sidebarRangStufen.innerHTML = BENUTZER_RAENGE.map((_, i) => {
+        const aktiv = i < stufe;
+        return `<span class="sidebar__rang-stufe" style="${aktiv ? `background:${farbe};` : ""}"></span>`;
+      }).join("");
+    }
   }
 
   // Akte-Fokus-Modus (Link auf eine einzelne Akte oder "+ Neue Akte", siehe

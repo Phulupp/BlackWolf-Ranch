@@ -16,7 +16,7 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>Medical Department — Verwaltung</title>
-  <link rel="icon" type="image/svg+xml" href="assets/logo/favicon.svg?v=111" />
+  <link rel="icon" type="image/svg+xml" href="assets/logo/favicon.svg?v=113" />
 
   <!-- Google Fonts: Inter für die gesamte App (klar, modern, klinisch). -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -29,24 +29,24 @@
   <!-- Stylesheets: gleiche Kaskaden-Reihenfolge wie zuvor (base > layout >
        components > views). Reihenfolge ist wichtig und darf nicht vertauscht
        werden. -->
-  <link rel="stylesheet" href="css/base/tokens.css?v=111" />
-  <link rel="stylesheet" href="css/base/reset.css?v=111" />
-  <link rel="stylesheet" href="css/base/textures.css?v=111" />
-  <link rel="stylesheet" href="css/views/auth.css?v=111" />
-  <link rel="stylesheet" href="css/components/forms.css?v=111" />
-  <link rel="stylesheet" href="css/components/buttons.css?v=111" />
-  <link rel="stylesheet" href="css/layout/shell.css?v=111" />
-  <link rel="stylesheet" href="css/components/cards.css?v=111" />
-  <link rel="stylesheet" href="css/components/badges.css?v=111" />
-  <link rel="stylesheet" href="css/views/startseite.css?v=111" />
-  <link rel="stylesheet" href="css/components/tables.css?v=111" />
-  <link rel="stylesheet" href="css/views/patientenakten.css?v=111" />
-  <link rel="stylesheet" href="css/views/beispiele.css?v=111" />
-  <link rel="stylesheet" href="css/components/modals.css?v=111" />
-  <link rel="stylesheet" href="css/views/admin.css?v=111" />
-  <link rel="stylesheet" href="css/components/toast.css?v=111" />
-  <link rel="stylesheet" href="css/layout/footer.css?v=111" />
-  <link rel="stylesheet" href="css/base/responsive.css?v=111" />
+  <link rel="stylesheet" href="css/base/tokens.css?v=113" />
+  <link rel="stylesheet" href="css/base/reset.css?v=113" />
+  <link rel="stylesheet" href="css/base/textures.css?v=113" />
+  <link rel="stylesheet" href="css/views/auth.css?v=113" />
+  <link rel="stylesheet" href="css/components/forms.css?v=113" />
+  <link rel="stylesheet" href="css/components/buttons.css?v=113" />
+  <link rel="stylesheet" href="css/layout/shell.css?v=113" />
+  <link rel="stylesheet" href="css/components/cards.css?v=113" />
+  <link rel="stylesheet" href="css/components/badges.css?v=113" />
+  <link rel="stylesheet" href="css/views/startseite.css?v=113" />
+  <link rel="stylesheet" href="css/components/tables.css?v=113" />
+  <link rel="stylesheet" href="css/views/patientenakten.css?v=113" />
+  <link rel="stylesheet" href="css/views/beispiele.css?v=113" />
+  <link rel="stylesheet" href="css/components/modals.css?v=113" />
+  <link rel="stylesheet" href="css/views/admin.css?v=113" />
+  <link rel="stylesheet" href="css/components/toast.css?v=113" />
+  <link rel="stylesheet" href="css/layout/footer.css?v=113" />
+  <link rel="stylesheet" href="css/base/responsive.css?v=113" />
 
   <!-- Firebase SDK (Authentifizierung + Datenbank). "defer" statt normaler
        blockierender <script>-Tags: der Browser kann so den Rest der Seite
@@ -233,12 +233,27 @@
     <!-- ============================ -->
     <aside class="sidebar">
       <div class="sidebar__brand">
-        <div class="sidebar__brand-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M2 13h3.2l2-5.5L11.5 19l2.7-12 2 6H22" />
-          </svg>
+        <div class="sidebar__brand-row">
+          <div class="sidebar__brand-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 13h3.2l2-5.5L11.5 19l2.7-12 2 6H22" />
+            </svg>
+          </div>
+          <p class="sidebar__brand-name">Medical<br />Department</p>
         </div>
-        <p class="sidebar__brand-name">Medical Department</p>
+
+        <!-- Dienstausweis-artige Identität statt eines separaten
+             Konto-Menüs unten in der Sidebar - Name, Rang und ein
+             Rang-Stufen-Balken (siehe aktualisiereSidebarRang in
+             js/main.js) direkt unter der Marke, wie ein Namensschild. -->
+        <div class="sidebar__identity">
+          <div class="sidebar__user-avatar" id="sidebar-user-avatar">?</div>
+          <div class="sidebar__user-info">
+            <span class="sidebar__user-name" id="sidebar-user-name">Lädt...</span>
+            <span class="sidebar__user-role" id="sidebar-user-role">—</span>
+            <div class="sidebar__rang-stufen" id="sidebar-rang-stufen" aria-hidden="true"></div>
+          </div>
+        </div>
       </div>
 
       <nav class="sidebar__nav" id="sidebar-nav">
@@ -267,17 +282,10 @@
       </nav>
 
       <div class="sidebar__footer">
-        <button class="sidebar__user" id="sidebar-user-btn">
-          <div class="sidebar__user-avatar" id="sidebar-user-avatar">?</div>
-          <div class="sidebar__user-info">
-            <span class="sidebar__user-name" id="sidebar-user-name">Lädt...</span>
-            <span class="sidebar__user-role" id="sidebar-user-role">—</span>
-          </div>
-          <span class="sidebar__user-chevron">›</span>
+        <button class="sidebar__logout" id="btn-logout">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span>Abmelden</span>
         </button>
-        <div class="sidebar__user-menu" id="sidebar-user-menu">
-          <button class="sidebar__user-menu-item" id="btn-logout">Abmelden</button>
-        </div>
       </div>
     </aside>
 
@@ -316,14 +324,31 @@
               <h1 class="startseite-hero__name" id="startseite-name">—</h1>
             </div>
 
+            <div class="startseite-stats">
+              <div class="startseite-stat">
+                <span class="startseite-stat__wert" id="startseite-stat-patienten">0</span>
+                <span class="startseite-stat__label">Patienten</span>
+              </div>
+              <div class="startseite-stat">
+                <span class="startseite-stat__wert" id="startseite-stat-akten">0</span>
+                <span class="startseite-stat__label">Akten insgesamt</span>
+              </div>
+            </div>
+
             <div class="startseite-kacheln">
-              <button type="button" class="parch-card startseite-kachel" data-quicklink="patientenakten">
+              <button type="button" class="startseite-kachel" data-quicklink="patientenakten">
+                <span class="startseite-kachel__icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+                </span>
                 <h3>Patientenakten</h3>
-                <p class="parch-card__hint">Patienten suchen, anlegen und Behandlungen dokumentieren.</p>
+                <p>Patienten suchen, anlegen und Behandlungen dokumentieren.</p>
               </button>
-              <button type="button" class="parch-card startseite-kachel" data-quicklink="beispiele">
+              <button type="button" class="startseite-kachel" data-quicklink="beispiele">
+                <span class="startseite-kachel__icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5.5C10 4 6.5 3.6 4 4.3v14.3c2.5-.7 6-.3 8 1.2"/><path d="M12 5.5c2-1.5 5.5-1.9 8-1.2v14.3c-2.5-.7-6-.3-8 1.2Z"/><line x1="12" y1="5.5" x2="12" y2="19.8"/></svg>
+                </span>
                 <h3>Beispiele</h3>
-                <p class="parch-card__hint">Behandlungsleitfäden für häufige Fälle nachschlagen.</p>
+                <p>Behandlungsleitfäden für häufige Fälle nachschlagen.</p>
               </button>
             </div>
           </section>
@@ -452,7 +477,17 @@
     <div class="akte-dokument">
       <a class="akte-dokument__marke" href="?">Medical Department</a>
 
-      <div id="akte-fokus-ansicht">
+      <!-- Sichtbar, bis Patient/Akte tatsächlich geladen sind (siehe
+           zeigeAkteFokusAnsicht/zeigeAkteFokusFormular in
+           js/views/patientenakten.js) - vorher stand hier sofort eine leere
+           Vorlage mit lauter "—"-Platzhaltern, was beim Öffnen unfertig
+           wirkte, bevor die echten Daten eintrafen. -->
+      <div class="akte-fokus__lade" id="akte-fokus-lade">
+        <span class="akte-fokus__lade-spinner" aria-hidden="true"></span>
+        <span>Wird geladen …</span>
+      </div>
+
+      <div id="akte-fokus-ansicht" hidden>
         <h1 id="akte-detail-titel">Akte</h1>
         <div class="akte-vorlage__kopf">
           <span><strong>Patient:</strong> <span id="akte-detail-patient">—</span></span>
@@ -473,8 +508,8 @@
         <label class="field-label">Patient</label>
         <p class="field-static" id="akte-form-patient-name">—</p>
 
-        <label class="field-label" for="akte-datum">Datum</label>
-        <input type="date" id="akte-datum" class="field-input" />
+        <label class="field-label" for="akte-datum">Datum &amp; Uhrzeit</label>
+        <input type="datetime-local" id="akte-datum" class="field-input" />
 
         <label class="field-label" for="akte-behandlungsgrund">Behandlungsgrund</label>
         <textarea id="akte-behandlungsgrund" class="field-input field-textarea" rows="2" placeholder="Kurze Beschreibung"></textarea>
@@ -719,22 +754,22 @@
        (nicht type="module") "defer"-Skripte, damit sie sich gemeinsame
        globale Variablen/Funktionen teilen können. js/main.js muss immer
        zuletzt kommen, da es die App erst startet. -->
-  <script defer src="js/firebase-config.js?v=111"></script>
-  <script defer src="js/core/config.js?v=111"></script>
-  <script defer src="js/core/state.js?v=111"></script>
-  <script defer src="js/core/dom.js?v=111"></script>
-  <script defer src="js/core/firebase-init.js?v=111"></script>
-  <script defer src="js/core/utils.js?v=111"></script>
-  <script defer src="js/ui/modals.js?v=111"></script>
-  <script defer src="js/ui/nav.js?v=111"></script>
-  <script defer src="js/ui/presence.js?v=111"></script>
-  <script defer src="js/views/startseite.js?v=111"></script>
-  <script defer src="js/views/patientenakten.js?v=111"></script>
-  <script defer src="js/views/beispiele.js?v=111"></script>
-  <script defer src="js/views/einstellungen.js?v=111"></script>
-  <script defer src="js/views/admin.js?v=111"></script>
-  <script defer src="js/ui/version-check.js?v=111"></script>
-  <script defer src="js/main.js?v=111"></script>
-  <script type="module" src="js/auth.js?v=111"></script>
+  <script defer src="js/firebase-config.js?v=113"></script>
+  <script defer src="js/core/config.js?v=113"></script>
+  <script defer src="js/core/state.js?v=113"></script>
+  <script defer src="js/core/dom.js?v=113"></script>
+  <script defer src="js/core/firebase-init.js?v=113"></script>
+  <script defer src="js/core/utils.js?v=113"></script>
+  <script defer src="js/ui/modals.js?v=113"></script>
+  <script defer src="js/ui/nav.js?v=113"></script>
+  <script defer src="js/ui/presence.js?v=113"></script>
+  <script defer src="js/views/startseite.js?v=113"></script>
+  <script defer src="js/views/patientenakten.js?v=113"></script>
+  <script defer src="js/views/beispiele.js?v=113"></script>
+  <script defer src="js/views/einstellungen.js?v=113"></script>
+  <script defer src="js/views/admin.js?v=113"></script>
+  <script defer src="js/ui/version-check.js?v=113"></script>
+  <script defer src="js/main.js?v=113"></script>
+  <script type="module" src="js/auth.js?v=113"></script>
 </body>
 </html>

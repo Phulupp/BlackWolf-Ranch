@@ -34,14 +34,7 @@
     btn.addEventListener("click", () => zeigeAnsicht(btn.getAttribute("data-admin-subview")));
   });
 
-  if (el.sidebarUserBtn) {
-    el.sidebarUserBtn.addEventListener("click", (event) => {
-      event.stopPropagation();
-      el.sidebarUserMenu.classList.toggle("sidebar__user-menu--visible");
-    });
-  }
   document.addEventListener("click", () => {
-    el.sidebarUserMenu && el.sidebarUserMenu.classList.remove("sidebar__user-menu--visible");
     el.onlinePanel && el.onlinePanel.classList.remove("online-panel--visible");
   });
   if (el.onlineWidgetBtn) {
