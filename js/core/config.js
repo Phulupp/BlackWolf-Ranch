@@ -12,7 +12,7 @@
   /* ------------------------------------------------------------------------
      1. Konstanten
      ------------------------------------------------------------------------ */
-  const VERSION_AKTUELL = 113;
+  const VERSION_AKTUELL = 115;
 
   // Ränge im MD (rein organisatorisch — Verwalterrechte sind unabhängig davon
   // und werden separat je Benutzer vergeben, siehe isAdmin).
@@ -59,6 +59,9 @@
   const VIEW_META = {
     startseite: { title: "Startseite", subtitle: "" },
     patientenakten: { title: "Patientenakten", subtitle: "Suche, lege Patienten an und dokumentiere Behandlungen." },
+    // Kein Sidebar-Button - wird per oeffnePatientSeite (js/views/
+    // patientenakten.js) geöffnet, Titel dort auf den Patientennamen gesetzt.
+    "patient-detail": { title: "Patient", subtitle: "Patientenakte" },
     beispiele: { title: "Beispiele", subtitle: "Behandlungsleitfäden für häufige Fälle." },
     einstellungen: { title: "Einstellungen", subtitle: "Persönliche Einstellungen." },
     admin: { title: "Verwaltung", subtitle: "Benutzerverwaltung — nur für Verwalter sichtbar." },

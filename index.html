@@ -16,7 +16,7 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>Medical Department — Verwaltung</title>
-  <link rel="icon" type="image/svg+xml" href="assets/logo/favicon.svg?v=113" />
+  <link rel="icon" type="image/svg+xml" href="assets/logo/favicon.svg?v=115" />
 
   <!-- Google Fonts: Inter für die gesamte App (klar, modern, klinisch). -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -29,24 +29,24 @@
   <!-- Stylesheets: gleiche Kaskaden-Reihenfolge wie zuvor (base > layout >
        components > views). Reihenfolge ist wichtig und darf nicht vertauscht
        werden. -->
-  <link rel="stylesheet" href="css/base/tokens.css?v=113" />
-  <link rel="stylesheet" href="css/base/reset.css?v=113" />
-  <link rel="stylesheet" href="css/base/textures.css?v=113" />
-  <link rel="stylesheet" href="css/views/auth.css?v=113" />
-  <link rel="stylesheet" href="css/components/forms.css?v=113" />
-  <link rel="stylesheet" href="css/components/buttons.css?v=113" />
-  <link rel="stylesheet" href="css/layout/shell.css?v=113" />
-  <link rel="stylesheet" href="css/components/cards.css?v=113" />
-  <link rel="stylesheet" href="css/components/badges.css?v=113" />
-  <link rel="stylesheet" href="css/views/startseite.css?v=113" />
-  <link rel="stylesheet" href="css/components/tables.css?v=113" />
-  <link rel="stylesheet" href="css/views/patientenakten.css?v=113" />
-  <link rel="stylesheet" href="css/views/beispiele.css?v=113" />
-  <link rel="stylesheet" href="css/components/modals.css?v=113" />
-  <link rel="stylesheet" href="css/views/admin.css?v=113" />
-  <link rel="stylesheet" href="css/components/toast.css?v=113" />
-  <link rel="stylesheet" href="css/layout/footer.css?v=113" />
-  <link rel="stylesheet" href="css/base/responsive.css?v=113" />
+  <link rel="stylesheet" href="css/base/tokens.css?v=115" />
+  <link rel="stylesheet" href="css/base/reset.css?v=115" />
+  <link rel="stylesheet" href="css/base/textures.css?v=115" />
+  <link rel="stylesheet" href="css/views/auth.css?v=115" />
+  <link rel="stylesheet" href="css/components/forms.css?v=115" />
+  <link rel="stylesheet" href="css/components/buttons.css?v=115" />
+  <link rel="stylesheet" href="css/layout/shell.css?v=115" />
+  <link rel="stylesheet" href="css/components/cards.css?v=115" />
+  <link rel="stylesheet" href="css/components/badges.css?v=115" />
+  <link rel="stylesheet" href="css/views/startseite.css?v=115" />
+  <link rel="stylesheet" href="css/components/tables.css?v=115" />
+  <link rel="stylesheet" href="css/views/patientenakten.css?v=115" />
+  <link rel="stylesheet" href="css/views/beispiele.css?v=115" />
+  <link rel="stylesheet" href="css/components/modals.css?v=115" />
+  <link rel="stylesheet" href="css/views/admin.css?v=115" />
+  <link rel="stylesheet" href="css/components/toast.css?v=115" />
+  <link rel="stylesheet" href="css/layout/footer.css?v=115" />
+  <link rel="stylesheet" href="css/base/responsive.css?v=115" />
 
   <!-- Firebase SDK (Authentifizierung + Datenbank). "defer" statt normaler
        blockierender <script>-Tags: der Browser kann so den Rest der Seite
@@ -357,18 +357,106 @@
           <!-- VIEW: PATIENTENAKTEN          -->
           <!-- ============================ -->
           <section class="view" id="view-patientenakten">
-            <div class="toolbar">
-              <div class="search-field">
-                <input type="text" id="patienten-search" placeholder="Patient suchen..." autocomplete="off" />
+            <div class="pat-kopf">
+              <div class="pat-suche">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+                <input type="text" id="patienten-search" placeholder="Patient suchen" autocomplete="off" />
               </div>
-              <div class="toolbar__buttons">
-                <button class="btn btn--primary" id="btn-patient-anlegen">＋ Patient anlegen</button>
-              </div>
+              <button class="btn btn--primary" id="btn-patient-anlegen">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>Patient anlegen</span>
+              </button>
             </div>
 
-            <div class="patienten-liste" id="patienten-liste"></div>
+            <div class="pat-register" id="patienten-liste"></div>
             <p class="empty-state" id="patienten-empty" hidden>Noch keine Patienten angelegt.</p>
             <p class="empty-state" id="patienten-no-results" hidden>Keine Patienten gefunden, die zu deiner Suche passen.</p>
+          </section>
+
+          <!-- ============================ -->
+          <!-- VIEW: PATIENT-DETAIL          -->
+          <!-- ============================ -->
+          <!-- Bewusst kein Modal (mehr) und kein eigenes Browser-Fenster
+               (frühere Fassungen) - eine echte Seite innerhalb der App, wie
+               jede andere Ansicht auch, nicht über die Sidebar erreichbar
+               (siehe oeffnePatientSeite in js/views/patientenakten.js). -->
+          <section class="view" id="view-patient-detail">
+            <button type="button" class="patient-seite__zurueck" data-quicklink="patientenakten">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+              <span>Zurück zu Patientenakten</span>
+            </button>
+
+            <div class="patient-seite">
+              <div class="md-panel pblatt">
+                <div class="pblatt__kopf">
+                  <span class="pblatt__avatar" id="patient-detail-avatar">?</span>
+                  <div class="pblatt__name md-feld">
+                    <label for="patient-detail-name">Name</label>
+                    <input type="text" id="patient-detail-name" class="md-input" />
+                  </div>
+                </div>
+                <input type="hidden" id="patient-detail-id" value="" />
+
+                <h4 class="pblatt__titel">Stammdaten</h4>
+                <div class="md-grid-2">
+                  <div class="md-feld">
+                    <label for="patient-geburtsdatum">Geburtsdatum</label>
+                    <input type="text" id="patient-geburtsdatum" class="md-input" placeholder="TT.MM.JJJJ" />
+                  </div>
+                  <div class="md-feld">
+                    <label for="patient-telefonnummer">Telefonnummer</label>
+                    <input type="text" id="patient-telefonnummer" class="md-input" />
+                  </div>
+                </div>
+
+                <h4 class="pblatt__titel">Medizinische Hinweise</h4>
+                <div class="md-feld md-feld--warn">
+                  <label for="patient-allergien">Allergien / Unverträglichkeiten</label>
+                  <textarea id="patient-allergien" class="md-input" rows="2" placeholder="Nichts erfasst"></textarea>
+                </div>
+                <div class="md-feld">
+                  <label for="patient-vorerkrankungen">Vorerkrankungen</label>
+                  <textarea id="patient-vorerkrankungen" class="md-input" rows="2" placeholder="Nichts erfasst"></textarea>
+                </div>
+                <div class="md-feld">
+                  <label for="patient-besondere-hinweise">Besondere Hinweise</label>
+                  <textarea id="patient-besondere-hinweise" class="md-input" rows="2" placeholder="Nichts erfasst"></textarea>
+                </div>
+
+                <h4 class="pblatt__titel">Notfallkontakt</h4>
+                <div class="md-grid-2">
+                  <div class="md-feld">
+                    <label for="patient-notfallkontakt">Name</label>
+                    <input type="text" id="patient-notfallkontakt" class="md-input" />
+                  </div>
+                  <div class="md-feld">
+                    <label for="patient-notfallkontakt-telefon">Telefonnummer</label>
+                    <input type="text" id="patient-notfallkontakt-telefon" class="md-input" />
+                  </div>
+                </div>
+
+                <p class="field-error" id="patient-profil-error" hidden></p>
+                <div class="pblatt__fuss">
+                  <p class="pblatt__meta" id="patient-profil-meta"></p>
+                  <button class="btn btn--primary" id="btn-confirm-patient-profil">Speichern</button>
+                </div>
+              </div>
+
+              <div class="md-panel pakten">
+                <div class="pakten__kopf">
+                  <div>
+                    <h3>Behandlungsakten</h3>
+                    <p class="pakten__anzahl" id="patient-akten-anzahl"></p>
+                  </div>
+                  <button type="button" class="btn btn--primary btn--sm" id="btn-akte-neu">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    <span>Neue Akte</span>
+                  </button>
+                </div>
+                <div class="akten-zeitleiste" id="patient-akten-liste"></div>
+                <p class="empty-state" id="patient-akten-leer" hidden>Noch keine Akten für diesen Patienten.</p>
+              </div>
+            </div>
           </section>
 
           <!-- ============================ -->
@@ -465,86 +553,23 @@
   </div>
 
   <!-- ============================ -->
-  <!-- AKTE-FOKUS: eigenständige Dokumentenseite (kein Modal) -->
-  <!-- ============================ -->
-  <!-- Wird NUR sichtbar, wenn die Seite mit "?akte=<id>" oder
-       "?neueAkte=1&patient=<id>" aufgerufen wurde (siehe pruefeUrlAktion in
-       js/views/patientenakten.js) - ersetzt dann komplett die normale App
-       (Sidebar/Topbar bleiben verborgen, siehe starteApp in js/main.js),
-       damit eine Akte wirklich wie ein eigenständiges Dokument in einem
-       eigenen Fenster wirkt statt wie ein Popup über der App. -->
-  <div class="akte-fokus" id="akte-fokus-root" hidden>
-    <div class="akte-dokument">
-      <a class="akte-dokument__marke" href="?">Medical Department</a>
-
-      <!-- Sichtbar, bis Patient/Akte tatsächlich geladen sind (siehe
-           zeigeAkteFokusAnsicht/zeigeAkteFokusFormular in
-           js/views/patientenakten.js) - vorher stand hier sofort eine leere
-           Vorlage mit lauter "—"-Platzhaltern, was beim Öffnen unfertig
-           wirkte, bevor die echten Daten eintrafen. -->
-      <div class="akte-fokus__lade" id="akte-fokus-lade">
-        <span class="akte-fokus__lade-spinner" aria-hidden="true"></span>
-        <span>Wird geladen …</span>
-      </div>
-
-      <div id="akte-fokus-ansicht" hidden>
-        <h1 id="akte-detail-titel">Akte</h1>
-        <div class="akte-vorlage__kopf">
-          <span><strong>Patient:</strong> <span id="akte-detail-patient">—</span></span>
-          <span><strong>Datum:</strong> <span id="akte-detail-datum">—</span></span>
-        </div>
-        <div id="akte-detail-inhalt"></div>
-        <div class="akte-dokument__aktionen">
-          <button type="button" class="btn btn--danger" id="btn-akte-loeschen" style="margin-right: auto;">Löschen</button>
-          <button type="button" class="btn btn--primary" id="btn-akte-bearbeiten">Bearbeiten</button>
-        </div>
-      </div>
-
-      <div id="akte-fokus-formular" hidden>
-        <h1 id="akte-form-titel">Neue Akte</h1>
-        <input type="hidden" id="akte-editing-id" value="" />
-        <input type="hidden" id="akte-form-patient-id" value="" />
-
-        <label class="field-label">Patient</label>
-        <p class="field-static" id="akte-form-patient-name">—</p>
-
-        <label class="field-label" for="akte-datum">Datum &amp; Uhrzeit</label>
-        <input type="datetime-local" id="akte-datum" class="field-input" />
-
-        <label class="field-label" for="akte-behandlungsgrund">Behandlungsgrund</label>
-        <textarea id="akte-behandlungsgrund" class="field-input field-textarea" rows="2" placeholder="Kurze Beschreibung"></textarea>
-
-        <label class="field-label" for="akte-befund">Befund</label>
-        <textarea id="akte-befund" class="field-input field-textarea" rows="2" placeholder="Festgestellte Verletzungen / Beschwerden"></textarea>
-
-        <label class="field-label" for="akte-behandlung">Behandlung</label>
-        <textarea id="akte-behandlung" class="field-input field-textarea" rows="2" placeholder="Durchgeführte Maßnahmen"></textarea>
-
-        <label class="field-label" for="akte-bemerkungen">Bemerkungen</label>
-        <textarea id="akte-bemerkungen" class="field-input field-textarea" rows="2"></textarea>
-
-        <p class="field-error" id="akte-error" hidden></p>
-
-        <div class="akte-dokument__aktionen">
-          <button type="button" class="btn btn--ghost" id="btn-akte-fokus-abbrechen">Abbrechen</button>
-          <button type="button" class="btn btn--primary" id="btn-confirm-akte">Speichern</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ============================ -->
   <!-- MODAL: Patient anlegen        -->
   <!-- ============================ -->
   <div class="modal-overlay" id="modal-patient-anlegen">
-    <div class="modal">
-      <div class="modal__header">
-        <h3>Patient anlegen</h3>
+    <div class="modal modal--akte modal--schmal">
+      <div class="akte-blatt__kopf">
+        <div>
+          <span class="akte-blatt__kicker">Patientenakten</span>
+          <h3>Neuer Patient</h3>
+          <p class="akte-blatt__sub">Weitere Angaben trägst du danach im Patientenblatt ein.</p>
+        </div>
         <button class="modal__close" data-close-modal="modal-patient-anlegen">✕</button>
       </div>
       <div class="modal__body">
-        <label class="field-label" for="patient-anlegen-name">Name</label>
-        <input type="text" id="patient-anlegen-name" class="field-input" placeholder="Vor- und Nachname" />
+        <div class="md-feld">
+          <label for="patient-anlegen-name">Name</label>
+          <input type="text" id="patient-anlegen-name" class="md-input" placeholder="Vor- und Nachname" autocomplete="off" />
+        </div>
         <p class="field-error" id="patient-anlegen-error" hidden></p>
       </div>
       <div class="modal__footer">
@@ -555,82 +580,84 @@
   </div>
 
   <!-- ============================ -->
-  <!-- MODAL: Patient-Detail (Profil + Akten) -->
+  <!-- MODAL: Akte anlegen/bearbeiten -->
   <!-- ============================ -->
-  <div class="modal-overlay" id="modal-patient-detail">
-    <div class="modal modal--large">
-      <div class="modal__header">
-        <h3 id="patient-detail-titel">Patient</h3>
-        <button class="modal__close" data-close-modal="modal-patient-detail">✕</button>
+  <div class="modal-overlay" id="modal-akte-form">
+    <div class="modal modal--akte">
+      <div class="akte-blatt__kopf">
+        <div>
+          <span class="akte-blatt__kicker">Behandlungsakte</span>
+          <h3 id="akte-form-titel">Neue Akte</h3>
+          <p class="akte-blatt__sub">Patient: <strong id="akte-form-patient-name">—</strong></p>
+        </div>
+        <button class="modal__close" data-close-modal="modal-akte-form">✕</button>
       </div>
       <div class="modal__body">
-        <div class="patient-detail-body">
-          <input type="hidden" id="patient-detail-id" value="" />
-          <div class="patient-detail-header">
-            <span class="patient-detail-header__avatar" id="patient-detail-avatar">?</span>
-            <div class="patient-detail-header__inputs">
-              <label class="field-label" for="patient-detail-name">Name</label>
-              <input type="text" id="patient-detail-name" class="field-input" />
-            </div>
-          </div>
+        <input type="hidden" id="akte-editing-id" value="" />
+        <input type="hidden" id="akte-form-patient-id" value="" />
 
-          <div class="field-grid-2">
-            <div>
-              <label class="field-label" for="patient-geburtsdatum">Geburtsdatum</label>
-              <input type="text" id="patient-geburtsdatum" class="field-input" placeholder="z. B. 12.03.1874" />
-            </div>
-            <div>
-              <label class="field-label" for="patient-telefonnummer">Telefonnummer</label>
-              <input type="text" id="patient-telefonnummer" class="field-input" />
-            </div>
-          </div>
-
-          <h3 class="patient-detail-body__abschnitt">Medizinische Hinweise</h3>
-          <label class="field-label" for="patient-allergien">Allergien / Unverträglichkeiten</label>
-          <textarea id="patient-allergien" class="field-input field-textarea" rows="2"></textarea>
-
-          <label class="field-label" for="patient-vorerkrankungen">Vorerkrankungen</label>
-          <textarea id="patient-vorerkrankungen" class="field-input field-textarea" rows="2"></textarea>
-
-          <label class="field-label" for="patient-besondere-hinweise">Besondere Hinweise</label>
-          <textarea id="patient-besondere-hinweise" class="field-input field-textarea" rows="2"></textarea>
-
-          <h3 class="patient-detail-body__abschnitt">Notfallkontakt</h3>
-          <div class="field-grid-2">
-            <div>
-              <label class="field-label" for="patient-notfallkontakt">Name</label>
-              <input type="text" id="patient-notfallkontakt" class="field-input" />
-            </div>
-            <div>
-              <label class="field-label" for="patient-notfallkontakt-telefon">Telefonnummer</label>
-              <input type="text" id="patient-notfallkontakt-telefon" class="field-input" />
-            </div>
-          </div>
-
-          <p class="field-error" id="patient-profil-error" hidden></p>
-          <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
-            <button class="btn btn--primary" id="btn-confirm-patient-profil">Profil speichern</button>
-          </div>
-
-          <h3 class="patient-detail-body__abschnitt">Akten</h3>
-          <div class="toolbar">
-            <div class="toolbar__buttons">
-              <a class="btn btn--ghost btn--sm" id="btn-akte-neu" href="#" target="_blank" rel="noopener">＋ Neue Akte (eigenes Fenster)</a>
-            </div>
-          </div>
-          <div class="table-card">
-            <div class="reg-table">
-              <div id="patient-akten-liste"></div>
-            </div>
-            <p class="empty-state" id="patient-akten-leer" hidden>Noch keine Akten für diesen Patienten.</p>
-          </div>
+        <div class="akte-feldzeile">
+          <label for="akte-datum">Datum &amp; Uhrzeit</label>
+          <input type="datetime-local" id="akte-datum" class="md-input" />
         </div>
+
+        <div class="akte-feldzeile">
+          <label for="akte-behandlungsgrund"><span class="akte-abschnitt__nr">01</span>Behandlungsgrund<span class="akte-abschnitt__hinweis">Kurz und knapp</span></label>
+          <textarea id="akte-behandlungsgrund" class="md-input" rows="2"></textarea>
+        </div>
+
+        <div class="akte-feldzeile">
+          <label for="akte-befund"><span class="akte-abschnitt__nr">02</span>Befund<span class="akte-abschnitt__hinweis">Verletzungen, Beschwerden</span></label>
+          <textarea id="akte-befund" class="md-input" rows="3"></textarea>
+        </div>
+
+        <div class="akte-feldzeile">
+          <label for="akte-behandlung"><span class="akte-abschnitt__nr">03</span>Behandlung<span class="akte-abschnitt__hinweis">Durchgeführte Maßnahmen</span></label>
+          <textarea id="akte-behandlung" class="md-input" rows="3"></textarea>
+        </div>
+
+        <div class="akte-feldzeile">
+          <label for="akte-bemerkungen"><span class="akte-abschnitt__nr">04</span>Bemerkungen</label>
+          <textarea id="akte-bemerkungen" class="md-input" rows="2"></textarea>
+        </div>
+
+        <p class="field-error" id="akte-error" hidden></p>
+      </div>
+      <div class="modal__footer">
+        <button class="btn btn--ghost" data-close-modal="modal-akte-form">Abbrechen</button>
+        <button class="btn btn--primary" id="btn-confirm-akte">Speichern</button>
       </div>
     </div>
   </div>
 
   <!-- ============================ -->
-  <!-- MODAL: Beispiel anlegen/bearbeiten -->
+  <!-- MODAL: Akte-Detail (feste Vorlage) -->
+  <!-- ============================ -->
+  <div class="modal-overlay" id="modal-akte-detail">
+    <div class="modal modal--akte">
+      <div class="akte-blatt__kopf">
+        <div>
+          <span class="akte-blatt__kicker">Behandlungsakte</span>
+          <h3 id="akte-detail-titel">Akte</h3>
+        </div>
+        <button class="modal__close" data-close-modal="modal-akte-detail">✕</button>
+      </div>
+      <dl class="akte-blatt__meta">
+        <div><dt>Patient</dt><dd id="akte-detail-patient">—</dd></div>
+        <div><dt>Datum</dt><dd id="akte-detail-datum">—</dd></div>
+        <div><dt>Verfasst von</dt><dd id="akte-detail-autor">—</dd></div>
+      </dl>
+      <div class="modal__body">
+        <div id="akte-detail-inhalt"></div>
+      </div>
+      <div class="modal__footer">
+        <button class="btn btn--danger" id="btn-akte-loeschen" style="margin-right: auto;">Löschen</button>
+        <button class="btn btn--ghost" id="btn-akte-bearbeiten">Bearbeiten</button>
+        <button class="btn btn--ghost" data-close-modal="modal-akte-detail">Schließen</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ============================ -->
   <!-- MODAL: Beispiel anlegen/bearbeiten -->
   <!-- ============================ -->
@@ -754,22 +781,22 @@
        (nicht type="module") "defer"-Skripte, damit sie sich gemeinsame
        globale Variablen/Funktionen teilen können. js/main.js muss immer
        zuletzt kommen, da es die App erst startet. -->
-  <script defer src="js/firebase-config.js?v=113"></script>
-  <script defer src="js/core/config.js?v=113"></script>
-  <script defer src="js/core/state.js?v=113"></script>
-  <script defer src="js/core/dom.js?v=113"></script>
-  <script defer src="js/core/firebase-init.js?v=113"></script>
-  <script defer src="js/core/utils.js?v=113"></script>
-  <script defer src="js/ui/modals.js?v=113"></script>
-  <script defer src="js/ui/nav.js?v=113"></script>
-  <script defer src="js/ui/presence.js?v=113"></script>
-  <script defer src="js/views/startseite.js?v=113"></script>
-  <script defer src="js/views/patientenakten.js?v=113"></script>
-  <script defer src="js/views/beispiele.js?v=113"></script>
-  <script defer src="js/views/einstellungen.js?v=113"></script>
-  <script defer src="js/views/admin.js?v=113"></script>
-  <script defer src="js/ui/version-check.js?v=113"></script>
-  <script defer src="js/main.js?v=113"></script>
-  <script type="module" src="js/auth.js?v=113"></script>
+  <script defer src="js/firebase-config.js?v=115"></script>
+  <script defer src="js/core/config.js?v=115"></script>
+  <script defer src="js/core/state.js?v=115"></script>
+  <script defer src="js/core/dom.js?v=115"></script>
+  <script defer src="js/core/firebase-init.js?v=115"></script>
+  <script defer src="js/core/utils.js?v=115"></script>
+  <script defer src="js/ui/modals.js?v=115"></script>
+  <script defer src="js/ui/nav.js?v=115"></script>
+  <script defer src="js/ui/presence.js?v=115"></script>
+  <script defer src="js/views/startseite.js?v=115"></script>
+  <script defer src="js/views/patientenakten.js?v=115"></script>
+  <script defer src="js/views/beispiele.js?v=115"></script>
+  <script defer src="js/views/einstellungen.js?v=115"></script>
+  <script defer src="js/views/admin.js?v=115"></script>
+  <script defer src="js/ui/version-check.js?v=115"></script>
+  <script defer src="js/main.js?v=115"></script>
+  <script type="module" src="js/auth.js?v=115"></script>
 </body>
 </html>

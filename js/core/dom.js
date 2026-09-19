@@ -46,8 +46,8 @@
     patientAnlegenError: document.getElementById("patient-anlegen-error"),
     btnConfirmPatientAnlegen: document.getElementById("btn-confirm-patient-anlegen"),
 
-    modalPatientDetail: document.getElementById("modal-patient-detail"),
-    patientDetailTitel: document.getElementById("patient-detail-titel"),
+    // Patient-Detail: eigene Ansicht statt Modal (siehe view-patient-detail
+    // in index.html und oeffnePatientSeite in js/views/patientenakten.js).
     patientDetailAvatar: document.getElementById("patient-detail-avatar"),
     patientDetailId: document.getElementById("patient-detail-id"),
     patientDetailName: document.getElementById("patient-detail-name"),
@@ -58,19 +58,13 @@
     patientBesondereHinweise: document.getElementById("patient-besondere-hinweise"),
     patientNotfallkontakt: document.getElementById("patient-notfallkontakt"),
     patientNotfallkontaktTelefon: document.getElementById("patient-notfallkontakt-telefon"),
+    patientProfilMeta: document.getElementById("patient-profil-meta"),
     patientProfilError: document.getElementById("patient-profil-error"),
     btnConfirmPatientProfil: document.getElementById("btn-confirm-patient-profil"),
     patientAktenListe: document.getElementById("patient-akten-liste"),
     patientAktenLeer: document.getElementById("patient-akten-leer"),
+    patientAktenAnzahl: document.getElementById("patient-akten-anzahl"),
     btnAkteNeu: document.getElementById("btn-akte-neu"),
-
-    // Akte-Fokus: eigenständige Dokumentenseite statt Modal (siehe
-    // js/views/patientenakten.js und die entsprechende HTML-Sektion nach
-    // dem schließenden .app-div in index.html).
-    akteFokusRoot: document.getElementById("akte-fokus-root"),
-    akteFokusLade: document.getElementById("akte-fokus-lade"),
-    akteFokusAnsicht: document.getElementById("akte-fokus-ansicht"),
-    akteFokusFormular: document.getElementById("akte-fokus-formular"),
 
     akteFormTitel: document.getElementById("akte-form-titel"),
     akteEditingId: document.getElementById("akte-editing-id"),
@@ -83,11 +77,11 @@
     akteBemerkungen: document.getElementById("akte-bemerkungen"),
     akteError: document.getElementById("akte-error"),
     btnConfirmAkte: document.getElementById("btn-confirm-akte"),
-    btnAkteFokusAbbrechen: document.getElementById("btn-akte-fokus-abbrechen"),
 
     akteDetailTitel: document.getElementById("akte-detail-titel"),
     akteDetailPatient: document.getElementById("akte-detail-patient"),
     akteDetailDatum: document.getElementById("akte-detail-datum"),
+    akteDetailAutor: document.getElementById("akte-detail-autor"),
     akteDetailInhalt: document.getElementById("akte-detail-inhalt"),
     btnAkteBearbeiten: document.getElementById("btn-akte-bearbeiten"),
     btnAkteLoeschen: document.getElementById("btn-akte-loeschen"),

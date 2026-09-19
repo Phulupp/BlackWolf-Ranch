@@ -5,8 +5,7 @@
    kaum sichtbaren technischen Rasterraster (typisch für Dispatch-/Monitoring-
    Software), das den "klinisch-technischen" Look unterstützt, ohne vom
    Inhalt abzulenken. */
-  .app,
-  .akte-fokus {
+  .app {
     position: relative;
     background:
       radial-gradient(circle at 15% 0%, rgba(53, 181, 189, 0.05) 0%, transparent 45%),

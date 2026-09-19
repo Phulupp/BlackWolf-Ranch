@@ -8,7 +8,15 @@
     el.views.forEach((section) => section.classList.toggle("view--active", section.id === `view-${view}`));
 
     document.querySelectorAll(".sidebar__item").forEach((btn) => {
-      btn.classList.toggle("sidebar__item--active", btn.getAttribute("data-view") === view || (view === "admin-log" && btn.getAttribute("data-view") === "admin"));
+      const meineAnsicht = btn.getAttribute("data-view");
+      // "admin-log" und "patient-detail" haben keinen eigenen Sidebar-Button -
+      // sie zählen zum Bereich Verwaltung bzw. Patientenakten.
+      btn.classList.toggle(
+        "sidebar__item--active",
+        meineAnsicht === view ||
+          (view === "admin-log" && meineAnsicht === "admin") ||
+          (view === "patient-detail" && meineAnsicht === "patientenakten")
+      );
     });
 
     const meta = VIEW_META[view] || { title: view, subtitle: "" };

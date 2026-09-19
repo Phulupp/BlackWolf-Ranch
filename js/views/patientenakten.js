@@ -10,16 +10,22 @@
      gespeichert, sondern beim Anzeigen rein aus der nach "erstelltAm"
      aufsteigend sortierten Position innerhalb der Akten EINES Patienten
      berechnet (siehe patientAkten unten) - kein Zählerfeld, keine
-     Race-Conditions beim gleichzeitigen Anlegen durch mehrere Nutzer. */
+     Race-Conditions beim gleichzeitigen Anlegen durch mehrere Nutzer.
+
+     Aufbau: Patientenliste (Suche) -> eigene Patienten-Seite (view-patient-
+     detail: Profil + Akten-Liste) -> Akte als Modal (ansehen/bearbeiten).
+     Mehrere Spieler können gleichzeitig arbeiten: alle Listen aktualisieren
+     sich live über Firestore; das Profilformular wird dabei bewusst NICHT
+     von außen überschrieben, solange man es offen hat (siehe
+     startePatientenListener), damit niemandem beim Tippen die Eingabe durch
+     eine Änderung eines anderen Spielers weggenommen wird. */
 
   // ID der Akte, deren Detail-Modal gerade offen ist - rein lokal für diese
-  // Datei (analog zu warenDragZustand in der früheren waren.js), nicht in
-  // state.js, da es nur den Klick-Fluss innerhalb dieser Datei betrifft.
+  // Datei, nicht in state.js, da es nur den Klick-Fluss hier betrifft.
   let offeneAkteDetailId = null;
 
   // Default-Wert für das <input type="datetime-local"> beim Anlegen einer
-  // neuen Akte - "jetzt", auf die Minute genau (Sekunden lässt das Feld
-  // ohnehin weg).
+  // neuen Akte - "jetzt", auf die Minute genau.
   function jetzigerZeitpunkt() {
     const d = new Date();
     const pad = (n) => String(n).padStart(2, "0");
@@ -37,52 +43,6 @@
     ).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")} Uhr`;
   }
 
-  // Baut den dauerhaften, direkt teilbaren Link zu einer Akte - einfach die
-  // aktuelle Adresse mit "?akte=<id>" statt eines fest einprogrammierten
-  // "index.html", damit es unabhängig davon funktioniert, ob die Seite über
-  // "/" oder "/index.html" aufgerufen wurde.
-  function akteLink(akteId) {
-    return `?akte=${encodeURIComponent(akteId)}`;
-  }
-
-  function neueAkteLink(patientId) {
-    return `?neueAkte=1&patient=${encodeURIComponent(patientId)}`;
-  }
-
-  // Ist diese Seite gerade als eigenständige Akte-Dokumentenseite aufgerufen
-  // worden (Link auf eine bestehende Akte, oder "+ Neue Akte")? Wird in
-  // js/main.js (starteApp) ausgewertet, um statt der normalen App (Sidebar +
-  // Startseite) nur die Akte zu zeigen.
-  function istAkteFokusModus() {
-    const params = new URLSearchParams(location.search);
-    return !!(params.get("akte") || (params.get("neueAkte") && params.get("patient")));
-  }
-
-  // Öffnet automatisch die per URL angeforderte Akte (Link auf eine
-  // bestehende Akte) bzw. das Anlegen-Formular (Link von "+ Neue Akte", das
-  // bewusst in einem eigenen Fenster/Tab aufgeht statt im selben Fenster wie
-  // die Patientenübersicht) - siehe akteLink/neueAkteLink oben. Wird nach
-  // jedem Patienten-/Akten-Snapshot erneut aufgerufen, tut aber nach dem
-  // ersten erfolgreichen Ausführen nichts mehr (urlAktionAusgefuehrt in
-  // js/core/state.js) und wartet einfach weiter, falls die benötigten Daten
-  // (Patient bzw. Akte) noch nicht geladen sind.
-  function pruefeUrlAktion() {
-    if (urlAktionAusgefuehrt) return;
-    const params = new URLSearchParams(location.search);
-    const akteId = params.get("akte");
-    const neuFuerPatient = params.get("patient");
-
-    if (akteId) {
-      if (!akten.some((a) => a.id === akteId)) return;
-      urlAktionAusgefuehrt = true;
-      zeigeAkteFokusAnsicht(akteId);
-    } else if (params.get("neueAkte") && neuFuerPatient) {
-      if (!patienten.some((p) => p.id === neuFuerPatient)) return;
-      urlAktionAusgefuehrt = true;
-      zeigeAkteFokusFormular(neuFuerPatient, null);
-    }
-  }
-
   function starteAktenListener() {
     if (!db) return;
     if (unsubAkten) unsubAkten();
@@ -93,14 +53,11 @@
         (snap) => {
           akten = [];
           snap.forEach((docSnap) => akten.push({ id: docSnap.id, ...docSnap.data() }));
+          // Nur Anzeige-Listen werden live nachgezogen (kein Eingabeformular
+          // -> nichts, was dabei überschrieben werden könnte).
+          renderPatientenListe();
           if (offenerPatientId) renderPatientDetailAkten(offenerPatientId);
-          // Falls die Akte-Fokus-Seite gerade eine Akte per vorläufigem
-          // Platzhalter zeigt (siehe zeigeAkteFokusAnsicht/vorabDaten unten,
-          // direkt nach dem Anlegen), aktualisiert dieser Aufruf sie mit dem
-          // echten, jetzt geladenen Stand (korrekte Akte-Nummer etc.).
-          if (offeneAkteDetailId) zeigeAkteFokusAnsicht(offeneAkteDetailId);
           renderStartseiteStats();
-          pruefeUrlAktion();
         },
         (fehler) => console.error("Akten konnten nicht geladen werden:", fehler)
       );
@@ -117,12 +74,16 @@
           patienten = [];
           snap.forEach((docSnap) => patienten.push({ id: docSnap.id, ...docSnap.data() }));
           renderPatientenListe();
+          renderStartseiteStats();
+          // Das Profilformular der gerade offenen Patienten-Seite wird hier
+          // bewusst NICHT neu befüllt: sonst würde eine Änderung eines
+          // anderen Spielers die noch ungespeicherte Eingabe des aktuellen
+          // Nutzers mitten im Tippen überschreiben. Nur der Titel und die
+          // "zuletzt bearbeitet"-Zeile laufen live mit.
           if (offenerPatientId) {
             const p = patienten.find((x) => x.id === offenerPatientId);
-            if (p) fuellePatientDetailFelder(p);
+            if (p) aktualisiereProfilKopf(p);
           }
-          renderStartseiteStats();
-          pruefeUrlAktion();
         },
         (fehler) => console.error("Patienten konnten nicht geladen werden:", fehler)
       );
@@ -141,16 +102,38 @@
     el.patientenEmpty.hidden = patienten.length !== 0;
     el.patientenNoResults.hidden = !(patienten.length > 0 && liste.length === 0);
 
-    el.patientenListe.innerHTML = liste
-      .map((p) => {
-        const anzahl = patientAkten(p.id).length;
-        return `<div class="patienten-zeile" data-patient-oeffnen="${p.id}">
-            <span class="patienten-zeile__avatar">${escapeHtml(initialenAvatar(p.name))}</span>
-            <span class="patienten-zeile__name">${escapeHtml(p.name)}</span>
-            <span class="patienten-zeile__meta">${anzahl} Akte${anzahl === 1 ? "" : "n"}</span>
-          </div>`;
-      })
-      .join("");
+    if (liste.length === 0) {
+      el.patientenListe.innerHTML = "";
+      return;
+    }
+
+    // Register mit Buchstabengruppen (die Liste kommt bereits nach Name
+    // sortiert aus Firestore, siehe startePatientenListener).
+    let html = `<div class="pat-spaltenkopf">
+        <span>Patient</span><span>Geburtsdatum</span><span>Akten</span><span>Letzte Behandlung</span><span></span>
+      </div>`;
+    let aktuellerBuchstabe = "";
+    liste.forEach((p) => {
+      const erster = (p.name || "").trim().charAt(0).toLocaleUpperCase("de");
+      const buchstabe = /\p{L}/u.test(erster) ? erster : "#";
+      if (buchstabe !== aktuellerBuchstabe) {
+        aktuellerBuchstabe = buchstabe;
+        html += `<div class="pat-gruppe">${escapeHtml(buchstabe)}</div>`;
+      }
+      const seine = patientAkten(p.id);
+      const letzte = seine.reduce((max, a) => (a.datum && a.datum > max ? a.datum : max), "");
+      html += `<div class="pat-zeile" data-patient-oeffnen="${p.id}">
+          <span class="pat-zeile__name">
+            <span>${escapeHtml(p.name)}</span>
+            ${p.allergien ? '<span class="pat-zeile__warn">Allergien</span>' : ""}
+          </span>
+          <span class="pat-zeile__geb">${escapeHtml(p.geburtsdatum || "—")}</span>
+          <span class="pat-zeile__akten">${seine.length}</span>
+          <span class="pat-zeile__letzte">${letzte ? escapeHtml(formatDatumZeit(letzte).split(",")[0]) : "—"}</span>
+          <svg class="pat-zeile__pfeil" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 5 16 12 9 19"/></svg>
+        </div>`;
+    });
+    el.patientenListe.innerHTML = html;
   }
 
   if (el.patientenSearch) {
@@ -164,7 +147,7 @@
     el.patientenListe.addEventListener("click", (event) => {
       const zeile = event.target.closest("[data-patient-oeffnen]");
       if (!zeile) return;
-      oeffnePatientDetailModal(zeile.getAttribute("data-patient-oeffnen"));
+      oeffnePatientSeite(zeile.getAttribute("data-patient-oeffnen"));
     });
   }
 
@@ -194,10 +177,12 @@
           notfallkontaktTelefon: "",
           erstelltAm: firebase.firestore.FieldValue.serverTimestamp(),
           erstelltVon: aktuellerNutzer ? aktuellerNutzer.name : null,
+          bearbeiter: null,
+          bearbeitetAm: null,
         });
         schliesseModal("modal-patient-anlegen");
         zeigeToast("Patient angelegt.");
-        oeffnePatientDetailModal(ref.id, { id: ref.id, name });
+        oeffnePatientSeite(ref.id, { id: ref.id, name });
       } catch (fehler) {
         console.error(fehler);
         zeigeFeldFehler(el.patientAnlegenError, "Anlegen fehlgeschlagen. Bitte erneut versuchen.");
@@ -205,22 +190,40 @@
     });
   }
 
-  // --- Patient-Detail (Profil + Akten-Liste) --------------------------------
-  // "vorabDaten" wird nur direkt nach dem Anlegen übergeben, damit das Modal
+  // --- Patienten-Seite (Profil + Akten-Liste) ------------------------------
+  // "vorabDaten" wird nur direkt nach dem Anlegen übergeben, damit die Seite
   // sofort mit dem gerade eingegebenen Namen öffnet, statt kurz leer zu
-  // erscheinen, bis der Firestore-Listener zurückkommt (siehe oben).
-  function oeffnePatientDetailModal(patientId, vorabDaten) {
+  // erscheinen, bis der Firestore-Listener zurückkommt.
+  function oeffnePatientSeite(patientId, vorabDaten) {
     const p = patienten.find((x) => x.id === patientId) || vorabDaten || { id: patientId, name: "" };
     offenerPatientId = patientId;
+    zeigeAnsicht("patient-detail");
     fuellePatientDetailFelder(p);
     renderPatientDetailAkten(patientId);
-    aktualisiereNeueAkteLink(patientId);
-    oeffneModal("modal-patient-detail");
   }
 
-  function fuellePatientDetailFelder(p) {
-    el.patientDetailTitel.textContent = p.name || "Patient";
+  // Kopfbereich (Seitentitel, Avatar, "zuletzt bearbeitet") - unkritisch,
+  // darf jederzeit live aktualisiert werden, im Gegensatz zu den
+  // Eingabefeldern (siehe fuellePatientDetailFelder).
+  function aktualisiereProfilKopf(p) {
+    if (aktuelleAnsicht === "patient-detail") {
+      el.viewTitle.textContent = p.name || "Patient";
+      el.viewSubtitle.textContent = "Patientenakte";
+    }
     if (el.patientDetailAvatar) el.patientDetailAvatar.textContent = initialenAvatar(p.name);
+    if (el.patientProfilMeta) {
+      el.patientProfilMeta.textContent = p.bearbeiter
+        ? `Zuletzt bearbeitet von ${p.bearbeiter} · ${formatDatumUhrzeit(p.bearbeitetAm)}`
+        : p.erstelltVon
+        ? `Angelegt von ${p.erstelltVon}`
+        : "";
+    }
+  }
+
+  // Befüllt die Eingabefelder - nur beim ÖFFNEN der Seite, nie durch einen
+  // Live-Snapshot (siehe startePatientenListener).
+  function fuellePatientDetailFelder(p) {
+    aktualisiereProfilKopf(p);
     el.patientDetailId.value = p.id;
     el.patientDetailName.value = p.name || "";
     el.patientGeburtsdatum.value = p.geburtsdatum || "";
@@ -253,8 +256,9 @@
             besondereHinweise: el.patientBesondereHinweise.value.trim(),
             notfallkontakt: el.patientNotfallkontakt.value.trim(),
             notfallkontaktTelefon: el.patientNotfallkontaktTelefon.value.trim(),
+            bearbeiter: aktuellerNutzer ? aktuellerNutzer.name : null,
+            bearbeitetAm: firebase.firestore.FieldValue.serverTimestamp(),
           });
-        el.patientDetailTitel.textContent = name;
         zeigeToast("Profil gespeichert.");
       } catch (fehler) {
         console.error(fehler);
@@ -268,38 +272,61 @@
     return akten.filter((a) => a.patientId === patientId).sort((a, b) => zeitstempelWert(a.erstelltAm) - zeitstempelWert(b.erstelltAm));
   }
 
-  // Jede Akte ist ein echter Link (eigenes Fenster/Tab, siehe akteLink oben)
-  // statt eines nur per JavaScript klickbaren div - Rechtsklick "Link
-  // kopieren", Strg-Klick, Lesezeichen etc. funktionieren dadurch ganz normal
-  // wie bei jedem anderen Link auch, ganz ohne eigenen Klick-Handler.
+  // Neueste Akte zuerst (wie eine Fallhistorie), die Nummer "Akte N" bleibt
+  // aber die chronologische Reihenfolge des Anlegens - Akte 1 ist immer die
+  // erste, egal wie herum die Liste sortiert angezeigt wird.
   function renderPatientDetailAkten(patientId) {
     if (!el.patientAktenListe) return;
-    const liste = patientAkten(patientId);
-    el.patientAktenLeer.hidden = liste.length !== 0;
-    el.patientAktenListe.innerHTML = liste
-      .map(
-        (a, index) => `<a class="reg-row reg-row--body" style="grid-template-columns: 100px 1fr 170px;" href="${akteLink(a.id)}" target="_blank" rel="noopener">
-            <span class="reg-name">Akte ${index + 1}</span>
-            <span>${escapeHtml(a.behandlungsgrund || "—")}</span>
-            <span>${escapeHtml(formatDatumZeit(a.datum))}</span>
-          </a>`
-      )
+    const chronologisch = patientAkten(patientId);
+    el.patientAktenLeer.hidden = chronologisch.length !== 0;
+    if (el.patientAktenAnzahl) {
+      el.patientAktenAnzahl.textContent = chronologisch.length
+        ? `${chronologisch.length} ${chronologisch.length === 1 ? "Akte" : "Akten"}, neueste zuerst`
+        : "";
+    }
+    el.patientAktenListe.innerHTML = chronologisch
+      .map((a, index) => ({ a, nummer: index + 1 }))
+      .reverse()
+      .map(({ a, nummer }, position) => {
+        const vorschau = a.befund || a.behandlung || "";
+        return `<article class="akte-eintrag${position === 0 ? " akte-eintrag--neu" : ""}" tabindex="0" data-akte-oeffnen="${a.id}">
+            <span class="akte-eintrag__punkt"></span>
+            <div class="akte-eintrag__kopf">
+              <span class="akte-eintrag__nr">Akte ${nummer}</span>
+              <span>${escapeHtml(formatDatumZeit(a.datum))}</span>
+            </div>
+            <h4 class="akte-eintrag__titel">${escapeHtml(a.behandlungsgrund || "—")}</h4>
+            ${vorschau ? `<p class="akte-eintrag__vorschau">${escapeHtml(vorschau)}</p>` : ""}
+            <span class="akte-eintrag__autor">von ${escapeHtml(a.erstelltVon || "—")}</span>
+          </article>`;
+      })
       .join("");
   }
 
-  // "+ Neue Akte" ist ebenfalls ein echter Link (eigenes Fenster), dessen
-  // Ziel-Adresse sich mit dem gerade geöffneten Patienten ändert - deshalb
-  // hier statt eines festen Klick-Handlers gesetzt, jedes Mal wenn ein
-  // Patient geöffnet wird (siehe oeffnePatientDetailModal).
-  function aktualisiereNeueAkteLink(patientId) {
-    if (el.btnAkteNeu) el.btnAkteNeu.href = neueAkteLink(patientId);
+  if (el.patientAktenListe) {
+    const oeffneEintrag = (event) => {
+      const eintrag = event.target.closest("[data-akte-oeffnen]");
+      if (!eintrag) return;
+      oeffneAkteDetailModal(eintrag.getAttribute("data-akte-oeffnen"));
+    };
+    el.patientAktenListe.addEventListener("click", oeffneEintrag);
+    el.patientAktenListe.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        oeffneEintrag(event);
+      }
+    });
   }
 
-  // --- Akte-Fokus: Formular-Ansicht (Anlegen/Bearbeiten) --------------------
-  // Zeigt das Formular innerhalb der Akte-Fokus-Seite (kein Modal mehr,
-  // siehe css/views/patientenakten.css "18b") - ein gemeinsames Formular für
-  // Anlegen (akteId null) und Bearbeiten (akteId gesetzt).
-  function zeigeAkteFokusFormular(patientId, akteId) {
+  if (el.btnAkteNeu) {
+    el.btnAkteNeu.addEventListener("click", () => {
+      if (!offenerPatientId) return;
+      oeffneAkteFormModal(offenerPatientId, null);
+    });
+  }
+
+  // --- Akte anlegen/bearbeiten (ein gemeinsames Formular) -------------------
+  function oeffneAkteFormModal(patientId, akteId) {
     bearbeiteteAkteId = akteId;
     const patient = patienten.find((x) => x.id === patientId);
     el.akteFormPatientId.value = patientId;
@@ -309,19 +336,16 @@
     const a = akteId ? akten.find((x) => x.id === akteId) : null;
     el.akteFormTitel.textContent = akteId ? "Akte bearbeiten" : "Neue Akte";
     el.akteEditingId.value = akteId || "";
-    // "a.datum && !a.datum.includes('T')" fängt Akten ab, die noch vor der
-    // Uhrzeit-Erweiterung mit reinem <input type="date"> angelegt wurden -
-    // ohne das würde das jetzige datetime-local-Feld einen solchen Altwert
-    // stillschweigend als ungültig verwerfen und leer bleiben.
+    // Altwerte ohne Uhrzeit (noch mit reinem Datumsfeld angelegte Akten)
+    // werden auf "00:00" ergänzt, sonst würde das datetime-local-Feld sie
+    // stillschweigend verwerfen und leer bleiben.
     el.akteDatum.value = a ? (a.datum && !a.datum.includes("T") ? `${a.datum}T00:00` : a.datum) || jetzigerZeitpunkt() : jetzigerZeitpunkt();
     el.akteBehandlungsgrund.value = a ? a.behandlungsgrund || "" : "";
     el.akteBefund.value = a ? a.befund || "" : "";
     el.akteBehandlung.value = a ? a.behandlung || "" : "";
     el.akteBemerkungen.value = a ? a.bemerkungen || "" : "";
 
-    if (el.akteFokusLade) el.akteFokusLade.hidden = true;
-    if (el.akteFokusFormular) el.akteFokusFormular.hidden = false;
-    if (el.akteFokusAnsicht) el.akteFokusAnsicht.hidden = true;
+    oeffneModal("modal-akte-form");
   }
 
   if (el.btnConfirmAkte) {
@@ -331,7 +355,7 @@
       const datum = el.akteDatum.value;
       const behandlungsgrund = el.akteBehandlungsgrund.value.trim();
       if (!patientId) return;
-      if (!datum) return zeigeFeldFehler(el.akteError, "Bitte gib ein Datum ein.");
+      if (!datum) return zeigeFeldFehler(el.akteError, "Bitte gib Datum und Uhrzeit ein.");
       if (!behandlungsgrund) return zeigeFeldFehler(el.akteError, "Bitte gib einen Behandlungsgrund ein.");
 
       const daten = {
@@ -345,23 +369,19 @@
 
       try {
         if (bearbeiteteAkteId) {
+          // Verfasser bleibt der ursprüngliche Autor - wer zuletzt geändert
+          // hat, steht separat in "bearbeiter" (mehrere Spieler dürfen jede
+          // Akte bearbeiten, siehe firestore.rules).
+          daten.bearbeiter = aktuellerNutzer ? aktuellerNutzer.name : null;
+          daten.bearbeitetAm = firebase.firestore.FieldValue.serverTimestamp();
           await db.collection(AKTEN_COLLECTION).doc(bearbeiteteAkteId).update(daten);
-          zeigeToast("Akte gespeichert.");
-          zeigeAkteFokusAnsicht(bearbeiteteAkteId);
         } else {
           daten.erstelltAm = firebase.firestore.FieldValue.serverTimestamp();
           daten.erstelltVon = aktuellerNutzer ? aktuellerNutzer.name : null;
-          const ref = await db.collection(AKTEN_COLLECTION).add(daten);
-          zeigeToast("Akte gespeichert.");
-          // Dieses Fenster wurde extra für die Neuanlage geöffnet (Link von
-          // "+ Neue Akte", siehe neueAkteLink oben) - jetzt, wo die Akte
-          // wirklich existiert, bekommt genau dieses Fenster ohne Neuladen
-          // ihren echten, dauerhaften Link und zeigt die Akte gleich an
-          // ("vorabDaten" überbrückt die kurze Zeit, bis der Firestore-
-          // Listener den frisch angelegten Datensatz tatsächlich liefert).
-          history.replaceState(null, "", akteLink(ref.id));
-          zeigeAkteFokusAnsicht(ref.id, { id: ref.id, ...daten });
+          await db.collection(AKTEN_COLLECTION).add(daten);
         }
+        schliesseModal("modal-akte-form");
+        zeigeToast("Akte gespeichert.");
       } catch (fehler) {
         console.error(fehler);
         zeigeFeldFehler(el.akteError, "Speichern fehlgeschlagen. Bitte erneut versuchen.");
@@ -369,57 +389,31 @@
     });
   }
 
-  if (el.btnAkteFokusAbbrechen) {
-    el.btnAkteFokusAbbrechen.addEventListener("click", () => {
-      if (bearbeiteteAkteId) {
-        // Bearbeiten einer bestehenden Akte abgebrochen - zurück zur Ansicht.
-        zeigeAkteFokusAnsicht(bearbeiteteAkteId);
-      } else {
-        // Neuanlage abgebrochen - dieses Fenster wurde extra dafür geöffnet
-        // (siehe neueAkteLink), schließt sich also wieder. Falls der Browser
-        // das Schließen verweigert (z. B. weil noch andere Verlaufseinträge
-        // existieren), landet man ersatzweise auf der normalen Startseite.
-        window.close();
-        location.href = "?";
-      }
-    });
-  }
-
-  // --- Akte-Fokus: Ansicht (feste Vorlage) ----------------------------------
-  // "vorabDaten" wird nur direkt nach dem Anlegen übergeben (siehe oben),
-  // damit die Seite sofort mit dem gerade Gespeicherten zeigt, statt kurz
-  // leer zu erscheinen, bis der Firestore-Listener zurückkommt.
-  function zeigeAkteFokusAnsicht(akteId, vorabDaten) {
-    const vorhanden = akten.find((x) => x.id === akteId);
-    const a = vorhanden || vorabDaten;
+  // --- Akte-Detail (feste Vorlage, siehe css/views/patientenakten.css) -----
+  function oeffneAkteDetailModal(akteId) {
+    const a = akten.find((x) => x.id === akteId);
     if (!a) return;
     offeneAkteDetailId = akteId;
     const patient = patienten.find((x) => x.id === a.patientId);
+    const nummer = patientAkten(a.patientId).findIndex((x) => x.id === akteId) + 1;
 
-    el.akteDetailTitel.textContent = vorhanden ? `Akte ${patientAkten(a.patientId).findIndex((x) => x.id === akteId) + 1}` : "Akte";
+    el.akteDetailTitel.textContent = `Akte ${nummer}`;
     el.akteDetailPatient.textContent = patient ? patient.name : "—";
     el.akteDetailDatum.textContent = formatDatumZeit(a.datum);
-    el.akteDetailInhalt.innerHTML = `
-        <div class="akte-vorlage__abschnitt">
-          <span class="akte-vorlage__label">Behandlungsgrund</span>
-          <p>${escapeHtml(a.behandlungsgrund || "—")}</p>
-        </div>
-        <div class="akte-vorlage__abschnitt">
-          <span class="akte-vorlage__label">Befund</span>
-          <p>${escapeHtml(a.befund || "—")}</p>
-        </div>
-        <div class="akte-vorlage__abschnitt">
-          <span class="akte-vorlage__label">Behandlung</span>
-          <p>${escapeHtml(a.behandlung || "—")}</p>
-        </div>
-        <div class="akte-vorlage__abschnitt">
-          <span class="akte-vorlage__label">Bemerkungen</span>
-          <p>${escapeHtml(a.bemerkungen || "—")}</p>
-        </div>`;
-
-    if (el.akteFokusLade) el.akteFokusLade.hidden = true;
-    if (el.akteFokusAnsicht) el.akteFokusAnsicht.hidden = false;
-    if (el.akteFokusFormular) el.akteFokusFormular.hidden = true;
+    el.akteDetailAutor.textContent = a.bearbeiter && a.bearbeiter !== a.erstelltVon
+      ? `${a.erstelltVon || "—"} (zuletzt bearbeitet: ${a.bearbeiter})`
+      : a.erstelltVon || "—";
+    const abschnitt = (nr, titel, wert) => `
+        <section class="akte-abschnitt">
+          <h4 class="akte-abschnitt__label"><span class="akte-abschnitt__nr">${nr}</span>${titel}</h4>
+          ${wert ? `<p>${escapeHtml(wert)}</p>` : '<p class="akte-abschnitt__leer">Keine Angaben</p>'}
+        </section>`;
+    el.akteDetailInhalt.innerHTML =
+      abschnitt("01", "Behandlungsgrund", a.behandlungsgrund) +
+      abschnitt("02", "Befund", a.befund) +
+      abschnitt("03", "Behandlung", a.behandlung) +
+      abschnitt("04", "Bemerkungen", a.bemerkungen);
+    oeffneModal("modal-akte-detail");
   }
 
   if (el.btnAkteBearbeiten) {
@@ -427,7 +421,8 @@
       if (!offeneAkteDetailId) return;
       const a = akten.find((x) => x.id === offeneAkteDetailId);
       if (!a) return;
-      zeigeAkteFokusFormular(a.patientId, a.id);
+      schliesseModal("modal-akte-detail");
+      oeffneAkteFormModal(a.patientId, a.id);
     });
   }
 
@@ -437,15 +432,8 @@
       const id = offeneAkteDetailId;
       fordereLoeschungAn("Akte löschen", "Möchtest du diese Akte wirklich unwiderruflich löschen?", async () => {
         await db.collection(AKTEN_COLLECTION).doc(id).delete();
-        zeigeToast("Akte gelöscht. Dieses Fenster schließt sich gleich …");
-        // Die Akte gibt es nicht mehr - dieses Fenster wurde extra für sie
-        // geöffnet, schließt sich also. Klappt das Schließen nicht (z. B.
-        // weil der Browser es bei diesem Tab verweigert), landet man
-        // ersatzweise auf der normalen Startseite.
-        setTimeout(() => {
-          window.close();
-          location.href = "?";
-        }, 900);
+        schliesseModal("modal-akte-detail");
+        zeigeToast("Akte gelöscht.");
       });
     });
   }
