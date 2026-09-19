@@ -16,7 +16,7 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>Medical Department — Verwaltung</title>
-  <link rel="icon" type="image/svg+xml" href="assets/logo/favicon.svg?v=115" />
+  <link rel="icon" type="image/svg+xml" href="assets/logo/favicon.svg?v=117" />
 
   <!-- Google Fonts: Inter für die gesamte App (klar, modern, klinisch). -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -29,24 +29,24 @@
   <!-- Stylesheets: gleiche Kaskaden-Reihenfolge wie zuvor (base > layout >
        components > views). Reihenfolge ist wichtig und darf nicht vertauscht
        werden. -->
-  <link rel="stylesheet" href="css/base/tokens.css?v=115" />
-  <link rel="stylesheet" href="css/base/reset.css?v=115" />
-  <link rel="stylesheet" href="css/base/textures.css?v=115" />
-  <link rel="stylesheet" href="css/views/auth.css?v=115" />
-  <link rel="stylesheet" href="css/components/forms.css?v=115" />
-  <link rel="stylesheet" href="css/components/buttons.css?v=115" />
-  <link rel="stylesheet" href="css/layout/shell.css?v=115" />
-  <link rel="stylesheet" href="css/components/cards.css?v=115" />
-  <link rel="stylesheet" href="css/components/badges.css?v=115" />
-  <link rel="stylesheet" href="css/views/startseite.css?v=115" />
-  <link rel="stylesheet" href="css/components/tables.css?v=115" />
-  <link rel="stylesheet" href="css/views/patientenakten.css?v=115" />
-  <link rel="stylesheet" href="css/views/beispiele.css?v=115" />
-  <link rel="stylesheet" href="css/components/modals.css?v=115" />
-  <link rel="stylesheet" href="css/views/admin.css?v=115" />
-  <link rel="stylesheet" href="css/components/toast.css?v=115" />
-  <link rel="stylesheet" href="css/layout/footer.css?v=115" />
-  <link rel="stylesheet" href="css/base/responsive.css?v=115" />
+  <link rel="stylesheet" href="css/base/tokens.css?v=117" />
+  <link rel="stylesheet" href="css/base/reset.css?v=117" />
+  <link rel="stylesheet" href="css/base/textures.css?v=117" />
+  <link rel="stylesheet" href="css/views/auth.css?v=117" />
+  <link rel="stylesheet" href="css/components/forms.css?v=117" />
+  <link rel="stylesheet" href="css/components/buttons.css?v=117" />
+  <link rel="stylesheet" href="css/layout/shell.css?v=117" />
+  <link rel="stylesheet" href="css/components/cards.css?v=117" />
+  <link rel="stylesheet" href="css/components/badges.css?v=117" />
+  <link rel="stylesheet" href="css/views/startseite.css?v=117" />
+  <link rel="stylesheet" href="css/components/tables.css?v=117" />
+  <link rel="stylesheet" href="css/views/patientenakten.css?v=117" />
+  <link rel="stylesheet" href="css/views/beispiele.css?v=117" />
+  <link rel="stylesheet" href="css/components/modals.css?v=117" />
+  <link rel="stylesheet" href="css/views/admin.css?v=117" />
+  <link rel="stylesheet" href="css/components/toast.css?v=117" />
+  <link rel="stylesheet" href="css/layout/footer.css?v=117" />
+  <link rel="stylesheet" href="css/base/responsive.css?v=117" />
 
   <!-- Firebase SDK (Authentifizierung + Datenbank). "defer" statt normaler
        blockierender <script>-Tags: der Browser kann so den Rest der Seite
@@ -440,6 +440,10 @@
                   <p class="pblatt__meta" id="patient-profil-meta"></p>
                   <button class="btn btn--primary" id="btn-confirm-patient-profil">Speichern</button>
                 </div>
+                <button type="button" class="pblatt__loeschen" id="btn-patient-loeschen" hidden>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                  <span>Patient samt Akten löschen</span>
+                </button>
               </div>
 
               <div class="md-panel pakten">
@@ -781,22 +785,22 @@
        (nicht type="module") "defer"-Skripte, damit sie sich gemeinsame
        globale Variablen/Funktionen teilen können. js/main.js muss immer
        zuletzt kommen, da es die App erst startet. -->
-  <script defer src="js/firebase-config.js?v=115"></script>
-  <script defer src="js/core/config.js?v=115"></script>
-  <script defer src="js/core/state.js?v=115"></script>
-  <script defer src="js/core/dom.js?v=115"></script>
-  <script defer src="js/core/firebase-init.js?v=115"></script>
-  <script defer src="js/core/utils.js?v=115"></script>
-  <script defer src="js/ui/modals.js?v=115"></script>
-  <script defer src="js/ui/nav.js?v=115"></script>
-  <script defer src="js/ui/presence.js?v=115"></script>
-  <script defer src="js/views/startseite.js?v=115"></script>
-  <script defer src="js/views/patientenakten.js?v=115"></script>
-  <script defer src="js/views/beispiele.js?v=115"></script>
-  <script defer src="js/views/einstellungen.js?v=115"></script>
-  <script defer src="js/views/admin.js?v=115"></script>
-  <script defer src="js/ui/version-check.js?v=115"></script>
-  <script defer src="js/main.js?v=115"></script>
-  <script type="module" src="js/auth.js?v=115"></script>
+  <script defer src="js/firebase-config.js?v=117"></script>
+  <script defer src="js/core/config.js?v=117"></script>
+  <script defer src="js/core/state.js?v=117"></script>
+  <script defer src="js/core/dom.js?v=117"></script>
+  <script defer src="js/core/firebase-init.js?v=117"></script>
+  <script defer src="js/core/utils.js?v=117"></script>
+  <script defer src="js/ui/modals.js?v=117"></script>
+  <script defer src="js/ui/nav.js?v=117"></script>
+  <script defer src="js/ui/presence.js?v=117"></script>
+  <script defer src="js/views/startseite.js?v=117"></script>
+  <script defer src="js/views/patientenakten.js?v=117"></script>
+  <script defer src="js/views/beispiele.js?v=117"></script>
+  <script defer src="js/views/einstellungen.js?v=117"></script>
+  <script defer src="js/views/admin.js?v=117"></script>
+  <script defer src="js/ui/version-check.js?v=117"></script>
+  <script defer src="js/main.js?v=117"></script>
+  <script type="module" src="js/auth.js?v=117"></script>
 </body>
 </html>

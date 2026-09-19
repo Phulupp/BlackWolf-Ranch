@@ -64,6 +64,7 @@
     patientAktenListe: document.getElementById("patient-akten-liste"),
     patientAktenLeer: document.getElementById("patient-akten-leer"),
     patientAktenAnzahl: document.getElementById("patient-akten-anzahl"),
+    btnPatientLoeschen: document.getElementById("btn-patient-loeschen"),
     btnAkteNeu: document.getElementById("btn-akte-neu"),
 
     akteFormTitel: document.getElementById("akte-form-titel"),

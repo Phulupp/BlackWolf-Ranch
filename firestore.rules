@@ -190,9 +190,10 @@ service cloud.firestore {
        ------------------------------------------------------------------ */
 
     // Patienten: Profil (Name + Stammdaten) - jeder freigegebene Nutzer darf
-    // Patienten anlegen, lesen und bearbeiten.
+    // Patienten anlegen, lesen und bearbeiten; LÖSCHEN darf nur ein Admin.
     match /patienten/{dokument} {
-      allow read, write: if istFreigegeben();
+      allow read, create, update: if istFreigegeben();
+      allow delete: if istAdmin();
     }
 
     // Akten: eine Behandlungs-Akte pro Dokument, referenziert ihren

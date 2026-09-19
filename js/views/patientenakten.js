@@ -24,6 +24,11 @@
   // Datei, nicht in state.js, da es nur den Klick-Fluss hier betrifft.
   let offeneAkteDetailId = null;
 
+  // Wurde der geöffnete Patient schon einmal in einem Snapshot gesehen? Nur
+  // dann bedeutet sein späteres Fehlen "wurde gelöscht" (und nicht "Snapshot
+  // ist noch nicht angekommen", z. B. direkt nach dem Anlegen).
+  let offenerPatientGesehen = false;
+
   // Default-Wert für das <input type="datetime-local"> beim Anlegen einer
   // neuen Akte - "jetzt", auf die Minute genau.
   function jetzigerZeitpunkt() {
@@ -73,6 +78,10 @@
         (snap) => {
           patienten = [];
           snap.forEach((docSnap) => patienten.push({ id: docSnap.id, ...docSnap.data() }));
+          // Firestore sortiert nach Unicode (Großbuchstaben vor Kleinbuchstaben,
+          // Umlaute ganz hinten) - für das Register alphabetisch nach
+          // deutscher Reihenfolge, Groß-/Kleinschreibung egal.
+          patienten.sort((a, b) => (a.name || "").localeCompare(b.name || "", "de", { sensitivity: "base" }));
           renderPatientenListe();
           renderStartseiteStats();
           // Das Profilformular der gerade offenen Patienten-Seite wird hier
@@ -82,7 +91,16 @@
           // "zuletzt bearbeitet"-Zeile laufen live mit.
           if (offenerPatientId) {
             const p = patienten.find((x) => x.id === offenerPatientId);
-            if (p) aktualisiereProfilKopf(p);
+            if (p) {
+              offenerPatientGesehen = true;
+              aktualisiereProfilKopf(p);
+            } else if (offenerPatientGesehen) {
+              // Ein Admin hat den Patienten gelöscht, während er hier offen war.
+              offenerPatientId = null;
+              offenerPatientGesehen = false;
+              if (aktuelleAnsicht === "patient-detail") zeigeAnsicht("patientenakten");
+              zeigeToast("Dieser Patient wurde gelöscht.");
+            }
           }
         },
         (fehler) => console.error("Patienten konnten nicht geladen werden:", fehler)
@@ -114,7 +132,8 @@
       </div>`;
     let aktuellerBuchstabe = "";
     liste.forEach((p) => {
-      const erster = (p.name || "").trim().charAt(0).toLocaleUpperCase("de");
+      // Diakritika entfernen, damit Ä/Ö/Ü in der Gruppe A/O/U landen.
+      const erster = (p.name || "").trim().normalize("NFD").charAt(0).toLocaleUpperCase("de");
       const buchstabe = /\p{L}/u.test(erster) ? erster : "#";
       if (buchstabe !== aktuellerBuchstabe) {
         aktuellerBuchstabe = buchstabe;
@@ -197,9 +216,47 @@
   function oeffnePatientSeite(patientId, vorabDaten) {
     const p = patienten.find((x) => x.id === patientId) || vorabDaten || { id: patientId, name: "" };
     offenerPatientId = patientId;
+    offenerPatientGesehen = patienten.some((x) => x.id === patientId);
     zeigeAnsicht("patient-detail");
     fuellePatientDetailFelder(p);
     renderPatientDetailAkten(patientId);
+    aktualisiereAdminSteuerung();
+  }
+
+  // Löschen von Patienten ist Admins vorbehalten (siehe firestore.rules) -
+  // der Button wird nur für sie eingeblendet.
+  function aktualisiereAdminSteuerung() {
+    if (el.btnPatientLoeschen) el.btnPatientLoeschen.hidden = !istAdmin();
+  }
+
+  if (el.btnPatientLoeschen) {
+    el.btnPatientLoeschen.addEventListener("click", () => {
+      if (!istAdmin() || !offenerPatientId) return;
+      const id = offenerPatientId;
+      const p = patienten.find((x) => x.id === id);
+      const seineAkten = akten.filter((a) => a.patientId === id);
+      const text = seineAkten.length
+        ? `Möchtest du ${p ? p.name : "diesen Patienten"} samt ${seineAkten.length} ${seineAkten.length === 1 ? "Akte" : "Akten"} wirklich unwiderruflich löschen?`
+        : `Möchtest du ${p ? p.name : "diesen Patienten"} wirklich unwiderruflich löschen?`;
+      fordereLoeschungAn("Patient löschen", text, async () => {
+        const batch = db.batch();
+        seineAkten.forEach((a) => batch.delete(db.collection(AKTEN_COLLECTION).doc(a.id)));
+        batch.delete(db.collection(PATIENTEN_COLLECTION).doc(id));
+        // Vor dem Commit zurücksetzen, damit der Listener das Verschwinden
+        // nicht als "von jemand anderem gelöscht" meldet.
+        offenerPatientId = null;
+        offenerPatientGesehen = false;
+        try {
+          await batch.commit();
+        } catch (fehler) {
+          offenerPatientId = id;
+          offenerPatientGesehen = true;
+          throw fehler;
+        }
+        zeigeAnsicht("patientenakten");
+        zeigeToast("Patient gelöscht.");
+      });
+    });
   }
 
   // Kopfbereich (Seitentitel, Avatar, "zuletzt bearbeitet") - unkritisch,
@@ -288,16 +345,28 @@
       .map((a, index) => ({ a, nummer: index + 1 }))
       .reverse()
       .map(({ a, nummer }, position) => {
-        const vorschau = a.befund || a.behandlung || "";
+        // Beschriftete Kurzfassung: nur ausgefüllte Felder, damit schon in
+        // der Liste klar ist, was wo eingetragen wurde.
+        const felder = [
+          ["Behandlungsgrund", a.behandlungsgrund || "—", true],
+          ["Befund", a.befund],
+          ["Behandlung", a.behandlung],
+          ["Bemerkungen", a.bemerkungen],
+        ]
+          .filter(([, wert]) => wert)
+          .map(([label, wert, haupt]) => `<dt>${label}</dt><dd${haupt ? ' class="akte-eintrag__haupt"' : ""}>${escapeHtml(wert)}</dd>`)
+          .join("");
         return `<article class="akte-eintrag${position === 0 ? " akte-eintrag--neu" : ""}" tabindex="0" data-akte-oeffnen="${a.id}">
             <span class="akte-eintrag__punkt"></span>
+            <button type="button" class="akte-eintrag__loeschen" data-akte-loeschen="${a.id}" data-akte-nummer="${nummer}" title="Akte ${nummer} löschen" aria-label="Akte ${nummer} löschen">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+            </button>
             <div class="akte-eintrag__kopf">
               <span class="akte-eintrag__nr">Akte ${nummer}</span>
               <span>${escapeHtml(formatDatumZeit(a.datum))}</span>
+              <span class="akte-eintrag__autor">${escapeHtml(a.erstelltVon || "—")}</span>
             </div>
-            <h4 class="akte-eintrag__titel">${escapeHtml(a.behandlungsgrund || "—")}</h4>
-            ${vorschau ? `<p class="akte-eintrag__vorschau">${escapeHtml(vorschau)}</p>` : ""}
-            <span class="akte-eintrag__autor">von ${escapeHtml(a.erstelltVon || "—")}</span>
+            <dl class="akte-eintrag__felder">${felder}</dl>
           </article>`;
       })
       .join("");
@@ -305,16 +374,33 @@
 
   if (el.patientAktenListe) {
     const oeffneEintrag = (event) => {
+      const loeschen = event.target.closest("[data-akte-loeschen]");
+      if (loeschen) {
+        loescheAkteMitBestaetigung(loeschen.getAttribute("data-akte-loeschen"), loeschen.getAttribute("data-akte-nummer"));
+        return;
+      }
       const eintrag = event.target.closest("[data-akte-oeffnen]");
       if (!eintrag) return;
       oeffneAkteDetailModal(eintrag.getAttribute("data-akte-oeffnen"));
     };
     el.patientAktenListe.addEventListener("click", oeffneEintrag);
     el.patientAktenListe.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        oeffneEintrag(event);
-      }
+      if (event.key !== "Enter" && event.key !== " ") return;
+      // Auf dem Löschen-Button selbst löst der Browser den Klick von allein
+      // aus - nicht zusätzlich hier behandeln, sonst doppelt.
+      if (event.target.closest("[data-akte-loeschen]")) return;
+      event.preventDefault();
+      oeffneEintrag(event);
+    });
+  }
+
+  // Gemeinsam für den Löschen-Knopf in der Zeitleiste und im Akte-Fenster.
+  function loescheAkteMitBestaetigung(akteId, nummer, danach) {
+    const bezeichnung = nummer ? `Akte ${nummer}` : "diese Akte";
+    fordereLoeschungAn("Akte löschen", `Möchtest du ${bezeichnung} wirklich unwiderruflich löschen?`, async () => {
+      await db.collection(AKTEN_COLLECTION).doc(akteId).delete();
+      if (danach) danach();
+      zeigeToast("Akte gelöscht.");
     });
   }
 
@@ -430,10 +516,11 @@
     el.btnAkteLoeschen.addEventListener("click", () => {
       if (!offeneAkteDetailId) return;
       const id = offeneAkteDetailId;
-      fordereLoeschungAn("Akte löschen", "Möchtest du diese Akte wirklich unwiderruflich löschen?", async () => {
-        await db.collection(AKTEN_COLLECTION).doc(id).delete();
+      const a = akten.find((x) => x.id === id);
+      const nummer = a ? patientAkten(a.patientId).findIndex((x) => x.id === id) + 1 : 0;
+      loescheAkteMitBestaetigung(id, nummer, () => {
+        offeneAkteDetailId = null;
         schliesseModal("modal-akte-detail");
-        zeigeToast("Akte gelöscht.");
       });
     });
   }

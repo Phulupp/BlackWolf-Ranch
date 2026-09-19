@@ -13,7 +13,7 @@
   background: var(--leather-800);
   border: 1px solid var(--leather-edge-soft);
   border-radius: var(--radius-lg);
-  padding: 26px 28px;
+  padding: 32px 34px;
 }
 
 .md-feld {
@@ -26,8 +26,8 @@
 
 .md-feld > label {
   display: block;
-  margin-bottom: 4px;
-  font-size: 12px;
+  margin-bottom: 5px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--wood-text-muted);
 }
@@ -35,13 +35,13 @@
 .md-input {
   display: block;
   width: 100%;
-  padding: 7px 0;
+  padding: 8px 0;
   background: transparent;
   border: none;
   border-bottom: 1px solid var(--leather-edge);
   border-radius: 0;
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 15px;
   color: var(--wood-text);
   color-scheme: dark;
   transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
@@ -62,8 +62,8 @@
 }
 
 textarea.md-input {
-  min-height: 62px;
-  padding: 10px 12px;
+  min-height: 72px;
+  padding: 12px 14px;
   background: rgba(130, 170, 190, 0.05);
   border: 1px solid var(--leather-edge-soft);
   border-radius: 6px;
@@ -89,7 +89,14 @@ textarea.md-input:focus {
 .md-grid-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0 20px;
+  gap: 0 24px;
+}
+
+/* Beide Spalten gleich hoch beginnen lassen (sonst rutscht die zweite durch
+   die :first-child-Regel oben nach unten). */
+.md-grid-2 > .md-feld,
+.md-grid-2 > .md-feld:first-child {
+  margin-top: 20px;
 }
 
 @media (max-width: 560px) {
@@ -279,8 +286,8 @@ textarea.md-input:focus {
 
 .patient-seite {
   display: grid;
-  grid-template-columns: minmax(340px, 400px) 1fr;
-  gap: 24px;
+  grid-template-columns: minmax(360px, 440px) 1fr;
+  gap: 28px;
   align-items: start;
 }
 
@@ -361,48 +368,69 @@ textarea.md-input:focus {
   color: var(--wood-text-soft);
 }
 
+.pblatt__loeschen {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 22px;
+  padding: 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--wood-text-soft);
+  transition: color 0.15s ease;
+}
+
+.pblatt__loeschen:hover {
+  color: var(--status-danger-bright);
+}
+
+.pblatt__loeschen[hidden] {
+  display: none;
+}
+
 /* --- Akten-Zeitleiste ---------------------------------------------------- */
 .pakten__kopf {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 22px;
+  margin-bottom: 26px;
 }
 
 .pakten__kopf h3 {
   margin: 0;
-  font-size: 19px;
+  font-size: 22px;
   font-weight: 700;
   letter-spacing: -0.01em;
 }
 
 .pakten__anzahl {
-  margin-top: 3px;
-  font-size: 12.5px;
+  margin-top: 4px;
+  font-size: 13.5px;
   color: var(--wood-text-soft);
 }
 
 .akten-zeitleiste {
   position: relative;
-  padding-left: 28px;
+  padding-left: 32px;
 }
 
 .akten-zeitleiste::before {
   content: "";
   position: absolute;
   left: 5px;
-  top: 12px;
-  bottom: 12px;
+  top: 16px;
+  bottom: 16px;
   width: 1px;
   background: var(--leather-edge);
 }
 
 .akte-eintrag {
   position: relative;
-  margin-bottom: 6px;
-  padding: 16px 18px;
-  border: 1px solid transparent;
+  margin-bottom: 10px;
+  padding: 22px 26px 24px;
+  background: rgba(130, 170, 190, 0.04);
+  border: 1px solid var(--leather-edge-soft);
   border-radius: var(--radius-lg);
   cursor: pointer;
   transition: background 0.12s ease, border-color 0.12s ease;
@@ -412,13 +440,13 @@ textarea.md-input:focus {
 .akte-eintrag:focus-visible {
   outline: none;
   background: var(--leather-700);
-  border-color: var(--leather-edge-soft);
+  border-color: rgba(130, 170, 190, 0.34);
 }
 
 .akte-eintrag__punkt {
   position: absolute;
-  left: -28px;
-  top: 21px;
+  left: -32px;
+  top: 27px;
   width: 11px;
   height: 11px;
   box-sizing: border-box;
@@ -432,52 +460,124 @@ textarea.md-input:focus {
   background: var(--brass-bright);
 }
 
+.akte-eintrag__loeschen {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  color: var(--wood-text-soft);
+  opacity: 0;
+  transition: opacity 0.12s ease, color 0.12s ease, background 0.12s ease;
+}
+
+.akte-eintrag:hover .akte-eintrag__loeschen,
+.akte-eintrag:focus-within .akte-eintrag__loeschen,
+.akte-eintrag__loeschen:focus-visible {
+  opacity: 1;
+}
+
+.akte-eintrag__loeschen:hover {
+  color: var(--status-danger-bright);
+  background: var(--status-danger-soft);
+}
+
+@media (hover: none) {
+  .akte-eintrag__loeschen {
+    opacity: 1;
+  }
+}
+
 .akte-eintrag__kopf {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: 12px;
-  margin-bottom: 5px;
-  font-size: 12px;
-  color: var(--wood-text-soft);
+  gap: 4px 14px;
+  padding-right: 40px;
+  margin-bottom: 16px;
+  font-size: 13.5px;
+  color: var(--wood-text-muted);
   font-variant-numeric: tabular-nums;
 }
 
 .akte-eintrag__nr {
+  font-size: 17px;
   font-weight: 700;
   color: var(--brass-bright);
 }
 
-.akte-eintrag__titel {
-  margin: 0 0 4px;
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--wood-text);
+.akte-eintrag__autor::before {
+  content: "";
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  margin-right: 14px;
+  vertical-align: middle;
+  border-radius: 50%;
+  background: var(--wood-text-soft);
 }
 
-.akte-eintrag__vorschau {
+/* Beschriftete Kurzfassung: zeigt schon in der Liste, WAS wo eingetragen ist
+   (nur ausgefüllte Felder - der Behandlungsgrund ist Pflicht und steht immer
+   da). */
+.akte-eintrag__felder {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 12px 24px;
+  margin: 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--leather-edge-soft);
+}
+
+.akte-eintrag__felder dt {
+  padding-top: 2px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--wood-text-soft);
+}
+
+.akte-eintrag__felder dd {
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  font-size: 13px;
-  line-height: 1.5;
-  color: var(--wood-text-muted);
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--wood-text);
+  white-space: pre-line;
 }
 
-.akte-eintrag__autor {
-  display: block;
-  margin-top: 8px;
-  font-size: 12px;
-  color: var(--wood-text-soft);
+.akte-eintrag__felder dd.akte-eintrag__haupt {
+  font-weight: 600;
+}
+
+@media (max-width: 560px) {
+  .akte-eintrag__felder {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+  .akte-eintrag__felder dd {
+    margin-bottom: 10px;
+  }
 }
 
 /* --------------------------------------------------------------------------
    18c. Akte als Dokument (Ansicht + Formular teilen sich das Raster)
-   -------------------------------------------------------------------------- */
-.modal--akte {
-  width: 780px;
+   --------------------------------------------------------------------------
+   Selektor bewusst ".modal.modal--akte" (Spezifität 2): modals.css wird NACH
+   dieser Datei geladen und setzt für ".modal" Breite/Padding/Hintergrund -
+   mit nur einer Klasse würde das hier überschrieben (Fenster blieb dadurch
+   schmal und gequetscht). */
+.modal.modal--akte {
+  width: 980px;
   max-width: 94vw;
-  max-height: 90vh;
+  min-height: min(620px, 90vh);
+  max-height: 92vh;
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -485,8 +585,9 @@ textarea.md-input:focus {
   background: var(--leather-800);
 }
 
-.modal--schmal {
-  width: 460px;
+.modal.modal--schmal {
+  width: 540px;
+  min-height: 0;
 }
 
 .akte-blatt__kopf {
@@ -494,28 +595,28 @@ textarea.md-input:focus {
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
-  padding: 26px 32px 22px;
+  padding: 34px 40px 26px;
 }
 
 .akte-blatt__kicker {
   display: block;
-  margin-bottom: 5px;
-  font-size: 12px;
+  margin-bottom: 7px;
+  font-size: 13.5px;
   font-weight: 600;
   color: var(--brass-bright);
 }
 
 .akte-blatt__kopf h3 {
   margin: 0;
-  font-size: 26px;
+  font-size: 34px;
   font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
 }
 
 .akte-blatt__sub {
-  margin-top: 6px;
-  font-size: 13px;
+  margin-top: 8px;
+  font-size: 14.5px;
   color: var(--wood-text-muted);
 }
 
@@ -524,25 +625,31 @@ textarea.md-input:focus {
   color: var(--wood-text);
 }
 
+.akte-blatt__kopf .modal__close {
+  width: 36px;
+  height: 36px;
+  font-size: 16px;
+}
+
 .akte-blatt__meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px 44px;
+  gap: 14px 64px;
   margin: 0;
-  padding: 16px 32px;
+  padding: 20px 40px;
   background: rgba(0, 0, 0, 0.18);
   border-top: 1px solid var(--leather-edge-soft);
   border-bottom: 1px solid var(--leather-edge-soft);
 }
 
 .akte-blatt__meta dt {
-  font-size: 11.5px;
+  font-size: 12.5px;
   color: var(--wood-text-soft);
 }
 
 .akte-blatt__meta dd {
-  margin: 2px 0 0;
-  font-size: 14px;
+  margin: 3px 0 0;
+  font-size: 16px;
   font-weight: 500;
   color: var(--wood-text);
 }
@@ -551,23 +658,28 @@ textarea.md-input:focus {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
-  padding: 4px 32px 10px;
+  padding: 6px 40px 14px;
 }
 
 .modal--akte .modal__footer {
   flex: 0 0 auto;
   margin-top: 0;
-  padding: 16px 32px;
+  padding: 20px 40px;
   background: rgba(0, 0, 0, 0.18);
   border-top: 1px solid var(--leather-edge-soft);
+}
+
+.modal--akte .modal__footer .btn {
+  padding: 13px 26px;
+  font-size: 13.5px;
 }
 
 .akte-abschnitt,
 .akte-feldzeile {
   display: grid;
-  grid-template-columns: 180px minmax(0, 1fr);
-  gap: 24px;
-  padding: 20px 0;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 32px;
+  padding: 26px 0;
   border-bottom: 1px solid var(--leather-edge-soft);
 }
 
@@ -578,16 +690,20 @@ textarea.md-input:focus {
 
 .akte-abschnitt__label,
 .akte-feldzeile > label {
-  font-size: 13px;
+  margin: 0;
+  font-size: 15px;
   font-weight: 600;
-  line-height: 1.35;
+  line-height: 1.55;
   color: var(--wood-text);
 }
 
+/* Nummer steht vor dem Titel in derselben Zeile, damit der Inhalt rechts auf
+   gleicher Höhe wie die Überschrift beginnt. */
 .akte-abschnitt__nr {
-  display: block;
-  margin-bottom: 3px;
-  font-size: 11.5px;
+  display: inline-block;
+  min-width: 28px;
+  margin-right: 8px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--brass-bright);
   font-variant-numeric: tabular-nums;
@@ -595,16 +711,18 @@ textarea.md-input:focus {
 
 .akte-abschnitt__hinweis {
   display: block;
-  margin-top: 3px;
-  font-size: 12px;
+  margin: 3px 0 0 36px;
+  font-size: 12.5px;
   font-weight: 400;
+  line-height: 1.4;
   color: var(--wood-text-soft);
 }
 
 .akte-abschnitt p {
+  margin: 0;
   white-space: pre-wrap;
-  font-size: 14.5px;
-  line-height: 1.65;
+  font-size: 16px;
+  line-height: 1.7;
   color: var(--wood-text);
 }
 
@@ -613,14 +731,15 @@ textarea.md-input:focus {
 }
 
 .akte-feldzeile textarea.md-input {
-  min-height: 78px;
+  min-height: 96px;
+  font-size: 15.5px;
 }
 
 .akte-feldzeile input.md-input {
-  max-width: 260px;
+  max-width: 280px;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 720px) {
   .akte-abschnitt,
   .akte-feldzeile {
     grid-template-columns: 1fr;
@@ -630,7 +749,10 @@ textarea.md-input:focus {
   .akte-blatt__meta,
   .modal--akte .modal__body,
   .modal--akte .modal__footer {
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+  .akte-blatt__kopf h3 {
+    font-size: 28px;
   }
 }

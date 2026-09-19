@@ -62,6 +62,7 @@
       if (aktuelleAnsicht === "admin" || aktuelleAnsicht === "admin-log") zeigeAnsicht("startseite");
     }
     renderBeispiele();
+    aktualisiereAdminSteuerung();
   }
 
   function stoppeApp() {
@@ -77,6 +78,7 @@
     bearbeiteteAkteId = null;
     offenerPatientId = null;
     offeneAkteDetailId = null;
+    offenerPatientGesehen = false;
   }
 
   window.addEventListener("hof:auth-approved", (event) => starteApp(event.detail));
