@@ -125,11 +125,14 @@
     el.patientenNoResults.hidden = !(patienten.length > 0 && liste.length === 0);
 
     el.patientenListe.innerHTML = liste
-      .map(
-        (p) => `<div class="reg-row reg-row--body" style="grid-template-columns: 1fr;" data-patient-oeffnen="${p.id}">
-            <span class="reg-name">${escapeHtml(p.name)}</span>
-          </div>`
-      )
+      .map((p) => {
+        const anzahl = patientAkten(p.id).length;
+        return `<div class="patienten-zeile" data-patient-oeffnen="${p.id}">
+            <span class="patienten-zeile__avatar">${escapeHtml(initialenAvatar(p.name))}</span>
+            <span class="patienten-zeile__name">${escapeHtml(p.name)}</span>
+            <span class="patienten-zeile__meta">${anzahl} Akte${anzahl === 1 ? "" : "n"}</span>
+          </div>`;
+      })
       .join("");
   }
 
@@ -200,6 +203,7 @@
 
   function fuellePatientDetailFelder(p) {
     el.patientDetailTitel.textContent = p.name || "Patient";
+    if (el.patientDetailAvatar) el.patientDetailAvatar.textContent = initialenAvatar(p.name);
     el.patientDetailId.value = p.id;
     el.patientDetailName.value = p.name || "";
     el.patientGeburtsdatum.value = p.geburtsdatum || "";

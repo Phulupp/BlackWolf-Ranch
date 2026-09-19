@@ -94,9 +94,15 @@
   font-weight: 600;
   letter-spacing: 0.02em;
   color: #8ba0ad;
-  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
   text-align: left;
   position: relative;
+  /* Aktiv-Indikator lebt als Rahmen INNERHALB des Buttons (immer reserviert,
+     nur die Farbe wechselt) statt als abgesetztes Pseudo-Element außerhalb
+     der Sidebar-Kante - vorher landete der Strich exakt auf dem äußersten
+     Bildschirmpixel und wirkte dort wie ein losgelöster Fremdkörper statt
+     Teil des Buttons. */
+  border-left: 3px solid transparent;
 }
 
 .sidebar__item svg {
@@ -118,6 +124,7 @@
 .sidebar__item--active {
   color: #eaf4f7;
   background: var(--leather-600);
+  border-left-color: var(--brass-bright);
   box-shadow: 0 1px 0 rgba(180, 210, 225, 0.05) inset, 0 4px 10px rgba(0, 0, 0, 0.22);
 }
 
@@ -127,18 +134,6 @@
 
 .sidebar__item--active svg {
   opacity: 1;
-}
-
-.sidebar__item--active::before {
-  content: "";
-  position: absolute;
-  left: -12px;
-  top: 6px;
-  bottom: 6px;
-  width: 3px;
-  background: var(--brass-bright);
-  border-radius: 0 3px 3px 0;
-  box-shadow: 0 0 6px var(--shadow-copper-glow);
 }
 
 .sidebar__badge {
@@ -222,9 +217,16 @@
   text-overflow: ellipsis;
 }
 
+/* Schlichter farbiger Text statt einer umrandeten Pille - eine Badge mit
+   Rahmen/Füllung unter dem Namen wirkte in der schmalen Profilkarte klobig;
+   die Farbe allein reicht, um den Rang erkennbar zu machen (analog zu
+   Account-Menüs wie bei Linear/Notion). */
 .sidebar__user-role {
+  display: block;
+  margin-top: 1px;
   font-size: 10.5px;
-  font-weight: 700;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 /* Leuchtender Akzentring um den Avatar - nur für die beiden Spitzenränge

@@ -10,8 +10,7 @@
   function aktualisiereSidebarRang(rolle) {
     el.sidebarUserRole.textContent = rolle;
     const farbe = RANG_AKZENTE[rolle] || RANG_AKZENT_STANDARD;
-    el.sidebarUserRole.className = "sidebar__user-role badge badge--outline";
-    el.sidebarUserRole.style.cssText = `background:${farbe}26;color:${farbe};border-color:${farbe};`;
+    el.sidebarUserRole.style.color = farbe;
     el.sidebarUserAvatar.style.setProperty("--rang-farbe", farbe);
     el.sidebarUserAvatar.classList.toggle("sidebar__user-avatar--akzent", RANG_AKZENTRING.includes(rolle));
   }

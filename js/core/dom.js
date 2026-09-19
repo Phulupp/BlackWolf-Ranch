@@ -47,6 +47,7 @@
 
     modalPatientDetail: document.getElementById("modal-patient-detail"),
     patientDetailTitel: document.getElementById("patient-detail-titel"),
+    patientDetailAvatar: document.getElementById("patient-detail-avatar"),
     patientDetailId: document.getElementById("patient-detail-id"),
     patientDetailName: document.getElementById("patient-detail-name"),
     patientGeburtsdatum: document.getElementById("patient-geburtsdatum"),

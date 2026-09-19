@@ -7,10 +7,94 @@
   padding: 8px 0;
 }
 
-#patient-detail-name {
+/* --------------------------------------------------------------------------
+   18a. Patientenliste - echte Karten mit Avatar statt kahler Listenzeilen
+   -------------------------------------------------------------------------- */
+.patienten-liste {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.patienten-zeile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 18px;
+  background: var(--leather-700);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+}
+
+.patienten-zeile:hover {
+  border-color: var(--brass);
+  background: var(--leather-600);
+  transform: translateX(2px);
+}
+
+.patienten-zeile__avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--leather-900);
+  color: var(--brass-bright);
   font-family: var(--font-display);
-  font-size: 22px;
   font-weight: 700;
+  font-size: 12px;
+}
+
+.patienten-zeile__name {
+  flex: 1;
+  min-width: 0;
+  font-weight: 700;
+  font-size: 13.5px;
+  color: var(--wood-text);
+}
+
+.patienten-zeile__meta {
+  font-size: 11.5px;
+  color: var(--wood-text-soft);
+  flex-shrink: 0;
+}
+
+/* --------------------------------------------------------------------------
+   18b. Patient-Detail: Kopfzeile mit Avatar + gruppiertes Profilformular
+   -------------------------------------------------------------------------- */
+.patient-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 6px;
+}
+
+.patient-detail-header__avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, var(--brass-bright), var(--brass-deep));
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.patient-detail-header__inputs {
+  flex: 1;
+  min-width: 0;
+}
+
+.patient-detail-header__inputs .field-label:first-child {
+  margin-top: 0;
 }
 
 /* Zwei Felder nebeneinander statt jedes einzeln auf eigener Zeile - bricht
@@ -69,15 +153,15 @@
 }
 
 /* --------------------------------------------------------------------------
-   18b. Akte-Fokus: eigenständige Dokumentenseite (kein Modal)
+   18c. Akte-Fokus: eigenständige Dokumentenseite (kein Modal)
    --------------------------------------------------------------------------
    Ersetzt die komplette App (Sidebar/Topbar bleiben verborgen, siehe
-   starteApp in js/main.js) durch eine einzelne, papierartige "Aktenseite",
-   damit eine Akte in ihrem eigenen Fenster/Tab wirklich wie ein
-   eigenständiges Dokument aussieht statt wie ein Popup über der dunklen App.
-   Bewusst ein warmes Off-White statt reinem Weiß (wie echtes Papier) mit
-   dunkler "Tinten"-Schrift - deutlicher Kontrast zur sonst durchgängig
-   dunklen App, an genau dieser einen, bewusst dokumentartigen Stelle. */
+   starteApp in js/main.js) durch eine einzelne, ruhige Karte in derselben
+   dunklen Leder-Optik wie der Rest der App - bewusst KEIN eigener heller
+   "Papier"-Look mehr (frühere Fassung), der gegen die sonst durchgängig
+   dunkle App zu sehr abstach. Die Eigenständigkeit kommt stattdessen allein
+   aus Layout/Typografie: große, ruhige Karte, mittig, ohne Sidebar/Topbar
+   drumherum. */
 .akte-fokus {
   min-height: 100vh;
   display: flex;
@@ -89,9 +173,9 @@
   width: 100%;
   max-width: 640px;
   height: fit-content;
-  background: #f5f1e8;
-  color: #241d14;
-  border-radius: var(--radius-md);
+  background: linear-gradient(165deg, var(--leather-700) 0%, var(--leather-800) 55%, var(--leather-800) 100%);
+  border: 1px solid var(--leather-edge);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-modal);
   padding: 44px 48px 36px;
 }
@@ -103,7 +187,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--brass-deep);
+  color: var(--brass-bright);
 }
 
 .akte-dokument__marke:hover {
@@ -112,50 +196,7 @@
 
 .akte-dokument h1 {
   font-size: 25px;
-  color: #241d14;
   margin-bottom: 18px;
-}
-
-.akte-dokument .field-label {
-  color: #7a6c54;
-}
-
-.akte-dokument .field-input {
-  background: #ffffff;
-  border-color: #d9cfb8;
-  color: #241d14;
-  box-shadow: none;
-}
-
-.akte-dokument .field-input:hover {
-  border-color: #b8a97f;
-}
-
-.akte-dokument .field-input:focus {
-  border-color: var(--brass-bright);
-  box-shadow: 0 0 0 3px var(--brass-soft);
-}
-
-.akte-dokument .field-input::placeholder {
-  color: #ab9c7c;
-}
-
-.akte-dokument .field-static {
-  color: #241d14;
-  font-weight: 600;
-}
-
-.akte-dokument .akte-vorlage__kopf {
-  color: #524731;
-  border-bottom-color: #ddd2b7;
-}
-
-.akte-dokument .akte-vorlage__label {
-  color: #8a7a54;
-}
-
-.akte-dokument .akte-vorlage__abschnitt p {
-  color: #241d14;
 }
 
 .akte-dokument__aktionen {
@@ -164,5 +205,5 @@
   gap: 10px;
   margin-top: 30px;
   padding-top: 20px;
-  border-top: 1px solid #e3d9bf;
+  border-top: 1px solid var(--leather-edge);
 }
